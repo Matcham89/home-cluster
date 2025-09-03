@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: infra
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - name: ingress-nginx
+            path: infra/ingress-nginx
+          - name: external-secrets
+            path: infra/external-secrets
+  template: 
+    metadata:
+      name: '{{name}}'
+    spec:
+      project: apps
+      source:
+        repoURL: https://github.com/Matcham89/home-cluster.git
+        targetRevision: main
+        path: '{{path}}'
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '{{name}}'
+      syncPolicy:
+        automated: { prune: true, selfHeal: true }
+        syncOptions:
+          - CreateNamespace=true
+          - ApplyOutOfSyncOnly=true
+      revisionHistoryLimit: 5
