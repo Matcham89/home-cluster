@@ -9,8 +9,6 @@ spec:
       repoURL: https://github.com/Matcham89/home-cluster.git
       targetRevision: HEAD
       path: bootstrap
-      directory:
-        recurse: true
   destination:
       server: https://kubernetes.default.svc
       namespace: default
