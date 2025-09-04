@@ -11,6 +11,8 @@ spec:
             path: infra/ingress-nginx
           - name: external-secrets
             path: infra/external-secrets
+          - name: cert-manager
+            path: infra/cert-manager
   template: 
     metadata:
       name: '{{name}}'
