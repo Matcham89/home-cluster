@@ -11,4 +11,8 @@ spec:
   chartRef:
     kind: OCIRepository
     name: kagent
+  valuesFrom:
+    - kind: ConfigMap
+      name: kagent-values
+
 
