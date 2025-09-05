@@ -6,6 +6,8 @@ metadata:
   name: kagent
   namespace: kagent
 spec:
+  interval: 1m0s
+  releaseName: kagent-dev
   values:
     providers:
       default: openAI
