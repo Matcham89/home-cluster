@@ -3,3 +3,11 @@ kind: Kustomization
 resources:
 - gotk-components.yaml
 - gotk-sync.yaml
+patchesJson6902:
+  - target:
+      group: apps
+      version: v1
+      kind: Deployment
+      name: helm-controller
+      namespace: flux-system
+    path: patches/helm-controller-feature-gate.jsonpatch.yaml
