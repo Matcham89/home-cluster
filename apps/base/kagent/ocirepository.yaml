@@ -5,7 +5,7 @@ metadata:
   name: kagent
   namespace: kagent
 spec:
-  interval: 5m0s
+  interval: 1m0s
   url: oci://ghcr.io/kagent-dev/kagent/helm/kagent
   ref:
     tag: 0.6.0
