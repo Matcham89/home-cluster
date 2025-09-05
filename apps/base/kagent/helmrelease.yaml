@@ -14,5 +14,3 @@ spec:
   valuesFrom:
     - kind: ConfigMap
       name: kagent-values
-
-
