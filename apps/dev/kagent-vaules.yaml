@@ -6,11 +6,6 @@ metadata:
   name: kagent
   namespace: kagent
 spec:
-  interval: 1m0s
-  releaseName: kagent
-  chartRef:
-    kind: OCIRepository
-    name: kagent
   values:
     providers:
       default: openAI
