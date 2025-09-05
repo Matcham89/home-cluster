@@ -3,3 +3,9 @@ kind: Kustomization
 resources:
 - helmrelease.yaml
 - ocirepository.yaml
+configMapGenerator:
+  - name: kagent-values
+    files:
+      - values.yaml=./apps/dev/kagent-values.yaml
+configurations:
+  - kustomizeconfig.yaml
