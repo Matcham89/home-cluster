@@ -7,6 +7,6 @@ configMapGenerator:
   - name: kagent-values
     namespace: kagent
     files:
-      - kagent-values.yaml
+      - values.yaml=kagent-values.yaml
 configurations:
   - kustomizeconfig.yaml
