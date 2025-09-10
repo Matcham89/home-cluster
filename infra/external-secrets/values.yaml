@@ -3,4 +3,6 @@ bitwarden-sdk-server:
   image:
     repository: ghcr.io/external-secrets/bitwarden-sdk-server
     pullPolicy: IfNotPresent
-    tag: ""  # Defaults to chart appVersion
+    tag: "" 
+ # Defaults to chart appVersion
+installCRDs: false
