@@ -4,4 +4,3 @@ resources:
   - namespace.yaml
   - ocirepository.yaml
   - helmrelease.yaml
-  - kagent-crds.yaml
