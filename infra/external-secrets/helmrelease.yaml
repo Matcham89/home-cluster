@@ -16,4 +16,4 @@ spec:
       interval: 1m
   valuesFrom:
     - kind: ConfigMap
-      name: kagent-values
+      name: external-secrets-values
