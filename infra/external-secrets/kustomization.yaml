@@ -15,7 +15,7 @@ resources:
   - helmrelease.yaml
 
 # Deploy CRs
-  - deployment-crs.yaml
+  # - deployment-crs.yaml
 
 configMapGenerator:
   - name: external-secrets-values
