@@ -5,6 +5,7 @@ resources:
   - ../../base/kagent/ocirepository.yaml
 configMapGenerator:
   - name: kagent-dev-values
+    namespace: kagent
     files:
       - kagent-values.yaml
 configurations:
