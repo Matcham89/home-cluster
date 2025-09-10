@@ -4,10 +4,3 @@ bitwarden-sdk-server:
     repository: ghcr.io/external-secrets/bitwarden-sdk-server
     pullPolicy: IfNotPresent
     tag: ""  # Defaults to chart appVersion
-    tls:
-      enabled: true
-      certManager:
-        enabled: true
-        issuer:
-          name: ca-issuer
-          kind: ClusterIssuer
