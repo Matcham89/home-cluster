@@ -17,3 +17,5 @@ spec:
   valuesFrom:
     - kind: ConfigMap
       name: external-secrets-values
+  install:
+    createNamespace: true
