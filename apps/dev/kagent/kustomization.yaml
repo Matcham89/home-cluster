@@ -4,8 +4,8 @@ resources:
   - ../../base/kagent/helmrelease.yaml
   - ../../base/kagent/ocirepository.yaml
 configMapGenerator:
-  - name: kagent-values
+  - name: kagent-dev-values
     files:
-      - values.yaml=kagent-values.yaml
+      - kagent-values.yaml
 configurations:
   - kustomizeconfig.yaml
