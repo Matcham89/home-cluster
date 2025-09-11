@@ -9,7 +9,7 @@ resources:
 - repositories.yaml
 
 # Deploy the operator
-- deployment.yaml
+- deployment-operator.yaml
 
 # Deploy default Custom Resources from 'crs' directory
 # INFO: This depends on the CRDs deployment. Will happen after it
