@@ -1,0 +1,36 @@
+# Self-signed ClusterIssuer
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: selfsigned-bootstrap
+spec:
+  selfSigned: {}
+
+---
+
+# Certificate for our root CA
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: bitwarden-ca
+  namespace: cert-manager
+spec:
+  isCA: true
+  commonName: bitwarden-ca
+  secretName: bitwarden-ca-secret
+  privateKey:
+    algorithm: RSA
+    size: 2048
+  issuerRef:
+    name: selfsigned-bootstrap
+    kind: ClusterIssuer
+
+---
+
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: bitwarden-ca-issuer
+spec:
+  ca:
+    secretName: bitwarden-ca-secret
