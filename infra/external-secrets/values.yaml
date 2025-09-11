@@ -7,6 +7,8 @@ certManager:
   # switch to using cert-manager (installed separately) to automatically issue
   # and renew the webhook certificate. This chart does not install
   # cert-manager for you, See https://cert-manager.io/docs/
-  enabled: false
-
+  enabled: true
+  issuer:
+    name: bitwarden-ca-issuer
+    kind: ClusterIssuer
 installCRDs: false
