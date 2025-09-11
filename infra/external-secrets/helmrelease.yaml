@@ -19,4 +19,3 @@ spec:
       name: external-secrets-values
   install:
     createNamespace: true
-  installCRDs: false
