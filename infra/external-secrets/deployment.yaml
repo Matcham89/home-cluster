@@ -18,8 +18,9 @@ spec:
         kind: HelmRepository
         name: external-secrets
         namespace: flux-system
-  values:
-    installCRDs: false
+  valuesFrom:
+    - kind: ConfigMap
+      name: external-secrets-values
 
   # Ref: https://fluxcd.io/flux/components/helm/api/v2/#helm.toolkit.fluxcd.io/v2.Install
   install:
