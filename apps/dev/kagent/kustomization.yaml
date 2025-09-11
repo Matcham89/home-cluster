@@ -7,6 +7,7 @@ resources:
   - certificate.yaml
   - external-secret.yaml
   - ingress.yaml
+  - shadow-service.yaml
 
 configMapGenerator:
   - name: kagent-values
