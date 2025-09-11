@@ -17,11 +17,3 @@ resources:
 # Deploy default Custom Resources from 'crs' directory
 # INFO: This depends on the CRDs deployment. Will happen after it
 - deployment-crs.yaml
-
-# configMapGenerator:
-#   - name: metal-lb-values
-#     namespace: flux-system
-#     files:
-#       - values.yaml=values.yaml
-# configurations:
-#   - kustomizeconfig.yaml
