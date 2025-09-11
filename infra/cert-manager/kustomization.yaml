@@ -8,8 +8,8 @@ resources:
 # Deploy the repositories
 - repositories.yaml
 
-# Deploy the CRDs
-- deployment-crds.yaml
+# # Deploy the CRDs
+# - deployment-crds.yaml
 
 # Deploy the operator
 - deployment-operator.yaml

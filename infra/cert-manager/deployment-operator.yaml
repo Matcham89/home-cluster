@@ -21,7 +21,11 @@ spec:
   valuesFrom:
     - kind: ConfigMap
       name: cert-manager-values
-
-  # Ref: https://fluxcd.io/flux/components/helm/api/v2/#helm.toolkit.fluxcd.io/v2.Install
   install:
     createNamespace: true
+    crds: Create                 # Helm installs CRDs
+  upgrade:
+    crds: CreateReplace          # Helm upgrades CRDs safely
+  values:
+    installCRDs: true            # cert-manager chart flag (recommended)
+  # Ref: https://fluxcd.io/flux/components/helm/api/v2/#helm.toolkit.fluxcd.io/v2.Install
