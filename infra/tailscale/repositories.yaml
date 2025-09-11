@@ -1,0 +1,9 @@
+# Reference to Helm repository
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: tailscale-operator
+  namespace: flux-system
+spec:
+  interval: 10m
+  url: https://pkgs.tailscale.com/helmcharts
