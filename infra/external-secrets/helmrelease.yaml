@@ -12,10 +12,11 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: external-secrets
-        namespace: external-secrets
+        namespace: flux-system
       interval: 1m
   valuesFrom:
     - kind: ConfigMap
       name: external-secrets-values
   install:
     createNamespace: true
+  installCRDs: false
