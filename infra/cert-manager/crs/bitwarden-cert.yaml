@@ -17,5 +17,5 @@ spec:
   ipAddresses:
     - 127.0.0.1
   issuerRef:
-    name: bitwarden-ca-issuer
+    name: internal-ca-issuer
     kind: ClusterIssuer

@@ -1,36 +1,32 @@
-# Self-signed ClusterIssuer
+# 1) Bootstrap a self-signed CA (root)
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: selfsigned-bootstrap
+  name: internal-selfsigned-bootstrap
 spec:
   selfSigned: {}
-
 ---
-
-# Certificate for our root CA
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: bitwarden-ca
+  name: internal-root-ca
   namespace: cert-manager
 spec:
   isCA: true
-  commonName: bitwarden-ca
-  secretName: bitwarden-ca-secret
+  commonName: internal-root-ca
+  secretName: internal-root-ca-secret        # <— CA secret lives here
   privateKey:
     algorithm: RSA
     size: 2048
   issuerRef:
-    name: selfsigned-bootstrap
+    name: internal-selfsigned-bootstrap
     kind: ClusterIssuer
-
 ---
-
+# 2) Cluster-wide issuer backed by that CA (the one apps will use)
 apiVersion: cert-manager.io/v1
 kind: ClusterIssuer
 metadata:
-  name: bitwarden-ca-issuer
+  name: internal-ca-issuer
 spec:
   ca:
-    secretName: bitwarden-ca-secret
+    secretName: internal-root-ca-secret
