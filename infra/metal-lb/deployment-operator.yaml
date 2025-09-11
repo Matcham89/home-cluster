@@ -18,9 +18,6 @@ spec:
         kind: HelmRepository
         name: metal-lb
         namespace: flux-system
-  valuesFrom:
-    - kind: ConfigMap
-      name: metal-lb-values
   install:
     createNamespace: true
 
