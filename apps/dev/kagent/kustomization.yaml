@@ -4,8 +4,9 @@ resources:
   - ../../base/kagent/helmrelease.yaml
   - ../../base/kagent/ocirepository.yaml
 
-  - external-secret.yaml
   - certificate.yaml
+  - external-secret.yaml
+  - ingress.yaml
 
 configMapGenerator:
   - name: kagent-values
