@@ -5,6 +5,8 @@ metadata:
   name: cert-manager-crds
   namespace: flux-system
 spec:
+  releaseName: cert-manager-crds
+  targetNamespace: cert-manager
   interval: 10m
   path: ./deploy/crds
   prune: true
