@@ -7,3 +7,15 @@ metadata:
 spec:
   interval: 10m
   url: https://charts.jetstack.io
+
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: cert-manager
+  namespace: flux-system
+spec:
+  interval: 10m
+  ref:
+    tag: v0.18.2
+  url: https://github.com/cert-manager/cert-manager
