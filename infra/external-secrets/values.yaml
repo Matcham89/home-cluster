@@ -9,6 +9,6 @@ certManager:
   # cert-manager for you, See https://cert-manager.io/docs/
   enabled: true
   issuer:
-    name: bitwarden-ca-issuer
+    name: internal-ca-issuer
     kind: ClusterIssuer
 installCRDs: false
