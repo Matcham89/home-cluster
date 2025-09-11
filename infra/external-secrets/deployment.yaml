@@ -20,7 +20,7 @@ spec:
         namespace: flux-system
   valuesFrom:
     - kind: ConfigMap
-      name: values
+      name: external-secrets-values
 
   # Ref: https://fluxcd.io/flux/components/helm/api/v2/#helm.toolkit.fluxcd.io/v2.Install
   install:
