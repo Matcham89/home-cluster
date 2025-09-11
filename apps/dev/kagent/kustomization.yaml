@@ -3,6 +3,9 @@ kind: Kustomization
 resources:
   - ../../base/kagent/helmrelease.yaml
   - ../../base/kagent/ocirepository.yaml
+
+  - external-secret.yaml
+
 configMapGenerator:
   - name: kagent-values
     namespace: kagent
