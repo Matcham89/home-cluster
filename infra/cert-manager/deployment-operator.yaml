@@ -23,9 +23,4 @@ spec:
       name: cert-manager-values
   install:
     createNamespace: true
-    crds: Create                 # Helm installs CRDs
-  upgrade:
-    crds: CreateReplace          # Helm upgrades CRDs safely
-  values:
-    installCRDs: true            # cert-manager chart flag (recommended)
-  # Ref: https://fluxcd.io/flux/components/helm/api/v2/#helm.toolkit.fluxcd.io/v2.Install
+
