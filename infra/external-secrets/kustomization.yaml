@@ -17,3 +17,11 @@ resources:
 # Deploy default Custom Resources from 'crs' directory
 # INFO: This depends on the CRDs deployment. Will happen after it
 - deployment-crs.yaml
+
+configMapGenerator:
+  - name: external-secrets-values
+    namespace: external-secrets
+    files:
+      - values.yaml=values.yaml
+configurations:
+  - kustomizeconfig.yaml
