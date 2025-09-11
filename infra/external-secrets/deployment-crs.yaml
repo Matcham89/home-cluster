@@ -8,7 +8,7 @@ spec:
   dependsOn:
     - name: external-secrets-crds
   interval: 10m
-  path: ./infrastructure/external-secrets/crs
+  path: ./infra/external-secrets/crs
   prune: true
   sourceRef:
     kind: GitRepository
