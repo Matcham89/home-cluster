@@ -17,5 +17,5 @@ metadata:
 spec:
   interval: 10m
   ref:
-    tag: v0.18.2
+    tag: v1.18.2
   url: https://github.com/cert-manager/cert-manager
