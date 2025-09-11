@@ -5,6 +5,7 @@ resources:
   - ../../base/kagent/ocirepository.yaml
 
   - external-secret.yaml
+  - certificate.yaml
 
 configMapGenerator:
   - name: kagent-values
