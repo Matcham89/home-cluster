@@ -1,8 +1,12 @@
 bitwarden-sdk-server:
   enabled: true
-  image:
-    repository: ghcr.io/external-secrets/bitwarden-sdk-server
-    pullPolicy: IfNotPresent
-    tag: "" 
- # Defaults to chart appVersion
+  namespaceOverride: ""
+
+certManager:
+  # -- Enabling cert-manager support will disable the built in secret and
+  # switch to using cert-manager (installed separately) to automatically issue
+  # and renew the webhook certificate. This chart does not install
+  # cert-manager for you, See https://cert-manager.io/docs/
+  enabled: false
+
 installCRDs: false
