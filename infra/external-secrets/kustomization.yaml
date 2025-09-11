@@ -20,7 +20,7 @@ resources:
 
 configMapGenerator:
   - name: external-secrets-values
-    namespace: external-secrets
+    namespace: flux-system
     files:
       - values.yaml=values.yaml
 configurations:
