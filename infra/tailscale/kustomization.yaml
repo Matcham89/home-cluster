@@ -13,5 +13,3 @@ resources:
 
 # Deploy the operator
 - deployment-operator.yaml
-
-- external-secret.yaml
