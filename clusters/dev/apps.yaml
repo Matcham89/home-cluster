@@ -8,6 +8,7 @@ spec:
   interval: 1m0s
   dependsOn:
     - name: infra
+    - name: coredns
   sourceRef:
     kind: GitRepository
     name: flux-system
