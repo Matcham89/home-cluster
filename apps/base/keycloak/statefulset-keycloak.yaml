@@ -1,0 +1,104 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: keycloak
+  namespace: keycloak
+  labels:
+    app: keycloak
+spec:
+  serviceName: keycloak-discovery
+  replicas: 2                 # good for rolling updates of config
+  selector:
+    matchLabels:
+      app: keycloak
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      containers:
+        - name: keycloak
+          image: quay.io/keycloak/keycloak:26.3.3
+          args: ["start"]
+          env:
+            # Bootstrap creds: for dev you can inline; for prod, mount via Secret/ESO
+            - name: KC_BOOTSTRAP_ADMIN_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-bootstrap-admin
+                  key: username
+            - name: KC_BOOTSTRAP_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-bootstrap-admin
+                  key: password
+
+            - name: KC_PROXY_HEADERS
+              value: "xforwarded"
+            - name: KC_HTTP_ENABLED
+              value: "true"
+            - name: KC_HOSTNAME_STRICT
+              value: "false"
+            - name: KC_HEALTH_ENABLED
+              value: "true"
+            - name: KC_CACHE
+              value: "ispn"
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: JAVA_OPTS_APPEND
+              value: "-Djgroups.bind.address=$(POD_IP)"
+
+            # DB settings (env-specific values come from Secret/ESO in overlays)
+            - name: KC_DB
+              value: "postgres"
+            - name: KC_DB_URL_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-db
+                  key: host
+            - name: KC_DB_URL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-db
+                  key: name
+            - name: KC_DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-db
+                  key: user
+            - name: KC_DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: keycloak-db
+                  key: password
+
+          ports:
+            - name: http
+              containerPort: 8080
+          startupProbe:
+            httpGet:
+              path: /health/started
+              port: 9000
+            periodSeconds: 1
+            failureThreshold: 600
+          readinessProbe:
+            httpGet:
+              path: /health/ready
+              port: 9000
+            periodSeconds: 10
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /health/live
+              port: 9000
+            periodSeconds: 10
+            failureThreshold: 3
+          resources:
+            requests:
+              cpu: 500m
+              memory: 1700Mi
+            limits:
+              cpu: "2"
+              memory: 2000Mi
