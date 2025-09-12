@@ -8,12 +8,10 @@ metadata:
 spec:
   ingressClassName: nginx
   tls:
-    - hosts: 
-      - keycloak.localdev
-      - keycloak.keycloak.svc.cluster.local
+    - hosts: [keycloak.kubegit.com]
       secretName: keycloak-tls
   rules:
-    - host: keycloak.localdev
+    - host: keycloak.kubegit.com
       http:
         paths:
           - path: /
