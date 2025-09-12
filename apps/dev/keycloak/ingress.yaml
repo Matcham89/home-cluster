@@ -10,7 +10,6 @@ spec:
   tls:
     - hosts: 
       - keycloak.localdev
-      - keycloak.localdev/realms/master
       - keycloak.keycloak.svc.cluster.local
       secretName: keycloak-tls
   rules:
