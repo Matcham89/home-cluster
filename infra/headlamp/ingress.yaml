@@ -3,10 +3,8 @@ kind: Ingress
 metadata:
   name: headlamp
   namespace: kube-system
-  annotations:
-    cert-manager.io/cluster-issuer: ca-issuer
 spec:
-  ingressClassName: contour
+  ingressClassName: nginx
   rules:
   - host: headlamp.localdev
     http:
