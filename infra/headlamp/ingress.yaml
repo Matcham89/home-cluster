@@ -17,7 +17,7 @@ spec:
           service:
             name: headlamp
             port:
-              number: 80
+              number: 443
   tls:
   - hosts:
     - headlamp.localdev
