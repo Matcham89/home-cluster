@@ -11,7 +11,8 @@ spec:
     algorithm: RSA
     size: 2048
   dnsNames:
-    - keycloak.localdev
+      - keycloak.localdev
+      - keycloak.keycloak.svc.cluster.local
   issuerRef:
     kind: ClusterIssuer
     name: internal-ca-issuer
