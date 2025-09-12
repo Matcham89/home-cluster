@@ -12,5 +12,4 @@ spec:
     kind: GitRepository
     name: flux-system
   dependsOn:
-    - name: cert-manager-crs
     - name: external-secrets
