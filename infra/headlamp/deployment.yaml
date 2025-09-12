@@ -23,6 +23,7 @@ spec:
       name: headlamp-values
     - kind: Secret
       name: headlamp-helm-values-oidc
+      namespace: kube-system
       valuesKey: values.yaml
       targetPath: .
   install:
