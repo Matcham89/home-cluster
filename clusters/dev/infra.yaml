@@ -88,6 +88,23 @@ spec:
   wait: true
   dependsOn:
     - name: cert-manager
+
+---
+
+
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: external-secrets-crds
+  namespace: flux-system
+spec:
+  interval: 10m
+  path: ./deploy/crds
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: external-secrets
+
 ---
 
 apiVersion: kustomize.toolkit.fluxcd.io/v1
@@ -107,6 +124,27 @@ spec:
   wait: true
   dependsOn:
     - name: cert-manager
+    - name: external-secrets-crds
+
+
+---
+
+
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: external-secrets-crs
+  namespace: flux-system
+spec:
+  interval: 10m
+  path: ./infra/external-secrets/crs
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  dependsOn:
+    - name: external-secrets-crds
+    - name: cert-manager-secrets
 
 
 ---
