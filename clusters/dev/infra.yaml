@@ -40,6 +40,40 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
+  name: cert-manager-crs
+  namespace: flux-system
+spec:
+  interval: 10m
+  path: ./infra/cert-manager/crs
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  dependsOn:
+    - name: cert-manager
+---
+
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cert-manager-lets-encrypt
+  namespace: flux-system
+spec:
+  interval: 10m
+  path: ./infra/cert-manager/lets-encrpt
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  dependsOn:
+    - name: external-secrets
+
+---
+
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
   name: coredns
   namespace: flux-system
 spec:
