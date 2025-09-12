@@ -3,7 +3,9 @@ kind: Kustomization
 
 resources:
 - certificate.yaml
+- cluster-role-binding.yaml
 - deployment.yaml
+- externalsecret-oidc.yaml
 - ingress.yaml
 - repositories.yaml
 - service-account.yaml
