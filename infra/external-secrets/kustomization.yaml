@@ -8,15 +8,9 @@ resources:
 # Deploy the repositories
 - repositories.yaml
 
-# Deploy the CRDs
-- deployment-crds.yaml
-
 # Deploy the operator
 - deployment.yaml
 
-# Deploy default Custom Resources from 'crs' directory
-# INFO: This depends on the CRDs deployment. Will happen after it
-- deployment-crs.yaml
 
 configMapGenerator:
   - name: external-secrets-values
