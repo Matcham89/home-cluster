@@ -5,13 +5,8 @@ metadata:
   namespace: kube-system
 spec:
   secretName: headlamp-tls
-  duration: 2160h      # 90d
-  renewBefore: 360h    # 15d
-  privateKey:
-    algorithm: RSA
-    size: 2048
-  dnsNames:
-    - headlamp.localdev
   issuerRef:
+    name: letsencrypt-dns
     kind: ClusterIssuer
-    name: internal-ca-issuer
+  dnsNames:
+    - headlamp.kubegit.com

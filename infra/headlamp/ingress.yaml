@@ -6,7 +6,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: headlamp.localdev
+  - host: headlamp.kubegit.com
     http:
       paths:
       - path: /
@@ -17,6 +17,5 @@ spec:
             port:
               number: 80
   tls:
-  - hosts:
-    - headlamp.localdev
-    secretName: headlamp-tls
+    - hosts: [headlamp.kubegit.com]
+      secretName: headlamp-tls

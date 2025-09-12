@@ -5,14 +5,8 @@ metadata:
   namespace: keycloak
 spec:
   secretName: keycloak-tls
-  duration: 2160h      # 90d
-  renewBefore: 360h    # 15d
-  privateKey:
-    algorithm: RSA
-    size: 2048
-  dnsNames:
-      - keycloak.localdev
-      - keycloak.keycloak.svc.cluster.local
   issuerRef:
+    name: letsencrypt-dns
     kind: ClusterIssuer
-    name: internal-ca-issuer
+  dnsNames:
+    - keycloak.kubegit.com
