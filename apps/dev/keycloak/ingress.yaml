@@ -8,7 +8,10 @@ metadata:
 spec:
   ingressClassName: nginx
   tls:
-    - hosts: [keycloak.localdev, https://keycloak.localdev/realms/master, keycloak.keycloak.svc.cluster.local]
+    - hosts: 
+      - keycloak.localdev
+      - keycloak.localdev/realms/master
+      - keycloak.keycloak.svc.cluster.local
       secretName: keycloak-tls
   rules:
     - host: keycloak.localdev
