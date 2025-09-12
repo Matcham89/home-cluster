@@ -14,12 +14,6 @@ resources:
 # Deploy the operator
 - deployment-operator.yaml
 
-# Deploy default Custom Resources from 'crs' directory
-# INFO: This depends on the CRDs deployment. Will happen after it
-- deployment-crs.yaml
-
-- deployment-lets-encrypt.yaml
-
 configMapGenerator:
   - name: cert-manager-values
     namespace: flux-system
