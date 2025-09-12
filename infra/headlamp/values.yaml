@@ -1,5 +1,4 @@
 config:
-  pluginsDir: /build/plugins
 initContainers:
   - command:
       - /bin/sh
