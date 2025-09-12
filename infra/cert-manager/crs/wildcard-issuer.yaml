@@ -1,0 +1,13 @@
+# infra/certs/wildcard-kubegit-com.yaml
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wildcard-kubegit-com
+  namespace: cert-manager
+spec:
+  secretName: wildcard-kubegit-com-tls
+  issuerRef:
+    name: letsencrypt-dns
+    kind: ClusterIssuer
+  dnsNames:
+    - "*.kubegit.com"
