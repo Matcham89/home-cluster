@@ -1,8 +1,9 @@
 ---
+
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: infra
+  name: capacitor
   namespace: flux-system
 spec:
   interval: 1m0s
@@ -11,6 +12,163 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./infra
+  path: ./infra/capacitor
   prune: true
   wait: true
+  dependsOn:
+    - name: cert-manager
+
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: cert-manager
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  retryInterval: 1m
+  timeout: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./infra/cert-manager
+  prune: true
+  wait: true
+
+---
+
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: coredns
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  retryInterval: 1m
+  timeout: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./infra/coredns
+  prune: true
+  wait: true
+  dependsOn:
+    - name: cert-manager
+---
+
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: external-secrets
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  retryInterval: 1m
+  timeout: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./infra/external-secrets
+  prune: true
+  wait: true
+  dependsOn:
+    - name: cert-manager
+
+
+---
+
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: headlamp
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  retryInterval: 1m
+  timeout: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./infra/headlamp
+  prune: true
+  wait: true
+  dependsOn:
+    - name: cert-manager
+    - name: external-secrets
+
+---
+
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: ingress-controller
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  retryInterval: 1m
+  timeout: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./infra/ingress-controller
+  prune: true
+  wait: true
+  dependsOn:
+    - name: metal-lb
+    - name: cert-manager
+
+---
+
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: kagent
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  retryInterval: 1m
+  timeout: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./infra/kagent
+  prune: true
+  wait: true
+
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: metal-lb
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  retryInterval: 1m
+  timeout: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./infra/metal-lb
+  prune: true
+  wait: true
+
+
+---
+
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: tailscale
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  retryInterval: 1m
+  timeout: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./infra/tailscale
+  prune: true
+  wait: true
+  dependsOn:
+    - name: external-secrets
