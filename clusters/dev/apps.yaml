@@ -7,8 +7,9 @@ metadata:
 spec:
   interval: 1m0s
   dependsOn:
-    - name: infra
+    - name: external-secrets
     - name: coredns
+    - name: cert-manager
   sourceRef:
     kind: GitRepository
     name: flux-system
