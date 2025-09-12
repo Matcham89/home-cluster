@@ -18,6 +18,9 @@ spec:
         kind: HelmRepository
         name: headlamp
         namespace: flux-system
+  valuesFrom:
+    - kind: ConfigMap
+      name: headlamp-values
   install:
     createNamespace: true
 

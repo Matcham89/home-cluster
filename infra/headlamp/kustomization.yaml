@@ -7,3 +7,11 @@ resources:
 - ingress.yaml
 - repositories.yaml
 - service-account.yaml
+
+configMapGenerator:
+  - name: headlamp-values
+    namespace: flux-system
+    files:
+      - values.yaml=values.yaml
+configurations:
+  - kustomizeconfig.yaml
