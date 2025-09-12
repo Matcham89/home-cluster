@@ -9,7 +9,6 @@ resources:
   - ingress.yaml
   - certificate.yaml
   - service-account.yaml
-  - cluster-role-binding.yaml
 
 configMapGenerator:
   - name: headlamp-values
