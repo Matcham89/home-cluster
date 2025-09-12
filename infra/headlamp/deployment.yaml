@@ -25,6 +25,7 @@ spec:
       name: headlamp-helm-values-oidc
       valuesKey: values.yaml
       targetPath: .
+      optional: true
   install:
     createNamespace: true
 
