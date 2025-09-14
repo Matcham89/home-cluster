@@ -4,7 +4,7 @@ metadata:
   name: admin-user-clusterrolebinding
 subjects:
   - kind: User
-    name: chris # Please note that the name is case-sensitive
+    name: chrismatcham.dev@gmail.com # Please note that the name is case-sensitive
     apiGroup: rbac.authorization.k8s.io
 roleRef:
   kind: ClusterRole
