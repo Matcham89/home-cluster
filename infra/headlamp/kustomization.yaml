@@ -1,7 +1,6 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-namespace: kube-system
 
 resources:
   - cluster-role-binding.yaml
@@ -13,6 +12,7 @@ resources:
 
 configMapGenerator:
   - name: headlamp-values
+    namespace: kube-system
     files:
       - values.yaml=values.yaml
 
