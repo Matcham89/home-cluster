@@ -21,9 +21,9 @@ spec:
   valuesFrom:
     - kind: ConfigMap
       name: headlamp-values
+      valuesKey: values.yaml
     - kind: Secret
       name: headlamp-helm-values-oidc
-      valuesKey: values.yaml
       optional: true
   install:
     createNamespace: true
