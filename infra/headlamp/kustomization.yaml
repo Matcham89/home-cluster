@@ -12,7 +12,7 @@ resources:
 
 configMapGenerator:
   - name: headlamp-values
-    namespace: kube-system
+    namespace: flux-system
     files:
       - values.yaml=values.yaml
 
