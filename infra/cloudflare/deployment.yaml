@@ -1,49 +1,51 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cloudflared-deployment
+  name: cloudflared
   namespace: default
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      pod: cloudflared
+      app: cloudflared
   template:
     metadata:
       labels:
-        pod: cloudflared
+        app: cloudflared
     spec:
+      terminationGracePeriodSeconds: 30
+      # Optional sysctl you already had; safe to keep
       securityContext:
         sysctls:
-        # Allows ICMP traffic (ping, traceroute) to resources behind cloudflared.
           - name: net.ipv4.ping_group_range
             value: "65532 65532"
       containers:
-        - image: cloudflare/cloudflared:latest
-          name: cloudflared
+        - name: cloudflared
+          image: cloudflare/cloudflared:latest
           env:
-            # Defines an environment variable for the tunnel token.
             - name: TUNNEL_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: tunnel-token
                   key: token
-          command:
-            # Configures tunnel run parameters
-            - cloudflared
-            - tunnel
-            - --no-autoupdate
-            - --loglevel
-            - debug
-            - --metrics
-            - 0.0.0.0:2000
-            - run
+          command: ["/bin/sh","-c"]
+          args:
+            # Force token mode; optionally fall back to HTTP/2 if QUIC is flaky
+            - >
+              cloudflared tunnel
+              --no-autoupdate
+              --loglevel debug
+              --metrics 0.0.0.0:2000
+              run --token "$TUNNEL_TOKEN"
           livenessProbe:
             httpGet:
-              # Cloudflared has a /ready endpoint which returns 200 if and only if
-              # it has an active connection to Cloudflare's network.
               path: /ready
               port: 2000
-            failureThreshold: 1
             initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 2000
+            initialDelaySeconds: 5
             periodSeconds: 10
