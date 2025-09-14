@@ -1,46 +1,82 @@
+---
+# --- ConfigMap with cloudflared config.yaml ---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloudflared-config
+  namespace: default
+data:
+  # cloudflared will read this via --config /etc/cloudflared/config.yaml
+  config.yaml: |
+    # Logging/metrics (match your flags for clarity)
+    loglevel: debug
+    no-autoupdate: true
+    metrics: 0.0.0.0:2000
+    # Optional: if QUIC is flaky behind CGNAT, uncomment the next line
+    # protocol: http2
+
+    # Example public hostname routes. Replace with your actual services.
+    # You manage hostnames and routes in the Cloudflare dashboard too,
+    # but having them here is handy for local validation.
+    ingress:
+      - hostname: headlamp.kubegit.com
+        service: http://headlamp.kube-system.svc.cluster.local:80
+      - hostname: keycloak.kubegit.com
+        service: http://keycloak-http.keycloak.svc.cluster.local:8080
+      # Catch-all rule is required
+      - service: http_status:404
+
+---
+# --- Deployment (original template + config mount + token use) ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: cloudflared
+  name: cloudflared-deployment
   namespace: default
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
-      app: cloudflared
+      pod: cloudflared
   template:
     metadata:
       labels:
-        app: cloudflared
+        pod: cloudflared
     spec:
-      terminationGracePeriodSeconds: 30
-      # Optional sysctl you already had; safe to keep
       securityContext:
         sysctls:
+          # Allows ICMP traffic (ping, traceroute) to resources behind cloudflared.
           - name: net.ipv4.ping_group_range
             value: "65532 65532"
       containers:
-        - name: cloudflared
-          image: cloudflare/cloudflared:latest
+        - image: cloudflare/cloudflared:latest
+          name: cloudflared
           env:
             - name: TUNNEL_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: tunnel-token
                   key: token
+          # Use a shell so $TUNNEL_TOKEN expands; read config from the ConfigMap.
           command: ["/bin/sh","-c"]
           args:
-            # Force token mode; optionally fall back to HTTP/2 if QUIC is flaky
             - >
               cloudflared tunnel
               --no-autoupdate
               --loglevel debug
               --metrics 0.0.0.0:2000
+              --config /etc/cloudflared/config.yaml
               run --token "$TUNNEL_TOKEN"
+          volumeMounts:
+            - name: cloudflared-config
+              mountPath: /etc/cloudflared
+              readOnly: true
           livenessProbe:
             httpGet:
+              # Returns 200 only when connected to Cloudflare edge
               path: /ready
               port: 2000
+            failureThreshold: 1
             initialDelaySeconds: 10
             periodSeconds: 10
           readinessProbe:
@@ -49,3 +85,11 @@ spec:
               port: 2000
             initialDelaySeconds: 5
             periodSeconds: 10
+      volumes:
+        - name: cloudflared-config
+          configMap:
+            name: cloudflared-config
+            # Ensure the key becomes /etc/cloudflared/config.yaml
+            items:
+              - key: config.yaml
+                path: config.yaml
