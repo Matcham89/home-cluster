@@ -4,7 +4,7 @@ metadata:
   name: letsencrypt-dns
 spec:
   acme:
-    email: you@kubegit.com
+    email: chrismatcham.dev@gmail.com
     server: https://acme-v02.api.letsencrypt.org/directory
     privateKeySecretRef:
       name: le-dns-account-key
