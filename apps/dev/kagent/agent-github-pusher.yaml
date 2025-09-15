@@ -90,7 +90,7 @@ spec:
   headersFrom:
     - name: Authorization  # <-- This field is required!
       valueFrom:
-        name: github-pat
+        name: kagent-github
         key: GITHUB_PAT
         type: Secret
   protocol: STREAMABLE_HTTP
