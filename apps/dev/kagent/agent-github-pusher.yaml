@@ -88,10 +88,10 @@ metadata:
 spec:
   description: ""
   headersFrom:
-    - name: Authorization
-      secretKeyRef:
-        key: GITHUB_PAT
-        name: kagent-github
+  - valueFrom:
+      name: github-pat
+      key: GITHUB_PAT
+      type: Secret
   protocol: STREAMABLE_HTTP
   sseReadTimeout: 5m0s
   terminateOnClose: true
