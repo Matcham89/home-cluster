@@ -78,7 +78,12 @@ spec:
           toolNames:
             - get_video_info
         type: McpServer
-  description: An AI Agent that retrieves YouTube transcripts and rewrites them into beginner-friendly yet expert-accurate Markdown blog posts.
+        description: An AI Agent that retrieves YouTube transcripts and rewrites them into beginner-friendly yet expert-accurate Markdown blog posts.
+      - agent:
+          apiGroup: kagent.dev
+          kind: Agent
+          name: github-pusher
+        type: Agent
 
 ---
 
