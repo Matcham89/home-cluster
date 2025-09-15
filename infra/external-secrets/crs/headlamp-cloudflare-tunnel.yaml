@@ -11,4 +11,4 @@ spec:
   data:
   - secretKey: token
     remoteRef:
-      key: "50b78136-6222-4e4c-843b-b356013dfcfc"
+      key: "5fe32207-44c9-4b71-9d91-b35900da9ddc"
