@@ -1,44 +1,29 @@
-serviceAccount:
-  create: false
-  name: headlamp-admin
-
-# Persist plugin bundle
-persistence:
-  enabled: true
-  size: 1Gi
-  accessModes: ["ReadWriteOnce"]
-
-
-# Mount that PVC at /build/plugins inside the pod
-extraVolumes:
-  - name: headlamp-plugins
-    persistentVolumeClaim:
-      claimName: headlamp
-
-extraVolumeMounts:
-  - name: headlamp-plugins
-    mountPath: /build/plugins
-
-# Copy Flux plugin into the writable /build/plugins dir before app starts
-extraInitContainers:
-  - name: headlamp-plugins
+config:
+initContainers:
+  - command:
+      - /bin/sh
+      - -c
+      - mkdir -p /build/plugins && cp -r /plugins/* /build/plugins/ && chown -R 100:101 /build
     image: ghcr.io/headlamp-k8s/headlamp-plugin-flux:latest
     imagePullPolicy: Always
+    name: headlamp-plugins
     securityContext:
       runAsNonRoot: false
       privileged: false
       runAsUser: 0
       runAsGroup: 0
-    command:
-      - /bin/sh
-      - -lc
-      - >
-        mkdir -p /build/plugins &&
-        cp -r /plugins/* /build/plugins/ &&
-        chown -R 100:101 /build
     volumeMounts:
-      - name: headlamp-plugins
-        mountPath: /build/plugins
-
-env: []
-extraArgs: []
+      - mountPath: /build/plugins
+        name: headlamp-plugins
+persistentVolumeClaim:
+  accessModes:
+    - ReadWriteOnce
+  enabled: true
+  size: 1Gi
+volumeMounts:
+  - mountPath: /build/plugins
+    name: headlamp-plugins
+volumes:
+  - name: headlamp-plugins
+    persistentVolumeClaim:
+      claimName: headlamp # The name of the Helm release
