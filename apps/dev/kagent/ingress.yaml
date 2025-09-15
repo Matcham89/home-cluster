@@ -3,8 +3,6 @@ kind: Ingress
 metadata:
   name: kagent-ingress
   namespace: kagent
-  annotations:
-    cert-manager.io/cluster-issuer: ca-issuer
 spec:
   ingressClassName: nginx
   rules:
@@ -18,8 +16,3 @@ spec:
             name: kagent-ui
             port:
               number: 80
-              
-  tls:
-  - hosts:
-    - kagent.kubegit.com
-    secretName: kagent-tls
