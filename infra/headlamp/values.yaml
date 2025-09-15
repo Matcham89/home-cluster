@@ -5,3 +5,6 @@ config:
     secret:
       create: false
       name: oidc
+    externalSecret:
+      enabled: true
+      name: "headlamp-helm-values-oidc"
