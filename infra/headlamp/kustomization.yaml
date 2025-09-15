@@ -3,6 +3,7 @@ kind: Kustomization
 
 
 resources:
+  - namespace.yaml
   - certificate.yaml
   - cloudflare-tunnel.yaml
   - cluster-role-binding.yaml
