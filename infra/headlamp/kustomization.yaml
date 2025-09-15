@@ -6,11 +6,9 @@ resources:
   - namespace.yaml
   - certificate.yaml
   - cloudflare-tunnel.yaml
-  - cluster-role-binding.yaml
   - deployment.yaml
   - ingress.yaml
   - repositories.yaml
-  - service-account.yaml
 
 configMapGenerator:
   - name: headlamp-values
