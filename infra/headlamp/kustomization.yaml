@@ -3,16 +3,17 @@ kind: Kustomization
 
 
 resources:
+  - certificate.yaml
+  - cloudflare-tunnel.yaml
   - cluster-role-binding.yaml
-  - repositories.yaml
   - deployment.yaml
   - ingress.yaml
-  - certificate.yaml
+  - repositories.yaml
   - service-account.yaml
 
 configMapGenerator:
   - name: headlamp-values
-    namespace: flux-system
+    namespace: headlamp
     files:
       - values.yaml=values.yaml
 
