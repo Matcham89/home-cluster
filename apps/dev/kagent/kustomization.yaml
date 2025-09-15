@@ -4,6 +4,7 @@ resources:
   - ../../base/kagent/helmrelease.yaml
   - ../../base/kagent/ocirepository.yaml
 
+  - cloudflare-tunnel.yaml
   - certificate.yaml
   - external-secret.yaml
   - ingress.yaml
