@@ -9,7 +9,7 @@ resources:
   - external-secret.yaml
   - ingress.yaml
   - shadow-service.yaml
-  - yt-agent-mcp.yaml
+  - agent-youtube-scrapper
   - yt-kmcp-secret.yaml 
 configMapGenerator:
   - name: kagent-values
