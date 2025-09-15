@@ -71,12 +71,12 @@ spec:
             - clarification
             - questions
 
-    tools:
-      - mcpServer:
-          kind: RemoteMCPServer
-          name: github-mcp
-        type: McpServer
-  description: An AI Agent that retrieves YouTube transcripts and rewrites them into beginner-friendly yet expert-accurate Markdown blog posts.
+  #   tools:
+  #     - mcpServer:
+  #         kind: RemoteMCPServer
+  #         name: github-mcp
+  #       type: McpServer
+  # description: An AI Agent that retrieves YouTube transcripts and rewrites them into beginner-friendly yet expert-accurate Markdown blog posts.
 
 ---
 
