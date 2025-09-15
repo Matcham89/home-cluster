@@ -1,4 +1,11 @@
 config:
+  inCluster: true
+  baseURL: ""
+  oidc:
+    secret:
+      create: false
+      name: oidc
+
 initContainers:
   - command:
       - /bin/sh
