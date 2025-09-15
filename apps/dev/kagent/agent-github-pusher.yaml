@@ -43,6 +43,29 @@ spec:
       ## Clarifications
       - If Markdown does not contain a clear title, ask for one before proceeding.  
       - If GitHub tools error out (branch exists, missing permissions, etc.), explain the issue and propose the next action.  
+    
+    a2aConfig:
+      skills:
+        - id: publish-markdown
+          name: Publish Markdown
+          description: Takes Markdown content and publishes it to GitHub as a blog post.
+          examples:
+            - "Publish this blog post to GitHub."
+            - "Create a pull request with this Markdown file."
+          tags:
+            - github
+            - blog
+            - publish
+
+        - id: create-pr
+          name: Create Pull Request
+          description: Creates a new GitHub branch and PR for review.
+          examples:
+            - "Open a PR for this new file."
+            - "Submit a blog post for review."
+          tags:
+            - github
+            - pull-request
 
     tools:
       - mcpServer:
