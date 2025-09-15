@@ -7,9 +7,6 @@ metadata:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
 spec:
   ingressClassName: nginx
-  tls:
-    - hosts: [keycloak.kubegit.com]
-      secretName: keycloak-tls
   rules:
     - host: keycloak.kubegit.com
       http:
