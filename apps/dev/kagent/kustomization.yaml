@@ -9,7 +9,7 @@ resources:
   - external-secret.yaml
   - ingress.yaml
   - shadow-service.yaml
-  - agent-youtube-scrapper
+  - agent-youtube-scrapper.yaml
   - agent-github-pusher.yaml
   - yt-kmcp-secret.yaml 
 configMapGenerator:
