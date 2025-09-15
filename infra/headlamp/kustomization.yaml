@@ -14,7 +14,7 @@ resources:
 
 configMapGenerator:
   - name: headlamp-values
-    namespace: headlamp
+    namespace: flux-system
     files:
       - values.yaml=values.yaml
 
