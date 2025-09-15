@@ -2,7 +2,7 @@ apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: tunnel-token
-  namespace: headlamp
+  namespace: kube-system
 spec:
   refreshInterval: 1h
   secretStoreRef:
