@@ -10,6 +10,7 @@ resources:
   - ingress.yaml
   - shadow-service.yaml
   - agent-youtube-scrapper
+  - agent-github-pusher.yaml
   - yt-kmcp-secret.yaml 
 configMapGenerator:
   - name: kagent-values
