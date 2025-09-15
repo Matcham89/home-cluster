@@ -1,108 +1,21 @@
-providers:
-  default: openAI
-  openAI:
-    provider: OpenAI
-    model: "gpt-4.1-mini"
-    apiKeySecretRef: kagent-openai
-    apiKeySecretKey: OPENAI_API_KEY
-  ollama:
-    provider: Ollama
-    model: "llama3.2"
-    config:
-      host: host.docker.internal:11434
-  anthropic:
-    provider: Anthropic
-    model: "claude-3-sonnet-20240229"
-    apiKeySecretRef: kagent-anthropic
-    apiKeySecretKey: ANTHROPIC_API_KEY
-    apiKey: ""
-  azureOpenAI:
-    provider: AzureOpenAI
-    model: "gpt-4.1-mini"
-    apiKeySecretRef: kagent-azure-openai
-    apiKeySecretKey: AZUREOPENAI_API_KEY
-    apiKey: ""
-    config:
-      apiVersion: "2023-05-15"
-      azureAdToken: ""
-      azureDeployment: ""
-      azureEndpoint: ""
-
-# ==============================================================================
-# BUILT-IN TOOLS
-# ==============================================================================
-
-kagent-tools:
-  fullnameOverride: kagent-tools
-  enabled: true
-  replicaCount: 1
-  tools:
-    loglevel: "debug"
-
-# ==============================================================================
-# AGENTS
-# ==============================================================================
-
 agents:
   k8s-agent:
     enabled: true
   kgateway-agent:
     enabled: true
   istio-agent:
-    enabled: false
+    enabled: true
   promql-agent:
     enabled: false
   observability-agent:
-    enabled: false
+    enabled: true
   argo-rollouts-agent:
     enabled: false
   helm-agent:
-    enabled: false
+    enabled: true
   cilium-policy-agent:
     enabled: false
   cilium-manager-agent:
     enabled: false
   cilium-debug-agent:
     enabled: false
-
-# ==============================================================================
-# EXTERNAL MCP SERVERS
-# ==============================================================================
-
-querydoc:
-  enabled: false
-  replicas: 1
-  image:
-    registry: ghcr.io
-    repository: kagent-dev/doc2vec/mcp
-    tag: 1.1.12
-    pullPolicy: IfNotPresent
-  resources:
-    requests:
-      cpu: 100m
-      memory: 128Mi
-    limits:
-      cpu: 500m
-      memory: 512Mi
-  openai:
-    apiKey: ""
-
-# ==============================================================================
-# OBSERVABILITY
-# ==============================================================================
-
-otel:
-  tracing:
-    enabled: false
-    exporter:
-      otlp:
-        endpoint: http://host.docker.internal:4317
-        timeout: 15
-        insecure: true
-  logging:
-    enabled: false
-    exporter:
-      otlp:
-        endpoint: http://host.docker.internal:4317
-        timeout: 15
-        insecure: true
