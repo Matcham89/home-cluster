@@ -7,4 +7,4 @@ spec:
   interval: 1m0s
   url: oci://ghcr.io/kagent-dev/kagent/helm/kagent
   ref:
-    tag: 0.6.8
+    tag: 0.6.12
