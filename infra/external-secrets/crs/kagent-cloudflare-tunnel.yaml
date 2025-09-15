@@ -2,7 +2,7 @@ apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: tunnel-token
-  namespace: headlamp
+  namespace: kagent
 spec:
   refreshInterval: 1h
   secretStoreRef:
@@ -11,4 +11,4 @@ spec:
   data:
   - secretKey: token
     remoteRef:
-      key: "5fe32207-44c9-4b71-9d91-b35900da9ddc"
+      key: "ddb0ebec-0958-4c6b-ad34-b35900df27c6"
