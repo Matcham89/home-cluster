@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: cloudflared-deployment
-  namespace: headlamp
+  namespace: kube-system
 spec:
   replicas: 2
   selector:

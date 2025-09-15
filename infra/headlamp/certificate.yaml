@@ -2,7 +2,7 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: headlamp-tls
-  namespace: headlamp
+  namespace: kube-system
 spec:
   secretName: headlamp-tls
   issuerRef:
