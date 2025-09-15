@@ -11,7 +11,7 @@ spec:
     algorithm: RSA
     size: 2048
   dnsNames:
-    - kagent.localdev
+    - kagent.kubegit.com
   issuerRef:
     kind: ClusterIssuer
     name: internal-ca-issuer
