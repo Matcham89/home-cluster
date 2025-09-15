@@ -3,12 +3,6 @@ kind: Ingress
 metadata:
   name: headlamp
   namespace: headlamp
-  annotations:
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
-    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
-    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
-    nginx.ingress.kubernetes.io/enable-websocket: "true"
-    nginx.ingress.kubernetes.io/proxy-buffering: "off"
 spec:
   ingressClassName: nginx
   rules:
@@ -16,7 +10,7 @@ spec:
     http:
       paths:
       - path: /
-        pathType: ImplementationSpecific
+        pathType: Prefix
         backend:
           service:
             name: headlamp
