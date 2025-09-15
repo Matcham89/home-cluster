@@ -88,8 +88,7 @@ metadata:
 spec:
   description: ""
   headersFrom:
-  - name: Authorization
-    valueFrom:
+    - name: Authorization
       secretKeyRef:
         key: GITHUB_PAT
         name: kagent-github
