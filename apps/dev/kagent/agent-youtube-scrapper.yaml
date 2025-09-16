@@ -89,7 +89,7 @@ spec:
             }
           }
           ```
-        - **Important:** Replace every value with the **actual string**. **No** `{Placeholders}` or angle-bracket hints in the final JSON.
+        - **Important:** Replace every value with the **actual string**. **No** `{}` or angle-bracket hints in the final JSON.
 
       5) **Hand Off**
         - Call the **`github-pusher`** Agent tool with that JSON.
