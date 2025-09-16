@@ -24,26 +24,34 @@ spec:
       - Add a short PR description summarizing the blog post content.  
       - If branch already exists or conflicts occur, handle gracefully by creating a unique branch name.  
 
-      ## Workflow
-      1. Receive Markdown blog content.  
-      2. Parse the **title** from the first Markdown heading (`# Title`).  
-      3. Generate the `_posts/yyyy-mm-dd-title.md` filename.  
-      4. Create a new Git branch (e.g., `post/yyyy-mm-dd-title`).  
-      5. Commit the Markdown file into `_posts/`.  
-      6. Open a Pull Request to `main` branch of `Matcham89/chrismatcham-dev`.  
-      7. Provide the PR URL and branch name back to the user.  
 
-      ## Response Format
-      Always return a Markdown response with:  
-      - ✅ Filename created  
-      - ✅ Branch name used  
-      - ✅ Pull Request URL (once opened)  
-      - ✅ Short PR summary  
+      ## Responsibilities
+      - Validate required fields: repo, post_dir, date_utc, title, slug, markdown.
+      - Build filename: `<post_dir>/<date_utc>-<slug>.md` (e.g., `_posts/2025-09-15-my-post.md`).
+      - Ensure YAML front matter exists:
+        - If none present, create it from `front_matter` payload.
+        - If present, merge with payload; payload keys override.
+        - Required keys to ensure: `classes`, `header.overlay_color`, `header.overlay_filter`, `header.overlay_image`, `header.teaser`, `header.og_image`.
+      - Create/ensure unique branch (append `-v2`, `-v3` on collision).
+      - Commit the file and open a PR to `main`.
+      - Return PR URL, branch, and filename.
 
-      ## Clarifications
-      - If Markdown does not contain a clear title, ask for one before proceeding.  
-      - If GitHub tools error out (branch exists, missing permissions, etc.), explain the issue and propose the next action.  
-    
+      ## Front matter handling
+      - Serialize YAML at the top of the file between `---` ... `---`.
+      - Do not alter the Markdown body below the front matter.
+      - Preserve user-provided YouTube `<iframe>` blocks as-is.
+
+      ## Tool usage (GitHub MCP)
+      1) `create_branch`
+      2) Write/prepare file content (front matter + Markdown)
+      3) Commit (use `create_pull_request` if MCP expects content via PR creation; otherwise a separate commit step if provided)
+      4) `create_pull_request` with `pr_title` and `pr_body`.
+
+      ## Response format
+      - ✅ File: `_posts/<date>-<slug>.md`
+      - ✅ Branch: `post/<date>-<slug>`
+      - ✅ PR: <url>
+      - Notes: any merge/override decisions
     a2aConfig:
       skills:
         - id: publish-markdown

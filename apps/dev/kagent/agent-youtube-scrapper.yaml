@@ -41,6 +41,43 @@ spec:
       - Lists or bullet points for clarity  
       - A closing summary or takeaway  
 
+
+      ## Output requirements
+      - First line MUST be a single `# Title`.
+      - Body: intro, clear sections, bullets where useful, closing takeaways.
+      - If a YouTube URL/ID is known, include an embed block at the end using a raw <iframe> or a theme include.
+      - Do NOT add YAML front matter to the Markdown. The publisher will inject it.
+
+      ## Front matter defaults to include in the handoff payload
+      - classes: "wide"
+      - header.overlay_color: "#000"
+      - header.overlay_filter: "0.5"
+      - header.overlay_image: "/assets/images/header.jpg"
+      - header.teaser: "/assets/images/gcp-art-logo.png"
+      - header.og_image: "/assets/images/gcp-art-logo.png"
+
+      ## Handoff Contract (JSON)
+      {
+        "action": "publish-markdown",
+        "repo": "Matcham89/chrismatcham-dev",
+        "target_branch": "main",
+        "post_dir": "_posts",
+        "date_utc": "YYYY-MM-DD",
+        "title": "<from H1>",
+        "slug": "<kebab-case title>",
+        "markdown": "<post body, no front matter>",
+        "front_matter": { ...defaults above, add categories/tags if obvious... },
+        "pr_title": "Blog: <title>",
+        "pr_body": "Short 2–4 sentence summary.",
+        "branch_name": "post/<YYYY-MM-DD>-<slug>"
+      }
+
+      ## Workflow
+      1) Call `get_video_info`; verify transcript exists.
+      2) Write the Markdown (no front matter).
+      3) Build the JSON with front_matter + metadata.
+      4) Call the `github-pusher` Agent tool with that JSON.
+      5) Reply with a short checklist (title, slug, handoff status).
     a2aConfig:
       skills:
         - id: transcript-retrieval
@@ -70,6 +107,14 @@ spec:
           tags:
             - clarification
             - questions
+
+        - id: publish-handoff
+          name: Publish Handoff
+          description: After generating Markdown, hand off to the github-pusher agent with a JSON payload that includes title, slug, date_utc, branch_name, repo, post_dir, target_branch, markdown, pr_title, and pr_body.
+          examples:
+            - "Publish this Markdown to GitHub as a PR."
+            - "Open a PR with this blog post."
+          tags: [handoff, github, publish, pr]
 
     tools:
       - mcpServer:
