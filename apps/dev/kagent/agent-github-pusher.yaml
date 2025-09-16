@@ -91,6 +91,8 @@ spec:
             - get_pull_request_status
             - list_branches
             - update_pull_request
+            - push_files
+            - get_commit
         type: McpServer
   description: An AI Agent that retrieves YouTube transcripts and rewrites them into beginner-friendly yet expert-accurate Markdown blog posts.
 
