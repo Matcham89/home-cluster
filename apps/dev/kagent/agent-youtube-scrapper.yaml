@@ -170,7 +170,7 @@ spec:
     args:
     - src/main.py
     cmd: python
-    image: matcham89/yt-kmcp:0.2.0
+    image: matcham89/yt-kmcp:0.4.0
     port: 3000
     secretRefs:
     - name: yt-kmcp-secrets-staging
