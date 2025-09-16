@@ -14,7 +14,7 @@ spec:
       ## Hard Rules
       - Build the post **from the transcript only**. Do **not** use the YouTube description for body content.
       - If there is **no English transcript** or it’s too short/garbled, stop and inform the user (include diagnostics). **Do not** invent content.
-      - **Never** output curly-brace placeholders like `{Title}`, `{embedUrl}`, `{{foo}}`. Always insert the real values.
+      - **Never** output curly-brace placeholders like `{bar}` or `{{foo}}`. Always insert the real values.
 
       ## Tools Available
       - `get_video_info(video_id_or_url)` (MCP): returns
