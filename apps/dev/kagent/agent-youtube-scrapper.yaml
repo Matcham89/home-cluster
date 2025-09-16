@@ -59,7 +59,7 @@ spec:
         }
         Replace every value with real strings. Do not echo this JSON to the user.
       5) Handoff
-        - **Invoke tool type agent name EXACTLY:** `github-pusher` (or the precise name shown in the agent list). Pass the JSON above.
+        - **Invoke tool type agent name EXACTLY:** `github-pusher` also `kagent__NS__github_pusher` (or the precise name shown in the agent list). Pass the JSON above.
         - If the tool type agent returns an error, surface it once and stop (no more than one retry).
 
       ## Final reply to the user (after tool call completes)
