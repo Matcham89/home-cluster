@@ -5,7 +5,7 @@ resources:
   - helmrelease.yaml
 configMapGenerator:
   - name: kgateway-values
-    namespace: kgateway
+    namespace: kgateway-system
     files:
       - values.yaml=kgateway-values.yaml
 configurations:
