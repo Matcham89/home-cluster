@@ -11,4 +11,4 @@ spec:
     kind: OCIRepository
     name: kgateway
   install:
-    crds: CreateReplace
+    crds: False
