@@ -224,6 +224,25 @@ spec:
   dependsOn:
     - name: kgateway-crds
 ---
+
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: kgateway-crs
+  namespace: flux-system
+spec:
+  interval: 1m0s
+  retryInterval: 1m
+  timeout: 5m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  path: ./infra/kgateway/crs
+  prune: true
+  wait: true
+  dependsOn:
+    - name: kgateway-crds
+---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
