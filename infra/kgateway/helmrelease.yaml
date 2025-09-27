@@ -12,3 +12,6 @@ spec:
     name: kgateway
   install:
     crds: Skip
+  valuesFrom:
+    - kind: ConfigMap
+      name: kgateway-values

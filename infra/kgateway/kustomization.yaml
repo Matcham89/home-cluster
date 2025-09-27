@@ -3,3 +3,10 @@ kind: Kustomization
 resources:
   - ocirepository.yaml
   - helmrelease.yaml
+configMapGenerator:
+  - name: kgateway-values
+    namespace: kgateway
+    files:
+      - values.yaml=kgateway-values.yaml
+configurations:
+  - kustomizeconfig.yaml

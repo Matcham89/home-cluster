@@ -1,0 +1,5 @@
+agentgateway:
+  enabled: true
+gateway:
+  aiExtension:
+    enabled: true
