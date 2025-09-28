@@ -1,4 +1,4 @@
-agentgateway:
+agentGateway:
   enabled: true
 gateway:
   aiExtension:
