@@ -3,6 +3,7 @@ apiVersion: gateway.kgateway.dev/v1alpha1
 kind: Backend
 metadata:
   name: yt-mcp-backend
+  namespace: kgateway-system
 spec:
   type: MCP
   mcp:
