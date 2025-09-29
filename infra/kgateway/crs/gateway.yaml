@@ -1,11 +1,9 @@
 ---
-kind: Gateway
 apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
 metadata:
   name: agentgateway
   namespace: kgateway-system
-  labels:
-    app: agentgateway
 spec:
   gatewayClassName: agentgateway
   listeners:
@@ -14,4 +12,4 @@ spec:
     name: http
     allowedRoutes:
       namespaces:
-        from: All
+        from: kagent
