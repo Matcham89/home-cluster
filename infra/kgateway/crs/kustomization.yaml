@@ -4,4 +4,5 @@ resources:
   - admin-ui-service.yaml
   - gateway.yaml
   - a2a-deployment.yaml
+  - mcp-backend-ytmcp.yaml
 
