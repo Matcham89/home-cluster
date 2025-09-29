@@ -1,8 +1,10 @@
 ---
 apiVersion: apps/v1
 kind: Deployment
+
 metadata:
   name: a2a-agent
+  namespace: kgateway-system
   labels:
     app: a2a-agent
 spec:
