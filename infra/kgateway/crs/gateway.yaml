@@ -13,16 +13,33 @@ spec:
         namespaces:
           from: All
 ---
-apiVersion: gateway.kgateway.dev/v1alpha1
-kind: Route
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
 metadata:
   name: mcp-routes
   namespace: kgateway-system
 spec:
-  listenerRef:
-    name: http
+  parentRefs:
+    - name: agentgateway
+      namespace: kgateway-system
+      sectionName: http           # matches listener name
+  hostnames:
+    - youtube                     # clients must set :authority/Host to this
+    - kagent
   rules:
-    - match: { authority: youtube }
-      backendRef: { name: yt-mcp-backend }
-    - match: { authority: kagent }
-      backendRef: { name: kagent-mcp-backend }
+    - matches:
+        - headers:
+            - name: ":authority"
+              value: youtube
+      backendRefs:
+        - group: gateway.kgateway.dev
+          kind: Backend
+          name: yt-mcp-backend
+    - matches:
+        - headers:
+            - name: ":authority"
+              value: kagent
+      backendRefs:
+        - group: gateway.kgateway.dev
+          kind: Backend
+          name: kagent-mcp-backend
