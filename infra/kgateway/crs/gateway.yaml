@@ -11,7 +11,18 @@ spec:
       name: http
       allowedRoutes:
         namespaces:
-          from: Selector
-          selector:
-            matchLabels:
-              kubernetes.io/metadata.name: kagent
+          from: All
+---
+apiVersion: gateway.kgateway.dev/v1alpha1
+kind: Route
+metadata:
+  name: mcp-routes
+  namespace: kgateway-system
+spec:
+  listenerRef:
+    name: http
+  rules:
+    - match: { authority: youtube }
+      backendRef: { name: yt-mcp-backend }
+    - match: { authority: kagent }
+      backendRef: { name: kagent-mcp-backend }
