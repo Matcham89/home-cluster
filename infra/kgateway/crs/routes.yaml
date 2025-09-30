@@ -1,0 +1,25 @@
+apiVersion: gateway.kgateway.dev/v1alpha1
+kind: Route
+metadata:
+  name: mcp-routes
+  namespace: kgateway-system
+spec:
+  listenerRef:
+    name: http
+  rules:
+    - match:
+        authority: youtube
+      backendRef:
+        name: yt-mcp-backend
+    - match:
+        authority: kagent
+      backendRef:
+        name: kagent-mcp-backend
+    - match:
+        authority: yt-agent
+      backendRef:
+        name: yt-agent-backend
+    - match:
+        authority: github-pusher
+      backendRef:
+        name: github-pusher-backend

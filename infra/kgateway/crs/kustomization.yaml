@@ -2,7 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - admin-ui-service.yaml
+  - backends.yaml
+  - deployment.yaml
   - gateway.yaml
-  - a2a-deployment.yaml
-  - mcp-backend-ytmcp.yaml
-
+  - routes.yaml

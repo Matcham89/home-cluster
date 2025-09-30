@@ -1,0 +1,60 @@
+---
+apiVersion: gateway.kgateway.dev/v1alpha1
+kind: Backend
+metadata:
+  name: yt-mcp-backend
+  namespace: kgateway-system
+spec:
+  type: MCP
+  mcp:
+    targets:
+      - name: yt-kmcp
+        static:
+          host: yt-kmcp.kagent.svc.cluster.local
+          port: 3000
+          protocol: StreamableHTTP
+---
+apiVersion: gateway.kgateway.dev/v1alpha1
+kind: Backend
+metadata:
+  name: kagent-mcp-backend
+  namespace: kgateway-system
+spec:
+  type: MCP
+  mcp:
+    targets:
+      - name: yt-kmcp-kagent
+        static:
+          host: yt-kmcp-kagent.kagent.svc.cluster.local
+          port: 3000
+          protocol: StreamableHTTP
+---
+apiVersion: gateway.kgateway.dev/v1alpha1
+kind: Backend
+metadata:
+  name: yt-agent-backend
+  namespace: kgateway-system
+spec:
+  type: Agent
+  agent:
+    targets:
+      - name: yt-agent
+        static:
+          host: yt-agent.kagent.svc.cluster.local
+          port: 8080
+          protocol: StreamableHTTP
+---
+apiVersion: gateway.kgateway.dev/v1alpha1
+kind: Backend
+metadata:
+  name: github-pusher-backend
+  namespace: kgateway-system
+spec:
+  type: Agent
+  agent:
+    targets:
+      - name: github-pusher
+        static:
+          host: github-pusher.kagent.svc.cluster.local
+          port: 8080
+          protocol: StreamableHTTP

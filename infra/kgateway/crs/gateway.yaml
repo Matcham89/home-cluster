@@ -1,4 +1,3 @@
----
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
@@ -7,9 +6,12 @@ metadata:
 spec:
   gatewayClassName: agentgateway
   listeners:
-  - protocol: HTTP
-    port: 8080
-    name: http
-    allowedRoutes:
-      namespaces:
-        from: kagent
+    - protocol: HTTP
+      port: 8080
+      name: http
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              kubernetes.io/metadata.name: kagent
