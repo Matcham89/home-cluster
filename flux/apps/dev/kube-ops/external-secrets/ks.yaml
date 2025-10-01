@@ -10,9 +10,6 @@ spec:
       app.kubernetes.io/name: *app
   interval: 1h
   path: ./flux/apps/base/kube-ops/external-secrets/operator
-  postBuild:
-    substitute:
-      CLUSTER_NAME: dev
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -40,9 +37,6 @@ spec:
       current: status.conditions.exists(c, c.type == 'Ready' && c.status == 'True')
   interval: 1h
   path: ./flux/apps/base/kube-ops/external-secrets/store
-  postBuild:
-    substitute:
-      CLUSTER_NAME: dev
   sourceRef:
     kind: GitRepository
     name: flux-system
