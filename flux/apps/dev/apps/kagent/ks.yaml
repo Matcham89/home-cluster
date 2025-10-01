@@ -10,6 +10,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: external-secrets-operator
+      namespace: kube-ops
   interval: 1h
   path: ./flux/apps/base/apps/kagent/crds
   sourceRef:
