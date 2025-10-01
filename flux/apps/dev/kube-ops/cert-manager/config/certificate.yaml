@@ -19,15 +19,15 @@ spec:
   issuerRef:
     name: internal-ca-issuer
     kind: ClusterIssuer
----
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: wildcard-kubegit-com
-spec:
-  secretName: wildcard-kubegit-com-tls
-  issuerRef:
-    name: letsencrypt-dns
-    kind: ClusterIssuer
-  dnsNames:
-    - "*.kubegit.com"
+# ---
+# apiVersion: cert-manager.io/v1
+# kind: Certificate
+# metadata:
+#   name: wildcard-kubegit-com
+# spec:
+#   secretName: wildcard-kubegit-com-tls
+#   issuerRef:
+#     name: letsencrypt-dns
+#     kind: ClusterIssuer
+#   dnsNames:
+#     - "*.kubegit.com"
