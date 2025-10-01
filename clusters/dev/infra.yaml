@@ -1,110 +1,4 @@
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: cert-manager
-  namespace: flux-system
-spec:
-  interval: 1m0s
-  retryInterval: 1m
-  timeout: 5m
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-  path: ./infra/cert-manager
-  prune: true
-  wait: true
-
 ---
-
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: cert-manager-crs
-  namespace: flux-system
-spec:
-  interval: 10m
-  path: ./infra/cert-manager/crs
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-  dependsOn:
-    - name: cert-manager
-
----
-
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: cert-manager-secrets
-  namespace: flux-system
-spec:
-  interval: 10m
-  path: ./infra/cert-manager/secret-certs
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-  dependsOn:
-    - name: external-secrets
-
----
-
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: coredns
-  namespace: flux-system
-spec:
-  interval: 1m0s
-  retryInterval: 1m
-  timeout: 5m
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-  path: ./infra/coredns
-  prune: true
-  wait: true
-  dependsOn:
-    - name: cert-manager
-
----
-
-
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: external-secrets-crds-repo
-  namespace: flux-system
-spec:
-  interval: 10m
-  path: ./deploy/crds
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: external-secrets
-  dependsOn:
-    - name: external-secrets-crds
-
----
-
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: external-secrets-crds
-  namespace: flux-system
-spec:
-  interval: 1m0s
-  retryInterval: 1m
-  timeout: 5m
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-  path: ./infra/external-secrets/crds
-  prune: true
-  wait: true
----
-
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
@@ -117,39 +11,15 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./infra/external-secrets
+  path: ./apps/dev/kube-ops/external-secrets
   prune: true
   wait: true
-  dependsOn:
-    - name: cert-manager
-    - name: external-secrets-crds
 
----
-
-
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: external-secrets-crs
-  namespace: flux-system
-spec:
-  interval: 10m
-  path: ./infra/external-secrets/crs
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-  dependsOn:
-    - name: external-secrets-crds
-    - name: cert-manager-secrets
-
-
-# ---
 
 # apiVersion: kustomize.toolkit.fluxcd.io/v1
 # kind: Kustomization
 # metadata:
-#   name: headlamp
+#   name: cert-manager
 #   namespace: flux-system
 # spec:
 #   interval: 1m0s
@@ -158,142 +28,290 @@ spec:
 #   sourceRef:
 #     kind: GitRepository
 #     name: flux-system
-#   path: ./infra/headlamp
+#   path: ./infra/cert-manager
+#   prune: true
+#   wait: true
+
+# ---
+
+# apiVersion: kustomize.toolkit.fluxcd.io/v1
+# kind: Kustomization
+# metadata:
+#   name: cert-manager-crs
+#   namespace: flux-system
+# spec:
+#   interval: 10m
+#   path: ./infra/cert-manager/crs
+#   prune: true
+#   sourceRef:
+#     kind: GitRepository
+#     name: flux-system
+#   dependsOn:
+#     - name: cert-manager
+
+# ---
+
+# apiVersion: kustomize.toolkit.fluxcd.io/v1
+# kind: Kustomization
+# metadata:
+#   name: cert-manager-secrets
+#   namespace: flux-system
+# spec:
+#   interval: 10m
+#   path: ./infra/cert-manager/secret-certs
+#   prune: true
+#   sourceRef:
+#     kind: GitRepository
+#     name: flux-system
+#   dependsOn:
+#     - name: external-secrets
+
+# ---
+
+# apiVersion: kustomize.toolkit.fluxcd.io/v1
+# kind: Kustomization
+# metadata:
+#   name: coredns
+#   namespace: flux-system
+# spec:
+#   interval: 1m0s
+#   retryInterval: 1m
+#   timeout: 5m
+#   sourceRef:
+#     kind: GitRepository
+#     name: flux-system
+#   path: ./infra/coredns
 #   prune: true
 #   wait: true
 #   dependsOn:
 #     - name: cert-manager
+
+# ---
+
+
+# apiVersion: kustomize.toolkit.fluxcd.io/v1
+# kind: Kustomization
+# metadata:
+#   name: external-secrets-crds-repo
+#   namespace: flux-system
+# spec:
+#   interval: 10m
+#   path: ./deploy/crds
+#   prune: true
+#   sourceRef:
+#     kind: GitRepository
+#     name: external-secrets
+#   dependsOn:
+#     - name: external-secrets-crds
+
+# ---
+
+# apiVersion: kustomize.toolkit.fluxcd.io/v1
+# kind: Kustomization
+# metadata:
+#   name: external-secrets-crds
+#   namespace: flux-system
+# spec:
+#   interval: 1m0s
+#   retryInterval: 1m
+#   timeout: 5m
+#   sourceRef:
+#     kind: GitRepository
+#     name: flux-system
+#   path: ./infra/external-secrets/crds
+#   prune: true
+#   wait: true
+# ---
+
+# apiVersion: kustomize.toolkit.fluxcd.io/v1
+# kind: Kustomization
+# metadata:
+#   name: external-secrets
+#   namespace: flux-system
+# spec:
+#   interval: 1m0s
+#   retryInterval: 1m
+#   timeout: 5m
+#   sourceRef:
+#     kind: GitRepository
+#     name: flux-system
+#   path: ./infra/external-secrets
+#   prune: true
+#   wait: true
+#   dependsOn:
+#     - name: cert-manager
+#     - name: external-secrets-crds
+
+# ---
+
+
+# apiVersion: kustomize.toolkit.fluxcd.io/v1
+# kind: Kustomization
+# metadata:
+#   name: external-secrets-crs
+#   namespace: flux-system
+# spec:
+#   interval: 10m
+#   path: ./infra/external-secrets/crs
+#   prune: true
+#   sourceRef:
+#     kind: GitRepository
+#     name: flux-system
+#   dependsOn:
+#     - name: external-secrets-crds
+#     - name: cert-manager-secrets
+
+
+# # ---
+
+# # apiVersion: kustomize.toolkit.fluxcd.io/v1
+# # kind: Kustomization
+# # metadata:
+# #   name: headlamp
+# #   namespace: flux-system
+# # spec:
+# #   interval: 1m0s
+# #   retryInterval: 1m
+# #   timeout: 5m
+# #   sourceRef:
+# #     kind: GitRepository
+# #     name: flux-system
+# #   path: ./infra/headlamp
+# #   prune: true
+# #   wait: true
+# #   dependsOn:
+# #     - name: cert-manager
+# #     - name: external-secrets
+
+# ---
+
+# apiVersion: kustomize.toolkit.fluxcd.io/v1
+# kind: Kustomization
+# metadata:
+#   name: ingress-controller
+#   namespace: flux-system
+# spec:
+#   interval: 1m0s
+#   retryInterval: 1m
+#   timeout: 5m
+#   sourceRef:
+#     kind: GitRepository
+#     name: flux-system
+#   path: ./infra/ingress-controller
+#   prune: true
+#   wait: true
+#   dependsOn:
+#     - name: metal-lb
+#     - name: cert-manager
+
+# ---
+
+# apiVersion: kustomize.toolkit.fluxcd.io/v1
+# kind: Kustomization
+# metadata:
+#   name: kagent
+#   namespace: flux-system
+# spec:
+#   interval: 1m0s
+#   retryInterval: 1m
+#   timeout: 5m
+#   sourceRef:
+#     kind: GitRepository
+#     name: flux-system
+#   path: ./infra/kagent
+#   prune: true
+#   wait: true
+
+# # ---
+
+# # apiVersion: kustomize.toolkit.fluxcd.io/v1
+# # kind: Kustomization
+# # metadata:
+# #   name: kgateway-crds
+# #   namespace: flux-system
+# # spec:
+# #   interval: 1m0s
+# #   retryInterval: 1m
+# #   timeout: 5m
+# #   sourceRef:
+# #     kind: GitRepository
+# #     name: flux-system
+# #   path: ./infra/kgateway/crds
+# #   prune: true
+# #   wait: true
+
+# # ---
+
+# # apiVersion: kustomize.toolkit.fluxcd.io/v1
+# # kind: Kustomization
+# # metadata:
+# #   name: kgateway
+# #   namespace: flux-system
+# # spec:
+# #   interval: 1m0s
+# #   retryInterval: 1m
+# #   timeout: 5m
+# #   sourceRef:
+# #     kind: GitRepository
+# #     name: flux-system
+# #   path: ./infra/kgateway
+# #   prune: true
+# #   wait: true
+# #   dependsOn:
+# #     - name: kgateway-crds
+# # ---
+
+# # apiVersion: kustomize.toolkit.fluxcd.io/v1
+# # kind: Kustomization
+# # metadata:
+# #   name: kgateway-crs
+# #   namespace: flux-system
+# # spec:
+# #   interval: 1m0s
+# #   retryInterval: 1m
+# #   timeout: 5m
+# #   sourceRef:
+# #     kind: GitRepository
+# #     name: flux-system
+# #   path: ./infra/kgateway/crs
+# #   prune: true
+# #   wait: true
+# #   dependsOn:
+# #     - name: kgateway-crds
+# ---
+# apiVersion: kustomize.toolkit.fluxcd.io/v1
+# kind: Kustomization
+# metadata:
+#   name: metal-lb
+#   namespace: flux-system
+# spec:
+#   interval: 1m0s
+#   retryInterval: 1m
+#   timeout: 5m
+#   sourceRef:
+#     kind: GitRepository
+#     name: flux-system
+#   path: ./infra/metal-lb
+#   prune: true
+#   wait: true
+
+
+# ---
+
+# apiVersion: kustomize.toolkit.fluxcd.io/v1
+# kind: Kustomization
+# metadata:
+#   name: tailscale
+#   namespace: flux-system
+# spec:
+#   interval: 1m0s
+#   retryInterval: 1m
+#   timeout: 5m
+#   sourceRef:
+#     kind: GitRepository
+#     name: flux-system
+#   path: ./infra/tailscale
+#   prune: true
+#   wait: true
+#   dependsOn:
 #     - name: external-secrets
-
----
-
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: ingress-controller
-  namespace: flux-system
-spec:
-  interval: 1m0s
-  retryInterval: 1m
-  timeout: 5m
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-  path: ./infra/ingress-controller
-  prune: true
-  wait: true
-  dependsOn:
-    - name: metal-lb
-    - name: cert-manager
-
----
-
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: kagent
-  namespace: flux-system
-spec:
-  interval: 1m0s
-  retryInterval: 1m
-  timeout: 5m
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-  path: ./infra/kagent
-  prune: true
-  wait: true
-
-# ---
-
-# apiVersion: kustomize.toolkit.fluxcd.io/v1
-# kind: Kustomization
-# metadata:
-#   name: kgateway-crds
-#   namespace: flux-system
-# spec:
-#   interval: 1m0s
-#   retryInterval: 1m
-#   timeout: 5m
-#   sourceRef:
-#     kind: GitRepository
-#     name: flux-system
-#   path: ./infra/kgateway/crds
-#   prune: true
-#   wait: true
-
-# ---
-
-# apiVersion: kustomize.toolkit.fluxcd.io/v1
-# kind: Kustomization
-# metadata:
-#   name: kgateway
-#   namespace: flux-system
-# spec:
-#   interval: 1m0s
-#   retryInterval: 1m
-#   timeout: 5m
-#   sourceRef:
-#     kind: GitRepository
-#     name: flux-system
-#   path: ./infra/kgateway
-#   prune: true
-#   wait: true
-#   dependsOn:
-#     - name: kgateway-crds
-# ---
-
-# apiVersion: kustomize.toolkit.fluxcd.io/v1
-# kind: Kustomization
-# metadata:
-#   name: kgateway-crs
-#   namespace: flux-system
-# spec:
-#   interval: 1m0s
-#   retryInterval: 1m
-#   timeout: 5m
-#   sourceRef:
-#     kind: GitRepository
-#     name: flux-system
-#   path: ./infra/kgateway/crs
-#   prune: true
-#   wait: true
-#   dependsOn:
-#     - name: kgateway-crds
----
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: metal-lb
-  namespace: flux-system
-spec:
-  interval: 1m0s
-  retryInterval: 1m
-  timeout: 5m
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-  path: ./infra/metal-lb
-  prune: true
-  wait: true
-
-
----
-
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
-  name: tailscale
-  namespace: flux-system
-spec:
-  interval: 1m0s
-  retryInterval: 1m
-  timeout: 5m
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-  path: ./infra/tailscale
-  prune: true
-  wait: true
-  dependsOn:
-    - name: external-secrets

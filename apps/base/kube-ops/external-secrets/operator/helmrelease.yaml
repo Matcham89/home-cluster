@@ -1,0 +1,41 @@
+
+---
+# yaml-language-server: $schema=https://github.com/fluxcd-community/flux2-schemas/raw/main/ocirepository-source-v1beta2.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: external-secrets
+spec:
+  interval: 1h
+  ref:
+    tag: 0.18.2
+  url: oci://ghcr.io/external-secrets/charts/external-secrets
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: external-secrets
+spec:
+  releaseName: external-secrets-${CLUSTER_NAME}
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: external-secrets
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      strategy: rollback
+      retries: 3
+  values:
+    installCRDs: true
+    bitwarden-sdk-server:
+      enabled: true
+    certManager:
+      enabled: true
+      issuer:
+        name: internal-ca-issuer
+        kind: ClusterIssuer
