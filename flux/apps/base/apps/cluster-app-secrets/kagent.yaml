@@ -2,7 +2,6 @@ apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: kagent-openai
-  namespace: kagent
 spec:
   refreshInterval: 1h
   secretStoreRef:
@@ -17,7 +16,6 @@ apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: kagent-github
-  namespace: kagent
 spec:
   refreshInterval: 1h
   secretStoreRef:
