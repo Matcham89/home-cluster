@@ -3,7 +3,6 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: bitwarden-sdk-server-cert
-  namespace: external-secrets
 spec:
   secretName: bitwarden-tls-certs
   duration: 8760h
@@ -25,7 +24,6 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: wildcard-kubegit-com
-  namespace: cert-manager
 spec:
   secretName: wildcard-kubegit-com-tls
   issuerRef:
