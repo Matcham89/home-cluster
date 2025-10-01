@@ -8,4 +8,4 @@ components:
 
 resources:
   - ./cert-manager/ks.yaml
-  - ./external-secrets/ks.yaml
+  # - ./external-secrets/ks.yaml
