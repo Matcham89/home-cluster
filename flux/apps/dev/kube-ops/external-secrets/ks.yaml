@@ -13,7 +13,6 @@ spec:
   postBuild:
     substitute:
       CLUSTER_NAME: dev
-
   sourceRef:
     kind: GitRepository
     name: flux-system
