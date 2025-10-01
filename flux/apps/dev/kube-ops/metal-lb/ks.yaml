@@ -3,18 +3,13 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app ingress-nginx
+  name: &app metal-lb
 spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  healthCheckExprs:
-    - apiVersion: apps/v1
-      kind: Deployment
-      failed:  status.conditions.exists(c, c.type == 'Available' && c.status == 'False')
-      current: status.conditions.exists(c, c.type == 'Available' && c.status == 'True')
   interval: 1h
-  path: ./flux/apps/base/kube-ops/ingress-nginx
+  path: ./flux/apps/base/kube-ops/metal-lb
   sourceRef:
     kind: GitRepository
     name: flux-system

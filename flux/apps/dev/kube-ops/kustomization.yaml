@@ -8,4 +8,6 @@ components:
 
 resources:
   - ./cert-manager/ks.yaml
+  - ./ingress-controller/ks.yaml
   - ./external-secrets/ks.yaml
+  - ./metal-lb/ks.yaml
