@@ -7,4 +7,4 @@ components:
   - ../../../../infra/namespace
 
 resources:
-  - .ks.yaml
+  - ./ks.yaml
