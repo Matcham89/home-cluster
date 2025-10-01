@@ -17,7 +17,6 @@ kind: HelmRelease
 metadata:
   name: external-secrets
 spec:
-  releaseName: external-secrets-${CLUSTER_NAME}
   interval: 1h
   chartRef:
     kind: OCIRepository
