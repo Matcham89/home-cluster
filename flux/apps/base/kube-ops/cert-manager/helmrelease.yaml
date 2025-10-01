@@ -8,7 +8,7 @@ metadata:
 spec:
   interval: 1h
   ref:
-    tag: v1.18.2
+    tag: v1.16.2
   url: oci://quay.io/jetstack/charts/cert-manager
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
