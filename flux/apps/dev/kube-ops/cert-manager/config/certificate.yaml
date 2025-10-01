@@ -1,0 +1,35 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: bitwarden-sdk-server-cert
+  namespace: external-secrets
+spec:
+  secretName: bitwarden-tls-certs
+  duration: 8760h
+  renewBefore: 720h
+  privateKey:
+    algorithm: RSA
+    size: 2048
+  dnsNames:
+    - bitwarden-sdk-server.kube-ops.svc.cluster.local
+    - external-secrets-bitwarden-sdk-server.kube-ops.svc.cluster.local
+    - localhost
+  ipAddresses:
+    - 127.0.0.1
+  issuerRef:
+    name: internal-ca-issuer
+    kind: ClusterIssuer
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wildcard-kubegit-com
+  namespace: cert-manager
+spec:
+  secretName: wildcard-kubegit-com-tls
+  issuerRef:
+    name: letsencrypt-dns
+    kind: ClusterIssuer
+  dnsNames:
+    - "*.kubegit.com"
