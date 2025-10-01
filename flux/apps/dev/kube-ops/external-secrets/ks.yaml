@@ -8,7 +8,7 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-    dependsOn:
+  dependsOn:
     - name: cert-manager
   interval: 1h
   path: ./flux/apps/base/kube-ops/external-secrets/operator
