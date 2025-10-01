@@ -9,7 +9,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   interval: 1h
-  path: ./apps/base/kube-ops/external-secrets/operator
+  path: ./flux/apps/base/kube-ops/external-secrets/operator
   postBuild:
     substitute:
       CLUSTER_NAME: dev
@@ -40,7 +40,7 @@ spec:
       failed:  status.conditions.exists(c, c.type == 'Ready' && c.status == 'False')
       current: status.conditions.exists(c, c.type == 'Ready' && c.status == 'True')
   interval: 1h
-  path: ./apps/base/kube-ops/external-secrets/store
+  path: ./flux/apps/base/kube-ops/external-secrets/store
   postBuild:
     substitute:
       CLUSTER_NAME: dev
