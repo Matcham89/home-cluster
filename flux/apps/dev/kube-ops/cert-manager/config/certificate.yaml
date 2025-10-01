@@ -17,7 +17,7 @@ spec:
   ipAddresses:
     - 127.0.0.1
   issuerRef:
-    name: internal-ca-issuer
+    name: selfsigned
     kind: ClusterIssuer
 # ---
 # apiVersion: cert-manager.io/v1
