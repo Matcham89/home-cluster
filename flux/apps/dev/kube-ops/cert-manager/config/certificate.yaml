@@ -19,15 +19,3 @@ spec:
   issuerRef:
     name: selfsigned
     kind: ClusterIssuer
-# ---
-# apiVersion: cert-manager.io/v1
-# kind: Certificate
-# metadata:
-#   name: wildcard-kubegit-com
-# spec:
-#   secretName: wildcard-kubegit-com-tls
-#   issuerRef:
-#     name: letsencrypt-dns
-#     kind: ClusterIssuer
-#   dnsNames:
-#     - "*.kubegit.com"
