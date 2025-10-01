@@ -36,5 +36,5 @@ spec:
     certManager:
       enabled: true
       issuer:
-        name: internal-ca-issuer
+        name: selfsigned
         kind: ClusterIssuer
