@@ -14,4 +14,4 @@ spec:
           service:
             name: agentgateway-admin
             port:
-              number: 80
+              number: 15000
