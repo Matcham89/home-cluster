@@ -7,5 +7,5 @@ components:
   - ../../../infra/namespace
 
 resources:
-  - ./cluster-app-secrets/ks.yaml
+  - ./cluster-secrets/ks.yaml
   - ./kagent/ks.yaml
