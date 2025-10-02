@@ -11,3 +11,4 @@ resources:
   - ./ingress-nginx-controller/ks.yaml
   - ./external-secrets/ks.yaml
   - ./metal-lb/ks.yaml
+  - ./tailscale/ks.yaml
