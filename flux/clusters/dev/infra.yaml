@@ -3,11 +3,11 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: cluster-apps
+  name: cluster-infra
   namespace: flux-system
 spec:
   interval: 10m
-  path: ./flux/apps/dev
+  path: ./flux/apps/dev/infra
   prune: true
   sourceRef:
     kind: GitRepository
