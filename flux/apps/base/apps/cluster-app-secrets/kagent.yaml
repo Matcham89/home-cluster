@@ -25,3 +25,40 @@ spec:
   - secretKey: GITHUB_PAT
     remoteRef:
       key: "833987cf-91fa-40ee-8bcb-b35a0141e443"
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: yt-kmcp-secrets-staging
+  namespace: kagent
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: bitwarden-secretsmanager
+    kind: ClusterSecretStore
+  data:
+  - secretKey: YOUTUBE_API_KEY
+    remoteRef:
+      key: "4de0d812-0ae9-4ce6-b201-b33d004d696a"
+---
+
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: yt-kmcp-env-vars
+  namespace: kagent
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: bitwarden-secretsmanager
+    kind: ClusterSecretStore
+  target:
+    name: yt-kmcp-env-vars
+    creationPolicy: Owner
+    template:
+      type: Opaque
+  dataFrom:
+    - extract:
+        key: "aec36693-96d2-4c97-a7fc-b33d00f3930a"
+
+
