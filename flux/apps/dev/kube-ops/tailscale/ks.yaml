@@ -8,6 +8,11 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  healthCheckExprs:
+    - apiVersion: apps/v1
+      kind: Deployment
+      failed:  status.conditions.exists(c, c.type == 'Available' && c.status == 'False')
+      current: status.conditions.exists(c, c.type == 'Available' && c.status == 'True')
   interval: 1h
   path: ./flux/apps/base/kube-ops/tailscale
   sourceRef:
