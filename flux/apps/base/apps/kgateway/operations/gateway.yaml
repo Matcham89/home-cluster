@@ -24,9 +24,11 @@ metadata:
 spec:
   type: LoadBalancer
   selector:
-    app: agentgateway-gateway
+    app.kubernetes.io/name: agentgateway
+    app.kubernetes.io/instance: agentgateway
+    gateway.networking.k8s.io/gateway-name: agentgateway
   ports:
     - name: http
-      port: 8080       # Gateway listener port
+      port: 8080
       targetPort: 8080
-  loadBalancerIP: 192.168.1.53  # pick one from MetalLB pool
+  loadBalancerIP: 192.168.1.53
