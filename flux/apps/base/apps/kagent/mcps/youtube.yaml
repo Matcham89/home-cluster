@@ -18,7 +18,7 @@ metadata:
     kmcp.dev/framework: fastmcp-python
     kmcp.dev/version: 0.1.0
   name: yt-kmcp
-  namespace: kagent
+  
 spec:
   deployment:
     args:
@@ -39,7 +39,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: yt-kmcp-kagent
-  namespace: kagent
+  
   annotations:
     kagent.dev/mcp-service-path: /mcp
     kagent.dev/mcp-service-port: "3000"
