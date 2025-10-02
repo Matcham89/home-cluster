@@ -14,3 +14,17 @@ spec:
     - secretKey: api-token
       remoteRef:
         key: 50b78136-6222-4e4c-843b-b356013dfcfc
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: tunnel-token
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: bitwarden-secretsmanager
+    kind: ClusterSecretStore
+  data:
+  - secretKey: token
+    remoteRef:
+      key: "ddb0ebec-0958-4c6b-ad34-b35900df27c6"
