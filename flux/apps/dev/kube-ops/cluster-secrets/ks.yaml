@@ -3,7 +3,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app cluster-app-secrets
+  name: &app cluster-secrets
 spec:
   commonMetadata:
     labels:
