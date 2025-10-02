@@ -30,7 +30,6 @@ apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: yt-kmcp-secrets-staging
-  namespace: kagent
 spec:
   refreshInterval: 1h
   secretStoreRef:
@@ -46,7 +45,6 @@ apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: yt-kmcp-env-vars
-  namespace: kagent
 spec:
   refreshInterval: 1h
   secretStoreRef:
