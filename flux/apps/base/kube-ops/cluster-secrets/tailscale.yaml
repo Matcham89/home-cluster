@@ -2,7 +2,6 @@ apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: operator-oauth
-  namespace: tailscale
 spec:
   refreshInterval: 1h
   secretStoreRef:
