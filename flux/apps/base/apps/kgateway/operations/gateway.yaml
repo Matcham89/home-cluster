@@ -1,15 +1,32 @@
-kind: Gateway
+---
 apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
 metadata:
   name: agentgateway
+  namespace: apps
   labels:
     app: agentgateway
 spec:
   gatewayClassName: agentgateway
   listeners:
-  - protocol: HTTP
-    port: 8080
-    name: http
-    allowedRoutes:
-      namespaces:
-        from: All
+    - name: http
+      protocol: HTTP
+      port: 8080
+      allowedRoutes:
+        namespaces:
+          from: All
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: agentgateway-gateway-lb
+  namespace: apps
+spec:
+  type: LoadBalancer
+  selector:
+    app: agentgateway-gateway
+  ports:
+    - name: http
+      port: 8080       # Gateway listener port
+      targetPort: 8080
+  loadBalancerIP: 192.168.1.53  # pick one from MetalLB pool
