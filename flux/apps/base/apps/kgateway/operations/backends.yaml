@@ -8,8 +8,8 @@ spec:
   type: MCP
   mcp:
     targets:
-      - name: yt-kmcp
+      - name: yt-kmcp-kagent
         selector:
           service:
             matchLabels:
-              app: yt-kmcp
+              kagent.dev/mcp-service: "true"
