@@ -25,23 +25,23 @@ spec:
     agentgateway:
       enabled: true
       # add podLabels so the agentgateway pod template contains the labels the Service expects
-      podLabels:
-        app.kubernetes.io/name: agentgateway
-        app.kubernetes.io/instance: agentgateway
-        gateway.networking.k8s.io/gateway-name: agentgateway
+    #   podLabels:
+    #     app.kubernetes.io/name: agentgateway
+    #     app.kubernetes.io/instance: agentgateway
+    #     gateway.networking.k8s.io/gateway-name: agentgateway
 
-    gateway:
-      aiExtension:
-        enabled: true
+    # gateway:
+    #   aiExtension:
+    #     enabled: true
 
     controller:
       image:
         pullPolicy: Always
-      podLabels:
-        app.kubernetes.io/name: agentgateway
-        app.kubernetes.io/instance: agentgateway
-        gateway.networking.k8s.io/gateway-name: agentgateway
-    podLabels:
-      app.kubernetes.io/name: agentgateway
-      app.kubernetes.io/instance: agentgateway
-      gateway.networking.k8s.io/gateway-name: agentgateway
+    #   podLabels:
+    #     app.kubernetes.io/name: agentgateway
+    #     app.kubernetes.io/instance: agentgateway
+    #     gateway.networking.k8s.io/gateway-name: agentgateway
+    # podLabels:
+    #   app.kubernetes.io/name: agentgateway
+    #   app.kubernetes.io/instance: agentgateway
+    #   gateway.networking.k8s.io/gateway-name: agentgateway
