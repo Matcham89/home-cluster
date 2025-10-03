@@ -25,6 +25,10 @@ spec:
   parentRefs:
     - name: agentgateway
   rules:
-    - backendRefs:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /a2a
+      backendRefs:
         - name: a2a-agent
           port: 9090
