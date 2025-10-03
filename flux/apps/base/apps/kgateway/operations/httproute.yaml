@@ -7,9 +7,12 @@ metadata:
 spec:
   parentRefs:
     - name: agentgateway
-      namespace: apps
   rules:
-    - backendRefs:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /mcp
+      backendRefs:
         - name: yt-mcp-backend
           group: gateway.kgateway.dev
           kind: Backend
