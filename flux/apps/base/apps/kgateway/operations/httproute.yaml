@@ -11,11 +11,7 @@ spec:
   hostnames:
     - "yt-mcp.agentgateway.local"
   rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /
-      backendRefs:
+    - backendRefs:
         - name: yt-mcp-backend
           group: gateway.kgateway.dev
           kind: Backend
