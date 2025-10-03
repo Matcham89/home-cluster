@@ -14,7 +14,7 @@ spec:
           service:
             matchLabels:
               kagent.dev/mcp-service: "true"
-            namespace: kagent
+            namespace: apps
 ---
 # Backend for GitHub MCP Server (remote)
 apiVersion: gateway.kgateway.dev/v1alpha1
@@ -26,7 +26,7 @@ spec:
   type: MCP
   mcp:
     targets:
-      - name: github-mcp-remote
+      - name: github-mcp
         static:
           host: api.githubcopilot.com
           port: 443
