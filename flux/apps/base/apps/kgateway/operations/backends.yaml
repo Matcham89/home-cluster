@@ -3,13 +3,13 @@
 apiVersion: gateway.kgateway.dev/v1alpha1
 kind: Backend
 metadata:
-  name: yt-kmcp-kagent
+  name: yt-kmcp
 spec:
   type: MCP
   mcp:
     targets:
-    - name: yt-kmcp-kagent
-      static:
-        host: yt-kmcp-kagent .apps.svc.cluster.local
-        port: 80
-        protocol: STDIO
+      - name: yt-kmcp
+        selector:
+          service:
+            matchLabels:
+              app: yt-kmcp

@@ -17,6 +17,7 @@ metadata:
     app.kubernetes.io/part-of: kmcp
     kmcp.dev/framework: fastmcp-python
     kmcp.dev/version: 0.1.0
+    app: yt-kmcp
   name: yt-kmcp
   
 spec:
@@ -45,6 +46,7 @@ metadata:
     kagent.dev/mcp-service-port: "3000"
   labels:
     kagent.dev/mcp-service: "true"
+    app: yt-kmcp
 spec:
   ports:
   - appProtocol: mcp
