@@ -15,21 +15,8 @@ spec:
       namespaces:
         from: All
 ---
-apiVersion: v1
-kind: Service
-metadata:
-  name: agentgateway-admin
-  labels:
-    app.kubernetes.io/name: agentgateway
-spec:
-  type: LoadBalancer
-  selector:
-    app.kubernetes.io/instance: agentgateway
-    app.kubernetes.io/name: agentgateway
-    gateway.networking.k8s.io/gateway-name: agentgateway
-  ports:
-    - name: admin-15000
-      port: 15000
-      targetPort: 15000
-      protocol: TCP
-  loadBalancerIP: 192.168.1.54
+# Admin Console Access:
+# The admin console listens on localhost:15000 only (by design for security)
+# To access the admin UI, use port-forward:
+#   kubectl port-forward -n apps pod/<agentgateway-pod-name> 15000:15000
+# Then open: http://localhost:15000/ui

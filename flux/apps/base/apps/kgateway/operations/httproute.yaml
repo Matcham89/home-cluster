@@ -1,0 +1,44 @@
+---
+# HTTPRoute for YouTube MCP Server
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: yt-mcp-route
+  namespace: apps
+spec:
+  parentRefs:
+    - name: agentgateway
+      namespace: apps
+  hostnames:
+    - "yt-mcp.agentgateway.local"
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: yt-mcp-backend
+          group: gateway.kgateway.dev
+          kind: Backend
+---
+# HTTPRoute for GitHub MCP Server
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: github-mcp-route
+  namespace: apps
+spec:
+  parentRefs:
+    - name: agentgateway
+      namespace: apps
+  hostnames:
+    - "github-mcp.agentgateway.local"
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /mcp
+      backendRefs:
+        - name: github-mcp-backend
+          group: gateway.kgateway.dev
+          kind: Backend
