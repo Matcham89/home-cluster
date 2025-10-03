@@ -8,8 +8,6 @@ spec:
   parentRefs:
     - name: agentgateway
       namespace: apps
-  hostnames:
-    - "yt-mcp.agentgateway.local"
   rules:
     - backendRefs:
         - name: yt-mcp-backend
