@@ -26,6 +26,11 @@ spec:
     remediation:
       retries: 3
   values:
+    anthropic:
+      provider: Anthropic
+      model: "claude-3-5-haiku-20241022"
+      apiKeySecretRef: kagent-anthropic
+      apiKeySecretKey: ANTHROPIC_API_KEY
     agents:
       k8s-agent:
         enabled: true
