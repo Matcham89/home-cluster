@@ -1,3 +1,4 @@
+---
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
@@ -11,6 +12,20 @@ spec:
   - secretKey: OPENAI_API_KEY
     remoteRef:
       key: "00800203-a8aa-445a-ac2f-b2d4013a4986"
+---
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: kagent-claude
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: bitwarden-secretsmanager
+    kind: ClusterSecretStore
+  data:
+  - secretKey: ANTHROPIC_API_KEY
+    remoteRef:
+      key: "121df7d5-2478-4ca0-aa03-b36d00e1e52d"
 ---
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
