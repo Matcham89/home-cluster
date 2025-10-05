@@ -4,7 +4,7 @@ metadata:
   name: yt-agent
 spec:
   declarative:
-    modelConfig: anthropic
+    modelConfig: default-model-config
     systemMessage: |
       # YT-Scribe (YouTube → Blog)
 

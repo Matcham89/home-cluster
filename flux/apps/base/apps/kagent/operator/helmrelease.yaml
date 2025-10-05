@@ -26,6 +26,7 @@ spec:
     remediation:
       retries: 3
   values:
+    default: anthropic
     anthropic:
       provider: Anthropic
       model: "claude-3-5-haiku-20241022"
