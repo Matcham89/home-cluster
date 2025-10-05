@@ -4,7 +4,7 @@ metadata:
   name: yt-agent
 spec:
   declarative:
-    modelConfig: default-model-config
+    modelConfig: claude-model-config
     systemMessage: |
       # YT-Scribe (YouTube → Blog)
 
