@@ -4,7 +4,7 @@ metadata:
   name: yt-agent
 spec:
   declarative:
-    modelConfig: claude-3-5-haiku-20241022
+    modelConfig: claude-model-config
     systemMessage: |
       # YT-Scribe (YouTube → Blog)
 
