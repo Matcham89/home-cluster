@@ -10,8 +10,6 @@ items:
       kustomize.toolkit.fluxcd.io/name: kubeflow-pipeline
       kustomize.toolkit.fluxcd.io/namespace: kubeflow
     name: kubeflow
-    resourceVersion: "2114662"
-    uid: 3e98f6eb-e5b4-4b43-a542-fce5d0557848
   spec:
     finalizers:
     - kubernetes
@@ -31,8 +29,6 @@ items:
       kustomize.toolkit.fluxcd.io/name: kubeflow-pipeline
       kustomize.toolkit.fluxcd.io/namespace: kubeflow
     name: applications.app.k8s.io
-    resourceVersion: "2110223"
-    uid: 07e1a73a-1c55-4135-88ee-8da291348be8
   spec:
     conversion:
       strategy: None
@@ -730,8 +726,6 @@ items:
       kustomize.toolkit.fluxcd.io/name: kubeflow-pipeline
       kustomize.toolkit.fluxcd.io/namespace: kubeflow
     name: scheduledworkflows.kubeflow.org
-    resourceVersion: "2110229"
-    uid: a84b331c-4031-48a8-a983-b7c481a18442
   spec:
     conversion:
       strategy: None
@@ -800,8 +794,6 @@ items:
       kustomize.toolkit.fluxcd.io/name: kubeflow-pipeline
       kustomize.toolkit.fluxcd.io/namespace: kubeflow
     name: viewers.kubeflow.org
-    resourceVersion: "2110236"
-    uid: c1170e93-6647-403c-a978-ba9d89d67393
   spec:
     conversion:
       strategy: None
@@ -865,8 +857,6 @@ items:
       kustomize.toolkit.fluxcd.io/name: kubeflow-pipeline
       kustomize.toolkit.fluxcd.io/namespace: kubeflow
     name: workflowartifactgctasks.argoproj.io
-    resourceVersion: "2110242"
-    uid: 711007e3-9e25-4a9a-a37e-a443d2f61ee5
   spec:
     conversion:
       strategy: None
@@ -2033,8 +2023,6 @@ items:
       kustomize.toolkit.fluxcd.io/name: kubeflow-pipeline
       kustomize.toolkit.fluxcd.io/namespace: kubeflow
     name: workfloweventbindings.argoproj.io
-    resourceVersion: "2110248"
-    uid: abf382d3-a332-4ca4-8482-cb07ba895408
   spec:
     conversion:
       strategy: None
@@ -2745,8 +2733,6 @@ items:
       kustomize.toolkit.fluxcd.io/name: kubeflow-pipeline
       kustomize.toolkit.fluxcd.io/namespace: kubeflow
     name: workflows.argoproj.io
-    resourceVersion: "2110249"
-    uid: 889b86f6-9a8a-4fbb-8c40-198d0d64a3a6
   spec:
     conversion:
       strategy: None
@@ -2831,8 +2817,6 @@ items:
       kustomize.toolkit.fluxcd.io/name: kubeflow-pipeline
       kustomize.toolkit.fluxcd.io/namespace: kubeflow
     name: workflowtaskresults.argoproj.io
-    resourceVersion: "2110255"
-    uid: 3a715acd-42cb-437d-b1ee-4c7fb7f87278
   spec:
     conversion:
       strategy: None
@@ -3522,8 +3506,6 @@ items:
       kustomize.toolkit.fluxcd.io/name: kubeflow-pipeline
       kustomize.toolkit.fluxcd.io/namespace: kubeflow
     name: workflowtasksets.argoproj.io
-    resourceVersion: "2110257"
-    uid: d2747d84-a611-416b-ad7c-9b92b096636d
   spec:
     conversion:
       strategy: None
@@ -3594,8 +3576,6 @@ items:
       kustomize.toolkit.fluxcd.io/name: kubeflow-pipeline
       kustomize.toolkit.fluxcd.io/namespace: kubeflow
     name: workflowtemplates.argoproj.io
-    resourceVersion: "2110258"
-    uid: b865b3e2-dd01-4676-aefc-cf8b4a6f518d
   spec:
     conversion:
       strategy: None
@@ -3660,8 +3640,6 @@ items:
       kustomize.toolkit.fluxcd.io/namespace: kubeflow
     name: kubeflow-pipelines-cache-deployer-sa
     namespace: kubeflow
-    resourceVersion: "2110263"
-    uid: 83bf66e0-7be2-460e-85c5-872bdf9c6261
 - apiVersion: rbac.authorization.k8s.io/v1
   kind: ClusterRole
   metadata:
@@ -3672,8 +3650,6 @@ items:
       kustomize.toolkit.fluxcd.io/name: kubeflow-pipeline
       kustomize.toolkit.fluxcd.io/namespace: kubeflow
     name: kubeflow-pipelines-cache-deployer-clusterrole
-    resourceVersion: "2110254"
-    uid: bdf0d887-8fca-4530-b380-a0100a094a6a
   rules:
   - apiGroups:
     - certificates.k8s.io
@@ -3712,8 +3688,6 @@ items:
       kustomize.toolkit.fluxcd.io/name: kubeflow-pipeline
       kustomize.toolkit.fluxcd.io/namespace: kubeflow
     name: kubeflow-pipelines-cache-deployer-clusterrolebinding
-    resourceVersion: "2110262"
-    uid: edb445bb-f1c5-4df1-9c48-82297e150e33
   roleRef:
     apiGroup: rbac.authorization.k8s.io
     kind: ClusterRole
