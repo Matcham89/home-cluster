@@ -594,8 +594,6 @@ items:
       kustomize.toolkit.fluxcd.io/name: kubeflow-pipeline
       kustomize.toolkit.fluxcd.io/namespace: kubeflow
     name: clusterworkflowtemplates.argoproj.io
-    resourceVersion: "2110220"
-    uid: fdc96860-38a3-4556-86a1-c88212fd5591
   spec:
     conversion:
       strategy: None
@@ -662,8 +660,6 @@ items:
       kustomize.toolkit.fluxcd.io/name: kubeflow-pipeline
       kustomize.toolkit.fluxcd.io/namespace: kubeflow
     name: cronworkflows.argoproj.io
-    resourceVersion: "2110227"
-    uid: 19c26d54-d7cc-442c-9573-c98f4e7b85f6
   spec:
     conversion:
       strategy: None
