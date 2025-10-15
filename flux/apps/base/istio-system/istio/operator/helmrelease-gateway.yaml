@@ -12,8 +12,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: istio
-  dependsOn:
-    - name: istiod
   install:
     remediation:
       retries: 3
