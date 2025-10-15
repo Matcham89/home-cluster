@@ -11,7 +11,7 @@ spec:
   dependsOn:
     - name: istio-operator
   interval: 1h
-  path: ./flux/apps/base/kube-ops/istio/gateway
+  path: ./flux/apps/base/istio-system/istio/gateway
   sourceRef:
     kind: GitRepository
     name: flux-system
