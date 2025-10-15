@@ -10,7 +10,7 @@ spec:
   dependsOn:
     - name: metal-lb
   interval: 1h
-  path: ./flux/apps/base/kube-ops/istio/operator
+  path: ./flux/apps/base/istio-system/istio/operator
   sourceRef:
     kind: GitRepository
     name: flux-system
