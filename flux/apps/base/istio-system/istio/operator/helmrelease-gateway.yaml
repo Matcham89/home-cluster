@@ -13,31 +13,32 @@ spec:
         kind: HelmRepository
         name: istio
   install:
+    disableSchemaValidation: true
     remediation:
       retries: 3
   upgrade:
+    disableSchemaValidation: true
     remediation:
       retries: 3
   values:
-    _internal_defaults_do_not_set:
-      service:
-        type: LoadBalancer
-        loadBalancerIP: 192.168.1.52
-        ports:
-          - name: http
-            port: 80
-            protocol: TCP
-            targetPort: 80
-          - name: https
-            port: 443
-            protocol: TCP
-            targetPort: 443
-      resources:
-        requests:
-          cpu: 100m
-          memory: 128Mi
-        limits:
-          cpu: 2000m
-          memory: 1024Mi
-      autoscaling:
-        enabled: false
+    service:
+      type: LoadBalancer
+      loadBalancerIP: 192.168.1.52
+      ports:
+        - name: http2
+          port: 80
+          protocol: TCP
+          targetPort: 80
+        - name: https
+          port: 443
+          protocol: TCP
+          targetPort: 443
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 2000m
+        memory: 1024Mi
+    autoscaling:
+      enabled: false
