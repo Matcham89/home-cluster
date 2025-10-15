@@ -37,3 +37,5 @@ spec:
       # Logging level
       logging:
         level: "default:info"
+      # Override default namespace
+      istioNamespace: kube-ops
