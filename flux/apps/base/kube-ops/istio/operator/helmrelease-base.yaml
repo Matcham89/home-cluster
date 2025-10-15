@@ -21,3 +21,5 @@ spec:
   values:
     # Enable Gateway API CRDs
     defaultRevision: default
+    global:
+      istioNamespace: kube-ops

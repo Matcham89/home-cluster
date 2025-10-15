@@ -43,3 +43,5 @@ spec:
         memory: 1024Mi
     autoscaling:
       enabled: false
+    global:
+      istioNamespace: kube-ops
