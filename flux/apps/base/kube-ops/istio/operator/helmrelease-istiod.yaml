@@ -3,7 +3,6 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: istiod
-  namespace: kube-ops
 spec:
   interval: 1h
   chart:
@@ -13,8 +12,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: istio
-        namespace: kube-ops
-  targetNamespace: istio-system
   dependsOn:
     - name: istio-base
   install:

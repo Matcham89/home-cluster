@@ -13,8 +13,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: istio
-        namespace: kube-ops
-  targetNamespace: istio-system
   dependsOn:
     - name: istiod
   install:
