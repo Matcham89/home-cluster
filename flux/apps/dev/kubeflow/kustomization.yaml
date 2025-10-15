@@ -7,4 +7,4 @@ components:
   - ../../../infra/namespace
 
 resources:
-  - ./pipelines/first_pipeline.yaml
+  - ./pipelines/ks.yaml
