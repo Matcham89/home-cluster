@@ -31,3 +31,7 @@ spec:
       retries: 3
   values:
     installCRDs: true
+    persistence:
+      enabled: true
+      storageClass: "local-path"
+      size: 8Gi
