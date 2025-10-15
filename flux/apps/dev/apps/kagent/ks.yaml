@@ -33,6 +33,8 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: kagent-crds
+    - name: istio-gateway
+      namespace: flux-system
   interval: 1h
   path: ./flux/apps/base/apps/kagent
   sourceRef:
