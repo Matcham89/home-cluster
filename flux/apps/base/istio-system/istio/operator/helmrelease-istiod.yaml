@@ -12,8 +12,6 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: istio
-  dependsOn:
-    - name: istio-base
   install:
     remediation:
       retries: 3
@@ -21,19 +19,3 @@ spec:
     remediation:
       retries: 3
   values:
-    # Enable Gateway API support
-    pilot:
-      env:
-        PILOT_ENABLE_GATEWAY_API: "true"
-        PILOT_ENABLE_GATEWAY_API_STATUS: "true"
-        PILOT_ENABLE_GATEWAY_API_DEPLOYMENT_CONTROLLER: "true"
-    meshConfig:
-      # Enable access logs for debugging
-      accessLogFile: /dev/stdout
-      # Default mTLS mode
-      defaultConfig:
-        holdApplicationUntilProxyStarts: true
-    global:
-      # Logging level
-      logging:
-        level: "default:info"
