@@ -15,7 +15,7 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: kube-ops
+  targetNamespace: istio-system
   prune: true
   wait: true
   timeout: 5m
