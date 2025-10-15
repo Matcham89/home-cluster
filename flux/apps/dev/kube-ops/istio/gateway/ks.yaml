@@ -1,0 +1,16 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: istio-gateway
+  namespace: flux-system
+spec:
+  interval: 1h
+  path: ./flux/apps/base/kube-ops/istio/gateway
+  targetNamespace: istio-system
+  prune: true
+  wait: true
+  timeout: 5m
+  dependsOn:
+    - name: istio-operator
+      namespace: flux-system

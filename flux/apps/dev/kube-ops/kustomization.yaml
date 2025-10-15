@@ -9,7 +9,8 @@ components:
 resources:
   - ./cert-manager/ks.yaml
   - ./cluster-secrets/ks.yaml
-  - ./ingress-nginx-controller/ks.yaml
   - ./external-secrets/ks.yaml
+  - ./istio/operator/ks.yaml
+  - ./istio/gateway/ks.yaml
   - ./metal-lb/ks.yaml
   - ./tailscale/ks.yaml
