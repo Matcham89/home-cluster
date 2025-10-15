@@ -10,4 +10,3 @@ resources:
   - ./cluster-secrets/ks.yaml
   - ./kagent/ks.yaml
   - ./kgateway/ks.yaml
-  - ./minio/ks.yaml
