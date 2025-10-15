@@ -9,6 +9,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: metal-lb
+      namespace: kube-ops
   interval: 1h
   path: ./flux/apps/base/istio-system/istio/operator
   sourceRef:
