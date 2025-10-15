@@ -16,7 +16,7 @@ spec:
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
-  name: kagent-claude
+  name: kagent-anthropic
 spec:
   refreshInterval: 1h
   secretStoreRef:
