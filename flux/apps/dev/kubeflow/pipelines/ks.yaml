@@ -10,7 +10,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   interval: 1h
-  path: ./flux/apps/apps/kubeflow/pipelines
+  path: ./flux/apps/dev/kubeflow/pipelines
   sourceRef:
     kind: GitRepository
     name: flux-system
