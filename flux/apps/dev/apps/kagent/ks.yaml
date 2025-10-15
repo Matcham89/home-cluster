@@ -34,7 +34,7 @@ spec:
   dependsOn:
     - name: kagent-crds
     - name: istio-gateway
-      namespace: kube-ops
+      namespace: istio-system
   interval: 1h
   path: ./flux/apps/base/apps/kagent
   sourceRef:
