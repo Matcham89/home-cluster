@@ -22,6 +22,7 @@ spec:
   install:
     crds: Skip
   values:
+    revisionHistoryLimit: 2
     agentgateway:
       enabled: true
       # add podLabels so the agentgateway pod template contains the labels the Service expects
