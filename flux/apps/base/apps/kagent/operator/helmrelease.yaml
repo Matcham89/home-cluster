@@ -27,6 +27,7 @@ spec:
       retries: 3
   values:
     default: anthropic
+    revisionHistoryLimit: 2
     agents:
       k8s-agent:
         enabled: true
