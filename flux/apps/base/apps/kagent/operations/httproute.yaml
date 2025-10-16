@@ -17,4 +17,4 @@ spec:
             value: /
       backendRefs:
         - name: kagent-ui
-          port: 80
+          port: 8080
