@@ -20,7 +20,7 @@ spec:
   interval: 10m
   chart:
     spec:
-      chart: grafana/loki
+      chart: loki
       version: 6.43.0
       sourceRef:
         kind: HelmRepository
