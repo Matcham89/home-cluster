@@ -7,4 +7,5 @@ components:
   - ../../../infra/namespace
 
 resources:
+  - ./cluster-secrets/ks.yaml
   - ./kube-prometheus-stack/ks.yaml
