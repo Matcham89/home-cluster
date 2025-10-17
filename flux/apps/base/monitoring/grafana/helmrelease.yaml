@@ -113,3 +113,8 @@ spec:
         limits:
           cpu: 100m
           memory: 128Mi
+
+    # Expose gateway via LoadBalancer for external Grafana access
+    gateway:
+      service:
+        type: LoadBalancer
