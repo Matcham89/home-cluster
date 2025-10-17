@@ -58,6 +58,7 @@ spec:
       persistence:
         enabled: true
         size: 5Gi
+        storageClassName: local-path
       resources:
         requests:
           cpu: 100m
@@ -101,6 +102,15 @@ spec:
     # prometheus-node-exporter configuration
     prometheus-node-exporter:
       enabled: true
+      # Limit DNS nameservers to avoid warning when running with hostNetwork
+      dnsConfig:
+        nameservers:
+          - 1.1.1.1
+          - 8.8.8.8
+          - 192.168.1.254
+        options:
+          - name: ndots
+            value: "2"
       resources:
         requests:
           cpu: 50m
