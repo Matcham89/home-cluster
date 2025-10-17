@@ -88,3 +88,28 @@ spec:
       replicas: 0
     bloomGateway:
       replicas: 0
+
+    # Resource overrides for mini PC - reduce cache memory requirements
+    chunksCache:
+      enabled: true
+      replicas: 1
+      allocatedMemory: 512  # Reduce from default ~10GB to 512MB
+      resources:
+        requests:
+          cpu: 50m      # Reduce from 500m to 50m
+          memory: 128Mi # Reduce from 9830Mi to 128Mi
+        limits:
+          cpu: 200m
+          memory: 512Mi
+
+    resultsCache:
+      enabled: true
+      replicas: 1
+      allocatedMemory: 128  # Small results cache
+      resources:
+        requests:
+          cpu: 25m
+          memory: 64Mi
+        limits:
+          cpu: 100m
+          memory: 128Mi
