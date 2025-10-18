@@ -1,0 +1,69 @@
+---
+# ServiceMonitor for cert-manager controller
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: cert-manager
+  labels:
+    app: cert-manager
+    app.kubernetes.io/name: cert-manager
+    app.kubernetes.io/instance: cert-manager
+    app.kubernetes.io/component: controller
+spec:
+  selector:
+    matchLabels:
+      app: cert-manager
+      app.kubernetes.io/component: controller
+  namespaceSelector:
+    matchNames:
+      - kube-ops
+  endpoints:
+    - port: tcp-prometheus-servicemonitor
+      interval: 30s
+      path: /metrics
+---
+# ServiceMonitor for cert-manager cainjector
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: cert-manager-cainjector
+  labels:
+    app: cainjector
+    app.kubernetes.io/name: cainjector
+    app.kubernetes.io/instance: cert-manager
+    app.kubernetes.io/component: cainjector
+spec:
+  selector:
+    matchLabels:
+      app: cainjector
+      app.kubernetes.io/component: cainjector
+  namespaceSelector:
+    matchNames:
+      - kube-ops
+  endpoints:
+    - port: tcp-prometheus-servicemonitor
+      interval: 30s
+      path: /metrics
+---
+# ServiceMonitor for cert-manager webhook
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: cert-manager-webhook
+  labels:
+    app: webhook
+    app.kubernetes.io/name: webhook
+    app.kubernetes.io/instance: cert-manager
+    app.kubernetes.io/component: webhook
+spec:
+  selector:
+    matchLabels:
+      app: webhook
+      app.kubernetes.io/component: webhook
+  namespaceSelector:
+    matchNames:
+      - kube-ops
+  endpoints:
+    - port: tcp-prometheus-servicemonitor
+      interval: 30s
+      path: /metrics

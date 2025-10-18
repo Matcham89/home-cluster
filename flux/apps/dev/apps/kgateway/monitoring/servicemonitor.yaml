@@ -1,0 +1,42 @@
+---
+# ServiceMonitor for KGateway controller
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: kgateway-controller
+  labels:
+    app.kubernetes.io/name: kgateway
+    app.kubernetes.io/instance: kgateway
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kgateway
+      app.kubernetes.io/instance: kgateway
+  namespaceSelector:
+    matchNames:
+      - apps
+  endpoints:
+    - port: metrics
+      interval: 30s
+      path: /metrics
+---
+# ServiceMonitor for AgentGateway
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: agentgateway
+  labels:
+    app.kubernetes.io/name: agentgateway
+    app.kubernetes.io/instance: agentgateway
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: agentgateway
+      app.kubernetes.io/instance: agentgateway
+  namespaceSelector:
+    matchNames:
+      - apps
+  endpoints:
+    - port: metrics
+      interval: 30s
+      path: /metrics

@@ -1,0 +1,88 @@
+---
+# ServiceMonitor for Flux source-controller
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: source-controller
+  labels:
+    app.kubernetes.io/component: source-controller
+    app.kubernetes.io/instance: flux-system
+    app.kubernetes.io/part-of: flux
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: source-controller
+      app.kubernetes.io/instance: flux-system
+  namespaceSelector:
+    matchNames:
+      - flux-system
+  endpoints:
+    - port: http
+      interval: 30s
+      path: /metrics
+---
+# ServiceMonitor for Flux helm-controller
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: helm-controller
+  labels:
+    app.kubernetes.io/component: helm-controller
+    app.kubernetes.io/instance: flux-system
+    app.kubernetes.io/part-of: flux
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: helm-controller
+      app.kubernetes.io/instance: flux-system
+  namespaceSelector:
+    matchNames:
+      - flux-system
+  endpoints:
+    - port: http-prom
+      interval: 30s
+      path: /metrics
+---
+# ServiceMonitor for Flux kustomize-controller
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: kustomize-controller
+  labels:
+    app.kubernetes.io/component: kustomize-controller
+    app.kubernetes.io/instance: flux-system
+    app.kubernetes.io/part-of: flux
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: kustomize-controller
+      app.kubernetes.io/instance: flux-system
+  namespaceSelector:
+    matchNames:
+      - flux-system
+  endpoints:
+    - port: http-prom
+      interval: 30s
+      path: /metrics
+---
+# ServiceMonitor for Flux notification-controller
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: notification-controller
+  labels:
+    app.kubernetes.io/component: notification-controller
+    app.kubernetes.io/instance: flux-system
+    app.kubernetes.io/part-of: flux
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: notification-controller
+      app.kubernetes.io/instance: flux-system
+  namespaceSelector:
+    matchNames:
+      - flux-system
+  endpoints:
+    - port: http-prom
+      interval: 30s
+      path: /metrics

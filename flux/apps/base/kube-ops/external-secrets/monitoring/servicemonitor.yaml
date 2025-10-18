@@ -1,0 +1,23 @@
+---
+# ServiceMonitor for external-secrets webhook
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: external-secrets-webhook
+  labels:
+    app.kubernetes.io/name: external-secrets-webhook
+    app.kubernetes.io/instance: external-secrets
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: external-secrets-webhook
+      app.kubernetes.io/instance: external-secrets
+  namespaceSelector:
+    matchNames:
+      - kube-ops
+  endpoints:
+    - port: metrics
+      interval: 30s
+      path: /metrics
+# Note: Only external-secrets-webhook has a service exposed
+# The main operator and cert-controller do not expose services
