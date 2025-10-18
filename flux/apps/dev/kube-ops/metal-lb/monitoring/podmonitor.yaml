@@ -1,0 +1,42 @@
+---
+# PodMonitor for MetalLB controller (no service exposed, monitor pods directly)
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: metallb-controller
+  labels:
+    app.kubernetes.io/name: metallb
+    app.kubernetes.io/component: controller
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: metallb
+      app.kubernetes.io/component: controller
+  namespaceSelector:
+    matchNames:
+      - kube-ops
+  podMetricsEndpoints:
+    - port: monitoring
+      interval: 30s
+      path: /metrics
+---
+# PodMonitor for MetalLB speaker (no service exposed, monitor pods directly)
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: metallb-speaker
+  labels:
+    app.kubernetes.io/name: metallb
+    app.kubernetes.io/component: speaker
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: metallb
+      app.kubernetes.io/component: speaker
+  namespaceSelector:
+    matchNames:
+      - kube-ops
+  podMetricsEndpoints:
+    - port: monitoring
+      interval: 30s
+      path: /metrics

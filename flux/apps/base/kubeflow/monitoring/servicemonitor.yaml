@@ -1,0 +1,61 @@
+---
+# ServiceMonitor for Kubeflow ML Pipeline
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: ml-pipeline
+  labels:
+    application-crd-id: kubeflow-pipelines
+spec:
+  selector:
+    matchLabels:
+      application-crd-id: kubeflow-pipelines
+  namespaceSelector:
+    matchNames:
+      - kubeflow
+  endpoints:
+    - port: http
+      interval: 30s
+      path: /metrics
+---
+# ServiceMonitor for Kubeflow Cache Server
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: cache-server
+  labels:
+    application-crd-id: kubeflow-pipelines
+    app: cache-server
+spec:
+  selector:
+    matchLabels:
+      application-crd-id: kubeflow-pipelines
+      app: cache-server
+  namespaceSelector:
+    matchNames:
+      - kubeflow
+  endpoints:
+    - port: webhook-api
+      interval: 30s
+      path: /metrics
+---
+# ServiceMonitor for Kubeflow Metadata GRPC Server
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: metadata-grpc
+  labels:
+    application-crd-id: kubeflow-pipelines
+    app: metadata
+spec:
+  selector:
+    matchLabels:
+      app: metadata
+      application-crd-id: kubeflow-pipelines
+  namespaceSelector:
+    matchNames:
+      - kubeflow
+  endpoints:
+    - port: grpc-api
+      interval: 30s
+      path: /metrics

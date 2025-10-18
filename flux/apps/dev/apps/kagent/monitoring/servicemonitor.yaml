@@ -1,0 +1,22 @@
+---
+# ServiceMonitor for KAgent controller
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: kagent-controller
+  labels:
+    app.kubernetes.io/name: kagent
+    app.kubernetes.io/component: controller
+    app.kubernetes.io/instance: kagent
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: controller
+      app.kubernetes.io/instance: kagent
+  namespaceSelector:
+    matchNames:
+      - apps
+  endpoints:
+    - port: http
+      interval: 30s
+      path: /metrics
