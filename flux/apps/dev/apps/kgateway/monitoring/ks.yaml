@@ -10,7 +10,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: kgateway
-    - name: prometheus-kube-prometheus-operator
+    - name: kube-prometheus-stack
       namespace: flux-system
   interval: 1h
   path: ./flux/apps/dev/apps/kgateway/monitoring
