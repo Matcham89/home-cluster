@@ -11,7 +11,7 @@ spec:
   dependsOn:
     - name: metal-lb
     - name: kube-prometheus-stack
-      namespace: flux-system
+      namespace: monitoring
   interval: 1h
   path: ./flux/apps/dev/kube-ops/metal-lb/monitoring
   sourceRef:

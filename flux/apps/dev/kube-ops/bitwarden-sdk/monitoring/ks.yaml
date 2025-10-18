@@ -11,7 +11,7 @@ spec:
   dependsOn:
     - name: external-secrets-operator
     - name: kube-prometheus-stack
-      namespace: flux-system
+      namespace: monitoring
   interval: 1h
   path: ./flux/apps/base/kube-ops/bitwarden-sdk/monitoring
   sourceRef:

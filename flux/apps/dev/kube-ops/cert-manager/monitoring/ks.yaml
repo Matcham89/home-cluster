@@ -11,7 +11,7 @@ spec:
   dependsOn:
     - name: cert-manager-config
     - name: kube-prometheus-stack
-      namespace: flux-system
+      namespace: monitoring
   interval: 1h
   path: ./flux/apps/dev/kube-ops/cert-manager/monitoring
   sourceRef:
