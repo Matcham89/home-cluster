@@ -9,7 +9,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: prometheus-kube-prometheus-operator
+    - name: kube-prometheus-stack
       namespace: flux-system
   interval: 1h
   path: ./flux/apps/base/kubeflow/monitoring
