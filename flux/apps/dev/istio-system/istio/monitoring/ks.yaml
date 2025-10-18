@@ -11,7 +11,7 @@ spec:
   dependsOn:
     - name: istio
     - name: kube-prometheus-stack
-      namespace: flux-system
+      namespace: monitoring
   interval: 1h
   path: ./flux/apps/dev/istio-system/istio/monitoring
   sourceRef:
