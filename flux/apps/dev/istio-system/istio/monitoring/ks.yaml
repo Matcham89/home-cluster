@@ -10,6 +10,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: istio
+      namespace: istio-system
     - name: kube-prometheus-stack
       namespace: monitoring
   interval: 1h
