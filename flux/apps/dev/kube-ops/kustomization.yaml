@@ -7,8 +7,12 @@ components:
   - ../../../infra/namespace
 
 resources:
+  - ./bitwarden-sdk/monitoring/ks.yaml
   - ./cert-manager/ks.yaml
+  - ./cert-manager/monitoring/ks.yaml
   - ./cluster-secrets/ks.yaml
   - ./external-secrets/ks.yaml
+  - ./external-secrets/monitoring/ks.yaml
   - ./metal-lb/ks.yaml
+  - ./metal-lb/monitoring/ks.yaml
   - ./tailscale/ks.yaml
