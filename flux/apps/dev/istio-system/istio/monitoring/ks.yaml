@@ -9,7 +9,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: istio
+    - name: istio-operator
       namespace: istio-system
     - name: kube-prometheus-stack
       namespace: monitoring
