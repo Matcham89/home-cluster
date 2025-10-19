@@ -38,7 +38,7 @@ spec:
       promql-agent:
         enabled: false
       observability-agent:
-        enabled: true
+        enabled: false
       argo-rollouts-agent:
         enabled: false
       helm-agent:
