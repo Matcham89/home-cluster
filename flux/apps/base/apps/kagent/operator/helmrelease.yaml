@@ -36,9 +36,9 @@ spec:
       istio-agent:
         enabled: true
       promql-agent:
-        enabled: false
+        enabled: true
       observability-agent:
-        enabled: false
+        enabled: true
       argo-rollouts-agent:
         enabled: false
       helm-agent:
