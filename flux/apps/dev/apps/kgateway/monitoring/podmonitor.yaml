@@ -1,42 +1,9 @@
----
-# PodMonitor for KGateway controller (service doesn't expose metrics port, monitor pods directly)
-apiVersion: monitoring.coreos.com/v1
-kind: PodMonitor
-metadata:
-  name: kgateway-controller
-  labels:
-    app.kubernetes.io/name: kgateway
-    app.kubernetes.io/instance: kgateway
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: kgateway
-      app.kubernetes.io/instance: kgateway
-  namespaceSelector:
-    matchNames:
-      - apps
-  podMetricsEndpoints:
-    - port: metrics
-      interval: 30s
-      path: /metrics
----
-# PodMonitor for AgentGateway (service doesn't expose metrics port, monitor pods directly)
-apiVersion: monitoring.coreos.com/v1
-kind: PodMonitor
-metadata:
-  name: agentgateway
-  labels:
-    app.kubernetes.io/name: agentgateway
-    app.kubernetes.io/instance: agentgateway
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: agentgateway
-      app.kubernetes.io/instance: agentgateway
-  namespaceSelector:
-    matchNames:
-      - apps
-  podMetricsEndpoints:
-    - port: metrics
-      interval: 30s
-      path: /metrics
+# PodMonitors removed - non-essential application-level monitoring
+# KGateway and AgentGateway health is monitored via:
+# - Pod status (kubectl get pods -n apps)
+# - Gateway API resources (kubectl get gateway,httproute,backend -A)
+# - Service endpoints (kubectl get endpoints -n apps)
+#
+# Removed monitors:
+# - kgateway-controller
+# - agentgateway

@@ -1,21 +1,8 @@
----
-# ServiceMonitor for Istio control plane (istiod)
-apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
-metadata:
-  name: istiod
-  labels:
-    app: istiod
-    istio: pilot
-spec:
-  selector:
-    matchLabels:
-      app: istiod
-      istio: pilot
-  namespaceSelector:
-    matchNames:
-      - istio-system
-  endpoints:
-    - port: http-monitoring
-      interval: 30s
-      path: /metrics
+# ServiceMonitor removed - non-essential monitoring
+# Istio health is monitored via:
+# - Pod status (kubectl get pods -n istio-system)
+# - Gateway status (kubectl get gateway -A)
+# - HTTPRoute status (kubectl get httproute -A)
+#
+# Removed monitors:
+# - istiod control plane

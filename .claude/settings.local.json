@@ -5,7 +5,15 @@
       "Bash(kubectl get events:*)",
       "Bash(kubectl get:*)",
       "Bash(kubectl logs:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(kubectl top:*)",
+      "Bash(while read node)",
+      "Bash(do echo \"=== $node ===\")",
+      "Bash(done)",
+      "Bash(flux get kustomizations:*)",
+      "Bash(flux get helmreleases:*)",
+      "Bash(flux reconcile:*)",
+      "Bash(kubectl exec:*)"
     ],
     "deny": [],
     "ask": []

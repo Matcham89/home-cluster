@@ -1,23 +1,5 @@
----
-# PodMonitor for external-secrets webhook (service doesn't expose metrics port, monitor pods directly)
-apiVersion: monitoring.coreos.com/v1
-kind: PodMonitor
-metadata:
-  name: external-secrets-webhook
-  labels:
-    app.kubernetes.io/name: external-secrets-webhook
-    app.kubernetes.io/instance: external-secrets
-spec:
-  selector:
-    matchLabels:
-      app.kubernetes.io/name: external-secrets-webhook
-      app.kubernetes.io/instance: external-secrets
-  namespaceSelector:
-    matchNames:
-      - kube-ops
-  podMetricsEndpoints:
-    - port: metrics
-      interval: 30s
-      path: /metrics
-# Note: Only external-secrets-webhook has metrics exposed
-# The main operator and cert-controller do not expose metrics endpoints
+# PodMonitor removed - non-essential application-level monitoring
+# External Secrets health is monitored via:
+# - Pod status (kubectl get pods -n kube-ops)
+# - ExternalSecret sync status (kubectl get externalsecrets -A)
+# - ClusterSecretStore Ready status
