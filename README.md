@@ -17,5 +17,3 @@ flux bootstrap github \
   --branch=main \
   --path=flux/clusters/dev \
   --personal
-
-
