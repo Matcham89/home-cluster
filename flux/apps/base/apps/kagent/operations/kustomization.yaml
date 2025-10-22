@@ -5,4 +5,4 @@ kind: Kustomization
 resources:
   - ./cloudflare-tunnel.yaml
   - ./httproute.yaml
-  - ./shadow-service.yaml
+ 
