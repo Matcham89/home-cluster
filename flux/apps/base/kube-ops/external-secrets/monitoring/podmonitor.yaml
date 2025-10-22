@@ -1,7 +1,7 @@
 ---
-# ServiceMonitor for external-secrets webhook
+# PodMonitor for external-secrets webhook (service doesn't expose metrics port, monitor pods directly)
 apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
+kind: PodMonitor
 metadata:
   name: external-secrets-webhook
   labels:
@@ -15,9 +15,9 @@ spec:
   namespaceSelector:
     matchNames:
       - kube-ops
-  endpoints:
+  podMetricsEndpoints:
     - port: metrics
       interval: 30s
       path: /metrics
-# Note: Only external-secrets-webhook has a service exposed
-# The main operator and cert-controller do not expose services
+# Note: Only external-secrets-webhook has metrics exposed
+# The main operator and cert-controller do not expose metrics endpoints

@@ -17,6 +17,6 @@ spec:
     matchNames:
       - apps
   endpoints:
-    - port: http
+    - port: controller
       interval: 30s
       path: /metrics
