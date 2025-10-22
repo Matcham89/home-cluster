@@ -4,7 +4,8 @@
       "Bash(kubectl describe:*)",
       "Bash(kubectl get events:*)",
       "Bash(kubectl get:*)",
-      "Bash(kubectl logs:*)"
+      "Bash(kubectl logs:*)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []

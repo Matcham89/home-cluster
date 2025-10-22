@@ -1,7 +1,7 @@
 ---
-# ServiceMonitor for KGateway controller
+# PodMonitor for KGateway controller (service doesn't expose metrics port, monitor pods directly)
 apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
+kind: PodMonitor
 metadata:
   name: kgateway-controller
   labels:
@@ -15,14 +15,14 @@ spec:
   namespaceSelector:
     matchNames:
       - apps
-  endpoints:
+  podMetricsEndpoints:
     - port: metrics
       interval: 30s
       path: /metrics
 ---
-# ServiceMonitor for AgentGateway
+# PodMonitor for AgentGateway (service doesn't expose metrics port, monitor pods directly)
 apiVersion: monitoring.coreos.com/v1
-kind: ServiceMonitor
+kind: PodMonitor
 metadata:
   name: agentgateway
   labels:
@@ -36,7 +36,7 @@ spec:
   namespaceSelector:
     matchNames:
       - apps
-  endpoints:
+  podMetricsEndpoints:
     - port: metrics
       interval: 30s
       path: /metrics
