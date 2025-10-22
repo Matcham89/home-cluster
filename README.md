@@ -2,7 +2,7 @@
 export BITWARDEN_KEY=
 kubectl create secret generic bitwarden-access-token \
 --namespace=kube-ops \
---from-literal=token=$BITWARDEN_KEY  \
+--from-literal=key=$BITWARDEN_KEY  \
 --dry-run=client \
 -o yaml > secret-bitwarden-token.yaml
 
@@ -15,5 +15,5 @@ flux bootstrap github \
   --owner=Matcham89 \
   --repository=home-cluster \
   --branch=main \
-  --path=flux/clusters/dev \
+  --path=clusters/dev \
   --personal
