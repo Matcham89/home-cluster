@@ -89,7 +89,7 @@ spec:
           cpu: 50m      # Reduce from 500m to 50m
           memory: 128Mi # Reduce from 9830Mi to 128Mi
         limits:
-          cpu: 200m
+          # CPU limit removed to prevent throttling
           memory: 512Mi
 
     resultsCache:
@@ -101,7 +101,7 @@ spec:
           cpu: 25m
           memory: 64Mi
         limits:
-          cpu: 100m
+          # CPU limit removed to prevent throttling
           memory: 128Mi
 
     # Expose gateway via LoadBalancer for external Grafana access

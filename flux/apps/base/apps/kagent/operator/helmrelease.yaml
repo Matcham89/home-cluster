@@ -28,6 +28,25 @@ spec:
   values:
     default: anthropic
     revisionHistoryLimit: 2
+
+    # Override default resource limits to prevent CPU throttling
+    # CPU limits removed - CPU is compressible, requests provide sufficient scheduling protection
+    resources:
+      limits:
+        memory: 1Gi  # Keep memory limit for safety
+      requests:
+        cpu: 100m
+        memory: 256Mi
+
+    # Controller resources
+    controller:
+      resources:
+        limits:
+          memory: 512Mi
+        requests:
+          cpu: 100m
+          memory: 128Mi
+
     agents:
       k8s-agent:
         enabled: true
