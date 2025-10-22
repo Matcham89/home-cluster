@@ -70,12 +70,6 @@ spec:
         type: LoadBalancer
       # Enable default dashboards
       defaultDashboardsEnabled: true
-      # Additional datasources
-      additionalDataSources:
-        - name: Loki
-          type: loki
-          access: proxy
-          url: http://loki-gateway.monitoring.svc.cluster.local:80
 
     # Alertmanager configuration
     alertmanager:
