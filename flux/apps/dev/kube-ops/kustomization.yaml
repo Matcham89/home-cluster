@@ -15,4 +15,3 @@ resources:
   - ./external-secrets/monitoring/ks.yaml
   - ./metal-lb/ks.yaml
   - ./metal-lb/monitoring/ks.yaml
-  - ./tailscale/ks.yaml
