@@ -4,7 +4,7 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: HelmRepository
 metadata:
-  name: grafana
+  name: grafana-${cluster_name}
 spec:
   interval: 10m
   url: https://grafana.github.io/helm-charts

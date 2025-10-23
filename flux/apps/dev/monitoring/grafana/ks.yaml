@@ -9,6 +9,9 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   interval: 1h
+  postBuild:
+    substitute:
+      cluster_name: dev
   dependsOn:
     - name: kube-prometheus-stack
   path: ./flux/apps/base/monitoring/grafana
