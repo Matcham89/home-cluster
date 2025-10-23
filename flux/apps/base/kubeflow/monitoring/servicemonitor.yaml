@@ -1,6 +1,0 @@
-# ServiceMonitors removed - Kubeflow is not deployed (no pods in kubeflow namespace)
-# These monitors were creating noise in Prometheus
-# If Kubeflow is deployed in the future, restore monitors for:
-# - ml-pipeline
-# - cache-server
-# - metadata-grpc
