@@ -1,0 +1,8 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - dashboards
+  - alerts
+# Note: alerts have their own namespace (flux-system) defined in their kustomization.yaml
+# dashboards use the parent namespace (monitoring)
