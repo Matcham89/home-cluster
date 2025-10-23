@@ -1,0 +1,48 @@
+---
+# Alert for all Flux failures and warnings
+apiVersion: notification.toolkit.fluxcd.io/v1beta3
+kind: Alert
+metadata:
+  name: flux-system
+  namespace: flux-system
+spec:
+  summary: "Flux GitOps alerts from home-cluster"
+  providerRef:
+    name: alertmanager
+  eventSeverity: error
+  eventSources:
+    # Git repository sync failures
+    - kind: GitRepository
+      name: '*'
+      namespace: flux-system
+    # Kustomization reconciliation failures
+    - kind: Kustomization
+      name: '*'
+      namespace: '*'
+    # Helm release failures
+    - kind: HelmRelease
+      name: '*'
+      namespace: '*'
+    # OCI repository failures
+    - kind: OCIRepository
+      name: '*'
+      namespace: '*'
+  suspend: false
+---
+# Alert for important info events (optional - can be noisy)
+apiVersion: notification.toolkit.fluxcd.io/v1beta3
+kind: Alert
+metadata:
+  name: flux-info
+  namespace: flux-system
+spec:
+  summary: "Flux info events from home-cluster"
+  providerRef:
+    name: alertmanager
+  eventSeverity: info
+  eventSources:
+    # Track successful reconciliations (can be disabled if too noisy)
+    - kind: Kustomization
+      name: 'cluster-apps'  # Only track the main entry point
+      namespace: flux-system
+  suspend: false  # Set to true if too many alerts
