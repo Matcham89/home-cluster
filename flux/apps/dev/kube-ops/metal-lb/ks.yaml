@@ -56,7 +56,7 @@ spec:
     - name: kube-prometheus-stack
       namespace: monitoring
   interval: 1h
-  path: ./flux/apps/dev/kube-ops/metal-lb/monitoring
+  path: ./flux/apps/base/kube-ops/metal-lb/monitoring
   sourceRef:
     kind: GitRepository
     name: flux-system
