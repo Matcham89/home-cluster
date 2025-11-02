@@ -1,3 +1,0 @@
-# ServiceMonitor removed - Bitwarden SDK Server does not expose Prometheus metrics
-# The /metrics endpoint returns HTTP 400, indicating no metrics support
-# Monitor bitwarden-sdk-server health via pod status instead
