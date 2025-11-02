@@ -1,3 +1,0 @@
-# ServiceMonitor removed - KAgent controller does not expose Prometheus /metrics endpoint
-# The controller only exposes /health endpoint for health checks
-# Controller health is monitored via Kubernetes pod status and readiness probes
