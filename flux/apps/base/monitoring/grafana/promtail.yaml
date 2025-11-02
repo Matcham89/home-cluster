@@ -36,5 +36,5 @@ spec:
         cpu: 50m
         memory: 64Mi
       limits:
-        # CPU limit removed to prevent throttling
+        cpu: 200m
         memory: 128Mi
