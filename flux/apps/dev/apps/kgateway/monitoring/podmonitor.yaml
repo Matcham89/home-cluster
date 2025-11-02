@@ -1,9 +1,0 @@
-# PodMonitors removed - non-essential application-level monitoring
-# KGateway and AgentGateway health is monitored via:
-# - Pod status (kubectl get pods -n apps)
-# - Gateway API resources (kubectl get gateway,httproute,backend -A)
-# - Service endpoints (kubectl get endpoints -n apps)
-#
-# Removed monitors:
-# - kgateway-controller
-# - agentgateway
