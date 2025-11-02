@@ -1,5 +1,0 @@
-# PodMonitor removed - non-essential application-level monitoring
-# External Secrets health is monitored via:
-# - Pod status (kubectl get pods -n kube-ops)
-# - ExternalSecret sync status (kubectl get externalsecrets -A)
-# - ClusterSecretStore Ready status
