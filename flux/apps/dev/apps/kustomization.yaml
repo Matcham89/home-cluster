@@ -9,6 +9,4 @@ components:
 resources:
   - ./cluster-secrets/ks.yaml
   - ./kagent/ks.yaml
-  - ./kagent/monitoring/ks.yaml
-  - ./kgateway/ks.yaml
-  - ./kgateway/monitoring/ks.yaml
+
