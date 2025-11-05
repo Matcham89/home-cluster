@@ -9,7 +9,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: kube-prometheus-stack
+    - name: prometheus-community
       namespace: monitoring
   interval: 1h
   path: ./flux/apps/base/flux-system/monitoring
