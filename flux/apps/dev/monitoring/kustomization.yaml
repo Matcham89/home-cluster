@@ -8,6 +8,6 @@ components:
 
 resources:
   - ./cluster-secrets/ks.yaml
-  # - ./kube-prometheus-stack/ks.yaml
+  - ./prometheus-community/ks.yaml
   - ./grafana/ks.yaml
   - ./flux-dashboards/ks.yaml
