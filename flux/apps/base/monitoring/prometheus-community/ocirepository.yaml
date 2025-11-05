@@ -1,0 +1,11 @@
+---
+# yaml-language-server: $schema=https://github.com/fluxcd-community/flux2-schemas/raw/main/ocirepository-source-v1beta2.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: kube-prometheus-stack
+spec:
+  interval: 1h
+  ref:
+    tag: 79.1.1
+  url: oci://ghcr.io/prometheus-community/charts/kube-prometheus-stack
