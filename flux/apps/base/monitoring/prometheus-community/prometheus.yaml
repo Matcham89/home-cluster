@@ -28,3 +28,21 @@ spec:
     crds: CreateReplace
     remediation:
       retries: 3
+  values:
+    # Disable bundled components - we're running them separately for fine-grained control
+    alertmanager:
+      enabled: false
+
+    kube-state-metrics:
+      enabled: false
+
+    prometheus-node-exporter:
+      enabled: false
+
+    prometheus-pushgateway:
+      enabled: false
+
+    server:
+      service:
+        type: ClusterIP
+        servicePort: 9090
