@@ -1,0 +1,15 @@
+---
+# Backend for YouTube MCP Server (local service)
+apiVersion: gateway.kgateway.dev/v1alpha1
+kind: Backend
+metadata:
+  name: yt-mcp-backend
+spec:
+  type: MCP
+  mcp:
+    targets:
+      - name: yt-kmcp-kagent
+        selector:
+          service:
+            matchLabels:
+              kagent.dev/mcp-service: "true"
