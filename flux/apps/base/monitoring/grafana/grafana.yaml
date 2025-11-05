@@ -23,3 +23,28 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
+  values:
+    # Enable the dashboard sidecar to auto-load dashboards from ConfigMaps
+    sidecar:
+      dashboards:
+        enabled: true
+        label: grafana_dashboard
+        labelValue: "1"
+        folder: /tmp/dashboards
+        searchNamespace: monitoring
+        provider:
+          foldersFromFilesStructure: true
+
+    # Enable dashboard providers
+    dashboardProviders:
+      dashboardproviders.yaml:
+        apiVersion: 1
+        providers:
+        - name: 'default'
+          orgId: 1
+          folder: ''
+          type: file
+          disableDeletion: false
+          editable: true
+          options:
+            path: /tmp/dashboards

@@ -8,3 +8,23 @@ resources:
   - ./loki.yaml
   - ./promtail.yaml
 
+# Generate ConfigMaps from dashboard JSON files
+configMapGenerator:
+  - name: grafana-dashboard-flux-cluster
+    options:
+      labels:
+        grafana_dashboard: "1"
+    files:
+      - dashboards/flux-cluster.json
+  - name: grafana-dashboard-flux-control-plane
+    options:
+      labels:
+        grafana_dashboard: "1"
+    files:
+      - dashboards/flux-control-plane.json
+  - name: grafana-dashboard-flux-logs
+    options:
+      labels:
+        grafana_dashboard: "1"
+    files:
+      - dashboards/flux-logs.json
