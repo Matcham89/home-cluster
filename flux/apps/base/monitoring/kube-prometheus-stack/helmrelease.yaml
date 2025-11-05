@@ -40,10 +40,6 @@ spec:
         type: LoadBalancer
       # Enable default dashboards
       defaultDashboardsEnabled: true
-      operator:
-        ## Enable references to ConfigMaps containing dashboards in GrafanaDashboard CRs
-        ## Set to true to allow dashboards to be loaded from ConfigMap references
-        dashboardsConfigMapRefEnabled: true
     # Alertmanager configuration
     alertmanager:
       enabled: true
