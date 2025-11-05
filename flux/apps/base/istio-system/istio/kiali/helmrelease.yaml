@@ -7,7 +7,7 @@ spec:
   interval: 1h
   chart:
     spec:
-      chart: kiali/kiali-operator
+      chart: kiali-operator
       version: 2.18.0
       sourceRef:
         kind: HelmRepository
