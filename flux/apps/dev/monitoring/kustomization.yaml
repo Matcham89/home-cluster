@@ -10,4 +10,4 @@ resources:
   - ./cluster-secrets/ks.yaml
   - ./prometheus-community/ks.yaml
   - ./grafana/ks.yaml
-  - ./flux-dashboards/ks.yaml
+  - ./flux-alerts/ks.yaml
