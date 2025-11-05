@@ -7,7 +7,7 @@ metadata:
 spec:
   interval: 1h
   ref:
-    tag: 78.3.0
+    tag: 79.1.1
   url: oci://ghcr.io/prometheus-community/charts/kube-prometheus-stack
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
@@ -29,96 +29,31 @@ spec:
     remediation:
       retries: 3
   values:
-    # Prometheus configuration
-    prometheus:
-      prometheusSpec:
-        retention: 7d
-        retentionSize: "10GB"
-        storageSpec:
-          volumeClaimTemplate:
-            spec:
-              accessModes: ["ReadWriteOnce"]
-              resources:
-                requests:
-                  storage: 20Gi
-        resources:
-          requests:
-            cpu: 200m
-            memory: 512Mi
-          limits:
-            memory: 2Gi
-        # Enable service monitors for all namespaces
-        serviceMonitorSelectorNilUsesHelmValues: false
-        podMonitorSelectorNilUsesHelmValues: false
-
+    crds:
+      enabled: true
     # Grafana configuration
     grafana:
       enabled: true
       adminPassword: "admin"
-      persistence:
-        enabled: true
-        size: 5Gi
-        storageClassName: local-path
-      resources:
-        requests:
-          cpu: 100m
-          memory: 256Mi
-        limits:
-          memory: 512Mi
       # Grafana service - expose via LoadBalancer
       service:
         type: LoadBalancer
       # Enable default dashboards
       defaultDashboardsEnabled: true
-
+      operator:
+        ## Enable references to ConfigMaps containing dashboards in GrafanaDashboard CRs
+        ## Set to true to allow dashboards to be loaded from ConfigMap references
+        dashboardsConfigMapRefEnabled: true
     # Alertmanager configuration
     alertmanager:
       enabled: true
-      alertmanagerSpec:
-        storage:
-          volumeClaimTemplate:
-            spec:
-              accessModes: ["ReadWriteOnce"]
-              resources:
-                requests:
-                  storage: 5Gi
-        resources:
-          requests:
-            cpu: 50m
-            memory: 128Mi
-          limits:
-            memory: 256Mi
-
     # kube-state-metrics configuration
     kube-state-metrics:
       enabled: true
-      resources:
-        requests:
-          cpu: 10m
-          memory: 64Mi
-        limits:
-          memory: 128Mi
-
     # prometheus-node-exporter configuration
     prometheus-node-exporter:
       enabled: true
-      # Limit DNS nameservers to avoid warning when running with hostNetwork
-      dnsConfig:
-        nameservers:
-          - 1.1.1.1
-          - 8.8.8.8
-          - 192.168.1.254
-        options:
-          - name: ndots
-            value: "2"
-      resources:
-        requests:
-          cpu: 50m
-          memory: 64Mi
-        limits:
-          memory: 128Mi
-
-    # Disable components we don't need for basic monitoring
+    # Disable components
     kubeEtcd:
       enabled: false
     kubeControllerManager:
