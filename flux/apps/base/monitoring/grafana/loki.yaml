@@ -11,7 +11,7 @@ spec:
   chart:
     spec:
       chart: loki
-      version: 6.43.0
+      version: 6.46.0
       sourceRef:
         kind: HelmRepository
         name: grafana
@@ -27,6 +27,11 @@ spec:
     loki:
       commonConfig:
         replication_factor: 1
+      storage:
+        bucketNames:
+          chunks: loki-chunks
+          ruler: loki-ruler
+          admin: loki-admin
       schemaConfig:
         configs:
           - from: "2024-04-01"
