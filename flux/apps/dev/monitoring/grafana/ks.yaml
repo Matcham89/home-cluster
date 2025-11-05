@@ -13,7 +13,7 @@ spec:
     substitute:
       cluster_name: dev
   dependsOn:
-    - name: kube-prometheus-stack
+    - name: prometheus-community
   path: ./flux/apps/base/monitoring/grafana
   sourceRef:
     kind: GitRepository

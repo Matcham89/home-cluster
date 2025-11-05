@@ -15,5 +15,5 @@ spec:
   path: ./flux/apps/base/monitoring/configs
   targetNamespace: monitoring
   dependsOn:
-    - name: kube-prometheus-stack
+    - name: grafana
       namespace: monitoring
