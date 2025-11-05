@@ -11,7 +11,7 @@ spec:
   interval: 1h
   postBuild:
     substitute:
-      cluster_name: dev
+      CLUSTER_NAME: dev
   dependsOn:
     - name: prometheus-community
   path: ./flux/apps/base/monitoring/grafana

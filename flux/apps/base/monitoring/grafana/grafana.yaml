@@ -12,7 +12,7 @@ spec:
       version: 6.16.6
       sourceRef:
         kind: HelmRepository
-        name: grafana
+        name: grafana-${CLUSTER_NAME}
   install:
     remediation:
       retries: 3
