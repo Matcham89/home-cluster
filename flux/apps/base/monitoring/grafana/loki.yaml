@@ -7,7 +7,7 @@ metadata:
 spec:
   # Override Release name to avoid the pattern Namespace-Release
   # Ref: https://fluxcd.io/flux/components/helm/api/v2/#helm.toolkit.fluxcd.io/v2.HelmRelease
-  interval: 10m
+  interval: 1m
   chart:
     spec:
       chart: loki
