@@ -13,7 +13,7 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  path: ./flux/apps/base/monitoring/configs
+  path: ./flux/apps/base/monitoring/alerts
   targetNamespace: monitoring
   dependsOn:
     - name: grafana
