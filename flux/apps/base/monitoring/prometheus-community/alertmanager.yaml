@@ -5,7 +5,7 @@ kind: OCIRepository
 metadata:
   name: alertmanager
 spec:
-  interval: 1h
+  interval: 1m
   ref:
     tag: latest
   url: oci://ghcr.io/prometheus-community/charts/alertmanager
@@ -16,7 +16,7 @@ kind: HelmRelease
 metadata:
   name: alertmanager
 spec:
-  interval: 1h
+  interval: 1m
   chartRef:
     kind: OCIRepository
     name: alertmanager
