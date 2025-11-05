@@ -6,6 +6,7 @@ resources:
   - ./helmrepository.yaml
   - ./grafana.yaml
   - ./loki.yaml
+  - ./httproute.yaml
   - ./promtail.yaml
 
 # Generate ConfigMaps from dashboard JSON files

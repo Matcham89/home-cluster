@@ -5,7 +5,7 @@ kind: Kustomization
 resources:
   - ./alertmanager.yaml
   - ./cloudflare-tunnel.yaml
-  - ./httproute.yaml
+  - ./prometheus.yaml
   - ./kube-state-metrics.yaml
   - ./ocirepository.yaml 
   - ./node-exporter.yaml
