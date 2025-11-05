@@ -9,4 +9,5 @@ components:
 resources:
   - ./istio/operator/ks.yaml
   - ./istio/gateway/ks.yaml
+  - ./istio/kiali/ks.yaml
 
