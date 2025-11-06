@@ -8,7 +8,7 @@ spec:
   interval: 1m
   chartRef:
     kind: OCIRepository
-    name: prometheus
+    name: kube-prometheus-stack
   install:
     crds: Create
     remediation:
