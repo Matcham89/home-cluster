@@ -3,9 +3,9 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ./kube-prometheus-stack.yaml
   - ./cloudflare-tunnel.yaml
   - ./httproute.yaml
+  - ./kube-prometheus-stack.yaml
   - ./ocirepository.yaml 
 
 
