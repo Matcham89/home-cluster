@@ -22,3 +22,8 @@ spec:
       retries: 3
   values:
     profile: ambient
+    cni:
+      cniBinDir: /var/lib/rancher/k3s/data/current/bin
+      cniConfDir: /var/lib/rancher/k3s/agent/etc/cni/net.d
+      cniConfFileName: "10-flannel.conflist"
+      chained: false
