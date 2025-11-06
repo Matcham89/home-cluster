@@ -18,4 +18,14 @@ spec:
   upgrade:
     remediation:
       retries: 3
+  values:
+    cr:
+      spec:
+        external_services:
+          prometheus:
+            url: "http://kube-prometheus-stack-prometheus.monitoring:9090"
+          grafana:
+            enabled: true
+            in_cluster_url: "http://kube-prometheus-stack-grafana.monitoring"
+            url: "http://kube-prometheus-stack-grafana.monitoring"
 
