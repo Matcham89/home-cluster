@@ -3,18 +3,18 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
-  name: prometheus
+  name: kube-prometheus-stack
 spec:
   interval: 1m
   ref:
-    tag: 27.44.0
-  url: oci://ghcr.io/prometheus-community/charts/prometheus
+    tag: 79.2.1
+  url: oci://ghcr.io/prometheus-community/charts/kube-prometheus-stack
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: prometheus
+  name: kube-prometheus-stack
 spec:
   interval: 1m
   chartRef:
@@ -29,20 +29,22 @@ spec:
     remediation:
       retries: 3
   values:
-    # Disable bundled components - we're running them separately for fine-grained control
     alertmanager:
-      enabled: false
-
-    kube-state-metrics:
-      enabled: false
-
-    prometheus-node-exporter:
-      enabled: false
-
-    prometheus-pushgateway:
-      enabled: false
-
-    server:
-      service:
-        type: ClusterIP
-        servicePort: 9090
+      enabled: true
+    kubeStateMetrics:
+      enabled: true
+    nodeExporter:
+      enabled: true
+    grafana:
+      enabled: true
+      defaultDashboardsEnabled: true
+      defaultDashboardsTimezone: mdt
+      sidecar:
+        dashboards:
+          enabled: true
+          label: grafana_dashboard
+          labelValue: "1"
+          folder: /tmp/dashboards
+          searchNamespace: monitoring
+          provider:
+            foldersFromFilesStructure: true
