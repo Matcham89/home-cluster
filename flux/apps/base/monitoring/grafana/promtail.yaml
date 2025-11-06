@@ -22,10 +22,12 @@ spec:
       strategy: rollback
       retries: 3
   values:
+    # https://grafana.com/docs/loki/latest/send-data/promtail/installation/
     config:
+    # publish data to loki
       clients:
-        - url: http://loki-gateway.monitoring.svc.cluster.local/loki/api/v1/push
-          tenant_id: "1"  # Matches the X-Scope-OrgID header
+        - url: http://loki-gateway/loki/api/v1/push
+          tenant_id: 1
 
     # DaemonSet to run on every node
     daemonset:
