@@ -1,84 +1,24 @@
----
-# PodMonitor for Flux source-controller
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
-  name: source-controller
+  name: flux-system
   labels:
-    app.kubernetes.io/component: source-controller
-    app.kubernetes.io/instance: flux-system
     app.kubernetes.io/part-of: flux
+    app.kubernetes.io/component: monitoring
 spec:
-  selector:
-    matchLabels:
-      app: source-controller
   namespaceSelector:
     matchNames:
       - flux-system
-  podMetricsEndpoints:
-    - port: http-prom
-      interval: 30s
-      path: /metrics
----
-# PodMonitor for Flux helm-controller
-apiVersion: monitoring.coreos.com/v1
-kind: PodMonitor
-metadata:
-  name: helm-controller
-  labels:
-    app.kubernetes.io/component: helm-controller
-    app.kubernetes.io/instance: flux-system
-    app.kubernetes.io/part-of: flux
-spec:
   selector:
-    matchLabels:
-      app: helm-controller
-  namespaceSelector:
-    matchNames:
-      - flux-system
+    matchExpressions:
+      - key: app
+        operator: In
+        values:
+          - helm-controller
+          - source-controller
+          - kustomize-controller
+          - notification-controller
+          - image-automation-controller
+          - image-reflector-controller
   podMetricsEndpoints:
     - port: http-prom
-      interval: 30s
-      path: /metrics
----
-# PodMonitor for Flux kustomize-controller
-apiVersion: monitoring.coreos.com/v1
-kind: PodMonitor
-metadata:
-  name: kustomize-controller
-  labels:
-    app.kubernetes.io/component: kustomize-controller
-    app.kubernetes.io/instance: flux-system
-    app.kubernetes.io/part-of: flux
-spec:
-  selector:
-    matchLabels:
-      app: kustomize-controller
-  namespaceSelector:
-    matchNames:
-      - flux-system
-  podMetricsEndpoints:
-    - port: http-prom
-      interval: 30s
-      path: /metrics
----
-# PodMonitor for Flux notification-controller
-apiVersion: monitoring.coreos.com/v1
-kind: PodMonitor
-metadata:
-  name: notification-controller
-  labels:
-    app.kubernetes.io/component: notification-controller
-    app.kubernetes.io/instance: flux-system
-    app.kubernetes.io/part-of: flux
-spec:
-  selector:
-    matchLabels:
-      app: notification-controller
-  namespaceSelector:
-    matchNames:
-      - flux-system
-  podMetricsEndpoints:
-    - port: http-prom
-      interval: 30s
-      path: /metrics
