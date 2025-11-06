@@ -7,7 +7,6 @@ spec:
   interval: 1m
   dependsOn:
     - name: istio-base
-    - name: istio-cni
   chart:
     spec:
       chart: istiod
@@ -22,4 +21,3 @@ spec:
     remediation:
       retries: 3
   values:
-    profile: ambient
