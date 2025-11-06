@@ -1,0 +1,30 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ./kube-prometheus-stack.yaml
+  - ./cloudflare-tunnel.yaml
+  - ./ocirepository.yaml 
+
+
+# Generate ConfigMaps from dashboard JSON files
+configMapGenerator:
+  - name: grafana-dashboard-flux-cluster
+    options:
+      labels:
+        grafana_dashboard: "1"
+    files:
+      - dashboards/flux-cluster.json
+  - name: grafana-dashboard-flux-control-plane
+    options:
+      labels:
+        grafana_dashboard: "1"
+    files:
+      - dashboards/flux-control-plane.json
+  - name: grafana-dashboard-flux-logs
+    options:
+      labels:
+        grafana_dashboard: "1"
+    files:
+      - dashboards/flux-logs.json
