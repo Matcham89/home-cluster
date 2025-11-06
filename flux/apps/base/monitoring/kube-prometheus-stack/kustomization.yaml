@@ -5,6 +5,7 @@ kind: Kustomization
 resources:
   - ./kube-prometheus-stack.yaml
   - ./cloudflare-tunnel.yaml
+  - ./httproute.yaml
   - ./ocirepository.yaml 
 
 
