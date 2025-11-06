@@ -11,3 +11,11 @@ resources:
   - ./kube-prometheus-stack/ks.yaml
   - ./grafana/ks.yaml
   - ./flux-alerts/ks.yaml
+
+patches:
+  - patch: |-
+      - op: remove
+        path: /metadata/labels/istio-injection
+    target:
+      kind: Namespace
+      name: monitoring

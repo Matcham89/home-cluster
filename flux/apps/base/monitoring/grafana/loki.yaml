@@ -113,13 +113,3 @@ spec:
     gateway:
       service:
         type: LoadBalancer
-
-    # Disable Istio sidecar injection for test and canary pods to prevent timeout issues
-    test:
-      enabled: true
-      annotations:
-        sidecar.istio.io/inject: "false"
-
-    lokiCanary:
-      annotations:
-        sidecar.istio.io/inject: "false"
