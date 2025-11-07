@@ -1,0 +1,21 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: istio-gateway-tls
+spec:
+  secretName: istio-gateway-tls-cert
+  duration: 2160h # 90 days
+  renewBefore: 360h # 15 days
+  issuerRef:
+    name: selfsigned
+    kind: ClusterIssuer
+  commonName: "*.kubegit.com"
+  dnsNames:
+    - "*.kubegit.com"
+    - "kubegit.com"
+    - "grafana.kubegit.com"
+    - "kagent.kubegit.com"
+  privateKey:
+    algorithm: RSA
+    size: 2048

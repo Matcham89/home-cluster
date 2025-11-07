@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: not-used
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
+  labels:
+    istio-gateway-access: "true"
+    istio-injection: enabled

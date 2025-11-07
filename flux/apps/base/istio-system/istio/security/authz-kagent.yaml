@@ -1,0 +1,18 @@
+---
+# Authorization policy for kagent (ingress traffic)
+# Note: kagent doesn't have Istio sidecar, so this policy
+# would only apply if sidecars are added later
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: kagent-ingress-authz
+  namespace: kagent
+spec:
+  selector:
+    matchLabels:
+      app: kagent-ui
+  action: ALLOW
+  rules:
+    # Allow all traffic when no sidecar is present
+    # If sidecars are added later, restrict to istio-system namespace
+    - {}
