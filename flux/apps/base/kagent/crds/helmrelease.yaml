@@ -3,7 +3,6 @@ apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
   name: kagent-crds
-  
 spec:
   interval: 1m0s
   url: oci://ghcr.io/kagent-dev/kagent/helm/kagent-crds
@@ -14,7 +13,6 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: kagent-crds
-  
 spec:
   interval: 1m0s
   releaseName: kagent-crds
