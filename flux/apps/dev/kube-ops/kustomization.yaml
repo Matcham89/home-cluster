@@ -8,6 +8,5 @@ components:
 
 resources:
   - ./cert-manager/ks.yaml
-  - ./cluster-secrets/ks.yaml
   - ./external-secrets/ks.yaml
   - ./metal-lb/ks.yaml
