@@ -8,7 +8,7 @@ spec:
   parentRefs:
     - name: istio-gateway
       namespace: istio-system
-      sectionName: https
+      sectionName: http
   hostnames:
     - "kagent.kubegit.com"
   rules:

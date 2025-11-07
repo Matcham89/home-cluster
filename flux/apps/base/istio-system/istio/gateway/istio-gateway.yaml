@@ -6,21 +6,6 @@ metadata:
 spec:
   gatewayClassName: istio
   listeners:
-    - name: https
-      protocol: HTTPS
-      port: 443
-      hostname: "*.kubegit.com"
-      tls:
-        mode: Terminate
-        certificateRefs:
-          - name: istio-gateway-tls-cert
-            kind: Secret
-      allowedRoutes:
-        namespaces:
-          from: Selector
-          selector:
-            matchLabels:
-              istio-gateway-access: "true"
     - name: http
       protocol: HTTP
       port: 80
