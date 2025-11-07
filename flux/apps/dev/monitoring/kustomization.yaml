@@ -7,7 +7,6 @@ components:
   - ../../../infra/namespace
 
 resources:
-  - ./cluster-secrets/ks.yaml
   - ./flux-alerts/ks.yaml
   - ./grafana/ks.yaml
   - ./kube-prometheus-stack/ks.yaml
