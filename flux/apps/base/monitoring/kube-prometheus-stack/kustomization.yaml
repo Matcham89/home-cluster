@@ -6,7 +6,6 @@ resources:
   - ./cloudflare-tunnel.yaml
   - ./kube-prometheus-stack.yaml
   - ./ocirepository.yaml
-  - ./referencegrant.yaml 
 configMapGenerator:
   - name: flux-kube-state-metrics-config
     files:
