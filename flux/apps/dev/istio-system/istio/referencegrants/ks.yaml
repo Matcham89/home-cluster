@@ -17,7 +17,8 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: istio-system
+  # Note: No targetNamespace specified - ReferenceGrants must be created in the namespace
+  # where the backend service lives, not in istio-system
   prune: true
   wait: true
   timeout: 5m
