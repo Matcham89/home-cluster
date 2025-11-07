@@ -10,6 +10,10 @@ metadata:
     traffic.sidecar.istio.io/excludeInboundPorts: "15000,15020,15021"
 spec:
   gatewayClassName: agentgateway
+  infrastructure:
+    annotations:
+      traffic.sidecar.istio.io/excludeInboundPorts: "15000,15020,15021"
+      traffic.sidecar.istio.io/excludeOutboundPorts: "15000,15020"
   listeners:
   - protocol: HTTP
     port: 8080
