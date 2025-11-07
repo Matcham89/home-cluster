@@ -4,7 +4,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: kagent
 components:
-  - ../../../infra/namespace
+  - ../../../infra/namespace-istio-enabled
 
 resources:
   - ./ks.yaml
