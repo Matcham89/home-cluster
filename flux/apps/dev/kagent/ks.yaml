@@ -12,7 +12,7 @@ spec:
     - name: external-secrets-operator
       namespace: kube-ops
   interval: 1h
-  path: ./flux/apps/base/apps/kagent/crds
+  path: ./flux/apps/base/kagent/crds
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -36,7 +36,7 @@ spec:
     - name: istio-gateway
       namespace: istio-system
   interval: 1h
-  path: ./flux/apps/base/apps/kagent
+  path: ./flux/apps/base/kagent
   sourceRef:
     kind: GitRepository
     name: flux-system
