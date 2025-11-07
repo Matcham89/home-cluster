@@ -9,9 +9,6 @@ metadata:
   annotations:
     kmcp.dev/description: MCP server built with fastmcp-python
     kmcp.dev/project-name: yt-kmcp
-    # Exclude agentgateway admin ports from Istio to avoid conflicts
-    traffic.sidecar.istio.io/excludeInboundPorts: "15000,15020,15021"
-    traffic.sidecar.istio.io/excludeOutboundPorts: "15000,15020"
   labels:
     app.kubernetes.io/component: mcp-server
     app.kubernetes.io/instance: yt-kmcp
@@ -33,9 +30,6 @@ spec:
     secretRefs:
     - name: yt-kmcp-secrets-staging
     - name: yt-kmcp-env-vars
-    podAnnotations:
-      traffic.sidecar.istio.io/excludeInboundPorts: "15000,15020,15021"
-      traffic.sidecar.istio.io/excludeOutboundPorts: "15000,15020"
   stdioTransport: {}
   transportType: stdio
 

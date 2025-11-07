@@ -45,3 +45,18 @@ spec:
   timeout: 5m
   prune: true
   wait: true
+  patches:
+    - patch: |-
+        apiVersion: apps/v1
+        kind: Deployment
+        metadata:
+          name: yt-kmcp
+        spec:
+          template:
+            metadata:
+              annotations:
+                traffic.sidecar.istio.io/excludeInboundPorts: "15000,15020,15021"
+                traffic.sidecar.istio.io/excludeOutboundPorts: "15000,15020"
+      target:
+        kind: Deployment
+        name: yt-kmcp
