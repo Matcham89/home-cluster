@@ -7,7 +7,7 @@ metadata:
 spec:
   parentRefs:
     - name: agentgateway
-      namespace: kgateway
+      namespace: istio-system
   hostnames:
     - "yt-mcp.agentgateway.local"
   rules:
