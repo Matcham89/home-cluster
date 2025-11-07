@@ -11,5 +11,5 @@ resources:
   - ./istio/gateway/ks.yaml
   - ./istio/tunnels/ks.yaml
   - ./istio/secrets/ks.yaml
-  - ./istio/httpsroutes/ks.yaml
+  - ./istio/httproutes/ks.yaml
   - ./istio/referencegrants/ks.yaml
