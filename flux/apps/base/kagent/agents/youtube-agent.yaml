@@ -1,7 +1,7 @@
 apiVersion: kagent.dev/v1alpha2
 kind: Agent
 metadata:
-  name: yt-agent
+  name: youtube-agent
 spec:
   declarative:
     modelConfig: claude-model-config
@@ -138,7 +138,7 @@ spec:
       - agent:
           apiGroup: kagent.dev
           kind: Agent
-          name: github-pusher
+          name: blog-agent
         type: Agent
 
   description: An AI Agent that retrieves YouTube transcripts and rewrites them into beginner-friendly yet expert-accurate Markdown blog posts.
