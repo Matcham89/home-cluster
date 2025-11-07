@@ -10,7 +10,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: istio-operator
+    - name: istio-secrets
   interval: 1h
   path: ./flux/apps/base/istio-system/istio/tunnels
   sourceRef:
