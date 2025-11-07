@@ -8,3 +8,9 @@ resources:
   - ./gateway.yaml
   - ./backends.yaml
   - ./httproute.yaml
+
+patches:
+  - path: istio-port-exclusions.yaml
+    target:
+      kind: Deployment
+      name: agentgateway
