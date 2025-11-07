@@ -33,30 +33,30 @@ spec:
   stdioTransport: {}
   transportType: stdio
 
----
+# ---
 
 
-apiVersion: v1
-kind: Service
-metadata:
-  name: yt-kmcp-kagent
-  annotations:
-    kagent.dev/mcp-service-path: /mcp
-    kagent.dev/mcp-service-port: "3000"
-  labels:
-    kagent.dev/mcp-service: "true"
-    app: yt-kmcp
-spec:
-  ports:
-  - appProtocol: kgateway.dev/mcp
-    name: mcp
-    port: 3000
-    protocol: TCP
-    targetPort: 3000
-  selector:
-    app.kubernetes.io/instance: yt-kmcp
-    app.kubernetes.io/name: yt-kmcp
-  sessionAffinity: None
-  type: ClusterIP
-status:
-  loadBalancer: {}
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: yt-kmcp-kagent
+#   annotations:
+#     kagent.dev/mcp-service-path: /mcp
+#     kagent.dev/mcp-service-port: "3000"
+#   labels:
+#     kagent.dev/mcp-service: "true"
+#     app: yt-kmcp
+# spec:
+#   ports:
+#   - appProtocol: kgateway.dev/mcp
+#     name: mcp
+#     port: 3000
+#     protocol: TCP
+#     targetPort: 3000
+#   selector:
+#     app.kubernetes.io/instance: yt-kmcp
+#     app.kubernetes.io/name: yt-kmcp
+#   sessionAffinity: None
+#   type: ClusterIP
+# status:
+#   loadBalancer: {}
