@@ -17,7 +17,7 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: apps
+  targetNamespace: kagateway
   timeout: 5m
   prune: true
   wait: true
@@ -39,7 +39,7 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: apps
+  targetNamespace: kgateway
   timeout: 5m
   prune: true
   wait: true

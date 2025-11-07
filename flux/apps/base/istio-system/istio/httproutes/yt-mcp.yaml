@@ -7,7 +7,7 @@ metadata:
 spec:
   parentRefs:
     - name: agentgateway
-      namespace: apps
+      namespace: kgateway
   hostnames:
     - "yt-mcp.agentgateway.local"
   rules:

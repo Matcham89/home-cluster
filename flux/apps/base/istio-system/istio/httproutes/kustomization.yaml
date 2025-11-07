@@ -4,3 +4,4 @@ kind: Kustomization
 resources:
   - grafana-httproute.yaml
   - kagent.yaml
+  - yt-mcp.yaml
