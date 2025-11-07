@@ -8,7 +8,7 @@ metadata:
 spec:
   interval: 1m
   ref:
-    tag: 0.18.2
+    tag: 1.0.0
   url: oci://ghcr.io/external-secrets/charts/external-secrets
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
