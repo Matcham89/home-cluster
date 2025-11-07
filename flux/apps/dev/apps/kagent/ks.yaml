@@ -55,8 +55,7 @@ spec:
           template:
             metadata:
               annotations:
-                traffic.sidecar.istio.io/excludeInboundPorts: "15000,15020,15021"
-                traffic.sidecar.istio.io/excludeOutboundPorts: "15000,15020"
+                sidecar.istio.io/inject: "false"
       target:
         kind: Deployment
         name: yt-kmcp
