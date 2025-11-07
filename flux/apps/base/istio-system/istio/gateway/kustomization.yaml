@@ -4,4 +4,4 @@ kind: Kustomization
 resources:
   - agentgateway.yaml
   - istio-gateway.yaml
-  - gateway-tls-cert.yaml
+
