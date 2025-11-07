@@ -8,6 +8,7 @@ spec:
   parentRefs:
     - name: istio-gateway
       namespace: istio-system
+      sectionName: https
   hostnames:
     - "grafana.kubegit.com"
   rules:
@@ -15,6 +16,9 @@ spec:
         - path:
             type: PathPrefix
             value: /
+      timeouts:
+        request: 30s
+        backendRequest: 30s
       backendRefs:
         - name: kube-prometheus-stack-grafana
           namespace: monitoring
