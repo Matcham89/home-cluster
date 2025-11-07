@@ -45,17 +45,3 @@ spec:
   timeout: 5m
   prune: true
   wait: true
-  patches:
-    - patch: |-
-        apiVersion: apps/v1
-        kind: Deployment
-        metadata:
-          name: yt-kmcp
-        spec:
-          template:
-            metadata:
-              annotations:
-                sidecar.istio.io/inject: "false"
-      target:
-        kind: Deployment
-        name: yt-kmcp
