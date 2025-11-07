@@ -9,3 +9,7 @@ components:
 resources:
   - ./istio/operator/ks.yaml
   - ./istio/gateway/ks.yaml
+  - ./istio/tunnels/ks.yaml
+  - ./istio/secrets/ks.yaml
+  - ./istio/httpsroutes/ks.yaml
+  - ./istio/referencegrants/ks.yaml
