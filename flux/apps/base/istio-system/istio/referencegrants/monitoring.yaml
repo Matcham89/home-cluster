@@ -2,7 +2,7 @@
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: ReferenceGrant
 metadata:
-  name: allow-istio-system-routes
+  name: allow-monitoring-istio-system-routes
   namespace: monitoring
 spec:
   from:
