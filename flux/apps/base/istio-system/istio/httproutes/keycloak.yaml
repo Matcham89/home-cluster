@@ -8,7 +8,7 @@ spec:
   parentRefs:
     - name: istio-gateway
       namespace: istio-system
-      sectionName: http
+      sectionName: https
   hostnames:
     - "keycloak.kubegit.com"
   rules:
