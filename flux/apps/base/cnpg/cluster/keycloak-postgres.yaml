@@ -14,8 +14,6 @@ spec:
     initdb:
       database: keycloak
       owner: keycloak
-      secret:
-        name: keycloak-postgres-app
 
   postgresql:
     parameters:
