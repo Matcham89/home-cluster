@@ -18,7 +18,8 @@ spec:
   http:
     httpEnabled: true
   hostname:
-    hostname: keycloak.kubegit.com
+    hostname: https://keycloak.kubegit.com
+    strict: true
   ingress:
     enabled: false
   proxy:
