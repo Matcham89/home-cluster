@@ -20,7 +20,9 @@ spec:
   hostname:
     hostname: keycloak.kubegit.com
     strict: false
-    strictBackchannel: false
+  additionalOptions:
+    - name: hostname-strict-https
+      value: "false"
   ingress:
     enabled: false
   proxy:
