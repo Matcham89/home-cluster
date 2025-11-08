@@ -20,6 +20,6 @@ spec:
         request: 30s
         backendRequest: 30s
       backendRefs:
-        - name: keycloak-operator
+        - name: keycloak-service
           namespace: keycloak
-          port: 80
+          port: 8080
