@@ -7,6 +7,7 @@ components:
   - ../../../infra/namespace-istio-enabled
 
 resources:
+  - ./cluster/ks.yaml
   - ./crds/ks.yaml
   - ./operator/ks.yaml
   - ./instance/ks.yaml

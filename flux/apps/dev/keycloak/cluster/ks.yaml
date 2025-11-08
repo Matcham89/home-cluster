@@ -16,3 +16,4 @@ spec:
   targetNamespace: keycloak
   dependsOn:
     - name: cnpg-operator
+      namespace: cnpg-system
