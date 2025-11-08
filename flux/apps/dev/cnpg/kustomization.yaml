@@ -2,11 +2,6 @@
 # yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: keycloak
-components:
-  - ../../../infra/namespace-istio-enabled
-
 resources:
-  - ./crds/ks.yaml
   - ./operator/ks.yaml
-  - ./instance/ks.yaml
+  - ./cluster/ks.yaml
