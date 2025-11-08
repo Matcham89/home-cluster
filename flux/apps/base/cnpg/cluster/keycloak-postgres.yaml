@@ -21,6 +21,3 @@ spec:
     parameters:
       max_connections: "100"
       shared_buffers: "256MB"
-
-  monitoring:
-    enabled: false
