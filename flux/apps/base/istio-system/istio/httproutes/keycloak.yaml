@@ -9,6 +9,9 @@ spec:
     - name: istio-gateway
       namespace: istio-system
       sectionName: https
+    - name: istio-gateway
+      namespace: istio-system
+      sectionName: http
   hostnames:
     - "keycloak.kubegit.com"
   rules:
