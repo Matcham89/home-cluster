@@ -21,6 +21,5 @@ spec:
     hostname: keycloak.kubegit.com
   ingress:
     enabled: false
-  additionalOptions:
-    - name: proxy-headers
-      value: xforwarded
+  proxy:
+    headers: xforwarded
