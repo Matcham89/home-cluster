@@ -6,4 +6,5 @@ resources:
   - ./helmrepository.yaml
   - ./loki.yaml
   - ./promtail.yaml
+  - ./tempo.yaml
 
