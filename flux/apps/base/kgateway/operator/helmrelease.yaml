@@ -24,7 +24,7 @@ spec:
   values:
     agentgateway:
       enabled: true
-      podLabels:
+      podLabels:  
         kgateway: kube-gateway
     controller:
       image:
