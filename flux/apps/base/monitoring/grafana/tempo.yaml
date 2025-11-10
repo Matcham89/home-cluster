@@ -328,7 +328,7 @@ spec:
       automountServiceAccountToken: true
 
     service:
-      type: ClusterIP
+      type: nodePort
       clusterIP: ""
       # -- (string) IP address, in case of 'type: LoadBalancer'
       loadBalancerIP:
