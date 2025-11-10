@@ -3,7 +3,6 @@ apiVersion: gateway.kgateway.dev/v1alpha1
 kind: GatewayParameters
 metadata:
   name: agentgateway-params
-  namespace: istio-system
 spec:
   kube:
     podTemplate:
