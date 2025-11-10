@@ -112,4 +112,4 @@ spec:
     # Expose gateway via LoadBalancer for external Grafana access
     gateway:
       service:
-        type: LoadBalancer
+        type: nodePort

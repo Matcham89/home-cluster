@@ -24,12 +24,29 @@ spec:
   values:
     alertmanager:
       enabled: true
+      service:
+        type: NodePort
     kubeStateMetrics:
       enabled: true
+      service:
+        type: NodePort
     nodeExporter:
       enabled: true
-    grafana:
+      service:
+        type: NodePort
+    prometheus:
       enabled: true
+      service:
+        type: NodePort
+      prometheusSpec:
+        ruleSelectorNilUsesHelmValues: false
+        serviceMonitorSelectorNilUsesHelmValues: false
+        podMonitorSelectorNilUsesHelmValues: false
+        enableFeatures:
+          - native-histograms
+        enableRemoteWriteReceiver: true
+    grafana:
+      enabled: false
       defaultDashboardsEnabled: true
       defaultDashboardsTimezone: mdt
       datasources:
@@ -76,11 +93,3 @@ spec:
           searchNamespace: monitoring
           provider:
             foldersFromFilesStructure: true
-    prometheus:
-      prometheusSpec:
-        ruleSelectorNilUsesHelmValues: false
-        serviceMonitorSelectorNilUsesHelmValues: false
-        podMonitorSelectorNilUsesHelmValues: false
-        enableFeatures:
-          - native-histograms
-        enableRemoteWriteReceiver: true
