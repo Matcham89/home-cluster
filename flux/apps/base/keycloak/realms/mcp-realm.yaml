@@ -27,14 +27,14 @@ spec:
 
     # Clients configuration
     clients:
-      # MCP Client for agentgateway
-      - clientId: mcp-client
-        name: "MCP Client"
-        description: "OAuth client for MCP authentication via agentgateway"
+      # Public client for user authentication
+      - clientId: mcp-test-client
+        name: "MCP Test Client"
+        description: "Public client for MCP user authentication"
         enabled: true
 
         # Client authentication settings
-        publicClient: false
+        publicClient: true
         bearerOnly: false
         standardFlowEnabled: true
         implicitFlowEnabled: false
@@ -43,42 +43,16 @@ spec:
 
         # OAuth settings
         protocol: openid-connect
-        fullScopeAllowed: true
+        fullScopeAllowed: false
 
-        # URLs - will be updated based on your actual agentgateway endpoint
+        # URLs
         rootUrl: ""
         baseUrl: ""
         redirectUris:
-          - "http://agentgateway.istio-system.svc.cluster.local:8080/*"
           - "http://localhost:*/*"
+          - "http://127.0.0.1:*/*"
         webOrigins:
           - "*"
-
-        # Protocol mappers for standard claims
-        protocolMappers:
-          - name: "username"
-            protocol: "openid-connect"
-            protocolMapper: "oidc-usermodel-property-mapper"
-            consentRequired: false
-            config:
-              userinfo.token.claim: "true"
-              user.attribute: "username"
-              id.token.claim: "true"
-              access.token.claim: "true"
-              claim.name: "preferred_username"
-              jsonType.label: "String"
-
-          - name: "email"
-            protocol: "openid-connect"
-            protocolMapper: "oidc-usermodel-property-mapper"
-            consentRequired: false
-            config:
-              userinfo.token.claim: "true"
-              user.attribute: "email"
-              id.token.claim: "true"
-              access.token.claim: "true"
-              claim.name: "email"
-              jsonType.label: "String"
 
         # Client scopes
         defaultClientScopes:
@@ -86,14 +60,56 @@ spec:
           - "email"
           - "roles"
           - "web-origins"
+          - "echo-mcp-server-audience"
         optionalClientScopes:
           - "address"
           - "phone"
           - "offline_access"
-          - "microprofile-jwt"
+          - "mcp:read"
+          - "mcp:tools"
+          - "mcp:prompts"
+
+      # Confidential client representing the MCP server
+      - clientId: echo-mcp-server
+        name: "Echo MCP Server"
+        description: "Confidential client representing the MCP server resource"
+        enabled: true
+
+        # Client authentication settings
+        publicClient: false
+        bearerOnly: true
+        standardFlowEnabled: false
+        implicitFlowEnabled: false
+        directAccessGrantsEnabled: false
+        serviceAccountsEnabled: false
+
+        # OAuth settings
+        protocol: openid-connect
+        fullScopeAllowed: false
+
+        # Client secret - you should change this
+        secret: "PLOs4j6ti521kb5ZVVVwi5GWi9eDYTwq"
 
     # Client Scopes
     clientScopes:
+      # Audience mapper for echo-mcp-server
+      - name: "echo-mcp-server-audience"
+        description: "Adds echo-mcp-server to token audience"
+        protocol: "openid-connect"
+        attributes:
+          include.in.token.scope: "true"
+          display.on.consent.screen: "false"
+        protocolMappers:
+          - name: "echo-mcp-server-audience-mapper"
+            protocol: "openid-connect"
+            protocolMapper: "oidc-audience-mapper"
+            consentRequired: false
+            config:
+              included.client.audience: "echo-mcp-server"
+              id.token.claim: "false"
+              access.token.claim: "true"
+
+      # MCP scopes with role mappings
       - name: "mcp:read"
         description: "Read access to MCP resources"
         protocol: "openid-connect"
@@ -101,30 +117,19 @@ spec:
           include.in.token.scope: "true"
           display.on.consent.screen: "true"
 
-      - name: "mcp:write"
-        description: "Write access to MCP resources"
+      - name: "mcp:tools"
+        description: "Access to execute MCP tools"
         protocol: "openid-connect"
         attributes:
           include.in.token.scope: "true"
           display.on.consent.screen: "true"
 
-    # Create a test user (optional - for testing)
-    users:
-      - username: "mcpuser"
-        enabled: true
-        emailVerified: true
-        email: "mcpuser@example.com"
-        firstName: "MCP"
-        lastName: "User"
-        credentials:
-          - type: "password"
-            value: "changeme123"
-            temporary: false
-        realmRoles:
-          - "user"
-        clientRoles:
-          mcp-client:
-            - "user"
+      - name: "mcp:prompts"
+        description: "Access to MCP prompts"
+        protocol: "openid-connect"
+        attributes:
+          include.in.token.scope: "true"
+          display.on.consent.screen: "true"
 
     # Roles
     roles:
@@ -134,8 +139,63 @@ spec:
         - name: "admin"
           description: "Administrator role"
       client:
-        mcp-client:
-          - name: "user"
-            description: "MCP user access"
-          - name: "admin"
-            description: "MCP admin access"
+        echo-mcp-server:
+          - name: "tools"
+            description: "Can call tools"
+          - name: "prompts"
+            description: "Can call prompts"
+          - name: "read-only"
+            description: "Can read resources"
+
+    # Create test users
+    users:
+      - username: "mcp-admin"
+        enabled: true
+        emailVerified: true
+        email: "admin@mcp.example.com"
+        firstName: "MCP"
+        lastName: "Admin"
+        credentials:
+          - type: "password"
+            value: "admin123"
+            temporary: false
+        realmRoles:
+          - "admin"
+        clientRoles:
+          echo-mcp-server:
+            - "tools"
+            - "prompts"
+            - "read-only"
+
+      - username: "mcp-user"
+        enabled: true
+        emailVerified: true
+        email: "user@mcp.example.com"
+        firstName: "MCP"
+        lastName: "User"
+        credentials:
+          - type: "password"
+            value: "user123"
+            temporary: false
+        realmRoles:
+          - "user"
+        clientRoles:
+          echo-mcp-server:
+            - "tools"
+            - "read-only"
+
+      - username: "mcp-readonly"
+        enabled: true
+        emailVerified: true
+        email: "readonly@mcp.example.com"
+        firstName: "MCP"
+        lastName: "ReadOnly"
+        credentials:
+          - type: "password"
+            value: "readonly123"
+            temporary: false
+        realmRoles:
+          - "user"
+        clientRoles:
+          echo-mcp-server:
+            - "read-only"
