@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agentgateway-standalone
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: agentgateway-standalone
+  template:
+    metadata:
+      labels:
+        app: agentgateway-standalone
+        kgateway: kube-gateway
+    spec:
+      containers:
+      - name: agentgateway
+        image: ghcr.io/agentgateway/agentgateway:v0.6.0
+        args:
+          - '--config=/etc/agentgateway/config.yaml'
+        volumeMounts:
+        - name: config
+          mountPath: /etc/agentgateway
+        ports:
+        - name: http
+          containerPort: 3000
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+      volumes:
+      - name: config
+        configMap:
+          name: agentgateway-standalone-config

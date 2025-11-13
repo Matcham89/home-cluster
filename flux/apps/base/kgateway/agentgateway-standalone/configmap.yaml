@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: agentgateway-standalone-config
+data:
+  config.yaml: |
+    binds:
+      - listeners:
+          - routes:
+              - backends:
+                  - mcp:
+                      targets:
+                        - name: my-mcp-server
+                          mcp:
+                            host: yt-kmcp.kagent.svc.cluster.local
+                            port: 3000
+                            protocol: SSE
+                matches:
+                  - path:
+                      exact: /mcp
+                policies:
+                  cors:
+                    allowHeaders:
+                      - mcp-protocol-version
+                      - authorization
+                    allowOrigins:
+                      - '*'
+            mcpAuthentication:
+              issuer: http://keycloak-service.keycloak.svc.cluster.local:8080/realms/mcp
+              jwksUrl: http://keycloak-service.keycloak.svc.cluster.local:8080/realms/mcp/protocol/openid-connect/certs
+              provider:
+                keycloak: {}
+              resourceMetadata:
+                resource: http://keycloak-service.keycloak.svc.cluster.local:8080/realms/mcp
+                scopesSupported:
+                  - profile
+                  - openid
+                bearerMethodsSupported:
+                  - header
+          port: 3000

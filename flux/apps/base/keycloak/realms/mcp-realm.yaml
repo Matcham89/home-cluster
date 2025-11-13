@@ -1,0 +1,141 @@
+---
+apiVersion: k8s.keycloak.org/v2alpha1
+kind: KeycloakRealmImport
+metadata:
+  name: mcp-realm
+  namespace: keycloak
+spec:
+  keycloakCRName: keycloak
+  realm:
+    id: mcp
+    realm: mcp
+    displayName: "MCP Authentication"
+    enabled: true
+
+    # Token settings
+    accessTokenLifespan: 300
+    ssoSessionIdleTimeout: 1800
+    ssoSessionMaxLifespan: 36000
+
+    # Login settings
+    registrationAllowed: false
+    resetPasswordAllowed: true
+    rememberMe: true
+    verifyEmail: false
+    loginWithEmailAllowed: true
+    duplicateEmailsAllowed: false
+
+    # Clients configuration
+    clients:
+      # MCP Client for agentgateway
+      - clientId: mcp-client
+        name: "MCP Client"
+        description: "OAuth client for MCP authentication via agentgateway"
+        enabled: true
+
+        # Client authentication settings
+        publicClient: false
+        bearerOnly: false
+        standardFlowEnabled: true
+        implicitFlowEnabled: false
+        directAccessGrantsEnabled: true
+        serviceAccountsEnabled: false
+
+        # OAuth settings
+        protocol: openid-connect
+        fullScopeAllowed: true
+
+        # URLs - will be updated based on your actual agentgateway endpoint
+        rootUrl: ""
+        baseUrl: ""
+        redirectUris:
+          - "http://agentgateway.istio-system.svc.cluster.local:8080/*"
+          - "http://localhost:*/*"
+        webOrigins:
+          - "*"
+
+        # Protocol mappers for standard claims
+        protocolMappers:
+          - name: "username"
+            protocol: "openid-connect"
+            protocolMapper: "oidc-usermodel-property-mapper"
+            consentRequired: false
+            config:
+              userinfo.token.claim: "true"
+              user.attribute: "username"
+              id.token.claim: "true"
+              access.token.claim: "true"
+              claim.name: "preferred_username"
+              jsonType.label: "String"
+
+          - name: "email"
+            protocol: "openid-connect"
+            protocolMapper: "oidc-usermodel-property-mapper"
+            consentRequired: false
+            config:
+              userinfo.token.claim: "true"
+              user.attribute: "email"
+              id.token.claim: "true"
+              access.token.claim: "true"
+              claim.name: "email"
+              jsonType.label: "String"
+
+        # Client scopes
+        defaultClientScopes:
+          - "profile"
+          - "email"
+          - "roles"
+          - "web-origins"
+        optionalClientScopes:
+          - "address"
+          - "phone"
+          - "offline_access"
+          - "microprofile-jwt"
+
+    # Client Scopes
+    clientScopes:
+      - name: "mcp:read"
+        description: "Read access to MCP resources"
+        protocol: "openid-connect"
+        attributes:
+          include.in.token.scope: "true"
+          display.on.consent.screen: "true"
+
+      - name: "mcp:write"
+        description: "Write access to MCP resources"
+        protocol: "openid-connect"
+        attributes:
+          include.in.token.scope: "true"
+          display.on.consent.screen: "true"
+
+    # Create a test user (optional - for testing)
+    users:
+      - username: "mcpuser"
+        enabled: true
+        emailVerified: true
+        email: "mcpuser@example.com"
+        firstName: "MCP"
+        lastName: "User"
+        credentials:
+          - type: "password"
+            value: "changeme123"
+            temporary: false
+        realmRoles:
+          - "user"
+        clientRoles:
+          mcp-client:
+            - "user"
+
+    # Roles
+    roles:
+      realm:
+        - name: "user"
+          description: "Standard user role"
+        - name: "admin"
+          description: "Administrator role"
+      client:
+        mcp-client:
+          - name: "user"
+            description: "MCP user access"
+          - name: "admin"
+            description: "MCP admin access"

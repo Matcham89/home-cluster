@@ -11,3 +11,4 @@ resources:
   - ./crds/ks.yaml
   - ./operator/ks.yaml
   - ./instance/ks.yaml
+  - ./realms/ks.yaml
