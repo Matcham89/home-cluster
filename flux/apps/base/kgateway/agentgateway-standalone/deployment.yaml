@@ -17,7 +17,7 @@ spec:
       - name: agentgateway
         image: ghcr.io/agentgateway/agentgateway:0.10.1
         args:
-          - '--config=/etc/agentgateway/config.yaml'
+          - '--file=/etc/agentgateway/config.yaml'
         volumeMounts:
         - name: config
           mountPath: /etc/agentgateway
