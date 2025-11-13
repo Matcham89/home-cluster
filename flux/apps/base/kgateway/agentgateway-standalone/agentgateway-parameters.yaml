@@ -1,0 +1,10 @@
+# ---
+# apiVersion: gateway.kgateway.dev/v1alpha1
+# kind: GatewayParameters
+# metadata:
+#   name: agentgateway-params
+# spec:
+#   kube:
+#     podTemplate:
+#       extraLabels:
+#         kgateway: kube-gateway

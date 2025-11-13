@@ -1,0 +1,27 @@
+# ---
+# kind: Gateway
+# apiVersion: gateway.networking.k8s.io/v1
+# metadata:
+#   name: agentgateway
+#   labels:
+#     app: agentgateway
+# spec:
+#   gatewayClassName: agentgateway
+#   infrastructure:
+#     parametersRef:
+#       group: gateway.kgateway.dev
+#       kind: GatewayParameters
+#       name: agentgateway-params
+#   listeners:
+#   - protocol: HTTP
+#     port: 8080
+#     name: http
+#     allowedRoutes:
+#       namespaces:
+#         from: All
+# # Notes:
+# # Admin Console Access:
+# # The admin console listens on localhost:15000 only (by design for security)
+# # To access the admin UI, use port-forward:
+# #   kubectl port-forward -n apps pod/<agentgateway-pod-name> 15000:15000
+# # Then open: http://localhost:15000/ui

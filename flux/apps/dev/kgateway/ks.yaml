@@ -43,3 +43,25 @@ spec:
   timeout: 5m
   prune: true
   wait: true
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app kgateway-agentgateway-standalone
+spec:
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  dependsOn:
+    - name: kgateway-crds
+  interval: 1h
+  path: ./flux/apps/base/kgateway/agentgateway-standalone
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: kgateway
+  timeout: 5m
+  prune: true
+  wait: true
