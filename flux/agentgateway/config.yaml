@@ -1,0 +1,32 @@
+config:
+  binds:
+    - port: 3000
+      listeners:
+        - routes:
+            - name: mcp-auth-route
+              matches:
+                - path:
+                    pathPrefix: /mcp
+              policies:
+                cors:
+                  allowOrigins:
+                    - "*"
+                  allowHeaders:
+                    - mcp-protocol-version
+                    - authorization
+                    - content-type
+                jwtAuth:
+                  mode: strict
+                  issuer: http://localhost:8080/realms/mcp
+                  audiences:
+                    - agentgateway
+                  jwks:
+                    url: http://localhost:8080/realms/mcp/protocol/openid-connect/certs
+              backends:
+                - mcp:
+                    targets:
+                      - name: yt-kmcp
+                        static:
+                          host: localhost
+                          port: 3001
+                          protocol: SSE
