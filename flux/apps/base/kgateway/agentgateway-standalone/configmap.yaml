@@ -10,8 +10,8 @@ data:
               - backends:
                   - mcp:
                       targets:
-                        - name: my-mcp-server
-                          mcp:
+                        - name: yt-kmcp
+                          static:
                             host: yt-kmcp.kagent.svc.cluster.local
                             port: 3000
                             protocol: SSE
