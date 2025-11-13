@@ -4,37 +4,35 @@ metadata:
   name: agentgateway-standalone-config
 data:
   config.yaml: |
-    binds:
-      - listeners:
-          - routes:
-              - backends:
-                  - mcp:
-                      targets:
-                        - name: yt-kmcp
-                          static:
-                            host: yt-kmcp.kagent.svc.cluster.local
-                            port: 3000
-                            protocol: SSE
-                matches:
-                  - path:
-                      exact: /mcp
-                policies:
-                  cors:
-                    allowHeaders:
-                      - mcp-protocol-version
-                      - authorization
-                    allowOrigins:
-                      - '*'
-            mcpAuthentication:
-              issuer: http://keycloak-service.keycloak.svc.cluster.local:8080/realms/mcp
-              jwksUrl: http://keycloak-service.keycloak.svc.cluster.local:8080/realms/mcp/protocol/openid-connect/certs
-              provider:
-                keycloak: {}
-              resourceMetadata:
-                resource: http://keycloak-service.keycloak.svc.cluster.local:8080/realms/mcp
-                scopesSupported:
-                  - profile
-                  - openid
-                bearerMethodsSupported:
-                  - header
-          port: 3000
+    config:
+      binds:
+        - port: 3000
+          listeners:
+            - routes:
+                - name: mcp-auth-route
+                  matches:
+                    - path:
+                        pathPrefix: /mcp
+                  policies:
+                    cors:
+                      allowOrigins:
+                        - "*"
+                      allowHeaders:
+                        - mcp-protocol-version
+                        - authorization
+                        - content-type
+                    jwtAuth:
+                      mode: strict
+                      issuer: http://keycloak-service.keycloak.svc.cluster.local:8080/realms/mcp
+                      audiences:
+                        - agentgateway
+                      jwks:
+                        url: http://keycloak-service.keycloak.svc.cluster.local:8080/realms/mcp/protocol/openid-connect/certs
+                  backends:
+                    - mcp:
+                        targets:
+                          - name: yt-kmcp
+                            static:
+                              host: yt-kmcp.kagent.svc.cluster.local
+                              port: 3000
+                              protocol: SSE
