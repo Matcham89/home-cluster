@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: agentgateway
-        image: ghcr.io/agentgateway/agentgateway:v0.6.0
+        image: ghcr.io/agentgateway/agentgateway:0.10.1
         args:
           - '--config=/etc/agentgateway/config.yaml'
         volumeMounts:
