@@ -26,17 +26,10 @@ spec:
     remediation:
       retries: 3
   # Workaround for Kubernetes 1.34+ stricter label validation
-  # The chart version with digest hash contains '+' which is invalid in labels
-  # Replace '+' with '-' in the version label
-  postRenderers:
-    - kustomize:
-        patches:
-          - target:
-              labelSelector: helm.toolkit.fluxcd.io/chart
-            patch: |-
-              - op: replace
-                path: /metadata/labels/helm.toolkit.fluxcd.io~1version
-                value: "0.7.4-813c46d642c1"
+  # Override the helm version label to replace '+' with '-'
+  commonMetadata:
+    labels:
+      helm.toolkit.fluxcd.io/version: "0.7.4-813c46d642c1"
   values:
     default: anthropic
     revisionHistoryLimit: 2
