@@ -21,6 +21,8 @@ spec:
     name: kgateway
   install:
     crds: Skip
+  # Disable chart digest in labels - Kubernetes 1.34+ doesn't allow '+' in label values
+  disableChartDigestTracking: true
   values:
     agentgateway:
       enabled: true

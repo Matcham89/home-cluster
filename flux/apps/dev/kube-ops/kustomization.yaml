@@ -9,4 +9,5 @@ components:
 resources:
   - ./cert-manager/ks.yaml
   - ./external-secrets/ks.yaml
+  - ./local-path-provisioner/ks.yaml
   - ./metal-lb/ks.yaml
