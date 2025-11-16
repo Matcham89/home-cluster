@@ -25,11 +25,9 @@ spec:
     createNamespace: true
     remediation:
       retries: 3
-  # Workaround for Kubernetes 1.34+ stricter label validation
-  # The chart version contains '+' which is invalid in K8s 1.34+ labels
-  # We need to patch this at the chart source level - this is a temporary workaround
-  # Issue: Helm adds labels AFTER post-rendering, so we can't fix this in Flux
-  # TODO: Contact kagent maintainers to fix OCI image digest format
+  # Note: Kubernetes 1.34+ has stricter label validation that rejects '+' in labels
+  # Fixed by enabling DisableChartDigestTracking feature gate in helm-controller
+  # See: https://github.com/fluxcd/flux2/issues/4910
   values:
     default: anthropic
     revisionHistoryLimit: 2
