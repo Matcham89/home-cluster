@@ -17,8 +17,8 @@ spec:
   interval: 1h
   chart:
     spec:
-      chart: local-storage-provisioner
-      version: ">=0.0.28"
+      chart: local-path-provisioner
+      version: ">=0.0.25"
       sourceRef:
         kind: HelmRepository
         name: local-path-provisioner
