@@ -22,10 +22,9 @@ spec:
   install:
     crds: Skip
   # Workaround for Kubernetes 1.34+ stricter label validation
-  # Override the helm version label to replace '+' with '-'
-  commonMetadata:
-    labels:
-      helm.toolkit.fluxcd.io/version: "2.1.0-main-ea8ae518b8cf"
+  # The chart version contains '+' which is invalid in K8s 1.34+ labels
+  # Issue: Helm adds labels AFTER post-rendering, so we can't fix this in Flux
+  # TODO: Contact kgateway maintainers to fix OCI image digest format
   values:
     agentgateway:
       enabled: true
