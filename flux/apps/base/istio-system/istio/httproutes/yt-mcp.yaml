@@ -14,7 +14,7 @@ spec:
             type: PathPrefix
             value: /mcp-auth
       backendRefs:
-        - name: agentgateway-standalone
+        - name: yt-kmcp
           namespace: kgateway
           kind: Service
           port: 3000

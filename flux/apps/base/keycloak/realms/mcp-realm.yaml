@@ -12,6 +12,10 @@ spec:
     displayName: "MCP Authentication"
     enabled: true
 
+    # Frontend URL for local development
+    attributes:
+      frontendUrl: "http://127.0.0.1:8443"
+
     # Token settings
     accessTokenLifespan: 300
     ssoSessionIdleTimeout: 1800
