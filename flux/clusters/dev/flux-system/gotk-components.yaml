@@ -8703,6 +8703,7 @@ spec:
         - --log-level=info
         - --log-encoding=json
         - --enable-leader-election
+        - --feature-gates=DisableChartDigestTracking=true,ObjectLevelWorkloadIdentity=false
         env:
         - name: RUNTIME_NAMESPACE
           valueFrom:
