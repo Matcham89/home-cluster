@@ -1,0 +1,61 @@
+---
+apiVersion: fluxcd.controlplane.io/v1
+kind: FluxInstance
+metadata:
+  name: flux
+  namespace: flux-system
+  annotations:
+    fluxcd.controlplane.io/reconcileEvery: 1h
+    fluxcd.controlplane.io/reconcileTimeout: 5m
+    fluxcd.controlplane.io/reconcileArtifactEvery: 10m
+spec:
+  distribution:
+    version: 2.x
+    registry: ghcr.io/fluxcd
+    artifact: oci://ghcr.io/controlplaneio-fluxcd/flux-operator-manifests
+  components:
+    - source-controller
+    - kustomize-controller
+    - helm-controller
+    - notification-controller
+    - image-reflector-controller
+    - image-automation-controller
+  cluster:
+    type: kubernetes
+    multitenant: false
+    networkPolicy: true
+    domain: cluster.local
+    size: medium
+  sync:
+    kind: GitRepository
+    url: https://github.com/Matcham89/home-cluster.git
+    ref: refs/heads/main
+    path: flux/clusters/dev
+    interval: 1m
+  kustomize:
+    patches:
+      # Apply node selector and tolerations to all Flux controllers
+      - target:
+          kind: Deployment
+        patch: |
+          - op: replace
+            path: /spec/template/spec/nodeSelector
+            value:
+              kubernetes.io/os: linux
+          - op: add
+            path: /spec/template/spec/tolerations
+            value:
+              - key: "CriticalAddonsOnly"
+                operator: "Exists"
+      # Enable DisableChartDigestTracking for Kubernetes 1.34+ compatibility
+      # This prevents helm-controller from appending OCI digest hashes with '+' to chart versions
+      # See: https://github.com/fluxcd/flux2/issues/4910
+      - target:
+          kind: Deployment
+          name: helm-controller
+        patch: |
+          - op: add
+            path: /spec/template/spec/containers/0/args/-
+            value: --feature-gates=DisableChartDigestTracking=true
+  wait: true
+  migrateResources: true
