@@ -113,4 +113,4 @@ spec:
     gateway:
       service:
         type: LoadBalancer
-        loadBalancerIP: "10.0.0.151"
+        loadBalancerIP: "10.0.0.157"
