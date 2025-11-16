@@ -26,10 +26,10 @@ spec:
     remediation:
       retries: 3
   # Workaround for Kubernetes 1.34+ stricter label validation
-  # Override the helm version label to replace '+' with '-'
-  commonMetadata:
-    labels:
-      helm.toolkit.fluxcd.io/version: "0.7.4-813c46d642c1"
+  # The chart version contains '+' which is invalid in K8s 1.34+ labels
+  # We need to patch this at the chart source level - this is a temporary workaround
+  # Issue: Helm adds labels AFTER post-rendering, so we can't fix this in Flux
+  # TODO: Contact kagent maintainers to fix OCI image digest format
   values:
     default: anthropic
     revisionHistoryLimit: 2
