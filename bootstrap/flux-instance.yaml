@@ -39,16 +39,8 @@ spec:
             value:
               - key: "CriticalAddonsOnly"
                 operator: "Exists"
----
-apiVersion: fluxcd.controlplane.io/v1
-kind: FluxInstance
-metadata:
-  name: flux
-  namespace: flux-system
-spec:
   sync:
     kind: GitRepository
     url: "https://github.com/Matcham89/home-cluster.git"
     ref: "refs/heads/main"
     path: "flux/clusters/dev"
-
