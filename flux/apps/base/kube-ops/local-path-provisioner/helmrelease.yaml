@@ -1,34 +1,15 @@
 ---
-# yaml-language-server: $schema=https://github.com/fluxcd-community/flux2-schemas/raw/main/helmrepository-source-v1.json
+# Install local-path-provisioner from official Rancher GitHub
+# Using GitRepository source since Helm charts are problematic
 apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
+kind: GitRepository
 metadata:
   name: local-path-provisioner
 spec:
-  interval: 1h
-  url: https://tablecheck-labs.github.io/local-storage-provisioner/
----
-# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
-apiVersion: helm.toolkit.fluxcd.io/v2
-kind: HelmRelease
-metadata:
-  name: local-path-provisioner
-spec:
-  interval: 1h
-  chart:
-    spec:
-      chart: local-path-provisioner
-      version: "0.0.25-dev"
-      sourceRef:
-        kind: HelmRepository
-        name: local-path-provisioner
-  values:
-    # Set as default StorageClass
-    storageClass:
-      defaultClass: true
-      name: local-path
-    # Talos mounts /var at /var on the host
-    nodePathMap:
-      - node: DEFAULT_PATH_FOR_NON_LISTED_NODES
-        paths:
-          - /var/local-path-provisioner
+  interval: 30m
+  url: https://github.com/rancher/local-path-provisioner
+  ref:
+    tag: v0.0.32
+  ignore: |
+    /*
+    !/deploy
