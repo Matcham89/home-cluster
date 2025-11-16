@@ -1,12 +1,14 @@
 ---
-# yaml-language-server: $schema=https://github.com/fluxcd-community/flux2-schemas/raw/main/helmrepository-source-v1.json
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
+# yaml-language-server: $schema=https://github.com/fluxcd-community/flux2-schemas/raw/main/ocirepository-source-v1.json
+apiVersion: source.toolkit.fluxcd.io/v1beta2
+kind: OCIRepository
 metadata:
   name: local-path-provisioner
 spec:
   interval: 1h
-  url: https://charts.rancher.io
+  url: oci://dp.apps.rancher.io/charts/local-path-provisioner
+  ref:
+    semver: ">=0.0.28"
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
@@ -15,13 +17,9 @@ metadata:
   name: local-path-provisioner
 spec:
   interval: 1h
-  chart:
-    spec:
-      chart: local-path-provisioner
-      version: 0.0.30
-      sourceRef:
-        kind: HelmRepository
-        name: local-path-provisioner
+  chartRef:
+    kind: OCIRepository
+    name: local-path-provisioner
   values:
     # Set as default StorageClass
     storageClass:
