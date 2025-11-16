@@ -131,7 +131,7 @@ spec:
     tools:
       - mcpServer:
           kind: Service
-          name: yt-kmcp-kagent
+          name: yt-kmcp
           toolNames:
             - get_video_info
         type: McpServer
