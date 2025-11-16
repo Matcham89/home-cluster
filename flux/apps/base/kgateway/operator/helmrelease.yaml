@@ -23,14 +23,18 @@ spec:
     crds: Skip
   # Workaround for Kubernetes 1.34+ stricter label validation
   # The chart version with digest hash contains '+' which is invalid in labels
+  # Use strategic merge to remove the problematic label
   postRenderers:
     - kustomize:
         patches:
           - target:
-              kind: ServiceAccount|ClusterRole|ClusterRoleBinding|Service|Deployment|ConfigMap|Role|RoleBinding
+              labelSelector: "helm.toolkit.fluxcd.io/version"
             patch: |
-              - op: remove
-                path: /metadata/labels/helm.toolkit.fluxcd.io~1version
+              apiVersion: v1
+              kind: all
+              metadata:
+                labels:
+                  helm.toolkit.fluxcd.io/version: null
   values:
     agentgateway:
       enabled: true
