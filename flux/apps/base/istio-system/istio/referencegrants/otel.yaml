@@ -1,0 +1,12 @@
+kind: ReferenceGrant
+metadata:
+  name: allow-otel-collector-logs-access
+spec:
+  from:
+  - group: gateway.kgateway.dev
+    kind: HTTPListenerPolicy
+    namespace: istio-system
+  to:
+  - group: ""
+    kind: Service
+    name: opentelemetry-collector-logs
