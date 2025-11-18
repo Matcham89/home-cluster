@@ -2,9 +2,24 @@ kube-state-metrics:
   # For kube-prometheus-stacks that are already installed and configured with
   # custom collectors, commenting out the collectors and extraArgs below will
   # retain any existing kube-state-metrics configuration.
-  collectors: [ ]
+  collectors:
+    - nodes
+    - pods
+    - deployments
+    - daemonsets
+    - statefulsets
+    - persistentvolumes
+    - persistentvolumeclaims
+    - configmaps
+    - secrets
+    - services
+    - namespaces
+    - replicasets
+    - jobs
+    - cronjobs
   extraArgs:
-    - --custom-resource-state-only=true
+    # Remove --custom-resource-state-only=true to enable both standard and custom metrics
+    []
   rbac:
     extraRules:
       - apiGroups:

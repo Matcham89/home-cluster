@@ -1,0 +1,74 @@
+---
+# ServiceMonitor for OpenTelemetry Collector
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: otel-collector
+  namespace: kgateway
+  labels:
+    app: otel-collector
+spec:
+  selector:
+    matchLabels:
+      app: otel-collector
+  endpoints:
+    - port: metrics
+      interval: 30s
+      path: /metrics
+    - port: prometheus
+      interval: 30s
+      path: /metrics
+---
+# ServiceMonitor for kgateway control plane
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: kgateway-controller
+  namespace: kgateway
+  labels:
+    app.kubernetes.io/name: kgateway
+    app.kubernetes.io/component: controller
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kgateway
+      app.kubernetes.io/component: controller-manager
+  namespaceSelector:
+    matchNames:
+      - kgateway
+  endpoints:
+    - port: metrics
+      interval: 30s
+      path: /metrics
+---
+# ServiceMonitor for kgateway gateway proxies (Envoy metrics)
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: kgateway-proxy
+  namespace: kgateway
+  labels:
+    kgateway: kube-gateway
+spec:
+  selector:
+    matchLabels:
+      kgateway: kube-gateway
+  namespaceSelector:
+    matchNames:
+      - kgateway
+  endpoints:
+    - port: http-metrics
+      interval: 30s
+      path: /stats/prometheus
+      relabelings:
+        - sourceLabels: [__meta_kubernetes_pod_name]
+          targetLabel: pod
+        - sourceLabels: [__meta_kubernetes_namespace]
+          targetLabel: namespace
+        - sourceLabels: [__meta_kubernetes_pod_label_kgateway]
+          targetLabel: gateway
+      metricRelabelings:
+        # Keep only Envoy metrics
+        - sourceLabels: [__name__]
+          regex: 'envoy_.*'
+          action: keep
