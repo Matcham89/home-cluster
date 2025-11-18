@@ -8,7 +8,7 @@ spec:
   interval: 1m
   chart:
     spec:
-      chart: open-telemetry/opentelemetry-operator
+      chart: opentelemetry-operator
       version: 0.99.1
       sourceRef:
         kind: HelmRepository
