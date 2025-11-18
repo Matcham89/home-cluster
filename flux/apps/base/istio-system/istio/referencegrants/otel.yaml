@@ -1,6 +1,9 @@
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
 kind: ReferenceGrant
 metadata:
-  name: allow-otel-collector-logs-access
+  name: allow-otel-collector-access
+  namespace: monitoring
 spec:
   from:
   - group: gateway.kgateway.dev
@@ -9,4 +12,4 @@ spec:
   to:
   - group: ""
     kind: Service
-    name: opentelemetry-collector-logs
+    name: otel-collector-collector
