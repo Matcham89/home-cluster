@@ -34,9 +34,9 @@ spec:
         loadBalancerIP: "10.0.0.154"
     nodeExporter:
       enabled: true
-      service:
-        type: LoadBalancer
-        loadBalancerIP: "10.0.0.155"
+      operatingSystems:
+        linux:
+          enabled: true
     prometheus:
       enabled: true
       service:
