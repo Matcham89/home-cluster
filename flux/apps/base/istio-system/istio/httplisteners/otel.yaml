@@ -2,6 +2,7 @@ apiVersion: gateway.kgateway.dev/v1alpha1
 kind: HTTPListenerPolicy
 metadata:
   name: logging-policy
+  namespace: istio-system
 spec:
   targetRefs:
   - group: gateway.networking.k8s.io
@@ -11,7 +12,7 @@ spec:
   - openTelemetry:
       grpcService:
         backendRef:
-          name: opentelemetry-collector-logs
+          name: otel-collector-collector
           namespace: monitoring
           port: 4317
         logName: "http-gateway-access-logs"
