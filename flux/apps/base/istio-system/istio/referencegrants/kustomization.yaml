@@ -7,4 +7,3 @@ resources:
   - keycloak.yaml
   - mcp.yaml
   - monitoring.yaml
-  - otel.yaml
