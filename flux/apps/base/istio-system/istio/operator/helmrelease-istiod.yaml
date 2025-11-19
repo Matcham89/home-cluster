@@ -21,3 +21,10 @@ spec:
     remediation:
       retries: 3
   values:
+    meshConfig:
+      enableTracing: true
+      extensionProviders:
+      - name: otel-tracing
+        opentelemetry:
+          port: 4317
+          service: otel-collector-collector.monitoring.svc.cluster.local
