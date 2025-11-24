@@ -25,6 +25,9 @@ spec:
   # Fixed by enabling DisableChartDigestTracking feature gate in helm-controller
   # See: https://github.com/fluxcd/flux2/issues/4910
   values:
+    gateway:
+      aiExtension:
+      enabled: true
     agentgateway:
       enabled: true
       podLabels:  
