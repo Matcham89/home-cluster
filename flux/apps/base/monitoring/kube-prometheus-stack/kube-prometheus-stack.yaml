@@ -26,12 +26,12 @@ spec:
       enabled: true
       service:
         type: LoadBalancer
-        loadBalancerIP: "10.0.0.153"
+        loadBalancerIP: "192.168.1.203"
     kubeStateMetrics:
       enabled: true
       service:
         type: LoadBalancer
-        loadBalancerIP: "10.0.0.154"
+        loadBalancerIP: "192.168.1.204"
     nodeExporter:
       enabled: true
       operatingSystems:
@@ -41,7 +41,7 @@ spec:
       enabled: true
       service:
         type: LoadBalancer
-        loadBalancerIP: "10.0.0.156"
+        loadBalancerIP: "192.168.1.205"
       prometheusSpec:
         ruleSelectorNilUsesHelmValues: false
         serviceMonitorSelectorNilUsesHelmValues: false
