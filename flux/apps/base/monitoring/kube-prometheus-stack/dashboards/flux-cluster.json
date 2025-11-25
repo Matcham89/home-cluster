@@ -16,6 +16,7 @@
           "uid": "grafana"
         },
         "enable": true,
+        "hide": false,
         "iconColor": "red",
         "name": "flux events",
         "target": {
@@ -32,9 +33,8 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 1,
+  "id": 32,
   "links": [],
-  "liveNow": false,
   "panels": [
     {
       "datasource": {
@@ -52,7 +52,7 @@
             "steps": [
               {
                 "color": "blue",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -76,6 +76,7 @@
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "last"
@@ -83,10 +84,12 @@
           "fields": "",
           "values": false
         },
+        "showPercentChange": false,
         "text": {},
-        "textMode": "value"
+        "textMode": "value",
+        "wideLayout": true
       },
-      "pluginVersion": "10.0.3",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
@@ -122,7 +125,7 @@
             "steps": [
               {
                 "color": "red",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -142,6 +145,7 @@
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "last"
@@ -149,10 +153,12 @@
           "fields": "",
           "values": false
         },
+        "showPercentChange": false,
         "text": {},
-        "textMode": "value"
+        "textMode": "value",
+        "wideLayout": true
       },
-      "pluginVersion": "10.0.3",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
@@ -188,7 +194,7 @@
             "steps": [
               {
                 "color": "blue",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -212,6 +218,7 @@
         "graphMode": "none",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "last"
@@ -219,10 +226,12 @@
           "fields": "",
           "values": false
         },
+        "showPercentChange": false,
         "text": {},
-        "textMode": "value"
+        "textMode": "value",
+        "wideLayout": true
       },
-      "pluginVersion": "10.0.3",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
@@ -258,7 +267,7 @@
             "steps": [
               {
                 "color": "red",
-                "value": null
+                "value": 0
               }
             ]
           },
@@ -278,6 +287,7 @@
         "graphMode": "area",
         "justifyMode": "auto",
         "orientation": "auto",
+        "percentChangeColorMode": "standard",
         "reduceOptions": {
           "calcs": [
             "last"
@@ -285,10 +295,12 @@
           "fields": "",
           "values": false
         },
+        "showPercentChange": false,
         "text": {},
-        "textMode": "value"
+        "textMode": "value",
+        "wideLayout": true
       },
-      "pluginVersion": "10.0.3",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
@@ -319,7 +331,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "#EAB839",
@@ -344,8 +356,16 @@
       "id": 8,
       "options": {
         "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
         "minVizHeight": 10,
         "minVizWidth": 0,
+        "namePlacement": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
@@ -355,10 +375,11 @@
           "values": false
         },
         "showUnfilled": true,
+        "sizing": "auto",
         "text": {},
         "valueMode": "color"
       },
-      "pluginVersion": "10.0.3",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "exemplar": true,
@@ -382,7 +403,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "#EAB839",
@@ -407,8 +428,16 @@
       "id": 31,
       "options": {
         "displayMode": "gradient",
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": false
+        },
+        "maxVizHeight": 300,
         "minVizHeight": 10,
         "minVizWidth": 0,
+        "namePlacement": "auto",
         "orientation": "horizontal",
         "reduceOptions": {
           "calcs": [
@@ -418,10 +447,11 @@
           "values": false
         },
         "showUnfilled": true,
+        "sizing": "auto",
         "text": {},
         "valueMode": "color"
       },
-      "pluginVersion": "10.0.3",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "exemplar": true,
@@ -436,7 +466,6 @@
     },
     {
       "collapsed": false,
-      "datasource": "${DS_PROMETHEUS}",
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -462,6 +491,9 @@
               "type": "auto"
             },
             "filterable": true,
+            "footer": {
+              "reducers": []
+            },
             "inspect": false
           },
           "mappings": [
@@ -486,7 +518,7 @@
             "steps": [
               {
                 "color": "transparent",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -518,14 +550,6 @@
       "id": 33,
       "options": {
         "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "fields": "",
-          "reducer": [
-            "sum"
-          ],
-          "show": false
-        },
         "showHeader": true,
         "sortBy": [
           {
@@ -534,7 +558,7 @@
           }
         ]
       },
-      "pluginVersion": "10.0.3",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
@@ -543,7 +567,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "flux_resource_info{exported_namespace=~\"$namespace\", kind=~\"Kustomization|HelmRelease\"}",
+          "expr": "flux_resource_info{kind=~\"Kustomization|HelmRelease\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -565,13 +589,13 @@
               "chart_source_name": false,
               "container": false,
               "customresource_group": false,
-              "kind": false,
               "customresource_version": false,
               "endpoint": false,
               "exported_namespace": false,
               "gotk_type": false,
               "instance": false,
               "job": false,
+              "kind": false,
               "kubernetes_namespace": false,
               "kubernetes_pod_name": false,
               "namespace": false,
@@ -590,12 +614,12 @@
               "__name__": 1,
               "container": 2,
               "customresource_group": 4,
-              "kind": 5,
               "customresource_version": 6,
               "endpoint": 7,
               "exported_namespace": 3,
               "instance": 8,
               "job": 9,
+              "kind": 5,
               "name": 10,
               "namespace": 11,
               "pod": 12,
@@ -604,7 +628,6 @@
             },
             "renameByName": {
               "Value": "",
-              "kind": "Kind",
               "exported_namespace": "Namespace",
               "kind": "Kind",
               "name": "Name",
@@ -641,6 +664,9 @@
               "type": "auto"
             },
             "filterable": true,
+            "footer": {
+              "reducers": []
+            },
             "inspect": false
           },
           "mappings": [
@@ -665,7 +691,7 @@
             "steps": [
               {
                 "color": "transparent",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -716,14 +742,6 @@
       "id": 34,
       "options": {
         "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "fields": "",
-          "reducer": [
-            "sum"
-          ],
-          "show": false
-        },
         "showHeader": true,
         "sortBy": [
           {
@@ -732,7 +750,7 @@
           }
         ]
       },
-      "pluginVersion": "10.0.3",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
@@ -741,7 +759,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "flux_resource_info{exported_namespace=~\"$namespace\", kind=~\"GitRepository|HelmRepository|Bucket|OCIRepository\"}",
+          "expr": "flux_resource_info{kind=~\"GitRepository|HelmRepository|Bucket|OCIRepository\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -762,13 +780,13 @@
               "bucket_name": false,
               "container": false,
               "customresource_group": false,
-              "kind": false,
               "customresource_version": false,
               "endpoint": false,
               "exported_namespace": false,
               "gotk_type": false,
               "instance": false,
               "job": false,
+              "kind": false,
               "kubernetes_namespace": false,
               "kubernetes_pod_name": false,
               "namespace": false,
@@ -788,12 +806,12 @@
               "__name__": 1,
               "container": 2,
               "customresource_group": 5,
-              "kind": 6,
               "customresource_version": 7,
               "endpoint": 8,
               "exported_namespace": 4,
               "instance": 9,
               "job": 10,
+              "kind": 6,
               "name": 11,
               "namespace": 3,
               "pod": 12,
@@ -802,7 +820,6 @@
             },
             "renameByName": {
               "Value": "",
-              "kind": "Kind",
               "exported_namespace": "Namespace",
               "kind": "Kind",
               "name": "Name",
@@ -839,6 +856,9 @@
               "type": "auto"
             },
             "filterable": true,
+            "footer": {
+              "reducers": []
+            },
             "inspect": false
           },
           "mappings": [],
@@ -847,7 +867,7 @@
             "steps": [
               {
                 "color": "transparent",
-                "value": null
+                "value": 0
               }
             ]
           }
@@ -879,14 +899,6 @@
       "id": 36,
       "options": {
         "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "fields": "",
-          "reducer": [
-            "sum"
-          ],
-          "show": false
-        },
         "showHeader": true,
         "sortBy": [
           {
@@ -895,7 +907,7 @@
           }
         ]
       },
-      "pluginVersion": "10.1.0",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
           "datasource": {
@@ -904,7 +916,7 @@
           },
           "editorMode": "code",
           "exemplar": true,
-          "expr": "flux_resource_info{exported_namespace=~\"$namespace\", suspended=\"true\"}",
+          "expr": "flux_resource_info{suspended=\"true\"}",
           "format": "table",
           "instant": true,
           "interval": "",
@@ -925,13 +937,13 @@
               "bucket_name": false,
               "container": false,
               "customresource_group": false,
-              "kind": false,
               "customresource_version": false,
               "endpoint": false,
               "exported_namespace": false,
               "gotk_type": false,
               "instance": false,
               "job": false,
+              "kind": false,
               "kubernetes_namespace": false,
               "kubernetes_pod_name": false,
               "namespace": false,
@@ -952,12 +964,12 @@
               "__name__": 1,
               "container": 2,
               "customresource_group": 5,
-              "kind": 6,
               "customresource_version": 7,
               "endpoint": 8,
               "exported_namespace": 4,
               "instance": 9,
               "job": 10,
+              "kind": 6,
               "name": 11,
               "namespace": 3,
               "pod": 12,
@@ -965,8 +977,8 @@
               "service": 14
             },
             "renameByName": {
-              "kind": "Kind",
               "exported_namespace": "Namespace",
+              "kind": "Kind",
               "name": "Name"
             }
           }
@@ -984,7 +996,6 @@
     },
     {
       "collapsed": false,
-      "datasource": "${DS_PROMETHEUS}",
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -1005,11 +1016,13 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
             "gradientMode": "none",
@@ -1018,6 +1031,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -1025,6 +1039,7 @@
               "type": "linear"
             },
             "showPoints": "never",
+            "showValues": false,
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -1040,7 +1055,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -1110,18 +1125,21 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "desc"
         }
       },
-      "pluginVersion": "10.0.3",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
+          "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(rate(gotk_reconcile_duration_seconds_sum{exported_namespace=~\"$namespace\",kind=~\"Kustomization|HelmRelease\"}[5m])) by (kind, name)\n/\n  sum(rate(gotk_reconcile_duration_seconds_count{exported_namespace=~\"$namespace\",kind=~\"Kustomization|HelmRelease\"}[5m])) by (kind, name)",
+          "expr": "sum(rate(gotk_reconcile_duration_seconds_sum{kind=~\"Kustomization|HelmRelease\"}[5m])) by (kind, name)\n/\n  sum(rate(gotk_reconcile_duration_seconds_count{kind=~\"Kustomization|HelmRelease\"}[5m])) by (kind, name)",
           "hide": false,
           "interval": "",
           "legendFormat": "{{kind}}/{{name}}",
+          "range": true,
           "refId": "B"
         }
       ],
@@ -1137,11 +1155,13 @@
             "mode": "palette-classic"
           },
           "custom": {
+            "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
             "barAlignment": 0,
+            "barWidthFactor": 0.6,
             "drawStyle": "line",
             "fillOpacity": 10,
             "gradientMode": "none",
@@ -1150,6 +1170,7 @@
               "tooltip": false,
               "viz": false
             },
+            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 1,
             "pointSize": 5,
@@ -1157,6 +1178,7 @@
               "type": "linear"
             },
             "showPoints": "never",
+            "showValues": false,
             "spanNulls": false,
             "stacking": {
               "group": "A",
@@ -1172,7 +1194,7 @@
             "steps": [
               {
                 "color": "green",
-                "value": null
+                "value": 0
               },
               {
                 "color": "red",
@@ -1242,18 +1264,21 @@
           "showLegend": true
         },
         "tooltip": {
+          "hideZeros": false,
           "mode": "multi",
           "sort": "desc"
         }
       },
-      "pluginVersion": "10.0.3",
+      "pluginVersion": "12.2.1",
       "targets": [
         {
+          "editorMode": "code",
           "exemplar": true,
-          "expr": "sum(rate(gotk_reconcile_duration_seconds_sum{exported_namespace=~\"$namespace\",kind=~\"GitRepository|HelmRepository|Bucket|OCIRepository\"}[5m])) by (kind, name)\n/\n  sum(rate(gotk_reconcile_duration_seconds_count{exported_namespace=~\"$namespace\",kind=~\"GitRepository|HelmRepository|Bucket|OCIRepository\"}[5m])) by (kind, name)",
+          "expr": "sum(rate(gotk_reconcile_duration_seconds_sum{kind=~\"GitRepository|HelmRepository|Bucket|OCIRepository\"}[5m])) by (kind, name)\n/\n  sum(rate(gotk_reconcile_duration_seconds_count{kind=~\"GitRepository|HelmRepository|Bucket|OCIRepository\"}[5m])) by (kind, name)",
           "hide": false,
           "interval": "",
           "legendFormat": "{{kind}}/{{name}}",
+          "range": true,
           "refId": "B"
         }
       ],
@@ -1261,9 +1286,9 @@
       "type": "timeseries"
     }
   ],
+  "preload": false,
   "refresh": "30s",
-  "schemaVersion": 38,
-  "style": "light",
+  "schemaVersion": 42,
   "tags": [
     "flux"
   ],
@@ -1271,58 +1296,52 @@
     "list": [
       {
         "current": {
-          "selected": true,
           "text": "flux-system",
           "value": "flux-system"
         },
         "hide": 2,
         "name": "operator_namespace",
+        "query": "flux-system",
+        "skipUrlSync": true,
+        "type": "constant",
         "options": [
           {
             "selected": true,
             "text": "flux-system",
             "value": "flux-system"
           }
-        ],
-        "query": "flux-system",
-        "skipUrlSync": false,
-        "type": "constant"
+        ]
       },
       {
         "current": {
-          "selected": true,
           "text": "flux-system",
           "value": "flux-system"
         },
         "hide": 2,
         "name": "namespace",
+        "query": "flux-system",
+        "skipUrlSync": true,
+        "type": "constant",
         "options": [
           {
             "selected": true,
             "text": "flux-system",
             "value": "flux-system"
           }
-        ],
-        "query": "flux-system",
-        "skipUrlSync": false,
-        "type": "constant"
+        ]
       },
       {
         "current": {
-          "selected": false,
           "text": "Prometheus",
           "value": "Prometheus"
         },
-        "hide": 0,
         "includeAll": false,
         "label": "Datasource",
-        "multi": false,
         "name": "DS_PROMETHEUS",
         "options": [],
         "query": "prometheus",
         "refresh": 1,
         "regex": "",
-        "skipUrlSync": false,
         "type": "datasource"
       }
     ]
@@ -1347,6 +1366,5 @@
   "timezone": "",
   "title": "Flux Cluster Stats",
   "uid": "flux-cluster",
-  "version": 4,
-  "weekStart": ""
+  "version": 1
 }
