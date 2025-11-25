@@ -1676,32 +1676,22 @@
       },
       {
         "current": {
-          "selected": false,
+          "selected": true,
           "text": "flux-system",
           "value": "flux-system"
         },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "${DS_PROMETHEUS}"
-        },
-        "definition": "workqueue_work_duration_seconds_count",
-        "hide": 0,
-        "includeAll": false,
-        "multi": false,
+        "hide": 2,
         "name": "namespace",
-        "options": [],
-        "query": {
-          "query": "workqueue_work_duration_seconds_count",
-          "refId": "Prometheus-namespace-Variable-Query"
-        },
-        "refresh": 2,
-        "regex": "/.*namespace=\"([^\"]*).*/",
+        "options": [
+          {
+            "selected": true,
+            "text": "flux-system",
+            "value": "flux-system"
+          }
+        ],
+        "query": "flux-system",
         "skipUrlSync": false,
-        "sort": 0,
-        "tagValuesQuery": "",
-        "tagsQuery": "",
-        "type": "query",
-        "useTags": false
+        "type": "constant"
       }
     ]
   },
