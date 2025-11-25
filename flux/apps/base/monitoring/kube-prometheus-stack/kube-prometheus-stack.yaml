@@ -34,6 +34,12 @@ spec:
       service:
         type: LoadBalancer
         loadBalancerIP: "192.168.1.204"
+    kube-state-metrics:
+      prometheus:
+        monitor:
+          enabled: true
+          interval: 30s
+          scrapeTimeout: 30s
     nodeExporter:
       enabled: true
       operatingSystems:
