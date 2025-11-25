@@ -4,3 +4,4 @@ kind: Kustomization
 namespace: flux-system
 resources:
   - podmonitor.yaml
+  - servicemonitor-operator.yaml
