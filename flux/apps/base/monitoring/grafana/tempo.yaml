@@ -333,7 +333,7 @@ spec:
       type: LoadBalancer
       clusterIP: ""
       # -- (string) IP address, in case of 'type: LoadBalancer'
-      loadBalancerIP: "192.168.1.202" 
+      loadBalancerIP: "192.168.1.207" 
       # -- If service type is LoadBalancer, the exposed protocol can either be "UDP", "TCP" or "UDP,TCP"
       protocol: "TCP"
 
