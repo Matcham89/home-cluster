@@ -52,7 +52,7 @@ spec:
           - native-histograms
         enableRemoteWriteReceiver: true
     grafana:
-      enabled: false
+      enabled: true
       defaultDashboardsEnabled: true
       defaultDashboardsTimezone: mdt
       datasources:
