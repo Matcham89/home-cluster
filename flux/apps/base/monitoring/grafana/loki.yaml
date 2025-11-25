@@ -115,4 +115,4 @@ spec:
     gateway:
       service:
         type: LoadBalancer
-        loadBalancerIP: "192.168.1.201"
+        loadBalancerIP: "192.168.1.206"
