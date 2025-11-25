@@ -255,29 +255,23 @@
         "type": "query"
       },
       {
-        "allValue": ".+",
         "current": {
           "selected": true,
-          "text": [
-            "flux-system"
-          ],
-          "value": [
-            "flux-system"
-          ]
+          "text": "flux-system",
+          "value": "flux-system"
         },
-        "datasource": "${DS_LOKI}",
-        "definition": "label_values(namespace)",
-        "hide": 0,
-        "includeAll": true,
-        "multi": true,
+        "hide": 2,
         "name": "namespace",
-        "options": [],
-        "query": "label_values(namespace)",
-        "refresh": 1,
-        "regex": "",
+        "options": [
+          {
+            "selected": true,
+            "text": "flux-system",
+            "value": "flux-system"
+          }
+        ],
+        "query": "flux-system",
         "skipUrlSync": false,
-        "sort": 0,
-        "type": "query"
+        "type": "constant"
       },
       {
         "allValue": ".+",

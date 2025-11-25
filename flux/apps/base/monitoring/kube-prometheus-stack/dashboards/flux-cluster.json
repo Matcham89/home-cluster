@@ -1270,73 +1270,42 @@
   "templating": {
     "list": [
       {
-        "allValue": "",
         "current": {
           "selected": true,
-          "text": [
-            "All"
-          ],
-          "value": [
-            "$__all"
-          ]
+          "text": "flux-system",
+          "value": "flux-system"
         },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "$DS_PROMETHEUS"
-        },
-        "definition": "label_values(gotk_resource_info, exported_namespace)",
-        "hide": 0,
-        "includeAll": true,
-        "multi": true,
+        "hide": 2,
         "name": "operator_namespace",
-        "options": [],
-        "query": {
-          "query": "label_values(gotk_reconcile_duration_seconds_sum, namespace)",
-          "refId": "StandardVariableQuery"
-        },
-        "refresh": 2,
-        "regex": "",
+        "options": [
+          {
+            "selected": true,
+            "text": "flux-system",
+            "value": "flux-system"
+          }
+        ],
+        "query": "flux-system",
         "skipUrlSync": false,
-        "sort": 5,
-        "tagValuesQuery": "",
-        "tags": [],
-        "tagsQuery": "",
-        "type": "query",
-        "useTags": false
+        "type": "constant"
       },
       {
         "current": {
           "selected": true,
-          "text": [
-            "All"
-          ],
-          "value": [
-            "$__all"
-          ]
+          "text": "flux-system",
+          "value": "flux-system"
         },
-        "datasource": {
-          "type": "prometheus",
-          "uid": "$DS_PROMETHEUS"
-        },
-        "definition": "label_values(gotk_resource_info,exported_namespace)",
-        "hide": 0,
-        "includeAll": true,
-        "multi": true,
+        "hide": 2,
         "name": "namespace",
-        "options": [],
-        "query": {
-          "query": "label_values(gotk_resource_info,exported_namespace)",
-          "refId": "PrometheusVariableQueryEditor-VariableQuery"
-        },
-        "refresh": 2,
-        "regex": "",
+        "options": [
+          {
+            "selected": true,
+            "text": "flux-system",
+            "value": "flux-system"
+          }
+        ],
+        "query": "flux-system",
         "skipUrlSync": false,
-        "sort": 0,
-        "tagValuesQuery": "",
-        "tags": [],
-        "tagsQuery": "",
-        "type": "query",
-        "useTags": false
+        "type": "constant"
       },
       {
         "current": {
