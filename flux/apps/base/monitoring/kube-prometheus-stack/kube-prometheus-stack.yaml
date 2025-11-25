@@ -53,6 +53,9 @@ spec:
         enableRemoteWriteReceiver: true
     grafana:
       enabled: true
+      service:
+        type: LoadBalancer
+        loadBalancerIP: "192.168.1.209"
       defaultDashboardsEnabled: true
       defaultDashboardsTimezone: mdt
       datasources:
