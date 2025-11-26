@@ -1,8 +1,8 @@
 {
   "__inputs": [
     {
-      "name": "DS__VICTORIAMETRICS-PROD-ALL",
-      "label": "VictoriaMetrics-prod-all",
+      "name": "DS_PROMETHEUS",
+      "label": "Prometheus",
       "description": "",
       "type": "datasource",
       "pluginId": "prometheus",
@@ -71,7 +71,7 @@
       }
     ]
   },
-  "description": "【English version】2025.01.25 Updates，kubernetesComprehensive display of resources！Includes K8S Overall Resource Overview、Microservices Resource Details、Pod Resource Details andK8SNetwork Bandwidth，Optimization metrics。https://grafana.com/orgs/starsliao/dashboards",
+  "description": "\u3010English version\u30112025.01.25 Updates\uff0ckubernetesComprehensive display of resources\uff01Includes K8S Overall Resource Overview\u3001Microservices Resource Details\u3001Pod Resource Details andK8SNetwork Bandwidth\uff0cOptimization metrics\u3002https://grafana.com/orgs/starsliao/dashboards",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "gnetId": 15661,
@@ -106,7 +106,7 @@
       "collapsed": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "WAYOn0FGz"
+        "uid": "${DS_PROMETHEUS}"
       },
       "gridPos": {
         "h": 1,
@@ -116,13 +116,13 @@
       },
       "id": 54,
       "panels": [],
-      "title": "Node Resource Overview：Selected Nodes:【$Node】",
+      "title": "Node Resource Overview\uff1aSelected Nodes:\u3010$Node\u3011",
       "type": "row"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -182,7 +182,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": true,
@@ -197,7 +197,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": true,
@@ -212,7 +212,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": true,
@@ -233,7 +233,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -293,7 +293,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": true,
@@ -308,7 +308,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": true,
@@ -322,7 +322,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": true,
@@ -340,9 +340,9 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+        "uid": "${DS_PROMETHEUS}"
       },
-      "description": "Number of cluster nodes，Nodes POD Number of，NodesPODUpper Limit",
+      "description": "Number of cluster nodes\uff0cNodes POD Number of\uff0cNodesPODUpper Limit",
       "fieldConfig": {
         "defaults": {
           "mappings": [],
@@ -400,7 +400,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "count(kube_node_info{origin_prometheus=~\"$origin_prometheus\"})",
           "instant": true,
@@ -411,7 +411,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "count(kube_pod_info{origin_prometheus=~\"$origin_prometheus\",created_by_kind!~\"<none>|Job\",node=~\"^$Node$\"})",
           "hide": false,
@@ -423,7 +423,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"pods\", unit=\"integer\",node=~\"^$Node$\"})",
@@ -440,7 +440,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -577,7 +577,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "expr": "count(kube_pod_info{origin_prometheus=~\"$origin_prometheus\",node=~\"^$Node$\"}) by (namespace)",
@@ -590,7 +590,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "expr": "count(kube_service_info{origin_prometheus=~\"$origin_prometheus\"}) by(namespace)",
@@ -604,7 +604,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "expr": "count by (namespace)({__name__=~\"kube_deployment_metadata_generation|kube_daemonset_metadata_generation|kube_statefulset_metadata_generation\",origin_prometheus=~\"$origin_prometheus\"})",
@@ -618,7 +618,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "expr": "count(kube_configmap_info{origin_prometheus=~\"$origin_prometheus\"}) by(namespace)",
@@ -632,7 +632,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "expr": "count(kube_secret_info{origin_prometheus=~\"$origin_prometheus\"}) by(namespace)",
@@ -691,7 +691,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -779,7 +779,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": true,
@@ -796,7 +796,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": true,
@@ -810,13 +810,13 @@
           "step": 10
         }
       ],
-      "title": "$NameSpace：Network Overview（Associable nodes and namespaces）",
+      "title": "$NameSpace\uff1aNetwork Overview\uff08Associable nodes and namespaces\uff09",
       "type": "timeseries"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -876,7 +876,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\", node=~\"^$Node$\"})",
@@ -888,7 +888,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum (container_memory_working_set_bytes{origin_prometheus=~\"$origin_prometheus\",container!=\"\",node=~\"^$Node$\"})",
@@ -900,7 +900,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\",node=~\"^$Node$\"})",
@@ -912,7 +912,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\",node=~\"^$Node$\"})",
@@ -928,7 +928,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -988,7 +988,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\", node=~\"^$Node$\"})",
@@ -1000,7 +1000,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum (irate(container_cpu_usage_seconds_total{origin_prometheus=~\"$origin_prometheus\",id=\"/\",node=~\"^$Node$\"}[2m]))",
@@ -1012,7 +1012,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\",node=~\"^$Node$\"})",
@@ -1024,7 +1024,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\",node=~\"^$Node$\"})",
@@ -1040,7 +1040,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1152,7 +1152,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum (container_fs_usage_bytes{origin_prometheus=~\"$origin_prometheus\",device=~\"^/dev/.*$\",id=\"/\",node=~\"^$Node$\"}) / sum (container_fs_limit_bytes{origin_prometheus=~\"$origin_prometheus\",device=~\"^/dev/.*$\",id=\"/\",node=~\"^$Node$\"})",
           "instant": true,
@@ -1163,7 +1163,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum (container_fs_usage_bytes{origin_prometheus=~\"$origin_prometheus\",device=~\"^/dev/.*$\",id=\"/\",node=~\"^$Node$\"})",
           "instant": true,
@@ -1174,7 +1174,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "expr": "sum (container_fs_limit_bytes{origin_prometheus=~\"$origin_prometheus\",device=~\"^/dev/.*$\",id=\"/\",node=~\"^$Node$\"})",
           "instant": true,
@@ -1189,7 +1189,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1261,7 +1261,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -1275,7 +1275,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -1289,7 +1289,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -1304,7 +1304,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -1318,7 +1318,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -1332,7 +1332,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -1358,7 +1358,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1459,7 +1459,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": true,
@@ -1472,7 +1472,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum (container_memory_working_set_bytes{origin_prometheus=~\"$origin_prometheus\",container!=\"\",node=~\"^$Node$\"})",
@@ -1484,7 +1484,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\",node=~\"^$Node$\"})",
@@ -1497,7 +1497,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\",node=~\"^$Node$\"})",
@@ -1508,13 +1508,13 @@
           "refId": "B"
         }
       ],
-      "title": "Memory Usage【$Node】",
+      "title": "Memory Usage\u3010$Node\u3011",
       "type": "timeseries"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1615,7 +1615,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": true,
@@ -1628,7 +1628,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum (irate(container_cpu_usage_seconds_total{origin_prometheus=~\"$origin_prometheus\",id=\"/\",node=~\"^$Node$\"}[2m]))",
@@ -1640,7 +1640,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\",node=~\"^$Node$\"})",
@@ -1653,7 +1653,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\",node=~\"^$Node$\"})",
@@ -1664,15 +1664,15 @@
           "refId": "B"
         }
       ],
-      "title": "CPU Used Cores【$Node】",
+      "title": "CPU Used Cores\u3010$Node\u3011",
       "type": "timeseries"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+        "uid": "${DS_PROMETHEUS}"
       },
-      "description": "Number of Cluster Nodes，Nodes POD Number of，Nodes POD Upper Limit",
+      "description": "Number of Cluster Nodes\uff0cNodes POD Number of\uff0cNodes POD Upper Limit",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -1799,7 +1799,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "count(kube_node_info{origin_prometheus=~\"$origin_prometheus\"})",
@@ -1812,7 +1812,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": true,
@@ -1826,7 +1826,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"pods\", unit=\"integer\",node=~\"^$Node$\"})",
@@ -1837,13 +1837,13 @@
           "refId": "C"
         }
       ],
-      "title": "Pod Number and nodes【$Node】",
+      "title": "Pod Number and nodes\u3010$Node\u3011",
       "type": "timeseries"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -1944,7 +1944,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum (irate(container_cpu_usage_seconds_total{origin_prometheus=~\"$origin_prometheus\",container!=\"\",node=~\"^$Node$\"}[2m]))by (node) / sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\", node=~\"^$Node$\"})by (node)*100",
@@ -1956,13 +1956,13 @@
           "refId": "I"
         }
       ],
-      "title": "$Node：Nodes CPU Breakdown",
+      "title": "$Node\uff1aNodes CPU Breakdown",
       "type": "timeseries"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -2047,7 +2047,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum (container_memory_working_set_bytes{origin_prometheus=~\"$origin_prometheus\",container!=\"\",node=~\"^$Node$\"})by (node) / sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\", node=~\"^$Node$\"})by (node)*100",
@@ -2059,13 +2059,13 @@
           "refId": "I"
         }
       ],
-      "title": "$Node：Node Memory Breakdown",
+      "title": "$Node\uff1aNode Memory Breakdown",
       "type": "timeseries"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -2076,7 +2076,7 @@
             "axisBorderShow": false,
             "axisCenteredZero": false,
             "axisColorMode": "series",
-            "axisLabel": "←Inflow/Outflow→",
+            "axisLabel": "\u2190Inflow/Outflow\u2192",
             "axisPlacement": "auto",
             "barAlignment": 0,
             "drawStyle": "line",
@@ -2164,7 +2164,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum (irate(container_network_receive_bytes_total{origin_prometheus=~\"$origin_prometheus\",node=~\"^$Node$\"}[2m]))by (node) *8",
@@ -2179,7 +2179,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": true,
           "expr": "sum (irate(container_network_transmit_bytes_total{origin_prometheus=~\"$origin_prometheus\",node=~\"^$Node$\"}[2m]))by (node) *8",
@@ -2192,13 +2192,13 @@
           "step": 10
         }
       ],
-      "title": "$Node：Node Network Overview",
+      "title": "$Node\uff1aNode Network Overview",
       "type": "timeseries"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -2556,7 +2556,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
           "expr": "count(kube_pod_info{origin_prometheus=~\"$origin_prometheus\",created_by_kind!~\"<none>|Job\",node=~\"^$Node$\"}) by (node)",
@@ -2570,7 +2570,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
           "expr": "kube_node_status_condition{origin_prometheus=~\"$origin_prometheus\",status=\"true\",node=~\"^$Node$\"}  == 1",
@@ -2584,7 +2584,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
           "expr": "sum (irate(container_cpu_usage_seconds_total{origin_prometheus=~\"$origin_prometheus\",container!=\"\",node=~\"^$Node$\"}[2m])) by (node)",
@@ -2598,7 +2598,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
           "expr": "kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\", node=~\"^$Node$\"} - 0",
@@ -2612,7 +2612,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
           "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\",node=~\"^$Node$\"}) by (node)",
@@ -2626,7 +2626,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
           "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\",node=~\"^$Node$\"}) by (node)",
@@ -2640,7 +2640,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
           "expr": "sum (container_memory_working_set_bytes{origin_prometheus=~\"$origin_prometheus\",container!=\"\",node=~\"^$Node$\"}) by (node)",
@@ -2654,7 +2654,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
           "expr": "sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\", node=~\"^$Node$\"}) by (node) - 0",
@@ -2668,7 +2668,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
           "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\",node=~\"^$Node$\"}) by (node)",
@@ -2682,7 +2682,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
           "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\",node=~\"^$Node$\"}) by (node)",
@@ -2696,7 +2696,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
           "expr": "sum (container_fs_usage_bytes{origin_prometheus=~\"$origin_prometheus\",device=~\"^/dev/.*$\",id=\"/\",node=~\"^$Node$\"}) by (node)",
@@ -2710,7 +2710,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
           "expr": "sum (container_fs_limit_bytes{origin_prometheus=~\"$origin_prometheus\",device=~\"^/dev/.*$\",id=\"/\",node=~\"^$Node$\"}) by (node)",
@@ -2724,7 +2724,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
           "expr": "sum (container_memory_working_set_bytes{origin_prometheus=~\"$origin_prometheus\",container!=\"\",node=~\"^$Node$\"})by (node) / sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\", node=~\"^$Node$\"})by (node)",
@@ -2738,7 +2738,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
           "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\",node=~\"^$Node$\"})by (node) / sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\", node=~\"^$Node$\"})by (node)",
@@ -2752,7 +2752,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
           "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\",node=~\"^$Node$\"})by (node) / sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\", node=~\"^$Node$\"})by (node)",
@@ -2766,7 +2766,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
           "expr": "sum (irate(container_cpu_usage_seconds_total{origin_prometheus=~\"$origin_prometheus\",container!=\"\",node=~\"^$Node$\"}[2m]))by (node) / sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\", node=~\"^$Node$\"})by (node)",
@@ -2780,7 +2780,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
           "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\",node=~\"^$Node$\"})by (node) / sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\", node=~\"^$Node$\"})by (node)",
@@ -2794,7 +2794,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
           "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\",node=~\"^$Node$\"})by (node) / sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\", node=~\"^$Node$\"})by (node)",
@@ -2808,7 +2808,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
           "expr": "sum (container_fs_usage_bytes{origin_prometheus=~\"$origin_prometheus\",device=~\"^/dev/.*$\",id=\"/\",node=~\"^$Node$\"})by (node) / sum (container_fs_limit_bytes{origin_prometheus=~\"$origin_prometheus\",device=~\"^/dev/.*$\",id=\"/\",node=~\"^$Node$\"})by (node)",
@@ -2822,7 +2822,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
           "expr": "sum(kube_node_status_allocatable{origin_prometheus=~\"$origin_prometheus\",resource=\"pods\", unit=\"integer\",node=~\"^$Node$\"})by (node)",
@@ -2834,7 +2834,7 @@
           "refId": "T"
         }
       ],
-      "title": "$Node：Node Information Detail",
+      "title": "$Node\uff1aNode Information Detail",
       "transformations": [
         {
           "id": "merge",
@@ -2966,7 +2966,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -3153,7 +3153,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -3171,7 +3171,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -3190,7 +3190,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -3209,7 +3209,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -3256,7 +3256,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -3342,7 +3342,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": true,
@@ -3363,7 +3363,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -3450,7 +3450,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": true,
@@ -3471,7 +3471,7 @@
       "collapsed": false,
       "datasource": {
         "type": "prometheus",
-        "uid": "WAYOn0FGz"
+        "uid": "${DS_PROMETHEUS}"
       },
       "gridPos": {
         "h": 1,
@@ -3481,13 +3481,13 @@
       },
       "id": 49,
       "panels": [],
-      "title": "Pod Resource Overview：SelectedPod:【$Pod】",
+      "title": "Pod Resource Overview\uff1aSelectedPod:\u3010$Pod\u3011",
       "type": "row"
     },
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -3941,7 +3941,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -3956,7 +3956,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
           "expr": "sum(irate(container_cpu_usage_seconds_total{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",container =~\"$Container\",container !=\"\",container!=\"POD\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}[2m])) by (container, pod,node,namespace)",
@@ -3970,7 +3970,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
           "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\",pod=~\"$Pod\",container =~\"$Container\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}) by (container,pod,node,namespace)",
@@ -3984,7 +3984,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
           "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\",pod=~\"$Pod\",container =~\"$Container\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}) by (container,pod,node,namespace)",
@@ -3997,7 +3997,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -4012,7 +4012,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
           "expr": "sum (container_memory_working_set_bytes{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",container =~\"$Container\",container !=\"\",container!=\"POD\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}) by (container, pod,node,namespace)",
@@ -4026,7 +4026,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -4041,7 +4041,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
           "expr": "sum (container_memory_rss{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",container =~\"$Container\",container !=\"\",container!=\"POD\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}) by (container, pod,node,namespace)",
@@ -4055,7 +4055,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -4070,7 +4070,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "exemplar": false,
           "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\",pod=~\"$Pod\",container =~\"$Container\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}) by (container,pod,node,namespace)",
@@ -4084,7 +4084,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -4098,7 +4098,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -4113,7 +4113,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -4128,7 +4128,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -4143,7 +4143,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -4158,7 +4158,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -4171,7 +4171,7 @@
           "refId": "U"
         }
       ],
-      "title": "$Node：Pod Resource Detail(Associable Nodes)",
+      "title": "$Node\uff1aPod Resource Detail(Associable Nodes)",
       "transformations": [
         {
           "id": "merge",
@@ -4365,7 +4365,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -4451,7 +4451,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": true,
@@ -4472,7 +4472,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -4558,14 +4558,14 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
           "expr": "max (container_memory_working_set_bytes{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",container =~\"$Container\",container !=\"\",container!=\"POD\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}) by (container, pod)/ max(container_spec_memory_limit_bytes{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",container =~\"$Container\",container !=\"\",container!=\"POD\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}) by (container, pod) * 100",
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "WSS：{{ pod }}",
+          "legendFormat": "WSS\uff1a{{ pod }}",
           "metric": "container_memory_usage:sort_desc",
           "range": true,
           "refId": "A",
@@ -4574,14 +4574,14 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
           "expr": "max (container_memory_rss{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",container =~\"$Container\",container !=\"\",container!=\"POD\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}) by (container, pod)/ max(container_spec_memory_limit_bytes{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",container =~\"$Container\",container !=\"\",container!=\"POD\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}) by (container, pod) * 100",
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "RSS：{{ pod }}",
+          "legendFormat": "RSS\uff1a{{ pod }}",
           "metric": "container_memory_usage:sort_desc",
           "range": true,
           "refId": "B",
@@ -4590,7 +4590,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": true,
@@ -4599,7 +4599,7 @@
           "instant": false,
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "Heap：{{ pod }}",
+          "legendFormat": "Heap\uff1a{{ pod }}",
           "metric": "container_memory_usage:sort_desc",
           "refId": "C",
           "step": 10
@@ -4611,7 +4611,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -4697,7 +4697,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -4714,7 +4714,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -4730,7 +4730,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "expr": "sum(sum(irate(container_network_receive_bytes_total{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",image!=\"\",name=~\"^k8s_.*\",node=~\"^$Node$\",namespace=~\"$NameSpace\",pod=~\".*$Container.*\"}[2m])) by (pod)* on(pod) group_right kube_pod_container_info) by(pod) *8",
@@ -4746,7 +4746,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "expr": "sum(sum(irate(container_network_transmit_bytes_total{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",image!=\"\",name=~\"^k8s_.*\",node=~\"^$Node$\",namespace=~\"$NameSpace\",pod=~\".*$Container.*\"}[2m])) by (pod)* on(pod) group_right kube_pod_container_info) by(pod) *8",
@@ -4766,7 +4766,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -4870,7 +4870,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": true,
@@ -4879,7 +4879,7 @@
           "instant": false,
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "CPU Usage：{{ pod }}",
+          "legendFormat": "CPU Usage\uff1a{{ pod }}",
           "metric": "container_cpu",
           "refId": "A",
           "step": 10
@@ -4887,7 +4887,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": true,
@@ -4896,7 +4896,7 @@
           "instant": false,
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "Pod CPU Limitations：{{ container}}",
+          "legendFormat": "Pod CPU Limitations\uff1a{{ container}}",
           "metric": "container_cpu",
           "refId": "B",
           "step": 10
@@ -4908,7 +4908,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -5012,14 +5012,14 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
           "expr": "max (container_memory_working_set_bytes{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",container =~\"$Container\",container !=\"\",container!=\"POD\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}) by (container, pod,node,namespace)",
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "WSS：{{ pod }}",
+          "legendFormat": "WSS\uff1a{{ pod }}",
           "metric": "container_memory_usage:sort_desc",
           "range": true,
           "refId": "A",
@@ -5028,7 +5028,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": false,
@@ -5036,7 +5036,7 @@
           "hide": false,
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "PodMemory Limits：{{ container}}",
+          "legendFormat": "PodMemory Limits\uff1a{{ container}}",
           "metric": "container_memory_usage:sort_desc",
           "range": true,
           "refId": "B",
@@ -5049,7 +5049,7 @@
     {
       "datasource": {
         "type": "prometheus",
-        "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+        "uid": "${DS_PROMETHEUS}"
       },
       "fieldConfig": {
         "defaults": {
@@ -5134,14 +5134,14 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
           "exemplar": true,
           "expr": "max (container_memory_rss{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",container =~\"$Container\",container !=\"\",container!=\"POD\",node=~\"^$Node$\",namespace=~\"$NameSpace\"}) by (container, pod,node,namespace)",
           "interval": "",
           "intervalFactor": 1,
-          "legendFormat": "RSS：{{ pod }}",
+          "legendFormat": "RSS\uff1a{{ pod }}",
           "metric": "container_memory_usage:sort_desc",
           "range": true,
           "refId": "A",
@@ -5155,7 +5155,7 @@
       "collapsed": true,
       "datasource": {
         "type": "prometheus",
-        "uid": "WAYOn0FGz"
+        "uid": "${DS_PROMETHEUS}"
       },
       "gridPos": {
         "h": 1,
@@ -5168,7 +5168,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "fieldConfig": {
             "defaults": {
@@ -5539,7 +5539,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -5554,7 +5554,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -5569,7 +5569,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "exemplar": false,
               "expr": "sum(kube_pod_container_resource_requests{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}) by (container)",
@@ -5583,7 +5583,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "exemplar": false,
               "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$origin_prometheus\",resource=\"cpu\", unit=\"core\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}) by (container)",
@@ -5596,7 +5596,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -5611,7 +5611,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "exemplar": false,
               "expr": "sum (container_memory_working_set_bytes{origin_prometheus=~\"$origin_prometheus\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}) by (container)",
@@ -5625,7 +5625,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -5640,7 +5640,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "exemplar": false,
               "expr": "sum (container_memory_rss{origin_prometheus=~\"$origin_prometheus\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}) by (container)",
@@ -5654,7 +5654,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -5669,7 +5669,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "exemplar": false,
               "expr": "sum(kube_pod_container_resource_limits{origin_prometheus=~\"$origin_prometheus\",resource=\"memory\", unit=\"byte\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}) by (container)",
@@ -5683,7 +5683,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -5697,7 +5697,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -5711,7 +5711,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "editorMode": "code",
               "exemplar": false,
@@ -5797,7 +5797,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "fieldConfig": {
             "defaults": {
@@ -5882,7 +5882,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "exemplar": true,
               "expr": "sum(irate(container_cpu_usage_seconds_total{origin_prometheus=~\"$origin_prometheus\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}[2m])) by (container) / (sum(container_spec_cpu_quota{origin_prometheus=~\"$origin_prometheus\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}/100000) by (container)) * 100",
@@ -5902,7 +5902,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "fieldConfig": {
             "defaults": {
@@ -5987,12 +5987,12 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum (container_memory_working_set_bytes{origin_prometheus=~\"$origin_prometheus\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}) by (container)/ sum(container_spec_memory_limit_bytes{origin_prometheus=~\"$origin_prometheus\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}) by (container) * 100",
               "interval": "",
               "intervalFactor": 1,
-              "legendFormat": "WSS：{{ container }}",
+              "legendFormat": "WSS\uff1a{{ container }}",
               "metric": "container_memory_usage:sort_desc",
               "refId": "A",
               "step": 10
@@ -6000,12 +6000,12 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum (container_memory_rss{origin_prometheus=~\"$origin_prometheus\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}) by (container)/ sum(container_spec_memory_limit_bytes{origin_prometheus=~\"$origin_prometheus\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}) by (container) * 100",
               "interval": "",
               "intervalFactor": 1,
-              "legendFormat": "RSS：{{ container }}",
+              "legendFormat": "RSS\uff1a{{ container }}",
               "metric": "container_memory_usage:sort_desc",
               "refId": "B",
               "step": 10
@@ -6017,7 +6017,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "fieldConfig": {
             "defaults": {
@@ -6102,7 +6102,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "editorMode": "code",
               "exemplar": true,
@@ -6119,7 +6119,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "editorMode": "code",
               "exemplar": true,
@@ -6135,7 +6135,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "sum (rate (container_network_receive_bytes_total{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",image!=\"\",name=~\"^k8s_.*\",node=~\"^$Node$\",namespace=~\"$NameSpace\",pod=~\".*$Container.*\"}[2m])) by (pod)",
               "hide": true,
@@ -6149,7 +6149,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "expr": "- sum (rate (container_network_transmit_bytes_total{origin_prometheus=~\"$origin_prometheus\",pod=~\"$Pod\",image!=\"\",name=~\"^k8s_.*\",node=~\"^$Node$\",namespace=~\"$NameSpace\",pod=~\".*$Container.*\"}[2m])) by (pod)",
               "hide": true,
@@ -6167,7 +6167,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "fieldConfig": {
             "defaults": {
@@ -6270,7 +6270,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "editorMode": "code",
               "exemplar": true,
@@ -6279,7 +6279,7 @@
               "instant": false,
               "interval": "",
               "intervalFactor": 1,
-              "legendFormat": "CPU Limitations：{{ container}}",
+              "legendFormat": "CPU Limitations\uff1a{{ container}}",
               "metric": "container_cpu",
               "refId": "A",
               "step": 10
@@ -6287,7 +6287,7 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "editorMode": "code",
               "exemplar": true,
@@ -6296,7 +6296,7 @@
               "instant": false,
               "interval": "",
               "intervalFactor": 1,
-              "legendFormat": "CPU Core Usage：{{ container}}",
+              "legendFormat": "CPU Core Usage\uff1a{{ container}}",
               "metric": "container_cpu",
               "refId": "B",
               "step": 10
@@ -6308,7 +6308,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "fieldConfig": {
             "defaults": {
@@ -6411,13 +6411,13 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "editorMode": "code",
               "expr": "sum (container_memory_working_set_bytes{origin_prometheus=~\"$origin_prometheus\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}) by (container)",
               "interval": "",
               "intervalFactor": 1,
-              "legendFormat": "WSS：{{ container }}",
+              "legendFormat": "WSS\uff1a{{ container }}",
               "metric": "container_memory_usage:sort_desc",
               "range": true,
               "refId": "A",
@@ -6426,13 +6426,13 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "editorMode": "code",
               "expr": "sum(container_spec_memory_limit_bytes{origin_prometheus=~\"$origin_prometheus\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}) by (container)",
               "interval": "",
               "intervalFactor": 1,
-              "legendFormat": "Memory Limit：{{ container }}",
+              "legendFormat": "Memory Limit\uff1a{{ container }}",
               "metric": "container_memory_usage:sort_desc",
               "range": true,
               "refId": "B",
@@ -6441,14 +6441,14 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "editorMode": "code",
               "expr": "sum (container_memory_rss{origin_prometheus=~\"$origin_prometheus\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}) by (container)",
               "hide": false,
               "interval": "",
               "intervalFactor": 1,
-              "legendFormat": "RSS：{{ container }}",
+              "legendFormat": "RSS\uff1a{{ container }}",
               "metric": "container_memory_usage:sort_desc",
               "range": true,
               "refId": "C",
@@ -6461,7 +6461,7 @@
         {
           "datasource": {
             "type": "prometheus",
-            "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+            "uid": "${DS_PROMETHEUS}"
           },
           "fieldConfig": {
             "defaults": {
@@ -6546,13 +6546,13 @@
             {
               "datasource": {
                 "type": "prometheus",
-                "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+                "uid": "${DS_PROMETHEUS}"
               },
               "editorMode": "code",
               "expr": "count(kube_pod_container_info{origin_prometheus=~\"$origin_prometheus\",container =~\"$Container\",container !=\"\",container!=\"POD\",namespace=~\"$NameSpace\"}) by(container,namespace)",
               "interval": "",
               "intervalFactor": 1,
-              "legendFormat": "{{namespace}}：{{ container }}",
+              "legendFormat": "{{namespace}}\uff1a{{ container }}",
               "metric": "container_memory_usage:sort_desc",
               "range": true,
               "refId": "A",
@@ -6563,7 +6563,7 @@
           "type": "timeseries"
         }
       ],
-      "title": "Microservices (Container Name) Resource Overview：Selected Microservices:【$Container】",
+      "title": "Microservices (Container Name) Resource Overview\uff1aSelected Microservices:\u3010$Container\u3011",
       "type": "row"
     }
   ],
@@ -6580,7 +6580,7 @@
         "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+          "uid": "${DS_PROMETHEUS}"
         },
         "definition": "label_values(kube_node_info,origin_prometheus)",
         "hide": 0,
@@ -6607,7 +6607,7 @@
         "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+          "uid": "${DS_PROMETHEUS}"
         },
         "definition": "label_values(kube_node_info{origin_prometheus=~\"$origin_prometheus\"},node)",
         "hide": 0,
@@ -6634,7 +6634,7 @@
         "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+          "uid": "${DS_PROMETHEUS}"
         },
         "definition": "label_values(kube_namespace_created{origin_prometheus=~\"$origin_prometheus\"},namespace)",
         "hide": 0,
@@ -6661,7 +6661,7 @@
         "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+          "uid": "${DS_PROMETHEUS}"
         },
         "definition": "label_values(kube_pod_container_info{origin_prometheus=~\"$origin_prometheus\",namespace=~\"$NameSpace\"},container)",
         "hide": 0,
@@ -6688,7 +6688,7 @@
         "current": {},
         "datasource": {
           "type": "prometheus",
-          "uid": "${DS__VICTORIAMETRICS-PROD-ALL}"
+          "uid": "${DS_PROMETHEUS}"
         },
         "definition": "label_values(kube_pod_container_info{origin_prometheus=~\"$origin_prometheus\",namespace=~\"$NameSpace\",container=~\"$Container\"},pod)",
         "hide": 0,
