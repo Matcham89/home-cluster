@@ -59,6 +59,8 @@ spec:
         enableRemoteWriteReceiver: true
     grafana:
       enabled: true
+      operator:
+        dashboardsConfigMapRefEnabled: true
       service:
         type: LoadBalancer
         loadBalancerIP: "192.168.1.209"
@@ -76,6 +78,7 @@ spec:
               url: http://kube-prometheus-stack-prometheus.monitoring:9090
               basicAuth: false
               editable: true
+              isDefault: true
               jsonData:
                 httpMethod: GET
                 exemplarTraceIdDestinations:
