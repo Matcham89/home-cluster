@@ -76,7 +76,7 @@ spec:
               url: http://kube-prometheus-stack-prometheus.monitoring:9090
               basicAuth: false
               editable: true
-              isDefault: true
+              isDefault: false
               jsonData:
                 httpMethod: GET
                 exemplarTraceIdDestinations:
