@@ -28,7 +28,6 @@ spec:
     image: matcham89/yt-kmcp:0.4.0
     port: 3000
     secretRefs:
-    - name: yt-kmcp-secrets-staging
     - name: yt-kmcp-env-vars
   stdioTransport: {}
   transportType: stdio
