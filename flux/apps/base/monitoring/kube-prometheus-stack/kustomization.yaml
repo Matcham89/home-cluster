@@ -31,5 +31,11 @@ configMapGenerator:
     options:
       labels:
         grafana_dashboard: "1"
+  - name: k8s-dashboard
+    files:
+      - dashboards/k8s-dashboard.json
+    options:
+      labels:
+        grafana_dashboard: "1"
 configurations:
   - kustomizeconfig.yaml
