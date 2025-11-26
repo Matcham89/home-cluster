@@ -1,0 +1,51 @@
+---
+# CoreDNS Configuration for Talos Linux
+#
+# This ConfigMap configures CoreDNS to use explicit DNS forwarders
+# instead of /etc/resolv.conf to avoid systemd-resolved issues.
+#
+# Talos Linux nodes may have containerd caching DNS pointing to 127.0.0.53:53
+# which doesn't exist (systemd-resolved is not present in Talos).
+# Using explicit forwarders ensures reliable DNS resolution.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: coredns
+  namespace: kube-system
+  labels:
+    app.kubernetes.io/name: coredns
+    app.kubernetes.io/managed-by: flux
+data:
+  Corefile: |
+    .:53 {
+        errors
+        health {
+            lameduck 5s
+        }
+        ready
+        log . {
+            class error
+        }
+        prometheus :9153
+
+        kubernetes cluster.local in-addr.arpa ip6.arpa {
+            pods insecure
+            fallthrough in-addr.arpa ip6.arpa
+            ttl 30
+        }
+
+        # Use explicit DNS forwarders for Talos Linux compatibility
+        # These should match nameservers configured at Talos node level
+        forward . 8.8.8.8 8.8.4.4 1.1.1.1 1.0.0.1 {
+           max_concurrent 1000
+           policy random
+        }
+
+        cache 30 {
+           disable success cluster.local
+           disable denial cluster.local
+        }
+        loop
+        reload
+        loadbalance
+    }
