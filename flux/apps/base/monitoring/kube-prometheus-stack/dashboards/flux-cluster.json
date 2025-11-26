@@ -33,7 +33,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 32,
+  "id": 33,
   "links": [],
   "panels": [
     {
@@ -240,7 +240,7 @@
           },
           "editorMode": "code",
           "exemplar": false,
-          "expr": "count(flux_resource_info{exported_namespace=~\"$namespace\", kind=~\"GitRepository|HelmRepository|Bucket|OCIRepository\"})",
+          "expr": "count(flux_resource_info{kind=~\"GitRepository|HelmRepository|Bucket|OCIRepository\"})",
           "instant": true,
           "interval": "",
           "legendFormat": "",
