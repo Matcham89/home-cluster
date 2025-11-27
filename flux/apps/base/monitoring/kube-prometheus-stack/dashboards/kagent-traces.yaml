@@ -51,7 +51,7 @@ data:
                 "uid": "tempo"
               },
               "limit": 20,
-              "query": "{ name=\"call_llm\" }",
+              "query": "{span.name=\"call_llm\"}",
               "queryType": "traceqlSearch",
               "refId": "A",
               "tableType": "traces"
