@@ -81,13 +81,13 @@ spec:
         enabled: true
         exporter:
           otlp:
-            endpoint: http://otel-collector-collector.monitoring.svc.cluster.local:4317
+            endpoint: http://otel-collector-collector-headless.monitoring.svc.cluster.local:4317
             timeout: 15
             insecure: true
       logging:
         enabled: true
         exporter:
           otlp:
-            endpoint: http://otel-collector-collector.monitoring.svc.cluster.local:4317
+            endpoint: http://otel-collector-collector-headless.monitoring.svc.cluster.local:4317
             timeout: 15
             insecure: true
