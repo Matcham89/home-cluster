@@ -255,23 +255,23 @@ data:
           "targets": [
             {
               "datasource": {
-                "type": "tempo",
-                "uid": "tempo"
+                "type": "prometheus",
+                "uid": "prometheus"
               },
-              "limit": 20,
-              "query": "{resource.service.name=\"kagent\" && name=\"call_llm\"} | rate() by(span.gen.ai.request.model) | sum_over_time(span.gen.ai.usage.input_tokens)",
-              "queryType": "traceqlMetrics",
-              "refId": "A",
-              "step": ""
+              "editorMode": "code",
+              "expr": "sum by (gen_ai_request_model) (rate(otelcol_calls_total{service_name=\"kagent\",span_name=\"call_llm\"}[$__rate_interval]))",
+              "legendFormat": "{{gen_ai_request_model}} - calls/sec",
+              "range": true,
+              "refId": "A"
             }
           ],
-          "title": "Input Tokens Rate by Model",
+          "title": "LLM Call Rate by Model",
           "type": "timeseries"
         },
         {
           "datasource": {
-            "type": "tempo",
-            "uid": "tempo"
+            "type": "prometheus",
+            "uid": "prometheus"
           },
           "description": "Total output tokens generated over time",
           "fieldConfig": {

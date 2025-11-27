@@ -87,9 +87,11 @@ spec:
       #  max_concurrent_queries: 20
       # -- Configuration options for the query-fronted.
       # Refers to: https://grafana.com/docs/tempo/latest/configuration/#query-frontend
-      queryFrontend: {}
-      #  search:
-      #    concurrent_jobs: 2000
+      queryFrontend:
+        metrics:
+          query_backend_after: 15m
+        search:
+          concurrent_jobs: 2000
       retention: 24h
       # -- The standard overrides configuration section. This can include a `defaults` object for applying to all tenants (not to be confused with the `global` property of the same name, which overrides `max_byte_per_trace` for all tenants). For an example on how to enable the metrics generator using the `overrides` object, see the 'Activate metrics generator' section below. Refer to [Standard overrides](https://grafana.com/docs/tempo/latest/configuration/#standard-overrides) for more details.
       overrides:
