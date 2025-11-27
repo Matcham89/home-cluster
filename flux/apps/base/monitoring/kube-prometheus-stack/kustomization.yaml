@@ -5,6 +5,7 @@ kind: Kustomization
 resources:
   - ./kube-prometheus-stack.yaml
   - ./ocirepository.yaml
+  - dashboards
 configMapGenerator:
   - name: flux-kube-state-metrics-config
     files:
@@ -13,29 +14,3 @@ configMapGenerator:
       labels:
         app.kubernetes.io/part-of: flux
         app.kubernetes.io/component: monitoring
-  - name: flux-cluster-dashboard
-    files:
-      - dashboards/flux-cluster.json
-    options:
-      labels:
-        grafana_dashboard: "1"
-  - name: flux-control-plane-dashboard
-    files:
-      - dashboards/flux-control-plane.json
-    options:
-      labels:
-        grafana_dashboard: "1"
-  - name: flux-logs-dashboard
-    files:
-      - dashboards/flux-logs.json
-    options:
-      labels:
-        grafana_dashboard: "1"
-  - name: k8s-dashboard
-    files:
-      - dashboards/k8s-dashboard.json
-    options:
-      labels:
-        grafana_dashboard: "1"
-configurations:
-  - kustomizeconfig.yaml
