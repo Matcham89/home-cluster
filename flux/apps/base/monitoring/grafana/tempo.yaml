@@ -220,12 +220,26 @@ spec:
           {{- toYaml .Values.tempo.overrides | nindent 6 }}
           {{- if .Values.tempo.metricsGenerator.enabled }}
         metrics_generator:
+              registry:
+                external_labels:
+                  source: tempo
+                  cluster: home-cluster
               storage:
                 path: "/tmp/tempo"
                 remote_write:
                   - url: {{ .Values.tempo.metricsGenerator.remoteWriteUrl }}
+                    send_exemplars: true
               traces_storage:
                 path: "/tmp/traces"
+              processor:
+                span_metrics:
+                  dimensions:
+                    - gen.ai.request.model
+                    - gen.ai.system
+                    - kagent.user_id
+                    - gen.ai.usage.input_tokens
+                    - gen.ai.usage.output_tokens
+                  enable_target_info: true
           {{- end }}
 
     tempoQuery:
