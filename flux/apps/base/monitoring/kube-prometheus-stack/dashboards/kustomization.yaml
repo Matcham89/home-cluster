@@ -12,4 +12,4 @@ resources:
   - k8s-namespaces.yaml
   - k8s-nodes.yaml
   - k8s-pods.yaml
-  - kagent-llm-usage.yaml
+  - kagent-traces.yaml
