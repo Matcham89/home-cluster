@@ -1,0 +1,23 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: kagent-llm-token-metrics
+  namespace: monitoring
+  labels:
+    prometheus: kube-prometheus-stack-prometheus
+    role: alert-rules
+spec:
+  groups:
+    - name: kagent.llm.tokens
+      interval: 30s
+      rules:
+        # Note: These rules use the otelcol spanmetrics as a base
+        # The actual token values are in span attributes, not in separate metrics
+        # For true token metrics, kagent should emit them as OpenTelemetry metrics
+        - record: kagent:llm:calls:rate
+          expr: sum by (gen_ai_request_model, service_name) (rate(otelcol_calls_total{service_name="kagent",span_name="call_llm"}[5m]))
+        - record: kagent:llm:duration:avg
+          expr: |
+            sum by (gen_ai_request_model, service_name) (rate(otelcol_duration_milliseconds_sum{service_name="kagent",span_name="call_llm"}[5m]))
+            /
+            sum by (gen_ai_request_model, service_name) (rate(otelcol_duration_milliseconds_count{service_name="kagent",span_name="call_llm"}[5m]))
