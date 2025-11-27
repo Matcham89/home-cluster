@@ -8,7 +8,7 @@ spec:
   interval: 1m0s
   url: oci://ghcr.io/kagent-dev/kagent/helm/kagent
   ref:
-    tag: 0.7.4
+    tag: 0.7.5
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -36,7 +36,7 @@ spec:
     # CPU limits removed - CPU is compressible, requests provide sufficient scheduling protection
     resources:
       limits:
-        memory: 1Gi  # Keep memory limit for safety
+        memory: 2Gi
       requests:
         cpu: 100m
         memory: 256Mi
