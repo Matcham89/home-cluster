@@ -29,6 +29,8 @@ spec:
   # Fixed by enabling DisableChartDigestTracking feature gate in helm-controller
   # See: https://github.com/fluxcd/flux2/issues/4910
   values:
+    podAnnotations:
+      sidecar.opentelemetry.io/inject: "true"
     default: anthropic
     revisionHistoryLimit: 2
 
