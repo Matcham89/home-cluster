@@ -13,3 +13,4 @@ resources:
   - k8s-nodes.yaml
   - k8s-pods.yaml
   - kagent-traces.yaml
+  - kagent-llm-usage.yaml

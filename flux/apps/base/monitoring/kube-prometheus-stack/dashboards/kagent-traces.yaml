@@ -25,7 +25,7 @@ data:
           }
         ]
       },
-      "description": "Browse and explore kagent LLM traces with token usage details",
+      "description": "Browse and explore kagent LLM call traces - click trace ID to view full details in Explore",
       "editable": true,
       "fiscalYearStartMonth": 0,
       "graphTooltip": 0,
@@ -37,30 +37,128 @@ data:
             "type": "tempo",
             "uid": "tempo"
           },
+          "description": "Recent LLM calls from kagent. Click the trace ID to explore full trace details with token counts.",
+          "fieldConfig": {
+            "defaults": {
+              "custom": {
+                "align": "left",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              },
+              "links": [
+                {
+                  "title": "View Trace",
+                  "url": "/explore?left=%7B%22datasource%22:%22tempo%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22datasource%22:%7B%22type%22:%22tempo%22,%22uid%22:%22tempo%22%7D,%22queryType%22:%22traceql%22,%22query%22:%22${__data.fields.traceID}%22%7D%5D,%22range%22:%7B%22from%22:%22now-1h%22,%22to%22:%22now%22%7D%7D"
+                }
+              ]
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Trace ID"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 280
+                  },
+                  {
+                    "id": "links",
+                    "value": [
+                      {
+                        "title": "View in Explore",
+                        "url": "/explore?left={%22datasource%22:%22tempo%22,%22queries%22:[{%22queryType%22:%22traceqlSearch%22,%22query%22:%22${__data.fields[%22Trace%20ID%22]}%22}],%22range%22:{%22from%22:%22now-6h%22,%22to%22:%22now%22}}"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Duration"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "ms"
+                  }
+                ]
+              }
+            ]
+          },
           "gridPos": {
-            "h": 24,
+            "h": 20,
             "w": 24,
             "x": 0,
             "y": 0
           },
           "id": 1,
+          "options": {
+            "cellHeight": "sm",
+            "footer": {
+              "countRows": false,
+              "fields": "",
+              "reducer": ["sum"],
+              "show": false
+            },
+            "showHeader": true,
+            "sortBy": [
+              {
+                "desc": true,
+                "displayName": "Start Time"
+              }
+            ]
+          },
+          "pluginVersion": "11.6.3",
           "targets": [
             {
               "datasource": {
                 "type": "tempo",
                 "uid": "tempo"
               },
-              "limit": 20,
+              "limit": 50,
               "query": "{span.name=\"call_llm\"}",
               "queryType": "traceqlSearch",
               "refId": "A",
               "tableType": "traces"
             }
           ],
-          "title": "Recent LLM Calls",
-          "type": "traces"
+          "title": "Recent LLM Calls (Click Trace ID to Explore)",
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {},
+                "includeByName": {},
+                "indexByName": {},
+                "renameByName": {
+                  "durationMs": "Duration",
+                  "rootServiceName": "Service",
+                  "rootTraceName": "Operation",
+                  "startTimeUnixNano": "Start Time",
+                  "traceID": "Trace ID"
+                }
+              }
+            }
+          ],
+          "type": "table"
         }
       ],
+      "refresh": "30s",
       "schemaVersion": 41,
       "tags": [
         "kagent",
@@ -78,5 +176,5 @@ data:
       "timezone": "browser",
       "title": "kagent - LLM Traces",
       "uid": "kagent-llm-traces",
-      "version": 1
+      "version": 2
     }
