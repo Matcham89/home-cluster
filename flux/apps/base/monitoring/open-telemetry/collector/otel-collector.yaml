@@ -5,6 +5,7 @@ metadata:
   namespace: monitoring
 spec:
   mode: deployment
+  image: otel/opentelemetry-collector-contrib:latest
   config:
     receivers:
       otlp:
@@ -17,6 +18,27 @@ spec:
       batch:
         timeout: 10s
         send_batch_size: 1024
+      attributes:
+        actions:
+          - key: service.name
+            action: upsert
+            from_attribute: service.name
+    connectors:
+      spanmetrics:
+        namespace: otelcol
+        histogram:
+          explicit:
+            buckets: [0.002, 0.004, 0.008, 0.016, 0.032, 0.064, 0.128, 0.256, 0.512, 1.024, 2.048, 4.096, 8.192, 16.384]
+        dimensions:
+          - name: gen.ai.request.model
+          - name: gen.ai.system
+          - name: kagent.user_id
+          - name: gen.ai.usage.input_tokens
+          - name: gen.ai.usage.output_tokens
+        exemplars:
+          enabled: true
+        metrics_flush_interval: 15s
+        aggregation_temporality: AGGREGATION_TEMPORALITY_CUMULATIVE
     exporters:
       otlp/tempo:
         endpoint: http://tempo.monitoring.svc.cluster.local:4317
@@ -26,11 +48,24 @@ spec:
         endpoint: http://loki.monitoring.svc.cluster.local:3100/otlp
         tls:
           insecure: true
+      prometheusremotewrite:
+        endpoint: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090/api/v1/write
+        tls:
+          insecure: true
+        resource_to_telemetry_conversion:
+          enabled: true
+      prometheus:
+        endpoint: 0.0.0.0:8889
+        resource_to_telemetry_conversion:
+          enabled: true
       debug:
         verbosity: detailed
     service:
       pipelines:
         traces:
           receivers: [otlp]
-          processors: [batch]
-          exporters: [debug, otlp/tempo, otlphttp/loki]
+          processors: [batch, attributes]
+          exporters: [spanmetrics, debug, otlp/tempo, otlphttp/loki]
+        metrics:
+          receivers: [spanmetrics]
+          exporters: [prometheus, prometheusremotewrite, debug]
