@@ -149,8 +149,8 @@ data:
                 "uid": "tempo"
               },
               "limit": 50,
-              "query": "{resource.service.name=\"kagent\" && name=\"call_llm\"}",
-              "queryType": "traceqlSearch",
+              "query": "{resource.service.name=\"kagent\" && name=\"call_llm\"} | select(span.gen.ai.usage.input_tokens, span.gen.ai.usage.output_tokens, span.gen.ai.request.model, span.kagent.user_id)",
+              "queryType": "traceql",
               "refId": "A",
               "tableType": "spans"
             }
