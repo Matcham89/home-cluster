@@ -84,18 +84,18 @@ spec:
                   datasourceUid: tempo
             - name: Tempo
               type: tempo
-              access: browser
+              access: proxy
               basicAuth: false
               orgId: 1
               uid: tempo
-              url: http://tempo.monitoring.svc.cluster.local:3100
+              url: http://tempo.monitoring.svc.cluster.local:3200
               isDefault: false
               editable: true
             - orgId: 1
               name: Loki
               type: loki
               typeName: Loki
-              access: browser
+              access: proxy
               url: http://loki.monitoring.svc.cluster.local:3100
               basicAuth: false
               isDefault: false
