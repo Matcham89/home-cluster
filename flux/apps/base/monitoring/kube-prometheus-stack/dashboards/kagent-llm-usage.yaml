@@ -255,14 +255,14 @@ data:
           "targets": [
             {
               "datasource": {
-                "type": "prometheus",
-                "uid": "prometheus"
+                "type": "tempo",
+                "uid": "tempo"
               },
-              "editorMode": "code",
-              "expr": "sum by (gen_ai_request_model) (rate(traces_spanmetrics_gen_ai_usage_input_tokens_sum{service_name=\"kagent\"}[$__rate_interval]))",
-              "legendFormat": "{{gen_ai_request_model}}",
-              "range": true,
-              "refId": "A"
+              "limit": 20,
+              "query": "{resource.service.name=\"kagent\" && name=\"call_llm\"} | rate() by(span.gen.ai.request.model) | sum_over_time(span.gen.ai.usage.input_tokens)",
+              "queryType": "traceqlMetrics",
+              "refId": "A",
+              "step": ""
             }
           ],
           "title": "Input Tokens Rate by Model",
@@ -270,8 +270,8 @@ data:
         },
         {
           "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
+            "type": "tempo",
+            "uid": "tempo"
           },
           "description": "Total output tokens generated over time",
           "fieldConfig": {
@@ -348,14 +348,14 @@ data:
           "targets": [
             {
               "datasource": {
-                "type": "prometheus",
-                "uid": "prometheus"
+                "type": "tempo",
+                "uid": "tempo"
               },
-              "editorMode": "code",
-              "expr": "sum by (gen_ai_request_model) (rate(traces_spanmetrics_gen_ai_usage_output_tokens_sum{service_name=\"kagent\"}[$__rate_interval]))",
-              "legendFormat": "{{gen_ai_request_model}}",
-              "range": true,
-              "refId": "A"
+              "limit": 20,
+              "query": "{resource.service.name=\"kagent\" && name=\"call_llm\"} | rate() by(span.gen.ai.request.model) | sum_over_time(span.gen.ai.usage.output_tokens)",
+              "queryType": "traceqlMetrics",
+              "refId": "A",
+              "step": ""
             }
           ],
           "title": "Output Tokens Rate by Model",
@@ -606,14 +606,14 @@ data:
           "targets": [
             {
               "datasource": {
-                "type": "prometheus",
-                "uid": "prometheus"
+                "type": "tempo",
+                "uid": "tempo"
               },
-              "editorMode": "code",
-              "expr": "sum(increase(traces_spanmetrics_gen_ai_usage_input_tokens_sum{service_name=\"kagent\"}[$__range])) + sum(increase(traces_spanmetrics_gen_ai_usage_output_tokens_sum{service_name=\"kagent\"}[$__range]))",
-              "legendFormat": "Total Tokens",
-              "range": true,
-              "refId": "A"
+              "limit": 20,
+              "query": "{resource.service.name=\"kagent\" && name=\"call_llm\"} | sum_over_time(span.gen.ai.usage.input_tokens) + sum_over_time(span.gen.ai.usage.output_tokens)",
+              "queryType": "traceqlMetrics",
+              "refId": "A",
+              "step": ""
             }
           ],
           "title": "Total Tokens (Range)",
@@ -750,14 +750,14 @@ data:
           "targets": [
             {
               "datasource": {
-                "type": "prometheus",
-                "uid": "prometheus"
+                "type": "tempo",
+                "uid": "tempo"
               },
-              "editorMode": "code",
-              "expr": "(sum(increase(traces_spanmetrics_gen_ai_usage_input_tokens_sum{service_name=\"kagent\"}[$__range])) + sum(increase(traces_spanmetrics_gen_ai_usage_output_tokens_sum{service_name=\"kagent\"}[$__range]))) / sum(increase(traces_spanmetrics_calls_total{service_name=\"kagent\",span_name=\"call_llm\"}[$__range]))",
-              "legendFormat": "Avg Tokens/Call",
-              "range": true,
-              "refId": "A"
+              "limit": 20,
+              "query": "{resource.service.name=\"kagent\" && name=\"call_llm\"} | avg_over_time(span.gen.ai.usage.input_tokens + span.gen.ai.usage.output_tokens)",
+              "queryType": "traceqlMetrics",
+              "refId": "A",
+              "step": ""
             }
           ],
           "title": "Average Tokens per Call",
