@@ -149,26 +149,42 @@ data:
                 "uid": "tempo"
               },
               "limit": 50,
-              "query": "{resource.service.name=\"kagent\"}",
+              "query": "{resource.service.name=\"kagent\" && name=\"call_llm\"}",
               "queryType": "traceqlSearch",
               "refId": "A",
-              "tableType": "traces"
+              "tableType": "spans"
             }
           ],
-          "title": "Recent kagent Requests (click POST / traces for LLM token details)",
+          "title": "Recent LLM Calls with Token Usage",
           "transformations": [
             {
               "id": "organize",
               "options": {
-                "excludeByName": {},
-                "includeByName": {},
-                "indexByName": {},
+                "excludeByName": {
+                  "spanID": true,
+                  "gcp.vertex.agent.llm_request": true,
+                  "gcp.vertex.agent.llm_response": true,
+                  "gcp.vertex.agent.event_id": true,
+                  "gcp.vertex.agent.invocation_id": true,
+                  "gcp.vertex.agent.session_id": true
+                },
+                "indexByName": {
+                  "traceID": 0,
+                  "startTimeUnixNano": 1,
+                  "gen.ai.request.model": 2,
+                  "gen_ai.usage.input_tokens": 3,
+                  "gen_ai.usage.output_tokens": 4,
+                  "durationMs": 5,
+                  "kagent.user_id": 6
+                },
                 "renameByName": {
                   "traceID": "Trace ID",
-                  "durationMs": "Duration",
-                  "rootServiceName": "Service",
-                  "rootTraceName": "Operation",
-                  "startTimeUnixNano": "Start Time"
+                  "durationMs": "Duration (ms)",
+                  "startTimeUnixNano": "Time",
+                  "gen.ai.request.model": "Model",
+                  "gen_ai.usage.input_tokens": "Input Tokens",
+                  "gen_ai.usage.output_tokens": "Output Tokens",
+                  "kagent.user_id": "User"
                 }
               }
             }
