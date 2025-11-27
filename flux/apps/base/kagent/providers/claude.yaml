@@ -6,6 +6,6 @@ metadata:
 spec:
   apiKeySecret: kagent-anthropic
   apiKeySecretKey: ANTHROPIC_API_KEY
-  model: claude-3-sonnet-20240229
+  model: claude-3-5-haiku-20241022
   provider: Anthropic
   anthropic: {}
