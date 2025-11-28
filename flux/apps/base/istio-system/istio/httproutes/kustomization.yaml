@@ -5,4 +5,5 @@ resources:
   - grafana.yaml
   - kagent.yaml
   - keycloak.yaml
+  - longhorn.yaml 
   - yt-mcp.yaml
