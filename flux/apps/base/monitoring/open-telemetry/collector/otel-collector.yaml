@@ -48,6 +48,8 @@ spec:
         endpoint: http://loki.monitoring.svc.cluster.local:3100/otlp
         tls:
           insecure: true
+        headers:
+          X-Scope-OrgID: "1"
       prometheusremotewrite:
         endpoint: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090/api/v1/write
         tls:
@@ -65,7 +67,7 @@ spec:
         traces:
           receivers: [otlp]
           processors: [batch, attributes]
-          exporters: [spanmetrics, debug, otlp/tempo, otlphttp/loki]
+          exporters: [spanmetrics, debug, otlp/tempo]
         metrics:
           receivers: [spanmetrics]
           exporters: [prometheus, prometheusremotewrite, debug]
