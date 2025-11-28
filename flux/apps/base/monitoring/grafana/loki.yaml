@@ -27,6 +27,7 @@ spec:
       retries: 3
   values:
     loki:
+      auth_enabled: true
       commonConfig:
         replication_factor: 1
       storage:
