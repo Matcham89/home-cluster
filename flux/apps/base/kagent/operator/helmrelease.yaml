@@ -41,13 +41,6 @@ spec:
         cpu: 100m
         memory: 256Mi
 
-    # Lifecycle hook to ensure OTEL traces are flushed before pod termination
-    # Gives 10 seconds for graceful shutdown and trace export
-    lifecycle:
-      preStop:
-        exec:
-          command: ["/bin/sh", "-c", "sleep 10"]
-
     # Controller resources
     controller:
       resources:
@@ -58,9 +51,6 @@ spec:
           memory: 128Mi
 
     agents:
-      # Global settings for all agents
-      revisionHistoryLimit: 2
-
       k8s-agent:
         enabled: true
       kgateway-agent:
@@ -94,15 +84,6 @@ spec:
             endpoint: http://otel-collector-collector-headless.monitoring.svc.cluster.local:4317
             timeout: 15
             insecure: true
-        # Batch span processor configuration for optimal trace flushing
-        batchSpanProcessor:
-          # Max time to wait before exporting (milliseconds)
-          scheduleDelayMillis: 5000
-          # Export immediately on shutdown to prevent data loss
-          exportTimeoutMillis: 30000
-          # Maximum batch size before forcing export
-          maxQueueSize: 2048
-          maxExportBatchSize: 512
       logging:
         enabled: true
         exporter:
