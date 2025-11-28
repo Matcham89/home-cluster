@@ -58,6 +58,9 @@ spec:
           memory: 128Mi
 
     agents:
+      # Global settings for all agents
+      revisionHistoryLimit: 2
+
       k8s-agent:
         enabled: true
       kgateway-agent:
