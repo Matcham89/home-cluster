@@ -15,6 +15,6 @@ spec:
     name: flux-system
     namespace: flux-system
   targetNamespace: longhorn-system
-  timeout: 5m
+  timeout: 10m
   prune: true
   wait: true
