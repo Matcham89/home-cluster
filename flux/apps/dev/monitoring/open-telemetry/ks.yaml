@@ -10,6 +10,8 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: open-telemetry-operator
+    - name: cert-manager
+      namespace: kube-ops
   interval: 1h
   path: ./flux/apps/base/monitoring/open-telemetry/collector
   sourceRef:
