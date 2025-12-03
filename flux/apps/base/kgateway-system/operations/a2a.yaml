@@ -41,7 +41,7 @@ metadata:
 spec:
   parentRefs:
     - name: agentgateway
-      namespace: kgateway
+      namespace: kgateway-system
   rules:
     - backendRefs:
         - name: a2a-agent

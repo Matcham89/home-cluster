@@ -3,7 +3,7 @@ apiVersion: gateway.kgateway.dev/v1alpha1
 kind: GatewayParameters
 metadata:
   name: agentgateway-otel
-  namespace: kgateway
+  namespace: kgateway-system
 spec:
   kube:
     agentgateway:
