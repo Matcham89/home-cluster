@@ -8,7 +8,7 @@ spec:
   from:
   - group: gateway.kgateway.dev
     kind: HTTPListenerPolicy
-    namespace: kgateway
+    namespace: kgateway-system
   to:
   - group: ""
     kind: Service

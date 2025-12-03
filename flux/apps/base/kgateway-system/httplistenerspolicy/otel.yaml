@@ -2,7 +2,7 @@ apiVersion: gateway.kgateway.dev/v1alpha1
 kind: HTTPListenerPolicy
 metadata:
   name: logging-policy
-  namespace: kgateway
+  namespace: kgateway-system
 spec:
   targetRefs:
   - group: gateway.networking.k8s.io
