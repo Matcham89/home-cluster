@@ -12,7 +12,7 @@ spec:
     - name: external-secrets-operator
       namespace: kube-ops
   interval: 1h
-  path: ./flux/apps/base/kgateway/crds
+  path: ./flux/apps/base/kgateway-system/crds
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -34,7 +34,7 @@ spec:
   dependsOn:
     - name: kgateway-crds
   interval: 1h
-  path: ./flux/apps/base/kgateway
+  path: ./flux/apps/base/kgateway-system
   sourceRef:
     kind: GitRepository
     name: flux-system
