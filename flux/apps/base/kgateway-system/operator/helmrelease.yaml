@@ -30,8 +30,6 @@ spec:
       enabled: true
     agentgateway:
       enabled: true
-      podLabels:  
-        kgateway: kube-gateway
     controller:
       image:
         pullPolicy: Always
