@@ -71,7 +71,7 @@ spec:
   - name: istio-gateway
     namespace: istio-system
   hostnames:
-  - "ollama.dev.local"
+  - "ollama.kubegit.com"
   rules:
   - matches:
     - path:
