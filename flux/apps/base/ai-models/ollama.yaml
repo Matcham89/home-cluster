@@ -18,7 +18,6 @@ spec:
         image: ollama/ollama:latest
         ports:
         - containerPort: 11434
-        # Allocate generous resources since you have 60GB!
         resources:
           requests:
             memory: "8Gi"
