@@ -36,13 +36,47 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: ollama-service
+  name: ollama
   namespace: ai-models
 spec:
   selector:
     app: ollama
   ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 11434
-  type: LoadBalancer
+  - name: http
+    port: 11434
+    targetPort: 11434
+  type: ClusterIP
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  name: allow-istio-gateway
+  namespace: ai-models
+spec:
+  from:
+  - group: gateway.networking.k8s.io
+    kind: Gateway
+    namespace: istio-system
+  to:
+  - group: ""
+    kind: Service
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: ollama-route
+  namespace: ai-models
+spec:
+  parentRefs:
+  - name: istio-gateway
+    namespace: istio-system
+  hostnames:
+  - "ollama.dev.local"
+  rules:
+  - matches:
+    - path:
+        type: PathPrefix
+        value: /
+    backendRefs:
+    - name: ollama
+      port: 11434
