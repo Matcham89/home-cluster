@@ -1,39 +1,35 @@
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: a2a-agent
-#   namespace: kgateway-system
-#   labels:
-#     app: a2a-agent
-# spec:
-#   selector:
-#     matchLabels:
-#       app: a2a-agent
-#   template:
-#     metadata:
-#       labels:
-#         app: a2a-agent
-#     spec:
-#       containers:
-#         - name: a2a-agent
-#           image: gcr.io/solo-public/docs/test-a2a-agent:latest
-#           ports:
-#             - containerPort: 9090
-# ---
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: a2a-agent
-#   namespace: kgateway-system
-# spec:
-#   selector:
-#     app: a2a-agent
-#   type: ClusterIP
-#   ports:
-#     - protocol: TCP
-#       port: 9090
-#       targetPort: 9090
-#       appProtocol: kgateway.dev/a2a
+# Slack Bot A2A Gateway Configuration
+#
+# Configures AgentGateway to route A2A protocol requests to kagent-controller,
+# enabling the Slack bot (https://github.com/your-org/slackbot-agent) to interact
+# with Kagent agents via the A2A protocol.
+#
+# Components:
+# - ReferenceGrant: Allows cross-namespace access from kgateway-system to kagent
+# - Gateway: Exposes AgentGateway on port 8080 (LoadBalancer: 192.168.1.201)
+# - HTTPRoute: Routes /api/a2a/* to kagent-controller:8083
+#
+# Test endpoints:
+#   curl http://192.168.1.201:8080/api/a2a/kagent/k8s-agent/.well-known/agent.json
+#
+# Note: Ensure trailing slash on POST requests to /api/a2a/kagent/{agent}/
+#
+# Related: /Users/chris/Documents/github/slackbot-agent/k8s-deployment.yaml
+
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  name: allow-kgateway-to-kagent
+  namespace: kagent
+spec:
+  from:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      namespace: kgateway-system
+  to:
+    - group: ""
+      kind: Service
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
@@ -57,7 +53,11 @@ spec:
     - name: agentgateway
       namespace: kgateway-system
   rules:
-    - backendRefs:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /api/a2a/
+      backendRefs:
         - name: kagent-controller
           namespace: kagent
           port: 8083
