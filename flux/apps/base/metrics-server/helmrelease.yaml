@@ -33,6 +33,8 @@ spec:
     args:
       - --kubelet-insecure-tls
     tls:
+      # Set TLS type to cert-manager to use cert-manager for certificate management
+      type: "cert-manager"
       certManager:
         # Automatically add the cert-manager.io/inject-ca-from annotation to the APIService resource.
         # See https://cert-manager.io/docs/concepts/ca-injector
