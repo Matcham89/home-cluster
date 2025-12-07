@@ -28,6 +28,10 @@ spec:
   values:
     apiService:
       insecureSkipTLSVerify: false
+    # Add extra args to skip kubelet TLS verification
+    # This is needed because kubelet certificates don't contain IP SANs
+    args:
+      - --kubelet-insecure-tls
     tls:
       certManager:
         # Automatically add the cert-manager.io/inject-ca-from annotation to the APIService resource.
