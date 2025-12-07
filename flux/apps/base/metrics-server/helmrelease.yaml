@@ -25,3 +25,8 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: metrics-server
+  values:
+    apiService:
+      insecureSkipTLSVerify: false
+    tls:
+      type: helm
