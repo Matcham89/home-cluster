@@ -29,4 +29,14 @@ spec:
     apiService:
       insecureSkipTLSVerify: false
     tls:
-      type: cert-manager
+      certManager:
+        # Automatically add the cert-manager.io/inject-ca-from annotation to the APIService resource.
+        # See https://cert-manager.io/docs/concepts/ca-injector
+        addInjectorAnnotations: true
+        existingIssuer:
+          # Use an existing cert-manager issuer
+          enabled: true
+          # Kind of the existing cert-manager issuer
+          kind: "ClusterIssuer"
+          # Name of the existing cert-manager issuer
+          name: "selfsigned"
