@@ -1,0 +1,36 @@
+---
+# Allow Istio Ambient mode traffic
+# Ambient uses ztunnel for L4 secure overlay via HBONE protocol
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-istio-ambient
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  # Allow traffic from ztunnel pods on port 15008 (HBONE)
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: istio-system
+      podSelector:
+        matchLabels:
+          app: ztunnel
+    ports:
+    - port: 15008
+      protocol: TCP
+  egress:
+  # Allow traffic to ztunnel pods on port 15008 (HBONE)
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: istio-system
+      podSelector:
+        matchLabels:
+          app: ztunnel
+    ports:
+    - port: 15008
+      protocol: TCP

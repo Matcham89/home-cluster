@@ -1,0 +1,9 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ./default-deny-all.yaml
+  - ./allow-dns.yaml
+  - ./allow-istio-ambient.yaml
+  - ./allow-prometheus-scrape.yaml

@@ -1,0 +1,15 @@
+---
+# Allow external traffic to Istio ingress gateway
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-gateway-ingress
+spec:
+  podSelector:
+    matchLabels:
+      istio: ingressgateway
+  policyTypes:
+  - Ingress
+  ingress:
+  # Allow all external traffic to ingress gateway
+  - {}
