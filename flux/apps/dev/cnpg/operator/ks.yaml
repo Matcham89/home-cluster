@@ -14,3 +14,23 @@ spec:
     namespace: flux-system
   path: ./flux/apps/base/cnpg/operator
   targetNamespace: cnpg-system
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: &app cnpg-system-limit-ranges
+spec:
+  commonMetadata:
+    labels:
+      app.kubernetes.io/name: *app
+  interval: 1h
+  path: ./flux/apps/base/limit-ranges
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: cnpg-system
+  timeout: 5m
+  prune: true
+  wait: true
