@@ -1,0 +1,12 @@
+---
+# Default deny all ingress and egress traffic
+# This is the foundation of zero-trust networking
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress

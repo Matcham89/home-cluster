@@ -1,0 +1,29 @@
+---
+# Allow Istio ingress gateway to route to application namespaces
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-gateway-egress
+spec:
+  podSelector:
+    matchLabels:
+      istio: ingressgateway
+  policyTypes:
+  - Egress
+  egress:
+  # Allow egress to all namespaces (for routing)
+  - to:
+    - namespaceSelector: {}
+  # Allow DNS
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+    ports:
+    - port: 53
+      protocol: TCP
+    - port: 53
+      protocol: UDP
