@@ -1,0 +1,14 @@
+---
+# Resource quota patch for longhorn-system namespace
+# Current usage: CPU limits=11500m, Memory limits=11776Mi
+# Setting higher limits with headroom for growth
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: namespace-quota
+spec:
+  hard:
+    requests.cpu: "8"
+    requests.memory: 16Gi
+    limits.cpu: "16"
+    limits.memory: 20Gi

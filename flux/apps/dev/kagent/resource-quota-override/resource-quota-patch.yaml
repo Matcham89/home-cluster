@@ -1,0 +1,14 @@
+---
+# Resource quota patch for kagent namespace
+# Current usage: CPU limits=16, Memory limits=10880Mi
+# Setting higher limits with headroom for growth
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: namespace-quota
+spec:
+  hard:
+    requests.cpu: "10"
+    requests.memory: 16Gi
+    limits.cpu: "20"
+    limits.memory: 24Gi
