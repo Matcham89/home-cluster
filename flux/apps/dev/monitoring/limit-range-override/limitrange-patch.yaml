@@ -1,0 +1,17 @@
+---
+# LimitRange patch for monitoring namespace
+# Monitoring tools (Prometheus, Grafana) need more resources
+# Higher defaults to prevent OOMKills during startup
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: default-limits
+spec:
+  limits:
+  - default:
+      cpu: 2
+      memory: 2Gi
+    defaultRequest:
+      cpu: 200m
+      memory: 256Mi
+    type: Container

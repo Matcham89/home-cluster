@@ -29,7 +29,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   interval: 1h
-  path: ./flux/apps/base/limit-ranges
+  path: ./flux/apps/dev/monitoring/limit-range-override
   sourceRef:
     kind: GitRepository
     name: flux-system
