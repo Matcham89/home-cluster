@@ -1,0 +1,15 @@
+---
+# TLS Certificate for AgentGateway
+# Uses cert-manager to obtain certificate from Let's Encrypt
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: agentgateway-tls
+  namespace: kgateway-system
+spec:
+  secretName: agentgateway-tls
+  issuerRef:
+    name: letsencrypt-cloudflare
+    kind: ClusterIssuer
+  dnsNames:
+    - agentgateway.kubegit.com

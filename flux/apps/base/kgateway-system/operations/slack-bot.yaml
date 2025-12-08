@@ -42,6 +42,15 @@ spec:
   - protocol: HTTP
     port: 8080
     name: http
+  - protocol: HTTPS
+    port: 8443
+    name: https
+    hostname: "agentgateway.kubegit.com"
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - name: agentgateway-tls
+        kind: Secret
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
@@ -52,6 +61,10 @@ spec:
   parentRefs:
     - name: agentgateway
       namespace: kgateway-system
+      sectionName: http  # Bind to HTTP listener
+    - name: agentgateway
+      namespace: kgateway-system
+      sectionName: https  # Bind to HTTPS listener
   rules:
     - matches:
         - path:
