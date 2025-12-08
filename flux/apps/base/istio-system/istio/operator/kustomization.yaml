@@ -4,4 +4,4 @@ kind: Kustomization
 resources:
   - helmrepository.yaml
   - helmrelease-base.yaml
-  - helmrelease-istiod.yaml
+  - helmrelease-control.yaml
