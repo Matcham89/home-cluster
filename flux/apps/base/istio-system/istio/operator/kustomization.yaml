@@ -5,3 +5,5 @@ resources:
   - helmrepository.yaml
   - helmrelease-base.yaml
   - helmrelease-control.yaml
+  - helmrelease-cni.yaml
+  - helmrelease-ztunnel.yaml
