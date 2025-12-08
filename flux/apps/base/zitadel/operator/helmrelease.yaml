@@ -1,0 +1,85 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: zitadel
+spec:
+  interval: 1m
+  chart:
+    spec:
+      chart: zitadel
+      version: 8.x
+      sourceRef:
+        kind: HelmRepository
+        name: zitadel
+  install:
+    crds: Create
+    timeout: 10m
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    crds: CreateReplace
+    remediation:
+      strategy: rollback
+      retries: 3
+  valuesFrom:
+    - kind: Secret
+      name: zitadel-secrets
+      valuesKey: masterkey
+      targetPath: zitadel.masterkey
+    - kind: Secret
+      name: zitadel-db-password
+      valuesKey: password
+      targetPath: zitadel.secretConfig.Database.zitadel.Password
+  values:
+    zitadel:
+      # Master key should be provided via secret
+      configmapConfig:
+        ExternalDomain: zitadel.local
+        ExternalPort: 443
+        ExternalSecure: true
+        TLS:
+          Enabled: false
+        Database:
+          Postgres:
+            Host: postgres-rw.cnpg-system.svc.cluster.local
+            Port: 5432
+            Database: zitadel
+            MaxOpenConns: 20
+            MaxIdleConns: 10
+            MaxConnLifetime: 30m
+            MaxConnIdleTime: 5m
+            User:
+              Username: zitadel
+              SSL:
+                Mode: verify-full
+            Admin:
+              Username: postgres
+              SSL:
+                Mode: verify-full
+      secretConfig:
+        Database:
+          Postgres:
+            User:
+              Password: xyz
+            Admin:
+              Password: abc
+
+    # Resource limits
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 1Gi
+      requests:
+        cpu: 100m
+        memory: 256Mi
+
+    # Replica count
+    replicaCount: 1
+
+    # Service configuration
+    service:
+      type: ClusterIP
+      port: 8080
