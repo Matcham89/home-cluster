@@ -65,7 +65,7 @@ spec:
       defaultDashboardsEnabled: false
       defaultDashboardsTimezone: mdt
       persistence:
-        enabled: true
+        enabled: false
         type: pvc
         size: 10Gi
       datasources:
