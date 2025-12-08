@@ -4,7 +4,6 @@ kind: Kustomization
 resources:
   - agent-gateway.yaml
   - kagent.yaml
-  - keycloak.yaml
   - longhorn.yaml
   - mcp.yaml
   - monitoring.yaml
