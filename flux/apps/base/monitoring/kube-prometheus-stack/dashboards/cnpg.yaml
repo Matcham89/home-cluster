@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: flux-cluster-dashboard
+  name: cnpg-dashboard
   namespace: monitoring
   labels:
     grafana_dashboard: "1"
