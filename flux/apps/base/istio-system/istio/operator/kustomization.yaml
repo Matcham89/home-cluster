@@ -7,3 +7,4 @@ resources:
   - helmrelease-istiod.yaml
   - helmrelease-cni.yaml
   - helmrelease-ztunnel.yaml
+  - servicemonitors.yaml
