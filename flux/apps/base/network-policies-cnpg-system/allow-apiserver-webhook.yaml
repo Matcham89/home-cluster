@@ -1,12 +1,11 @@
-# # ---
-# # # Allow Kubernetes API server to call CNPG webhooks
-# # # Required for validation and mutation webhooks
-# allow-cnpg-webhook-np.yaml
+---
+# Allow Kubernetes API server to call CNPG webhooks
+# Required for validation and mutation webhooks
+# API server may connect from control-plane node IPs or in-cluster
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   name: allow-cnpg-webhook
-  namespace: cnpg-system
 spec:
   podSelector:
     matchLabels:
@@ -15,31 +14,15 @@ spec:
   - Ingress
   ingress:
   - from:
-    # 1) Allow control-plane nodes (kube-apiserver traffic may come from node IPs)
+    # 1) Allow control-plane nodes (kube-apiserver may come from node IPs)
     - ipBlock:
         cidr: 192.168.1.181/32
     - ipBlock:
         cidr: 192.168.1.182/32
     - ipBlock:
         cidr: 192.168.1.183/32
-    # 2) Allow any pod in any namespace (covers kube-proxy, kubelets, in-cluster sources)
+    # 2) Allow any pod in any namespace (covers in-cluster API server access)
     - namespaceSelector: {}
     ports:
     - port: 9443
       protocol: TCP
-
-
-# apiVersion: networking.k8s.io/v1
-# kind: NetworkPolicy
-# metadata:
-#   name: allow-all-debug
-#   namespace: cnpg-system
-# spec:
-#   podSelector: {}
-#   policyTypes:
-#     - Ingress
-#     - Egress
-#   ingress:
-#     - {}   # allow everything
-#   egress:
-#     - {}   # allow everything

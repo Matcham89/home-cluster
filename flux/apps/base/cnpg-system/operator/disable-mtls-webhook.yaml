@@ -1,0 +1,14 @@
+---
+# Disable mTLS for CNPG webhook service
+# API server doesn't support mTLS and needs plain HTTPS access
+apiVersion: security.istio.io/v1
+kind: PeerAuthentication
+metadata:
+  name: cnpg-webhook-disable-mtls
+  namespace: cnpg-system
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: cloudnative-pg
+  mtls:
+    mode: DISABLE
