@@ -12,7 +12,7 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  path: ./flux/apps/base/cnpg/cluster
+  path: ./flux/apps/base/cnpg-system/cluster
   targetNamespace: keycloak
   dependsOn:
     - name: cnpg-operator
