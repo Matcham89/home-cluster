@@ -6,5 +6,7 @@ metadata:
   annotations:
     kustomize.toolkit.fluxcd.io/prune: disabled
   labels:
+    kubernetes.io/metadata.name: not-used
+  labels:
     istio-gateway-access: "true"
     istio.io/dataplane-mode: ambient
