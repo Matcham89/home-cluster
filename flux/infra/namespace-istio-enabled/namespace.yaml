@@ -7,4 +7,5 @@ metadata:
     kustomize.toolkit.fluxcd.io/prune: disabled
   labels:
     istio-gateway-access: "true"
+    istio.io/dataplane-mode: ambient
 
