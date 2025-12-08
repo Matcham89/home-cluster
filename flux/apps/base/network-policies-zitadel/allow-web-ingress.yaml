@@ -1,0 +1,29 @@
+---
+# Allow ingress traffic to Zitadel web interface
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-web-ingress
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: zitadel
+  policyTypes:
+  - Ingress
+  ingress:
+  # Allow from Istio gateway for web access
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: istio-system
+    ports:
+    - port: 8080
+      protocol: TCP
+  # Allow from kgateway if used
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kgateway-system
+    ports:
+    - port: 8080
+      protocol: TCP

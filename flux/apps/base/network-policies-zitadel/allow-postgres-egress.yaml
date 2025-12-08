@@ -1,0 +1,24 @@
+---
+# Allow Zitadel pods to connect to PostgreSQL database
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-postgres-egress
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: zitadel
+  policyTypes:
+  - Egress
+  egress:
+  # Allow connection to CNPG postgres in cnpg-system namespace
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: cnpg-system
+      podSelector:
+        matchLabels:
+          cnpg.io/cluster: postgres
+    ports:
+    - port: 5432
+      protocol: TCP
