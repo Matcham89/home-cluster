@@ -1,0 +1,55 @@
+---
+# ServiceMonitor for istiod (control plane)
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: istiod
+  namespace: istio-system
+  labels:
+    app: istiod
+    istio: pilot
+    release: kube-prometheus-stack
+spec:
+  selector:
+    matchLabels:
+      istio: pilot
+  endpoints:
+    - port: http-monitoring
+      interval: 30s
+      path: /metrics
+---
+# PodMonitor for ztunnel (ambient mode data plane)
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: ztunnel
+  namespace: istio-system
+  labels:
+    app: ztunnel
+    release: kube-prometheus-stack
+spec:
+  selector:
+    matchLabels:
+      app: ztunnel
+  podMetricsEndpoints:
+    - port: ztunnel-stats
+      interval: 30s
+      path: /stats/prometheus
+---
+# PodMonitor for Istio Gateway
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: istio-gateway
+  namespace: istio-system
+  labels:
+    app: istio-gateway
+    release: kube-prometheus-stack
+spec:
+  selector:
+    matchLabels:
+      gateway.networking.k8s.io/gateway-name: istio-gateway
+  podMetricsEndpoints:
+    - port: http-envoy-prom
+      interval: 30s
+      path: /stats/prometheus

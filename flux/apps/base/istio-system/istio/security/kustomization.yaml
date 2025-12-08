@@ -1,8 +1,8 @@
-# ---
-# apiVersion: kustomize.config.k8s.io/v1beta1
-# kind: Kustomization
-# resources:
-#   - peer-authentication.yaml
-#   - authz-grafana.yaml
-#   - authz-kagent.yaml
-#   - authz-longhorn.yaml
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - peer-authentication.yaml
+  - authz-grafana.yaml
+  - authz-kagent.yaml
+  - authz-longhorn.yaml
