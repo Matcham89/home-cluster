@@ -3,3 +3,4 @@ kind: Kustomization
 namespace: cnpg-system
 resources:
   - helmrelease.yaml
+  - disable-mtls-webhook.yaml

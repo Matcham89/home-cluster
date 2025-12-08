@@ -7,7 +7,7 @@ spec:
   instances: 3
   storage:
     size: 10Gi
-    storageClass: local-path
+    storageClass: longhorn
   bootstrap:
     initdb:
       database: keycloak
