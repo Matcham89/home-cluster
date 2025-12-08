@@ -17,6 +17,7 @@ spec:
   targetNamespace: zitadel
   dependsOn:
     - name: cnpg-cluster
+      namespace: cnpg-system
   timeout: 10m
   prune: true
   wait: true
