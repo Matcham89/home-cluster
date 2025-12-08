@@ -22,6 +22,8 @@ spec:
     remediation:
       retries: 3
   values:
+    env:
+      PILOT_ENABLE_AMBIENT: "true"
     meshConfig:
       enableTracing: true
       extensionProviders:
