@@ -22,25 +22,25 @@ spec:
       retries: 3
   values:
     ambient:
-    # If enabled, ambient redirection will be enabled
-    enabled: true
-    # If ambient is enabled, this selector will be used to identify the ambient-enabled pods
-    enablementSelectors: 
-    - podSelector:
-        matchLabels: {istio.io/dataplane-mode: ambient}
-    - podSelector:
-        matchExpressions:
-        - { key: istio.io/dataplane-mode, operator: NotIn, values: [none] }
-      namespaceSelector:
-        matchLabels: {istio.io/dataplane-mode: ambient}
-    # Set ambient config dir path: defaults to /etc/ambient-config
-    configDir: ""
-    # If enabled, and ambient is enabled, DNS redirection will be enabled
-    dnsCapture: true
-    # If enabled, and ambient is enabled, enables ipv6 support
-    ipv6: true
-    # If enabled, and ambient is enabled, the CNI agent will reconcile incompatible iptables rules and chains at startup.
-    # This will eventually be enabled by default
-    reconcileIptablesOnStartup: false
-    # If enabled, and ambient is enabled, the CNI agent will always share the network namespace of the host node it is running on
-    shareHostNetworkNamespace: false
+      # If enabled, ambient redirection will be enabled
+      enabled: true
+      # If ambient is enabled, this selector will be used to identify the ambient-enabled pods
+      enablementSelectors: 
+      - podSelector:
+          matchLabels: {istio.io/dataplane-mode: ambient}
+      - podSelector:
+          matchExpressions:
+          - { key: istio.io/dataplane-mode, operator: NotIn, values: [none] }
+        namespaceSelector:
+          matchLabels: {istio.io/dataplane-mode: ambient}
+      # Set ambient config dir path: defaults to /etc/ambient-config
+      configDir: ""
+      # If enabled, and ambient is enabled, DNS redirection will be enabled
+      dnsCapture: true
+      # If enabled, and ambient is enabled, enables ipv6 support
+      ipv6: true
+      # If enabled, and ambient is enabled, the CNI agent will reconcile incompatible iptables rules and chains at startup.
+      # This will eventually be enabled by default
+      reconcileIptablesOnStartup: false
+      # If enabled, and ambient is enabled, the CNI agent will always share the network namespace of the host node it is running on
+      shareHostNetworkNamespace: false
