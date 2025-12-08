@@ -1,0 +1,25 @@
+---
+# Allow agentgateway to access kagent-controller
+# Required for cross-namespace A2A protocol communication
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-kgateway-to-controller
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: controller
+      app.kubernetes.io/name: kagent
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kgateway-system
+      podSelector:
+        matchLabels:
+          app.kubernetes.io/name: agentgateway
+    ports:
+    - port: 8083
+      protocol: TCP
