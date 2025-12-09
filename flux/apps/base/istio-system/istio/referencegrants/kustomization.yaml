@@ -7,3 +7,4 @@ resources:
   - longhorn.yaml
   - mcp.yaml
   - monitoring.yaml
+  - zitadel.yaml

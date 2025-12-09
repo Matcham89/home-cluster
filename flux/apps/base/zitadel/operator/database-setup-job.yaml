@@ -1,0 +1,130 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: zitadel-db-setup
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: zitadel-db-setup
+rules:
+  - apiGroups: [""]
+    resources: ["secrets"]
+    verbs: ["get", "create", "patch"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: zitadel-db-setup
+subjects:
+  - kind: ServiceAccount
+    name: zitadel-db-setup
+roleRef:
+  kind: Role
+  name: zitadel-db-setup
+  apiGroup: rbac.authorization.k8s.io
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: zitadel-db-setup
+spec:
+  ttlSecondsAfterFinished: 300
+  template:
+    spec:
+      restartPolicy: OnFailure
+      serviceAccountName: zitadel-db-setup
+      containers:
+      - name: setup
+        image: postgres:18-alpine
+        env:
+          - name: PGHOST
+            value: postgres-rw.cnpg-system.svc.cluster.local
+          - name: PGPORT
+            value: "5432"
+          - name: PGDATABASE
+            value: home-cluster
+          - name: PGUSER
+            value: postgres
+          - name: PGPASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgres-superuser
+                key: password
+                optional: true
+        command:
+          - /bin/sh
+          - -c
+          - |
+            set -e
+
+            echo "Waiting for PostgreSQL to be ready..."
+            until pg_isready; do
+              echo "Waiting..."
+              sleep 2
+            done
+
+            echo "Setting up Zitadel database user permissions..."
+            psql <<'EOF'
+            -- Grant additional privileges to zitadel user
+            ALTER USER zitadel WITH CREATEROLE CREATEDB;
+
+            -- Create cache schema (PostgreSQL 18 workaround)
+            CREATE SCHEMA IF NOT EXISTS cache;
+            GRANT ALL ON SCHEMA cache TO zitadel;
+
+            -- Create cache tables without UNLOGGED (PostgreSQL 15+ fix)
+            CREATE TABLE IF NOT EXISTS cache.objects (
+                instance_id TEXT NOT NULL,
+                cache_name TEXT NOT NULL,
+                key TEXT NOT NULL,
+                value JSONB NOT NULL,
+                expiry TIMESTAMPTZ NOT NULL,
+                last_usage TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (instance_id, cache_name, key)
+            ) PARTITION BY LIST (instance_id);
+
+            CREATE TABLE IF NOT EXISTS cache.string_keys (
+                instance_id TEXT,
+                cache_name TEXT,
+                key TEXT,
+                value TEXT,
+                expiry TIMESTAMPTZ,
+                last_usage TIMESTAMPTZ,
+                PRIMARY KEY (instance_id, cache_name, key)
+            ) PARTITION BY LIST (instance_id);
+
+            -- Set ownership
+            ALTER TABLE cache.objects OWNER TO zitadel;
+            ALTER TABLE cache.string_keys OWNER TO zitadel;
+
+            -- Mark migration as complete
+            INSERT INTO system.migrations (name, started_at, finished_at)
+            VALUES ('34_add_cache_schema', NOW(), NOW())
+            ON CONFLICT (name) DO NOTHING;
+
+            EOF
+
+            echo "Database setup completed successfully!"
+      - name: copy-certs
+        image: bitnami/kubectl:latest
+        command:
+          - /bin/sh
+          - -c
+          - |
+            set -e
+
+            echo "Copying CNPG certificates to zitadel namespace..."
+
+            # Copy postgres-ca secret
+            kubectl get secret postgres-ca -n cnpg-system -o json | \
+              jq 'del(.metadata.ownerReferences, .metadata.creationTimestamp, .metadata.resourceVersion, .metadata.uid, .metadata.selfLink, .metadata.managedFields) | .metadata.namespace = "zitadel"' | \
+              kubectl apply -f - || echo "postgres-ca already exists"
+
+            # Copy postgres-server secret
+            kubectl get secret postgres-server -n cnpg-system -o json | \
+              jq 'del(.metadata.ownerReferences, .metadata.creationTimestamp, .metadata.resourceVersion, .metadata.uid, .metadata.selfLink, .metadata.managedFields) | .metadata.namespace = "zitadel"' | \
+              kubectl apply -f - || echo "postgres-server already exists"
+
+            echo "Certificate copy completed successfully!"
