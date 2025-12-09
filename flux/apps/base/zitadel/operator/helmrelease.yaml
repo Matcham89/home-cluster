@@ -26,12 +26,16 @@ spec:
       retries: 3
   valuesFrom:
     - kind: Secret
-      name: zitadel-secrets
+      name: zitadel-masterkey
       valuesKey: masterkey
       targetPath: zitadel.masterkey
+    - kind: Secret
+      name: zitadel-db-password
+      valuesKey: password
+      targetPath: zitadel.password
   values:
     zitadel:
-      masterkey: x123456789012345678901234567891y
+      masterkeySecretName: 
       configmapConfig:
         ExternalDomain: pg-secure.127.0.0.1.sslip.io
         ExternalPort: 443
