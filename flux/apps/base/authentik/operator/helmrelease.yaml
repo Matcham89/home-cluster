@@ -50,11 +50,30 @@ spec:
       postgresql:
         host: postgres-rw.cnpg-system.svc.cluster.local
         name: authentik
-        user: auth
-        password: "20NxA1kAYDFBTqJ9q6ecJPRxkl8tiRQNlhx4SUYpdASjjakkbbQ8oAYmQa5QTm8H"
+        user: file:///postgres-creds/username
+        password: file:///postgres-creds/password
         port: 5432
 
     server:
+      volumes:
+        - name: postgres-creds
+          secret:
+            secretName: authentik-postgres-credentials
+      volumeMounts:
+        - name: postgres-creds
+          mountPath: /postgres-creds
+          readOnly: true
+
+      worker:
+        volumes:
+          - name: postgres-creds
+            secret:
+              secretName: authentik-postgres-credentials
+        volumeMounts:
+          - name: postgres-creds
+            mountPath: /postgres-creds
+            readOnly: true
+
       ingress:
         # Specify kubernetes ingress controller class name
         ingressClassName: nginx | traefik | kong
