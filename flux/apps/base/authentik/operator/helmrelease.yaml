@@ -36,30 +36,29 @@ spec:
       strategy: rollback
       retries: 3
   values:
-    authentik:
-      postgresql:
-        host: postgres-rw.cnpg-system.svc.cluster.local
-        name: authentik
-        port: 5432
-        user: "{{ .Values.env.POSTGRES_USER }}"
-        password: "{{ .Values.env.POSTGRES_PASSWORD }}"
-
     # Disable built-in PostgreSQL
     postgresql:
       enabled: false
 
-    # Global environment variables from secret
-    env:
-      POSTGRES_USER:
-        valueFrom:
-          secretKeyRef:
-            name: authentik-postgres-credentials
-            key: username
-      POSTGRES_PASSWORD:
-        valueFrom:
-          secretKeyRef:
-            name: authentik-postgres-credentials
-            key: password
+    # Global environment variables for PostgreSQL configuration
+    global:
+      env:
+        - name: AUTHENTIK_POSTGRESQL__HOST
+          value: postgres-rw.cnpg-system.svc.cluster.local
+        - name: AUTHENTIK_POSTGRESQL__PORT
+          value: "5432"
+        - name: AUTHENTIK_POSTGRESQL__NAME
+          value: authentik
+        - name: AUTHENTIK_POSTGRESQL__USER
+          valueFrom:
+            secretKeyRef:
+              name: authentik-postgres-credentials
+              key: username
+        - name: AUTHENTIK_POSTGRESQL__PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: authentik-postgres-credentials
+              key: password
 
     server:
       ingress:
