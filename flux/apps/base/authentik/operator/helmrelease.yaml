@@ -37,7 +37,30 @@ spec:
       retries: 3
   values:
     authentik:
+      postgresql:
+        host: postgres-rw.cnpg-system.svc.cluster.local
+        name: authentik
+        port: 5432
+        user: "{{ .Values.env.POSTGRES_USER }}"
+        password: "{{ .Values.env.POSTGRES_PASSWORD }}"
+
+    # Disable built-in PostgreSQL
+    postgresql:
       enabled: false
+
+    # Global environment variables from secret
+    env:
+      POSTGRES_USER:
+        valueFrom:
+          secretKeyRef:
+            name: authentik-postgres-credentials
+            key: username
+      POSTGRES_PASSWORD:
+        valueFrom:
+          secretKeyRef:
+            name: authentik-postgres-credentials
+            key: password
+
     server:
       ingress:
         # Specify kubernetes ingress controller class name
@@ -45,27 +68,3 @@ spec:
         enabled: false
         hosts:
             - authentik.kubegit.com
-      volumes:
-        - name: postgres-creds
-          secret:
-            secretName: authentik-postgres-credentials
-      volumeMounts:
-        - name: postgres-creds
-          mountPath: /postgres-creds
-          readOnly: true
-
-    postgresql:
-      host: postgres-rw.cnpg-system.svc.cluster.local
-      user: file:///postgres-creds/username
-      password: file:///postgres-creds/password
-      database: authentik
-
-    worker:
-      volumes:
-        - name: postgres-creds
-          secret:
-            secretName: authentik-postgres-credentials
-      volumeMounts:
-        - name: postgres-creds
-          mountPath: /postgres-creds
-          readOnly: true
