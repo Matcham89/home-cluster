@@ -38,22 +38,22 @@ spec:
   values:
     global:
       env:
-      - name: AUTHENTIK_POSTGRESQL__HOST
-        value: "postgres-rw.cnpg-system.svc.cluster.local"
-      - name: AUTHENTIK_POSTGRESQL__PORT
-        value: 5432
-      - name: AUTHENTIK_POSTGRESQL__NAME
-        value: "home-cluster"
-      - name: AUTHENTIK_POSTGRESQL__USER
-        valueFrom:
-          secretKeyRef:
-            name: authentik-postgres-credentials
-            key: username
-      - name: AUTHENTIK_POSTGRESQL__PASSWORD
-        valueFrom:
-          secretKeyRef:
-            name: authentik-postgres-credentials
-            key: password
+        - name: AUTHENTIK_POSTGRESQL__HOST
+          value: "postgres-rw.cnpg-system.svc.cluster.local"
+        - name: AUTHENTIK_POSTGRESQL__PORT
+          value: 5432
+        - name: AUTHENTIK_POSTGRESQL__NAME
+          value: "home-cluster"
+        - name: AUTHENTIK_POSTGRESQL__USER
+          valueFrom:
+            secretKeyRef:
+              name: authentik-postgres-credentials
+              key: username
+        - name: AUTHENTIK_POSTGRESQL__PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: authentik-postgres-credentials
+              key: password
     postgresql:
       enabled: false
 
