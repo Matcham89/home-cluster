@@ -11,6 +11,31 @@ spec:
   policyTypes:
   - Egress
   egress:
+  # Allow DNS resolution
+  - ports:
+    - port: 53
+      protocol: TCP
+    - port: 53
+      protocol: UDP
+    to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: kube-system
+      podSelector:
+        matchLabels:
+          k8s-app: kube-dns
+  # Allow Istio ambient mesh (ztunnel)
+  - ports:
+    - port: 15008
+      protocol: TCP
+    to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: istio-system
+      podSelector:
+        matchLabels:
+          app: ztunnel
+  # Allow PostgreSQL connection
   - to:
     - namespaceSelector:
         matchLabels:
