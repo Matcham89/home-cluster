@@ -20,6 +20,6 @@ spec:
         request: 30s
         backendRequest: 30s
       backendRefs:
-        - name: authentik
+        - name: authentik-operator-server
           namespace: authentik
           port: 80
