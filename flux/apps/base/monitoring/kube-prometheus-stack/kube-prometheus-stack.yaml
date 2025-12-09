@@ -4,6 +4,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: kube-prometheus-stack
+  namespace: monitoring
 spec:
   interval: 1m
   chartRef:
@@ -59,6 +60,32 @@ spec:
         enableRemoteWriteReceiver: true
     grafana:
       enabled: true
+      grafana.ini:
+        auth:
+          signout_redirect_url: "https://authentik.company/application/o/grafana-kubegit-com/end-session/"
+          oauth_auto_login: true
+        auth.generic_oauth:
+          name: authentik
+          enabled: true
+          client_id: $__file{/etc/secrets/auth_generic_oauth/client_id}
+          client_secret: $__file{/etc/secrets/auth_generic_oauth/client_secret}
+          scopes: "openid profile email"
+          auth_url: "https://authentik.company/application/o/authorize/"
+          token_url: "https://authentik.company/application/o/token/"
+          api_url: "https://authentik.company/application/o/userinfo/"
+          # Optionally map user groups to Grafana roles
+          # role_attribute_path: contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'
+      extraSecretMounts:
+        - name: authentik-grafana-client-id
+          secretName: authentik-grafana-client-id
+          defaultMode: 0440
+          mountPath: /etc/secrets/auth_generic_oauth
+          readOnly: true
+        - name: authentik-grafana-client-secret
+          secretName: authentik-grafana-client-secret
+          defaultMode: 0440
+          mountPath: /etc/secrets/auth_generic_oauth
+          readOnly: true
       service:
         type: LoadBalancer
         loadBalancerIP: "192.168.1.209"
