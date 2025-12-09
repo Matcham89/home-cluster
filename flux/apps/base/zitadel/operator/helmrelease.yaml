@@ -29,10 +29,6 @@ spec:
       name: zitadel-secrets
       valuesKey: masterkey
       targetPath: zitadel.masterkey
-    - kind: Secret
-      name: zitadel-db-password
-      valuesKey: password
-      targetPath: zitadel.secretConfig.Database.zitadel.Password
   values:
     zitadel:
       # Master key should be provided via secret
