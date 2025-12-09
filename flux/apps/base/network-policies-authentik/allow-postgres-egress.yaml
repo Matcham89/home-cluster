@@ -1,5 +1,5 @@
 ---
-# Allow Zitadel pods to connect to PostgreSQL database
+# Allow Authentik pods to connect to PostgreSQL database
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -7,7 +7,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: zitadel
+      app.kubernetes.io/name: authentik
   policyTypes:
   - Egress
   egress:
