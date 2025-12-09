@@ -26,12 +26,17 @@ spec:
         kind: HelmRepository
         name: authentik
   install:
+    strategy:
+      name: RetryOnFailure
+    createNamespace: true
     timeout: 10m
     remediation:
       retries: 3
   upgrade:
-    timeout: 10m
+    strategy:
+      name: RetryOnFailure
     cleanupOnFail: true
+    timeout: 10m
     remediation:
       strategy: rollback
       retries: 3

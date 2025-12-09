@@ -20,7 +20,16 @@ spec:
     kind: OCIRepository
     name: kgateway
   install:
+    strategy:
+      name: RetryOnFailure
+    createNamespace: true
+    timeout: 10m
     crds: Skip
+  upgrade:
+    strategy:
+      name: RetryOnFailure
+    cleanupOnFail: true
+    timeout: 10m
   # Note: Kubernetes 1.34+ has stricter label validation that rejects '+' in labels
   # Fixed by enabling DisableChartDigestTracking feature gate in helm-controller
   # See: https://github.com/fluxcd/flux2/issues/4910

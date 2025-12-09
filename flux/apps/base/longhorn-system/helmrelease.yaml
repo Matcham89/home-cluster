@@ -25,3 +25,13 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: longhorn
+  install:
+    strategy:
+      name: RetryOnFailure
+    createNamespace: true
+    timeout: 10m
+  upgrade:
+    strategy:
+      name: RetryOnFailure
+    cleanupOnFail: true
+    timeout: 10m

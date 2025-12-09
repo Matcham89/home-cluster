@@ -14,12 +14,18 @@ spec:
         kind: HelmRepository
         name: zitadel
   install:
-    crds: Create
+    strategy:
+      name: RetryOnFailure
+    createNamespace: true
     timeout: 10m
+    crds: Create
     remediation:
       retries: 3
   upgrade:
+    strategy:
+      name: RetryOnFailure
     cleanupOnFail: true
+    timeout: 10m
     crds: CreateReplace
     remediation:
       strategy: rollback
