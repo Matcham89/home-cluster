@@ -31,11 +31,10 @@ spec:
       targetPath: zitadel.masterkey
   values:
     zitadel:
-      # Master key should be provided via secret
+      masterkey: x123456789012345678901234567891y
       configmapConfig:
-        ExternalDomain: zitadel.local
+        ExternalDomain: pg-secure.127.0.0.1.sslip.io
         ExternalPort: 443
-        ExternalSecure: true
         TLS:
           Enabled: false
         Database:
@@ -48,13 +47,13 @@ spec:
             MaxConnLifetime: 30m
             MaxConnIdleTime: 5m
             User:
-              Username: postgres
+              Username: zitadel
               SSL:
-                Mode: disable
+                Mode: verify-full
             Admin:
               Username: postgres
               SSL:
-                Mode: disable
+                Mode: verify-full
       secretConfig:
         Database:
           Postgres:
@@ -63,19 +62,11 @@ spec:
             Admin:
               Password: abc
 
-    # Resource limits
-    resources:
-      limits:
-        cpu: 1000m
-        memory: 1Gi
-      requests:
-        cpu: 100m
-        memory: 256Mi
-
-    # Replica count
-    replicaCount: 1
-
-    # Service configuration
-    service:
-      type: ClusterIP
-      port: 8080
+      dbSslCaCrtSecret: postgres-cert
+      dbSslAdminCrtSecret: postgres-cert
+      dbSslUserCrtSecret: zitadel-cert
+    ingress:
+      enabled: true
+    login:
+      ingress:
+        enabled: true
