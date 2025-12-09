@@ -30,14 +30,9 @@ spec:
       name: RetryOnFailure
     createNamespace: true
     timeout: 10m
-    remediation:
-      retries: 3
   upgrade:
     strategy:
       name: RetryOnFailure
     cleanupOnFail: true
     timeout: 10m
-    remediation:
-      strategy: rollback
-      retries: 3
 
