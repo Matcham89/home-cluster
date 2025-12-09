@@ -40,15 +40,23 @@ spec:
     postgresql:
       enabled: false
 
-    # Global environment variables for PostgreSQL configuration
-    global:
+    # Disable built-in Redis
+    redis:
+      enabled: false
+
+    # Configure external PostgreSQL under authentik section
+    authentik:
+      postgresql:
+        host: postgres-rw.cnpg-system.svc.cluster.local
+        name: authentik
+        port: 5432
+      # Reference password from secret via envFrom in server/worker
+      redis:
+        host: redis-master.redis.svc.cluster.local
+
+    server:
+      # Environment variables for PostgreSQL credentials
       env:
-        - name: AUTHENTIK_POSTGRESQL__HOST
-          value: postgres-rw.cnpg-system.svc.cluster.local
-        - name: AUTHENTIK_POSTGRESQL__PORT
-          value: "5432"
-        - name: AUTHENTIK_POSTGRESQL__NAME
-          value: authentik
         - name: AUTHENTIK_POSTGRESQL__USER
           valueFrom:
             secretKeyRef:
@@ -59,11 +67,23 @@ spec:
             secretKeyRef:
               name: authentik-postgres-credentials
               key: password
-
-    server:
       ingress:
         # Specify kubernetes ingress controller class name
         ingressClassName: nginx | traefik | kong
         enabled: false
         hosts:
             - authentik.kubegit.com
+
+    worker:
+      # Environment variables for PostgreSQL credentials
+      env:
+        - name: AUTHENTIK_POSTGRESQL__USER
+          valueFrom:
+            secretKeyRef:
+              name: authentik-postgres-credentials
+              key: username
+        - name: AUTHENTIK_POSTGRESQL__PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: authentik-postgres-credentials
+              key: password
