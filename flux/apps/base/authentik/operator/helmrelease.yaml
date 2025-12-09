@@ -37,7 +37,7 @@ spec:
       retries: 3
   values:
     authentik:
-      enabled: true
+      enabled: false
     server:
       ingress:
         # Specify kubernetes ingress controller class name
