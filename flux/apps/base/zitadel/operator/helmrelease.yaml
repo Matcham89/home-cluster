@@ -29,6 +29,10 @@ spec:
       name: zitadel-db-password
       valuesKey: password
       targetPath: zitadel.secretConfig.Database.Postgres.User.Password
+    - kind: Secret
+      name: zitadel-db-password
+      valuesKey: password
+      targetPath: zitadel.secretConfig.Database.Postgres.Admin.Password
   values:
     zitadel:
       masterkeySecretName: zitadel-masterkey
@@ -50,7 +54,12 @@ spec:
               Username: zitadel
               SSL:
                 Mode: verify-full
+            Admin:
+              Username: zitadel
+              SSL:
+                Mode: verify-full
       dbSslCaCrtSecret: postgres-cert
+      dbSslAdminCrtSecret: postgres-cert
       dbSslUserCrtSecret: zitadel-cert
     ingress:
       enabled: true
