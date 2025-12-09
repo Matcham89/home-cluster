@@ -58,9 +58,9 @@ spec:
               Username: zitadel
               SSL:
                 Mode: verify-full
-      dbSslCaCrtSecret: postgres-cert
-      dbSslAdminCrtSecret: postgres-cert
-      dbSslUserCrtSecret: zitadel-cert
+      dbSslCaCrtSecret: postgres-ca
+      dbSslAdminCrtSecret: postgres-server
+      dbSslUserCrtSecret: postgres-server
     ingress:
       enabled: true
     login:
