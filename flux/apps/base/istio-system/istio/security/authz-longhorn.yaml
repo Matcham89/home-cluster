@@ -1,12 +1,9 @@
 ---
-# Authorization policy for Grafana (ingress traffic)
-# Note: Grafana doesn't have Istio sidecar, so this policy
-# would only apply if sidecars are added later
 apiVersion: security.istio.io/v1
 kind: AuthorizationPolicy
 metadata:
   name: longhorn-ingress-authz
-  namespace: monitoring
+  namespace: cnpg-system
 spec:
   selector:
     matchLabels:

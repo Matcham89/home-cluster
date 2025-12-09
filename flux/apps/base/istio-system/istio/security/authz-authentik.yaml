@@ -2,12 +2,12 @@
 apiVersion: security.istio.io/v1
 kind: AuthorizationPolicy
 metadata:
-  name: grafana-ingress-authz
-  namespace: monitoring
+  name: authentik-ingress-authz
+  namespace: authentik
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: grafana
+      app.kubernetes.io/name: authentik
   action: ALLOW
   rules:
     # Allow all traffic when no sidecar is present
