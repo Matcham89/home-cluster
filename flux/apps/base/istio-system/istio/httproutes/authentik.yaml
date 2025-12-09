@@ -22,4 +22,4 @@ spec:
       backendRefs:
         - name: authentik
           namespace: authentik
-          port: 8080
+          port: 80
