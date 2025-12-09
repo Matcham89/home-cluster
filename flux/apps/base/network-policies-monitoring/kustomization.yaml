@@ -5,3 +5,4 @@ kind: Kustomization
 resources:
   - ./prometheus-egress-all.yaml
   - ./grafana-ingress.yaml
+  - ./grafana-egress-postgres.yaml
