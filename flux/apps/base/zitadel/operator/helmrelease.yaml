@@ -26,7 +26,7 @@ spec:
       retries: 3
   valuesFrom:
     - kind: Secret
-      name: postgres-app
+      name: zitadel-db-password
       valuesKey: password
       targetPath: zitadel.secretConfig.Database.Postgres.User.Password
   values:
@@ -47,7 +47,7 @@ spec:
             MaxConnLifetime: 30m
             MaxConnIdleTime: 5m
             User:
-              Username: matcham89
+              Username: zitadel
               SSL:
                 Mode: verify-full
       dbSslCaCrtSecret: postgres-ca
