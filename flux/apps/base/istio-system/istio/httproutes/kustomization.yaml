@@ -6,4 +6,4 @@ resources:
   - kagent.yaml
   - longhorn.yaml
   - yt-mcp.yaml
-  - zitadel.yaml
+  - authentik.yaml
