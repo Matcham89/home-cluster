@@ -48,13 +48,13 @@ spec:
             MaxConnLifetime: 30m
             MaxConnIdleTime: 5m
             User:
-              Username: zitadel
+              Username: postgres
               SSL:
-                Mode: verify-full
+                Mode: disable
             Admin:
               Username: postgres
               SSL:
-                Mode: verify-full
+                Mode: disable
       secretConfig:
         Database:
           Postgres:
