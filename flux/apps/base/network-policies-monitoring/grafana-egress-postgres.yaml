@@ -1,22 +1,23 @@
 ---
-# Allow ingress to Grafana from ingress controller
+# Allow Grafana to egress to PostgreSQL
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: grafana-ingress
+  name: grafana-egress-postgres
 spec:
   podSelector:
     matchLabels:
       app.kubernetes.io/name: grafana
   policyTypes:
-  - Ingress
-  ingress:
-  # Allow from istio ingress gateway
-  - from:
+  - Egress
+  egress:
+  - to:
     - namespaceSelector:
         matchLabels:
-          kubernetes.io/metadata.name: istio-system
+          kubernetes.io/metadata.name: cnpg-system
       podSelector:
         matchLabels:
-          istio: ingressgateway
----
+          cnpg.io/cluster: postgres
+    ports:
+    - protocol: TCP
+      port: 5432
