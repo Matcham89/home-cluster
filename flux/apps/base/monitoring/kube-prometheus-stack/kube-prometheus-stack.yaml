@@ -74,15 +74,10 @@ spec:
           token_url: "https://authentik.company/application/o/token/"
           api_url: "https://authentik.company/application/o/userinfo/"
           # Optionally map user groups to Grafana roles
-          # role_attribute_path: contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'
+          role_attribute_path: contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'
       extraSecretMounts:
-        - name: authentik-grafana-client-id
-          secretName: authentik-grafana-client-id
-          defaultMode: 0440
-          mountPath: /etc/secrets/auth_generic_oauth
-          readOnly: true
-        - name: authentik-grafana-client-secret
-          secretName: authentik-grafana-client-secret
+        - name: auth-generic-oauth-secret-mount
+          secretName: auth-generic-oauth-secret
           defaultMode: 0440
           mountPath: /etc/secrets/auth_generic_oauth
           readOnly: true
