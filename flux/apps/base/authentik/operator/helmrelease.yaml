@@ -55,6 +55,12 @@ spec:
         port: 5432
 
     server:
+      ingress:
+        # Specify kubernetes ingress controller class name
+        ingressClassName: nginx | traefik | kong
+        enabled: false
+        hosts:
+            - authentik.kubegit.com
       volumes:
         - name: postgres-creds
           secret:
@@ -64,19 +70,13 @@ spec:
           mountPath: /postgres-creds
           readOnly: true
 
-      worker:
-        volumes:
-          - name: postgres-creds
-            secret:
-              secretName: authentik-postgres-credentials
-        volumeMounts:
-          - name: postgres-creds
-            mountPath: /postgres-creds
-            readOnly: true
+    worker:
+      volumes:
+        - name: postgres-creds
+          secret:
+            secretName: authentik-postgres-credentials
+      volumeMounts:
+        - name: postgres-creds
+          mountPath: /postgres-creds
+          readOnly: true
 
-      ingress:
-        # Specify kubernetes ingress controller class name
-        ingressClassName: nginx | traefik | kong
-        enabled: false
-        hosts:
-            - authentik.kubegit.com
