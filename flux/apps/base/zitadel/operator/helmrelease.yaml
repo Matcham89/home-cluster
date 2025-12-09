@@ -37,7 +37,7 @@ spec:
     zitadel:
       masterkeySecretName: zitadel-masterkey
       configmapConfig:
-        ExternalDomain: pg-secure.127.0.0.1.sslip.io
+        ExternalDomain: zitadel.kubegit.com
         ExternalPort: 443
         TLS:
           Enabled: false
