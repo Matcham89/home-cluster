@@ -53,11 +53,11 @@ spec:
             User:
               Username: zitadel
               SSL:
-                Mode: verify-full
+                Mode: require
             Admin:
               Username: zitadel
               SSL:
-                Mode: verify-full
+                Mode: require
       dbSslCaCrtSecret: postgres-ca
       dbSslAdminCrtSecret: postgres-server
       dbSslUserCrtSecret: postgres-server
