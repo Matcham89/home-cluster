@@ -68,7 +68,7 @@ spec:
       enabled: true
       grafana.ini:
         auth:
-          signout_redirect_url: "https://authentik.company/application/o/grafana-kubegit-com/end-session/"
+          signout_redirect_url: "https://authentik.kubegit.com/application/o/grafana-kubegit-com/end-session/"
           oauth_auto_login: true
         auth.generic_oauth:
           name: authentik
@@ -80,7 +80,7 @@ spec:
           token_url: "https://authentik.kubegit.com/application/o/token/"
           api_url: "https://authentik.kubegit.com/application/o/userinfo/"
           # Optionally map user groups to Grafana roles
-          role_attribute_path: contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'
+          # role_attribute_path: contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'
       extraSecretMounts:
         - name: auth-generic-oauth-secret-mount
           secretName: auth-generic-oauth-secret
