@@ -8,4 +8,5 @@ components:
 
 resources:
   - ./operator/ks.yaml
+  - ./secrets/ks.yaml
 
