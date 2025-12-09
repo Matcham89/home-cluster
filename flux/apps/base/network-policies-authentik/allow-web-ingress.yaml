@@ -17,13 +17,5 @@ spec:
         matchLabels:
           kubernetes.io/metadata.name: istio-system
     ports:
-    - port: 8080
-      protocol: TCP
-  # Allow from kgateway if used
-  - from:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: kgateway-system
-    ports:
-    - port: 8080
+    - port: 9000
       protocol: TCP
