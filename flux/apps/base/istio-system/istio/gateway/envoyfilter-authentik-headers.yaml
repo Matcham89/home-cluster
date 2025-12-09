@@ -30,8 +30,11 @@ spec:
             inline_code: |
               function envoy_on_request(request_handle)
                 local host = request_handle:headers():get(":authority")
-                -- Only add header for authentik.kubegit.com
+                -- Only set header for authentik.kubegit.com
                 if host == "authentik.kubegit.com" then
+                  -- Remove any existing x-forwarded-proto header first
+                  request_handle:headers():remove("x-forwarded-proto")
+                  -- Then add the https header
                   request_handle:headers():add("x-forwarded-proto", "https")
                 end
               end
