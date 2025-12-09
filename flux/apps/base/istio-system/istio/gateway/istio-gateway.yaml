@@ -16,3 +16,18 @@ spec:
           selector:
             matchLabels:
               istio-gateway-access: "true"
+    - name: https
+      protocol: HTTPS
+      port: 443
+      hostname: "*.kubegit.com"
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: authentik-tls-cert
+            kind: Secret
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              istio-gateway-access: "true"
