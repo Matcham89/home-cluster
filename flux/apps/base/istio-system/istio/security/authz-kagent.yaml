@@ -1,7 +1,4 @@
 ---
-# Authorization policy for kagent (ingress traffic)
-# Note: kagent doesn't have Istio sidecar, so this policy
-# would only apply if sidecars are added later
 apiVersion: security.istio.io/v1
 kind: AuthorizationPolicy
 metadata:
