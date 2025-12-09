@@ -26,16 +26,12 @@ spec:
       retries: 3
   valuesFrom:
     - kind: Secret
-      name: zitadel-masterkey
-      valuesKey: masterkey
-      targetPath: zitadel.masterkey
-    - kind: Secret
-      name: zitadel-db-password
+      name: postgres-app
       valuesKey: password
-      targetPath: zitadel.password
+      targetPath: zitadel.secretConfig.Database.Postgres.User.Password
   values:
     zitadel:
-      masterkeySecretName: 
+      masterkeySecretName: zitadel-masterkey
       configmapConfig:
         ExternalDomain: pg-secure.127.0.0.1.sslip.io
         ExternalPort: 443
@@ -51,23 +47,11 @@ spec:
             MaxConnLifetime: 30m
             MaxConnIdleTime: 5m
             User:
-              Username: zitadel
+              Username: matcham89
               SSL:
                 Mode: verify-full
-            Admin:
-              Username: postgres
-              SSL:
-                Mode: verify-full
-      secretConfig:
-        Database:
-          Postgres:
-            User:
-              Password: xyz
-            Admin:
-              Password: abc
-      dbSslCaCrtSecret: postgres-cert
-      dbSslAdminCrtSecret: postgres-cert
-      dbSslUserCrtSecret: zitadel-cert
+      dbSslCaCrtSecret: postgres-ca
+      dbSslUserCrtSecret: postgres-server
     ingress:
       enabled: true
     login:
