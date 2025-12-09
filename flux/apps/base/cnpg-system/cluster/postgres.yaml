@@ -4,14 +4,13 @@ metadata:
   name: postgres
 spec:
   instances: 3
-  imageName: ghcr.io/cloudnative-pg/postgresql:16
   storage:
     size: 10Gi
     storageClass: longhorn
   bootstrap:
     initdb:
       database: home-cluster
-      owner: zitadel
+      owner: auth
   postgresql:
     parameters:
       max_connections: "200"
