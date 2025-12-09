@@ -10,7 +10,7 @@ spec:
   bootstrap:
     initdb:
       database: home-cluster
-      owner: matcham89
+      owner: zitadel
   postgresql:
     parameters:
       max_connections: "200"
@@ -19,7 +19,7 @@ spec:
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
-  name: kpostgres
+  name: postgres
 spec:
   selector:
     matchLabels:
