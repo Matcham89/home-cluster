@@ -58,6 +58,10 @@ spec:
               Username: zitadel
               SSL:
                 Mode: require
+    initJob:
+      enabled: true
+    setupJob:
+      enabled: true
     ingress:
       enabled: true
     login:
