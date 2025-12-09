@@ -39,6 +39,7 @@ spec:
       configmapConfig:
         ExternalDomain: zitadel.kubegit.com
         ExternalPort: 443
+        ExternalSecure: true
         TLS:
           Enabled: false
         Database:
