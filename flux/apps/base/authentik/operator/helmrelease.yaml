@@ -57,9 +57,9 @@ spec:
         # Trust proxy headers for HTTPS (Cloudflare -> Gateway -> Authentik)
         - name: AUTHENTIK_LISTEN__TRUSTED_PROXY_IP
           value: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
-        # Force HTTPS scheme detection
-        - name: AUTHENTIK_LISTEN__HTTP__X_FORWARDED_PROTO
-          value: "1"
+        # Enable Django secure proxy SSL header (trusts X-Forwarded-Proto)
+        - name: AUTHENTIK_WEB__SECURE_PROXY_SSL_HEADER
+          value: "HTTP_X_FORWARDED_PROTO"
     postgresql:
       enabled: false
 
