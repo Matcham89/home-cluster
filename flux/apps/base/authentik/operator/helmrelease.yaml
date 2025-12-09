@@ -41,7 +41,7 @@ spec:
         - name: AUTHENTIK_POSTGRESQL__HOST
           value: "postgres-rw.cnpg-system.svc.cluster.local"
         - name: AUTHENTIK_POSTGRESQL__PORT
-          value: 5432
+          value: "5432"
         - name: AUTHENTIK_POSTGRESQL__NAME
           value: "home-cluster"
         - name: AUTHENTIK_POSTGRESQL__USER
