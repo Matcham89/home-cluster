@@ -108,7 +108,7 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: aauthentik
+  targetNamespace: authentik
   timeout: 5m
   prune: true
   wait: true
