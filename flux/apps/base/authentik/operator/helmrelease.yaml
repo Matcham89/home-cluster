@@ -42,7 +42,7 @@ spec:
 
     # Disable built-in Redis
     redis:
-      enabled: false
+      enabled: true
 
     # Configure external PostgreSQL under authentik section
     authentik:
