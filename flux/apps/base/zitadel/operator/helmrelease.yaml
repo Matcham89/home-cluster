@@ -41,7 +41,7 @@ spec:
           Postgres:
             Host: postgres-rw.cnpg-system.svc.cluster.local
             Port: 5432
-            Database: zitadel
+            Database: home-cluster
             MaxOpenConns: 20
             MaxIdleConns: 10
             MaxConnLifetime: 30m
@@ -61,7 +61,6 @@ spec:
               Password: xyz
             Admin:
               Password: abc
-
       dbSslCaCrtSecret: postgres-cert
       dbSslAdminCrtSecret: postgres-cert
       dbSslUserCrtSecret: zitadel-cert
