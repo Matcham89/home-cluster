@@ -11,13 +11,19 @@ spec:
     kind: OCIRepository
     name: kube-prometheus-stack
   install:
-    crds: Create
+    strategy:
+      name: RetryOnFailure
+    createNamespace: true
     timeout: 10m
+    crds: Create
     remediation:
       retries: 3
   upgrade:
-    crds: CreateReplace
+    strategy:
+      name: RetryOnFailure
+    cleanupOnFail: true
     timeout: 10m
+    crds: CreateReplace
     remediation:
       retries: 3
   valuesFrom:
@@ -70,9 +76,9 @@ spec:
           client_id: $__file{/etc/secrets/auth_generic_oauth/client_id}
           client_secret: $__file{/etc/secrets/auth_generic_oauth/client_secret}
           scopes: "openid profile email"
-          auth_url: "https://authentik.company/application/o/authorize/"
-          token_url: "https://authentik.company/application/o/token/"
-          api_url: "https://authentik.company/application/o/userinfo/"
+          auth_url: "https://authentik.kubegit.com/application/o/authorize/"
+          token_url: "https://authentik.kubegit.com/application/o/token/"
+          api_url: "https://authentik.kubegit.com/application/o/userinfo/"
           # Optionally map user groups to Grafana roles
           role_attribute_path: contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'
       extraSecretMounts:
