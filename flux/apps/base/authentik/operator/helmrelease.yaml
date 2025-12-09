@@ -79,6 +79,13 @@ spec:
         enabled: false
         hosts:
             - authentik.kubegit.com
+      resources:
+        requests:
+          cpu: 250m
+          memory: 768Mi
+        limits:
+          cpu: 1000m
+          memory: 1Gi
       volumes:
         - name: postgres-creds
           secret:
