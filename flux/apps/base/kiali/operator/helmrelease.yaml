@@ -35,17 +35,4 @@ spec:
       name: RetryOnFailure
     cleanupOnFail: true
     timeout: 10m
-  values:
-    cr:
-      create: true
-      namespace: istio-system
-      spec:
-        auth:
-          strategy: anonymous
-        deployment:
-          accessible_namespaces: ["**"]
-        external_services:
-          prometheus:
-            externalURL: "http://grafana.kubegit.com"
-          grafana:
-            internalURL: "http://kube-prometheus-stack-grafana.monitoring.svc.cluster.local:80"
+
