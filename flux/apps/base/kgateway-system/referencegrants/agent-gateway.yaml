@@ -6,9 +6,9 @@ metadata:
   namespace: kgateway-system
 spec:
   from:
-    - group: gateway.networking.k8s.io
+    - group: gateway.kgateway.dev
       kind: HTTPRoute
-      namespace: istio-system
+      namespace: kgateway-system
   to:
     - group: ""
       kind: Service

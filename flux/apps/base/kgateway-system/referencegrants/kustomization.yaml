@@ -5,3 +5,4 @@ kind: Kustomization
 resources:
   - ./otel.yaml
   - ./kagent.yaml
+  - ./agent-gateway.yaml
