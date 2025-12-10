@@ -7,7 +7,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: kagent-ui
+      app.kubernetes.io/name: kagent
   action: ALLOW
   rules:
     # Allow all traffic when no sidecar is present
