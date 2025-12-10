@@ -5,5 +5,4 @@ resources:
   - grafana.yaml
   - kagent.yaml
   - longhorn.yaml
-  - yt-mcp.yaml
   - authentik.yaml
