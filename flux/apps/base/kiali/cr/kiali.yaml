@@ -2,6 +2,7 @@ apiVersion: kiali.io/v1alpha1
 kind: Kiali
 metadata:
   name: kiali
+  namespace: istio-system
 spec:
   deployment:
     logger:
@@ -12,3 +13,35 @@ spec:
   external_services:
     prometheus:
       url: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
+    grafana:
+      auth:
+        ca_file: ''
+        insecure_skip_verify: true
+        password: ''
+        token: ''
+        type: none
+        use_kiali_token: false
+        username: ''
+      dashboards:
+      - name: Istio Service Dashboard
+        variables:
+          datasource: var-datasource
+          namespace: var-namespace
+          service: var-service
+          version: var-version
+      - name: Istio Workload Dashboard
+        variables:
+          datasource: var-datasource
+          namespace: var-namespace
+          version: var-version
+          workload: var-workload
+      - name: Istio Mesh Dashboard
+      - name: Istio Control Plane Dashboard
+      - name: Istio Performance Dashboard
+      - name: Istio Wasm Extension Dashboard
+      datasource_uid: ''
+      enabled: false
+      external_url: ''
+      health_check_url: ''
+      internal_url: http://kube-prometheus-stack-grafana.monitoring.svc.cluster.local:80
+      is_core: false
