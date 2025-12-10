@@ -7,4 +7,16 @@ components:
   - ../../../infra/namespace-istio-enabled
 
 resources:
-  - ./ks.yaml
+  - ./crds/ks.yaml
+  - ./operator/ks.yaml
+  - ./limit-ranges/ks.yaml
+  - ./resource-quotas/ks.yaml
+  - ./network-policies/ks.yaml
+  - ./gateway/ks.yaml
+  - ./gatewayparameters/ks.yaml
+  - ./httplistenerspolicy/ks.yaml
+  - ./backends/ks.yaml
+  - ./httproute/ks.yaml
+  - ./certificate/ks.yaml
+  - ./referencegrants/ks.yaml
+  - ./observability/ks.yaml

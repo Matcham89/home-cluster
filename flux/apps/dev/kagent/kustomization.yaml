@@ -7,4 +7,12 @@ components:
   - ../../../infra/namespace-istio-enabled
 
 resources:
-  - ./ks.yaml
+  - ./crds/ks.yaml
+  - ./operator/ks.yaml
+  - ./limit-ranges/ks.yaml
+  - ./resource-quotas/ks.yaml
+  - ./network-policies/ks.yaml
+  - ./secrets/ks.yaml
+  - ./providers/ks.yaml
+  - ./mcps/ks.yaml
+  - ./agents/ks.yaml

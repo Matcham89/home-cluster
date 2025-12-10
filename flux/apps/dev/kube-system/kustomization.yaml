@@ -5,3 +5,6 @@ kind: Kustomization
 namespace: kube-system
 resources:
   - ./coredns/ks.yaml
+  - ./limit-ranges/ks.yaml
+  - ./resource-quotas/ks.yaml
+  - ./network-policies/ks.yaml
