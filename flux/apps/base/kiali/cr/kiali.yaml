@@ -9,8 +9,8 @@ spec:
     view_only_mode: false
   istio_namespace: istio-system
   version: default
-external_services:
-  grafana:
-    url: http://kube-prometheus-stack-grafana.monitoring.svc.cluster.local:3000
-  prometheus:
-    url: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
+  external_services:
+    grafana:
+      url: http://kube-prometheus-stack-grafana.monitoring.svc.cluster.local:3000
+    prometheus:
+      url: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
