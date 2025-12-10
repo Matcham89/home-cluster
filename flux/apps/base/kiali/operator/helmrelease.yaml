@@ -46,6 +46,6 @@ spec:
           accessible_namespaces: ["**"]
         external_services:
           prometheus:
-            url: "http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090"
+            externalURL: "http://grafana.kubegit.com"
           grafana:
-            in_cluster_url: "http://kube-prometheus-stack-grafana.monitoring.svc.cluster.local:80"
+            internalURL: "http://kube-prometheus-stack-grafana.monitoring.svc.cluster.local:80"
