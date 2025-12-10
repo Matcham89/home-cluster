@@ -9,7 +9,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   interval: 1h
-  path: ./flux/apps/base/kiali-operator
+  path: ./flux/apps/base/kiali/operator
   sourceRef:
     kind: GitRepository
     name: flux-system
