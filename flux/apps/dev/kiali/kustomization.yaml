@@ -7,5 +7,5 @@ components:
   - ../../../infra/namespace-privileged
 
 resources:
-  - .cr/ks.yaml
-  - .operator/ks.yaml
+  - ./cr/ks.yaml
+  - ./operator/ks.yaml
