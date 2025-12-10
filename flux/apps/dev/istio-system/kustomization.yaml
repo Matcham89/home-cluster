@@ -14,3 +14,5 @@ resources:
   - ./istio/secrets/ks.yaml
   - ./istio/httproutes/ks.yaml
   - ./istio/referencegrants/ks.yaml
+  - ./kiali/cr/ks.yaml
+  - ./kiali/operator/ks.yaml
