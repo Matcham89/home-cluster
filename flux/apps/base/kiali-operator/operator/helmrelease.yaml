@@ -48,4 +48,4 @@ spec:
           prometheus:
             url: "http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090"
           grafana:
-            url: "http://kube-prometheus-stack-grafana.monitoring.svc.cluster.local:80"
+            external_url: "http://kube-prometheus-stack-grafana.monitoring.svc.cluster.local:80"
