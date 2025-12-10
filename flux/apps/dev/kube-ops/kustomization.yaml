@@ -7,6 +7,12 @@ components:
   - ../../../infra/namespace-privileged
 
 resources:
-  - ./cert-manager/ks.yaml
-  - ./external-secrets/ks.yaml
-  - ./metal-lb/ks.yaml
+  - ./cert-manager/operator/ks.yaml
+  - ./cert-manager/config/ks.yaml
+  - ./external-secrets/operator/ks.yaml
+  - ./external-secrets/store/ks.yaml
+  - ./metal-lb/operator/ks.yaml
+  - ./metal-lb/resources/ks.yaml
+  - ./limit-ranges/ks.yaml
+  - ./resource-quotas/ks.yaml
+  - ./network-policies/ks.yaml
