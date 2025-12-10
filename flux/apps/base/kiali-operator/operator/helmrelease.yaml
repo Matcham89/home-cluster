@@ -44,3 +44,8 @@ spec:
           strategy: anonymous
         deployment:
           accessible_namespaces: ["**"]
+        external_services:
+          prometheus:
+            url: "http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090"
+          grafana:
+            url: "http://kube-prometheus-stack-grafana.monitoring.svc.cluster.local:80"
