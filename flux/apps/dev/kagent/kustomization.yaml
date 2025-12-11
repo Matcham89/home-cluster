@@ -13,6 +13,7 @@ resources:
   - ./resource-quotas/ks.yaml
   - ./network-policies/ks.yaml
   - ./secrets/ks.yaml
+  - ./oauth2-proxy/ks.yaml
   - ./providers/ks.yaml
   - ./mcps/ks.yaml
   - ./agents/ks.yaml
