@@ -20,4 +20,5 @@ spec:
   wait: true
   dependsOn:
     - name: kiali-operator
+    - name: kiali-secrets
 
