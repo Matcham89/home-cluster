@@ -23,6 +23,7 @@ spec:
     web_fqdn: kiali.kubegit.com
     web_root: /
     web_schema: https
+    web_port: ""
   istio_namespace: istio-system
   version: default
   external_services:
