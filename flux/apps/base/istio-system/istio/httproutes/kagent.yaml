@@ -28,6 +28,6 @@ spec:
         request: 30s
         backendRequest: 30s
       backendRefs:
-        - name: kagent-ui
+        - name: oauth2-proxy
           namespace: kagent
-          port: 8080
+          port: 4180
