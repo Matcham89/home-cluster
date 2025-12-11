@@ -1,40 +1,40 @@
----
-# Add X-Forwarded-Proto: https header for Authentik traffic
-# Cloudflare Tunnel doesn't set this header by default, but Authentik needs it
-# to generate HTTPS URLs for API calls
-apiVersion: networking.istio.io/v1alpha3
-kind: EnvoyFilter
-metadata:
-  name: authentik-forwarded-proto
-  namespace: istio-system
-spec:
-  workloadSelector:
-    labels:
-      gateway.networking.k8s.io/gateway-name: istio-gateway
-  configPatches:
-    - applyTo: HTTP_FILTER
-      match:
-        context: GATEWAY
-        listener:
-          filterChain:
-            filter:
-              name: envoy.filters.network.http_connection_manager
-              subFilter:
-                name: envoy.filters.http.router
-      patch:
-        operation: INSERT_BEFORE
-        value:
-          name: envoy.lua
-          typed_config:
-            "@type": type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua
-            inline_code: |
-              function envoy_on_request(request_handle)
-                local host = request_handle:headers():get(":authority")
-                -- Only set header for authentik.kubegit.com
-                if host == "authentik.kubegit.com" then
-                  -- Remove any existing x-forwarded-proto header first
-                  request_handle:headers():remove("x-forwarded-proto")
-                  -- Then add the https header
-                  request_handle:headers():add("x-forwarded-proto", "https")
-                end
-              end
+# ---
+# # Add X-Forwarded-Proto: https header for Authentik traffic
+# # Cloudflare Tunnel doesn't set this header by default, but Authentik needs it
+# # to generate HTTPS URLs for API calls
+# apiVersion: networking.istio.io/v1alpha3
+# kind: EnvoyFilter
+# metadata:
+#   name: authentik-forwarded-proto
+#   namespace: istio-system
+# spec:
+#   workloadSelector:
+#     labels:
+#       gateway.networking.k8s.io/gateway-name: istio-gateway
+#   configPatches:
+#     - applyTo: HTTP_FILTER
+#       match:
+#         context: GATEWAY
+#         listener:
+#           filterChain:
+#             filter:
+#               name: envoy.filters.network.http_connection_manager
+#               subFilter:
+#                 name: envoy.filters.http.router
+#       patch:
+#         operation: INSERT_BEFORE
+#         value:
+#           name: envoy.lua
+#           typed_config:
+#             "@type": type.googleapis.com/envoy.extensions.filters.http.lua.v3.Lua
+#             inline_code: |
+#               function envoy_on_request(request_handle)
+#                 local host = request_handle:headers():get(":authority")
+#                 -- Only set header for authentik.kubegit.com
+#                 if host == "authentik.kubegit.com" then
+#                   -- Remove any existing x-forwarded-proto header first
+#                   request_handle:headers():remove("x-forwarded-proto")
+#                   -- Then add the https header
+#                   request_handle:headers():add("x-forwarded-proto", "https")
+#                 end
+#               end
