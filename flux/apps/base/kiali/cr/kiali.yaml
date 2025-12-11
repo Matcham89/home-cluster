@@ -9,7 +9,7 @@ spec:
     openid:
       client_id: "Tay2gF2euqcSVHvg1Vd9S5zljv0A4IsXCMuOyegJ"
       disable_rbac: true
-      issuer_uri: "https://authentik.kubegit.com/application/o/kiali-kubegit-com"
+      issuer_uri: "https://authentik.kubegit.com"
   deployment:
     logger:
       log_level: info
