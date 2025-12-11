@@ -6,3 +6,4 @@ resources:
   - authz-grafana.yaml
   - authz-kagent.yaml
   - authz-longhorn.yaml
+  - authz-kiali.yaml
