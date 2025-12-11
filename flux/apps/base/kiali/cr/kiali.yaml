@@ -19,6 +19,10 @@ spec:
     logger:
       log_level: info
     view_only_mode: false
+  server:
+    web_fqdn: kiali.kubegit.com
+    web_root: /
+    web_schema: https
   istio_namespace: istio-system
   version: default
   external_services:
