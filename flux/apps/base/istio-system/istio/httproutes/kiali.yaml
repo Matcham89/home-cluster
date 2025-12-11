@@ -1,0 +1,25 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: kiali-route
+  namespace: istio-system
+spec:
+  parentRefs:
+    - name: istio-gateway
+      namespace: istio-system
+      sectionName: http
+  hostnames:
+    - "kiali.kubegit.com"
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      timeouts:
+        request: 30s
+        backendRequest: 30s
+      backendRefs:
+        - name: kiali
+          namespace: istio-system
+          port: 20001

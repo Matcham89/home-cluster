@@ -1,0 +1,15 @@
+---
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: kiali-ingress-authz
+  namespace: istio-system
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: kiali
+  action: ALLOW
+  rules:
+    # Allow all traffic when no sidecar is present
+    # If sidecars are added later, restrict to istio-system namespace
+    - {}
