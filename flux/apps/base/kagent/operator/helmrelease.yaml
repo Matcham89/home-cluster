@@ -55,7 +55,15 @@ spec:
       readOnlyRootFilesystem: true
       runAsNonRoot: true
       runAsUser: 1000
+    podSecurityContext:
+      fsGroup: 1000
+    volumes:
+      - name: tmp-volume
+        emptyDir: {}
 
+    volumeMounts:
+      - name: tmp-volume
+        mountPath: /tmp
     # Controller resources
     controller:
       resources:
