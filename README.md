@@ -32,6 +32,25 @@ Each service, operator, and configuration has its own Flux Kustomization (ks.yam
 
 For example, cert-manager has separate kustomizations for the operator and its configuration, ensuring the operator is ready before applying certificates.
 
+### Namespace Templates
+
+Namespaces are templated in `flux/infra/` and consumed by apps in `flux/apps/dev/` using Kustomize components. Each app's kustomization sets the namespace name and includes the appropriate template.
+
+**Available Templates:**
+
+- `namespace` / `namespace-istio-enabled` - Istio ambient mode with gateway access
+- `namespace-privileged` - Privileged pod security standard
+- `namespace-istio-privileged` - Istio ambient mode + privileged security
+
+**Example:**
+```yaml
+namespace: kube-ops
+components:
+  - ../../../infra/namespace-privileged
+```
+
+This DRY approach centralizes namespace configuration - security policies, Istio labels, and annotations are managed in one place.
+
 ## Deployed Applications
 
 ### Infrastructure
