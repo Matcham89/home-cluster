@@ -37,17 +37,51 @@ spec:
     timeout: 10m
   values:
     master:
+      enabled: true
+      replicas: 3 # set to 3 for high availability (requires 3 nodes)
       data:
         type: "persistentVolumeClaim"
-        size: "10Gi"
         storageClass: "longhorn"
+        size: "10Gi"
       logs:
-        type: "persistentVolumeClaim"
-        size: "10Gi"
-        storageClass: "longhorn"
-    
-    # Enable S3 API
+        type: "emptyDir" # Don't waste Longhorn storage on text logs
+    volume:
+      enabled: true
+      replicas: 3
+      minFreeSpacePercent: 1
+      dataDirs:
+        - name: data
+          type: "persistentVolumeClaim"
+          storageClass: "longhorn"
+          size: "10Gi" # Size of your chunk storage
+      logs:
+        type: "emptyDir"
+    # Ensure Longhorn volumes are writable by the container user
+      podSecurityContext:
+        fsGroup: 1000
+        runAsUser: 1000
     filer:
+      enabled: true
+      replicas: 1
+      data:
+        type: "persistentVolumeClaim"
+        storageClass: "longhorn"
+        size: "10Gi"
+      logs:
+        type: "emptyDir"
       s3:
         enabled: true
-        enableAuth: true
+        port: 8333
+        createBuckets:
+          - name: loki-chunks
+            anonymousRead: false
+          - name: loki-ruler
+            anonymousRead: false
+          - name: loki-admin
+            anonymousRead: false
+    s3:
+      enabled: true
+      replicas: 1
+      enableAuth: false # Keep false for internal cluster traffic to avoid complexity
+      logs:
+        type: "emptyDir"
