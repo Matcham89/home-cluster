@@ -8,7 +8,7 @@ spec:
   url: oci://ghcr.io/kagent-dev/kagent/helm/kagent-crds
   ref:
     # renovate: datasource=github-releases depName=kagent-dev/kagent
-    tag: 0.6.18
+    tag: 0.7.6
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
