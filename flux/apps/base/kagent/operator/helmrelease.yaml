@@ -48,6 +48,14 @@ spec:
         cpu: 100m
         memory: 256Mi
 
+    securityContext:
+      capabilities:
+        drop:
+        - ALL
+      readOnlyRootFilesystem: true
+      runAsNonRoot: true
+      runAsUser: 1000
+
     # Controller resources
     controller:
       resources:
