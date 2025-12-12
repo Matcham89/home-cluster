@@ -11,7 +11,7 @@ resources:
   - ./grafana/ks.yaml
   - ./kube-prometheus-stack/ks.yaml
   - ./open-telemetry/ks.yaml
-  - ./limit-ranges/ks.yaml
-  - ./resource-quotas/ks.yaml
+  - ./limit-range-override
+  - ./resource-quota
   - ./network-policies/ks.yaml
   - ./seaweedfs/ks.yaml
