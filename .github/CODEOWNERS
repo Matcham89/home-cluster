@@ -1,0 +1,20 @@
+# GitOps Repository Code Owners
+# These owners will be automatically requested for review when someone opens a pull request
+
+# Default owners for everything in the repo
+* @Matcham89
+
+# Critical infrastructure requires extra review
+/flux/clusters/ @Matcham89
+/flux/infra/ @Matcham89
+/bootstrap/ @Matcham89
+
+# Security-sensitive configurations
+**/secrets/ @Matcham89
+**/external-secrets/ @Matcham89
+**/security/ @Matcham89
+**/network-policies/ @Matcham89
+
+# Istio/Gateway configuration
+**/istio/ @Matcham89
+**/gateway/ @Matcham89
