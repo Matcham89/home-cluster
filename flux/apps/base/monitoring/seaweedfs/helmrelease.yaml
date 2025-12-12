@@ -1,0 +1,53 @@
+---
+# yaml-language-server: $schema=https://github.com/fluxcd-community/flux2-schemas/raw/main/helmrepository-source-v1.json
+# Reference to Helm repository
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: seaweedfs
+spec:
+  interval: 10m
+  url: https://seaweedfs.github.io/seaweedfs/helm
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: longhorn
+spec:
+  # Override Release name to avoid the pattern Namespace-Release
+  # Ref: https://fluxcd.io/flux/components/helm/api/v2/#helm.toolkit.fluxcd.io/v2.HelmRelease
+  interval: 10m
+  chart:
+    spec:
+      chart: seaweedfs
+      version: 4.0.402
+      sourceRef:
+        kind: HelmRepository
+        name: flux-system
+  install:
+    strategy:
+      name: RetryOnFailure
+    createNamespace: true
+    timeout: 10m
+  upgrade:
+    strategy:
+      name: RetryOnFailure
+    cleanupOnFail: true
+    timeout: 10m
+  values:
+    master:
+      data:
+        type: "persistentVolumeClaim"
+        size: "10Gi"
+        storageClass: "longhorn"
+      logs:
+        type: "persistentVolumeClaim"
+        size: "10Gi"
+        storageClass: "longhorn"
+    
+    # Enable S3 API
+    filer:
+      s3:
+        enabled: true
+        enableAuth: true
