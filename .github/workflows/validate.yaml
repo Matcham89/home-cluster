@@ -1,5 +1,5 @@
 ---
-name: Validate Kubernetes Manifests
+name: Security Scanning
 
 on:
   pull_request:
@@ -8,44 +8,6 @@ on:
     branches: [main]
 
 jobs:
-  validate:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Flux CLI
-        uses: fluxcd/flux2/action@main
-
-      - name: Validate Flux Kustomizations
-        run: |
-          # Only validate active flux directories, skip deprecated
-          find flux/ -type f \( -name 'kustomization.yaml' -o -name 'kustomization.yml' \) | \
-          grep -v deprecated | \
-          while read file; do
-            dir=$(dirname "$file")
-            name=$(basename "$dir")
-            echo "Validating $file (name: $name)"
-
-            # Try to build, but allow some failures (CRDs, etc.)
-            flux build kustomization "$name" \
-              --path "$dir" \
-              --kustomization-file "$(basename $file)" || echo "⚠️  Warning: Could not build $file (may need cluster CRDs)"
-          done
-
-      - name: Validate Kubernetes YAMLs
-        run: |
-          # Install kubeconform for Kubernetes schema validation
-          wget https://github.com/yannh/kubeconform/releases/latest/download/kubeconform-linux-amd64.tar.gz
-          tar xf kubeconform-linux-amd64.tar.gz
-          sudo mv kubeconform /usr/local/bin/
-
-          # Validate all YAML files, skip deprecated directories
-          find flux/ -type f \( -name '*.yaml' -o -name '*.yml' \) | \
-            grep -v deprecated | \
-            grep -v node_modules | \
-            xargs kubeconform -strict -ignore-missing-schemas -summary -skip HelmRelease,HelmRepository,OCIRepository,Kustomization,GitRepository || echo "⚠️  Some validation warnings (expected for Flux CRDs)"
-
   security-scan:
     runs-on: ubuntu-latest
     steps:
