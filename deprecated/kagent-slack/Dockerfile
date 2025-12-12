@@ -1,7 +1,7 @@
 # Kagent Slack Bot - Docker Image
 # 2025 best practices: minimal image, non-root user, pinned versions
 
-FROM python:3.13-slim
+FROM python:3.14-slim
 
 # Metadata
 LABEL org.opencontainers.image.title="Kagent Slack Bot"
