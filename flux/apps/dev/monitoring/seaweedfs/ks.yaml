@@ -12,8 +12,6 @@ spec:
   postBuild:
     substitute:
       CLUSTER_NAME: dev
-  dependsOn:
-    - name: kube-prometheus-stack
   path: ./flux/apps/base/monitoring/seaweedfs
   sourceRef:
     kind: GitRepository
