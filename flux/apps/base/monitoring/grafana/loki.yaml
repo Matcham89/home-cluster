@@ -46,7 +46,16 @@ spec:
       limits_config:
         allow_structured_metadata: true
         volume_enabled: true
-
+      storage:
+        type: s3
+        bucketNames:
+          chunks: loki-chunks
+          ruler: loki-ruler
+          admin: loki-admin
+        s3:
+          # Internal DNS to SeaweedFS Filer S3 service
+          endpoint: http://seaweedfs-filer.monitoring.svc.cluster.local:8333
+          insecure: true
 
     deploymentMode: Distributed
 
@@ -87,18 +96,6 @@ spec:
 
     singleBinary:
       replicas: 0
-    
-    storage:
-      type: s3
-      bucketNames:
-        chunks: loki-chunks
-        ruler: loki-ruler
-        admin: loki-admin
-      s3:
-        # Internal DNS to SeaweedFS Filer S3 service
-        # Format: http://<release-name>-filer.<namespace>.svc:8333
-        endpoint: http://seaweedfs-filer.monitoring.svc.cluster.local:8333
-        insecure: true
 
     # Expose gateway via LoadBalancer for external Grafana access
     gateway:
