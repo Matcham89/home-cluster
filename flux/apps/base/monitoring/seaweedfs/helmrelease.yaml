@@ -47,7 +47,7 @@ spec:
         type: "emptyDir" # Don't waste Longhorn storage on text logs
     volume:
       enabled: true
-      replicas: 3
+      replicas: 1
       minFreeSpacePercent: 1
       dataDirs:
         - name: data
