@@ -97,7 +97,7 @@ spec:
       s3:
         # Internal DNS to SeaweedFS S3 service
         # Format: http://<release-name>-s3.<namespace>.svc:8333
-        endpoint: http://seaweedfs.monitoring.svc:8333 
+        endpoint: http://seaweedfs.monitoring.svc.cluster.local:8333 
         insecure: true
 
     # Expose gateway via LoadBalancer for external Grafana access
