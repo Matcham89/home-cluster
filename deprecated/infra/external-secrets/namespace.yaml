@@ -1,5 +1,0 @@
-# The namespace.yaml first
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: external-secrets
