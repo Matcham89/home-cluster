@@ -80,7 +80,7 @@ spec:
           - name: loki-admin
             anonymousRead: false
     s3:
-      enabled: true
+      enabled: false # Disabled - using filer.s3 instead
       replicas: 1
       enableAuth: false # Keep false for internal cluster traffic to avoid complexity
       logs:
