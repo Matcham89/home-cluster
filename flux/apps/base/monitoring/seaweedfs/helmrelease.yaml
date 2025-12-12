@@ -38,7 +38,7 @@ spec:
   values:
     master:
       enabled: true
-      replicas: 3 # set to 3 for high availability (requires 3 nodes)
+      replicas: 1
       data:
         type: "persistentVolumeClaim"
         storageClass: "longhorn"
