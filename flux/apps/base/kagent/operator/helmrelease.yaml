@@ -3,11 +3,12 @@ apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
   name: kagent
-  
+
 spec:
   interval: 1m0s
   url: oci://ghcr.io/kagent-dev/kagent/helm/kagent
   ref:
+    # renovate: datasource=docker depName=ghcr.io/kagent-dev/kagent/helm/kagent
     tag: 0.7.5
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
