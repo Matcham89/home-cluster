@@ -51,25 +51,25 @@ spec:
     deploymentMode: Distributed
 
     ingester:
-      replicas: 3 # To ensure data durability with replication
+      replicas: 1 # Reduced for dev cluster
       zoneAwareReplication:
         enabled: false
     querier:
-      replicas: 3 # Improve query performance via parallelism
-      maxUnavailable: 2
+      replicas: 1 # Reduced for dev cluster
+      maxUnavailable: 0
     queryFrontend:
-      replicas: 2
-      maxUnavailable: 1
+      replicas: 1 # Reduced for dev cluster
+      maxUnavailable: 0
     queryScheduler:
-      replicas: 2
+      replicas: 1 # Reduced for dev cluster
     distributor:
-      replicas: 3 
-      maxUnavailable: 2
+      replicas: 1 # Reduced for dev cluster
+      maxUnavailable: 0
     compactor:
       replicas: 1
     indexGateway:
-      replicas: 2
-      maxUnavailable: 1
+      replicas: 1 # Reduced for dev cluster
+      maxUnavailable: 0
 
     bloomPlanner:
       replicas: 0
