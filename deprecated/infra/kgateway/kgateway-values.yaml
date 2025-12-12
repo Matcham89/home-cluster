@@ -1,8 +1,0 @@
-agentgateway:
-  enabled: true
-gateway:
-  aiExtension:
-    enabled: true
-controller:
-  image:
-    pullPolicy: Always
