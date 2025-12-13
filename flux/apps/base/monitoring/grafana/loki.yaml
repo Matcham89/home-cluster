@@ -57,41 +57,37 @@ spec:
           endpoint: http://seaweedfs-filer.monitoring.svc.cluster.local:8333
           insecure: true
 
-    deploymentMode: Distributed
+    deploymentMode: SimpleScalable
 
-    ingester:
-      replicas: 1 # Reduced for dev cluster
-      zoneAwareReplication:
-        enabled: false
-    querier:
-      replicas: 1 # Reduced for dev cluster
-      maxUnavailable: 0
-    queryFrontend:
-      replicas: 1 # Reduced for dev cluster
-      maxUnavailable: 0
-    queryScheduler:
-      replicas: 1 # Reduced for dev cluster
-    distributor:
-      replicas: 1 # Reduced for dev cluster
-      maxUnavailable: 0
-    compactor:
+    # SimpleScalable uses only 3 components: read, write, backend
+    backend:
       replicas: 1
+    read:
+      replicas: 1
+    write:
+      replicas: 1
+
+    # Disable Distributed mode components
+    ingester:
+      replicas: 0
+    querier:
+      replicas: 0
+    queryFrontend:
+      replicas: 0
+    queryScheduler:
+      replicas: 0
+    distributor:
+      replicas: 0
+    compactor:
+      replicas: 0
     indexGateway:
-      replicas: 1 # Reduced for dev cluster
-      maxUnavailable: 0
+      replicas: 0
 
     bloomPlanner:
       replicas: 0
     bloomBuilder:
       replicas: 0
     bloomGateway:
-      replicas: 0
-
-    backend:
-      replicas: 0
-    read:
-      replicas: 0
-    write:
       replicas: 0
 
     singleBinary:
