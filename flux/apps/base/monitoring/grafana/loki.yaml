@@ -61,11 +61,11 @@ spec:
 
     # SimpleScalable uses only 3 components: read, write, backend
     backend:
-      replicas: 1
+      replicas: 3
     read:
-      replicas: 1
+      replicas: 3
     write:
-      replicas: 1
+      replicas: 3
 
     # Disable Distributed mode components
     ingester:
