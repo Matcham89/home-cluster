@@ -35,3 +35,9 @@ spec:
       name: RetryOnFailure
     cleanupOnFail: true
     timeout: 10m
+  values:
+    defaultSettings:
+      # Reduced from default 12% to prevent resource request/limit conflicts
+      # Instance manager pods were failing with: requests (954m) > limits (500m)
+      # Setting to 5% provides adequate performance while staying within resource limits
+      guaranteedInstanceManagerCPU: 5
