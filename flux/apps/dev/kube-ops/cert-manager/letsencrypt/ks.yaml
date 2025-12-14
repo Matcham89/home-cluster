@@ -4,6 +4,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app cert-manager-letsencrypt
+  namespace: kube-ops
 spec:
   commonMetadata:
     labels:
@@ -12,7 +13,7 @@ spec:
     - name: cert-manager-operator
     - name: cert-manager-selfsigned
   interval: 1h
-  path: ./flux/apps/dev/kube-ops/cert-manager/config/letsencrypt
+  path: ./flux/apps/dev/kube-ops/cert-manager/letsencrypt
   sourceRef:
     kind: GitRepository
     name: flux-system
