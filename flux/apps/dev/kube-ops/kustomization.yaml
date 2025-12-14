@@ -8,7 +8,9 @@ components:
 
 resources:
   - ./cert-manager/operator/ks.yaml
+  - ./cert-manager/selfsigned/ks.yaml
   - ./cert-manager/config/ks.yaml
+  - ./cert-manager/letsencrypt/ks.yaml
   - ./external-secrets/operator/ks.yaml
   - ./external-secrets/store/ks.yaml
   - ./metal-lb/operator/ks.yaml
