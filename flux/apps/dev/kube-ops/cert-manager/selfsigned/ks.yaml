@@ -10,9 +10,8 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: cert-manager-operator
-    - name: cert-manager-selfsigned
   interval: 1h
-  path: ./flux/apps/dev/kube-ops/cert-manager/config
+  path: ./flux/apps/dev/kube-ops/cert-manager/selfsigned
   sourceRef:
     kind: GitRepository
     name: flux-system
