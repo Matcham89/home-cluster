@@ -1,6 +1,6 @@
 ---
 apiVersion: gateway.networking.k8s.io/v1beta1
-kind: ReferenceGrant
+kind:   
 metadata:
   name: allow-kgateway-service
   namespace: kgateway-system

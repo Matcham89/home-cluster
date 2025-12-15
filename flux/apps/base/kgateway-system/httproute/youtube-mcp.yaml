@@ -17,4 +17,3 @@ spec:
         - name: yt-kmcp
           namespace: kagent
           kind: Service
-          port: 3000
