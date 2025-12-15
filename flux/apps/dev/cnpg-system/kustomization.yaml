@@ -10,6 +10,6 @@ resources:
   - ./operator/ks.yaml
   - ./cluster/ks.yaml
   - ./limit-ranges/ks.yaml
-  - ./resource-quotas/ks.yaml
+  - ./resource-quota/ks.yaml
   - ./network-policies/ks.yaml
 
