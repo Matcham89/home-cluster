@@ -1,7 +1,7 @@
 ---
 # LimitRange patch for monitoring namespace
-# Monitoring tools (Prometheus, Grafana) need more resources
-# Higher defaults to prevent OOMKills during startup
+# Optimized defaults for sidecars and containers without explicit limits
+# Applies to: Grafana sidecars, Prometheus/Alertmanager config-reloaders
 apiVersion: v1
 kind: LimitRange
 metadata:
@@ -9,9 +9,9 @@ metadata:
 spec:
   limits:
   - default:
-      cpu: 500m
-      memory: 1Gi
+      cpu: 200m
+      memory: 256Mi
     defaultRequest:
-      cpu: 100m
-      memory: 128Mi
+      cpu: 50m
+      memory: 64Mi
     type: Container
