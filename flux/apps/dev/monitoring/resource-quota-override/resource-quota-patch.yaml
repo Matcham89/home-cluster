@@ -1,8 +1,9 @@
 ---
 # Resource quota patch for monitoring namespace
-# Loki memory requirements: backend(2Gi) + write(2Gi) + read(2Gi) + chunks-cache(10.85Gi) + results-cache(2Gi) + other components
-# Total usage with all Loki components: ~42Gi
-# Set to 44Gi to provide adequate headroom
+# Optimized Loki for home lab (2-day retention):
+#   backend(2Gi) + write(1Gi) + read(1Gi) + chunks-cache(1.5Gi) + results-cache(512Mi) + other(~15Gi)
+# Total usage with optimized Loki: ~21Gi
+# Set to 28Gi to provide adequate headroom
 apiVersion: v1
 kind: ResourceQuota
 metadata:
@@ -12,4 +13,4 @@ spec:
     requests.cpu: "10"
     requests.memory: 16Gi
     limits.cpu: "25"
-    limits.memory: 44Gi
+    limits.memory: 28Gi
