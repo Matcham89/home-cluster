@@ -19,5 +19,4 @@ spec:
             value: /api/a2a/
       backendRefs:
         - name: kagent-controller
-          kind: Service
           namespace: kagent
