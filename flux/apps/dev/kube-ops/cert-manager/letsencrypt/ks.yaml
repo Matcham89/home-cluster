@@ -11,6 +11,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: cert-manager-operator
+    - name: cert-manager-secrets
   interval: 1h
   path: ./flux/apps/dev/kube-ops/cert-manager/letsencrypt
   sourceRef:
