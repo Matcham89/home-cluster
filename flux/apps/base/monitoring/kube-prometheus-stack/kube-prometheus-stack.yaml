@@ -60,6 +60,10 @@ spec:
           scrapeTimeout: 30s
     nodeExporter:
       enabled: true
+      operatingSystems:
+        linux:
+          enabled: true
+    prometheus-node-exporter:
       resources:
         requests:
           cpu: 50m
@@ -67,9 +71,6 @@ spec:
         limits:
           cpu: 200m
           memory: 256Mi
-      operatingSystems:
-        linux:
-          enabled: true
     prometheus:
       enabled: true
       service:
