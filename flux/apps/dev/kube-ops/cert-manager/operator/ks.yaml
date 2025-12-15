@@ -19,3 +19,5 @@ spec:
   timeout: 5m
   prune: true
   wait: true
+  dependsOn:
+    - name: cert-manager-secrets
