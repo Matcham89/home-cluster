@@ -1,16 +1,20 @@
 ---
 # Resource quota patch for monitoring namespace
-# Optimized Loki for home lab (2-day retention):
-#   backend(2Gi) + write(1Gi) + read(1Gi) + chunks-cache(1.5Gi) + results-cache(512Mi) + other(~15Gi)
-# Total usage with optimized Loki: ~21Gi
-# Set to 28Gi to provide adequate headroom
+# Optimized resource limits (all components):
+#   kube-prometheus-stack: 5.3Gi (prometheus 2Gi + node-exporters 1.5Gi + other 1.8Gi)
+#   Loki: 6.3Gi (backend 2Gi + caches 2Gi + other 2.3Gi)
+#   Promtail: 768Mi (6 nodes × 128Mi)
+#   Tempo: 512Mi
+#   OpenTelemetry: 768Mi (operator 256Mi + collector 512Mi)
+# Total configured limits: ~13.6Gi
+# Set to 16Gi to provide adequate headroom (~18% buffer)
 apiVersion: v1
 kind: ResourceQuota
 metadata:
   name: namespace-quota
 spec:
   hard:
-    requests.cpu: "10"
-    requests.memory: 16Gi
-    limits.cpu: "25"
-    limits.memory: 28Gi
+    requests.cpu: "6"
+    requests.memory: 8Gi
+    limits.cpu: "12"
+    limits.memory: 16Gi

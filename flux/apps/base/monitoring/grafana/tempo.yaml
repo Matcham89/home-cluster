@@ -58,13 +58,13 @@ spec:
       #   - myRegistryKeySecretName
 
       updateStrategy: RollingUpdate
-      resources: {}
-      #  requests:
-      #    cpu: 1000m
-      #    memory: 4Gi
-      #  limits:
-      #    cpu: 2000m
-      #    memory: 6Gi
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+        limits:
+          cpu: 500m
+          memory: 512Mi
 
       memBallastSizeMbs: 1024
       multitenancyEnabled: false
