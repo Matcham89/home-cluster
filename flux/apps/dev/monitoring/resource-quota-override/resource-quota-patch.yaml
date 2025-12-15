@@ -1,7 +1,7 @@
 ---
 # Resource quota patch for monitoring namespace
-# Previous usage: CPU limits=12.7, Memory limits=24.32Gi
-# Increased memory limit to accommodate Loki backend (2Gi) with headroom
+# Previous usage: CPU limits=14.7, Memory limits=28.62Gi
+# Increased memory limit to 32Gi for Loki components with adequate headroom
 apiVersion: v1
 kind: ResourceQuota
 metadata:
@@ -11,4 +11,4 @@ spec:
     requests.cpu: "10"
     requests.memory: 16Gi
     limits.cpu: "25"
-    limits.memory: 28Gi
+    limits.memory: 32Gi
