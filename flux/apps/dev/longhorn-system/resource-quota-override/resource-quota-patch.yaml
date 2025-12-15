@@ -1,8 +1,8 @@
 ---
 # Resource quota patch for longhorn-system namespace
-# Updated after cluster rebuild - observed usage: CPU limits=15500m, Memory limits=15872Mi
-# Third longhorn-manager pod requires 1000m CPU - previous limit of 16 cores was insufficient
-# Setting higher limits with headroom for growth and additional replicas
+# Current usage: CPU limits=18/24 (75%), Memory limits=18Gi/24Gi (75%)
+# Storage system requires headroom for failover scenarios and pod scaling
+# Increased CPU limit to 24 cores to provide adequate buffer (25% headroom)
 apiVersion: v1
 kind: ResourceQuota
 metadata:
@@ -11,7 +11,7 @@ spec:
   hard:
     requests.cpu: "10"
     requests.memory: 20Gi
-    limits.cpu: "20"
+    limits.cpu: "24"
     limits.memory: 24Gi
     persistentvolumeclaims: "20"
     pods: "75"

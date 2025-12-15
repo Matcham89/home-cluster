@@ -1,0 +1,17 @@
+---
+# Resource quota patch for kgateway-system namespace
+# Current usage: CPU limits=1/6 (8%), Memory limits=1Gi/6Gi (6%)
+# Kubernetes Gateway API implementation with minimal resource requirements
+# Optimized from default 18Gi/12 CPU to match actual usage with buffer
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: namespace-quota
+spec:
+  hard:
+    requests.cpu: "3"
+    requests.memory: 4Gi
+    limits.cpu: "6"
+    limits.memory: 6Gi
+    persistentvolumeclaims: "10"
+    pods: "50"
