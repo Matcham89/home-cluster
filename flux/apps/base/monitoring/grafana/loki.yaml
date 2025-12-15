@@ -48,6 +48,8 @@ spec:
         volume_enabled: true
         # Home lab: 1 hour retention, 30 days on disk
         retention_period: 48h  # 2 days
+        # Single replica deployment - set replication factor to 1
+        replication_factor: 1
         # Per-stream rate limits (reduced for home lab)
         ingestion_rate_mb: 4
         ingestion_burst_size_mb: 6
