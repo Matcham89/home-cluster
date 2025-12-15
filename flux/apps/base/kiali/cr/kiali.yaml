@@ -7,7 +7,7 @@ spec:
   auth:
     strategy: openid
     openid:
-      client_id: "Tay2gF2euqcSVHvg1Vd9S5zljv0A4IsXCMuOyegJ"
+      client_id: "B86FR4ySUv3u41K25pbnb9vCCbT4Z0RSLQP1xGw1"
       disable_rbac: true
       issuer_uri: "https://authentik.kubegit.com/application/o/kiali-kubegit-com/"
       scopes:
