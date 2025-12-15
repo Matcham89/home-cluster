@@ -11,6 +11,7 @@ resources:
   - ./cert-manager/selfsigned/ks.yaml
   - ./cert-manager/certificates/ks.yaml
   - ./cert-manager/letsencrypt/ks.yaml
+  - ./cert-manager/secrets/ks.yaml
   - ./external-secrets/operator/ks.yaml
   - ./external-secrets/store/ks.yaml
   - ./metal-lb/operator/ks.yaml
