@@ -1,20 +1,23 @@
 ---
 # Resource quota patch for monitoring namespace
-# Optimized resource limits (all components):
+# TEMPORARY: Increased to 40Gi to allow Helm upgrade to complete
+# Old pods use 35Gi (1Gi limits each), new pods will use ~14Gi (optimized limits)
+# Once Helm upgrade completes and pods restart with new limits, reduce back to 16Gi
+#
+# Target after optimization:
 #   kube-prometheus-stack: 5.3Gi (prometheus 2Gi + node-exporters 1.5Gi + other 1.8Gi)
 #   Loki: 6.3Gi (backend 2Gi + caches 2Gi + other 2.3Gi)
 #   Promtail: 768Mi (6 nodes × 128Mi)
 #   Tempo: 512Mi
 #   OpenTelemetry: 768Mi (operator 256Mi + collector 512Mi)
 # Total configured limits: ~13.6Gi
-# Set to 16Gi to provide adequate headroom (~18% buffer)
 apiVersion: v1
 kind: ResourceQuota
 metadata:
   name: namespace-quota
 spec:
   hard:
-    requests.cpu: "6"
-    requests.memory: 8Gi
-    limits.cpu: "12"
-    limits.memory: 16Gi
+    requests.cpu: "10"
+    requests.memory: 12Gi
+    limits.cpu: "25"
+    limits.memory: 40Gi
