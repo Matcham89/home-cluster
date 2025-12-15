@@ -6,6 +6,13 @@ metadata:
 spec:
   mode: deployment
   image: otel/opentelemetry-collector-contrib:latest
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
   config:
     receivers:
       otlp:

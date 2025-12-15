@@ -32,12 +32,27 @@ spec:
       service:
         type: LoadBalancer
         loadBalancerIP: "192.168.1.203"
+      alertmanagerSpec:
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi
     kubeStateMetrics:
       enabled: true
       service:
         type: LoadBalancer
         loadBalancerIP: "192.168.1.204"
     kube-state-metrics:
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+        limits:
+          cpu: 200m
+          memory: 256Mi
       prometheus:
         monitor:
           enabled: true
@@ -45,6 +60,13 @@ spec:
           scrapeTimeout: 30s
     nodeExporter:
       enabled: true
+      resources:
+        requests:
+          cpu: 50m
+          memory: 64Mi
+        limits:
+          cpu: 200m
+          memory: 256Mi
       operatingSystems:
         linux:
           enabled: true
@@ -54,6 +76,13 @@ spec:
         type: LoadBalancer
         loadBalancerIP: "192.168.1.208"
       prometheusSpec:
+        resources:
+          requests:
+            cpu: 200m
+            memory: 1Gi
+          limits:
+            cpu: 1000m
+            memory: 2Gi
         ruleSelectorNilUsesHelmValues: false
         serviceMonitorSelectorNilUsesHelmValues: false
         podMonitorSelectorNilUsesHelmValues: false
@@ -139,3 +168,33 @@ spec:
           searchNamespace: monitoring
           provider:
             foldersFromFilesStructure: true
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+        datasources:
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+      resources:
+        requests:
+          cpu: 100m
+          memory: 256Mi
+        limits:
+          cpu: 500m
+          memory: 512Mi
+    prometheusOperator:
+      resources:
+        requests:
+          cpu: 50m
+          memory: 128Mi
+        limits:
+          cpu: 200m
+          memory: 256Mi
