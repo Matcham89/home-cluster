@@ -1,7 +1,8 @@
 ---
 # Resource quota patch for kagent namespace
-# Current usage: CPU limits=16, Memory limits=10880Mi
-# Setting higher limits with headroom for growth
+# Current usage: CPU limits=16.5/20 (66%), Memory limits=11.8Gi/18Gi (49%)
+# Reduced from previous over-provisioned values while maintaining adequate headroom
+# Optimized based on actual usage patterns for Claude agents and MCP servers
 apiVersion: v1
 kind: ResourceQuota
 metadata:
@@ -10,5 +11,5 @@ spec:
   hard:
     requests.cpu: "10"
     requests.memory: 16Gi
-    limits.cpu: "25"
-    limits.memory: 24Gi
+    limits.cpu: "20"
+    limits.memory: 18Gi

@@ -7,6 +7,7 @@ components:
   - ../../../infra/namespace-istio-privileged
 
 resources:
+  - ./resource-quotas/ks.yaml
   - ./istio/operator/ks.yaml
   - ./istio/gateway/ks.yaml
   - ./istio/security/ks.yaml

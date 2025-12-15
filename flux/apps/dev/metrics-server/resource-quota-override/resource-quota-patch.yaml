@@ -1,0 +1,17 @@
+---
+# Resource quota patch for metrics-server namespace
+# Current usage: CPU limits=0.5/2 (4%), Memory limits=512Mi/2Gi (3%)
+# Single pod metrics-server deployment with minimal requirements
+# Optimized from default 18Gi/12 CPU to match actual usage with buffer
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: namespace-quota
+spec:
+  hard:
+    requests.cpu: "1"
+    requests.memory: 1Gi
+    limits.cpu: "2"
+    limits.memory: 2Gi
+    persistentvolumeclaims: "10"
+    pods: "50"

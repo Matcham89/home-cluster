@@ -1,0 +1,16 @@
+---
+# Resource quota for istio-system namespace (NEW)
+# Istio service mesh components
+# Initial quota based on typical Istio deployment requirements
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: namespace-quota
+spec:
+  hard:
+    requests.cpu: "4"
+    requests.memory: 6Gi
+    limits.cpu: "8"
+    limits.memory: 8Gi
+    persistentvolumeclaims: "10"
+    pods: "50"
