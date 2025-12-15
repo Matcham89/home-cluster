@@ -41,3 +41,8 @@ spec:
       # Instance manager pods were failing with: requests (954m) > limits (500m)
       # Setting to 5% provides adequate performance while staying within resource limits
       guaranteedInstanceManagerCPU: 5
+      # Increase storage over-provisioning from 100% to 200% (Longhorn default)
+      # This allows scheduling up to 2x physical storage capacity
+      # Safe for typical workloads as volumes are rarely fully utilized simultaneously
+      # Required to support current volume requirements with 30% reserved storage
+      storageOverProvisioningPercentage: 200
