@@ -16,4 +16,3 @@ spec:
       backendRefs:
         - name: yt-kmcp
           namespace: kagent
-          kind: Service
