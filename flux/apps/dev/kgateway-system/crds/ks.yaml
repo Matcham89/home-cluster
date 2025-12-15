@@ -9,7 +9,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: external-secrets-operator
+    - name: external-secrets-store
       namespace: kube-ops
   interval: 1h
   path: ./flux/apps/base/kgateway-system/crds
