@@ -19,6 +19,13 @@ spec:
     logger:
       log_level: info
     view_only_mode: false
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
   server:
     web_fqdn: kiali.kubegit.com
     web_root: /
