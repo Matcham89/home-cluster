@@ -1,7 +1,7 @@
 ---
-# Resource quota patch for kagent namespace
-# Current usage: CPU limits=16, Memory limits=10880Mi
-# Setting higher limits with headroom for growth
+# Resource quota patch for monitoring namespace
+# Previous usage: CPU limits=12.7, Memory limits=24.32Gi
+# Increased memory limit to accommodate Loki backend (2Gi) with headroom
 apiVersion: v1
 kind: ResourceQuota
 metadata:
@@ -11,4 +11,4 @@ spec:
     requests.cpu: "10"
     requests.memory: 16Gi
     limits.cpu: "25"
-    limits.memory: 24Gi
+    limits.memory: 28Gi
