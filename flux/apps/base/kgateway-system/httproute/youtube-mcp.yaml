@@ -9,17 +9,7 @@ spec:
     - name: agentgateway
       namespace: kgateway-system
   rules:
-    - matches:
-        - path:
-            type: PathPrefix
-            value: /mcp-youtube
-      filters:
-        - type: CORS
-          cors:
-            allowHeaders: ["*"]
-            allowMethods: ["*"]
-            allowOrigins: ["*"]
-      backendRefs:
+    - backendRefs:
         - name: youtube-mcp-backend
           group: gateway.kgateway.dev
           kind: Backend
