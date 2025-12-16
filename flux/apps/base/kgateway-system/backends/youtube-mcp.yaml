@@ -11,6 +11,6 @@ spec:
     targets:
       - name: youtube-mcp
         selector:
-          services:
+          service:
             matchLabels:
               app.kubernetes.io/name: yt-kmcp
