@@ -1,0 +1,15 @@
+---
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: kgateway-peerauthentication
+  namespace: kgateway-system
+spec:
+  interval: 1m0s
+  path: ./flux/apps/base/kgateway-system/peerauthentication
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  targetNamespace: kgateway-system
