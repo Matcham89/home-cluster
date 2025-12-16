@@ -1,6 +1,6 @@
 ---
 # Backend for YouTube MCP Server
-# Uses dynamic selector to auto-discover YouTube MCP service
+# Uses static configuration for SSE protocol
 apiVersion: gateway.kgateway.dev/v1alpha1
 kind: Backend
 metadata:
@@ -10,7 +10,7 @@ spec:
   mcp:
     targets:
       - name: youtube-mcp
-        selector:
-          service:
-            matchLabels:
-              app.kubernetes.io/name: yt-kmcp
+        static:
+          host: yt-kmcp-kagent.kagent.svc.cluster.local
+          port: 3000
+          protocol: SSE
