@@ -65,6 +65,8 @@ spec:
         requests:
           cpu: 100m
           memory: 128Mi
+      service:
+        appProtocol: kgateway.dev/a2a
 
     agents:
       k8s-agent:
