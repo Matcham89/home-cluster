@@ -1,0 +1,14 @@
+---
+# Allow external connections to agentgateway
+# Needed for slackbot and other external clients using a2a protocol
+apiVersion: security.istio.io/v1
+kind: PeerAuthentication
+metadata:
+  name: agentgateway-permissive-mtls
+  namespace: kgateway-system
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: agentgateway
+  mtls:
+    mode: PERMISSIVE

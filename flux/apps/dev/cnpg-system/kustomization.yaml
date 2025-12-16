@@ -12,4 +12,5 @@ resources:
   - ./limit-ranges/ks.yaml
   - ./resource-quotas/ks.yaml
   - ./network-policies/ks.yaml
+  - ./peerauthentication/ks.yaml
 
