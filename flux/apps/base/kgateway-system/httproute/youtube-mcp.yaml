@@ -12,8 +12,14 @@ spec:
     - matches:
         - path:
             type: PathPrefix
-            value: /mcp-auth
+            value: /mcp-youtube
+      filters:
+        - type: CORS
+          cors:
+            allowHeaders: ["*"]
+            allowMethods: ["*"]
+            allowOrigins: ["*"]
       backendRefs:
-        - name: yt-kmcp-kagent
-          namespace: kagent
-          port: 3000
+        - name: youtube-mcp-backend
+          group: gateway.kgateway.dev
+          kind: Backend
