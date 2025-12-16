@@ -19,7 +19,7 @@ spec:
           kubernetes.io/metadata.name: kgateway-system
       podSelector:
         matchLabels:
-          app.kubernetes.io/name: agentgateway
+          app.kubernetes.io/name: kgateway-gateway
     ports:
     - port: 8083
       protocol: TCP
