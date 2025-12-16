@@ -14,5 +14,6 @@ spec:
             type: PathPrefix
             value: /mcp-auth
       backendRefs:
-        - name: yt-kmcp
+        - name: yt-kmcp-kagent
           namespace: kagent
+          port: 3000
