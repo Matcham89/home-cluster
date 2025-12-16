@@ -1,15 +1,16 @@
 ---
-# Backend for YouTube MCP Server (local service)
+# Backend for YouTube MCP Server
+# Uses dynamic selector to auto-discover YouTube MCP service
 apiVersion: gateway.kgateway.dev/v1alpha1
 kind: Backend
 metadata:
-  name: yt-mcp-backend
+  name: youtube-mcp-backend
 spec:
   type: MCP
   mcp:
     targets:
-      - name: yt-kmcp-kagent
+      - name: youtube-mcp
         selector:
-          service:
+          services:
             matchLabels:
-              kagent.dev/mcp-service: "true"
+              app.kubernetes.io/name: yt-kmcp
