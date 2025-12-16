@@ -2,8 +2,8 @@
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: ReferenceGrant
 metadata:
-  name: allow-kgateway-to-kagent
-  namespace: kagent
+  name: allow-gateway-access
+  namespace: kagent  # MUST be in the target namespace
 spec:
   from:
     - group: gateway.networking.k8s.io
