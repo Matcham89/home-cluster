@@ -47,7 +47,7 @@ spec:
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
-  name: agentgateway-controller
+  name: agentgateway
 spec:
   interval: 1m0s
   url: oci://ghcr.io/kgateway-dev/charts/agentgateway
