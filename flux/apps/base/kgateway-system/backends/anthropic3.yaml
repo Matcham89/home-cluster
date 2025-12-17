@@ -16,3 +16,4 @@ spec:
             secretRef:
               name: anthropic-secret
           model: "claude-3-5-haiku-latest"
+          apiVersion: "2023-06-01"
