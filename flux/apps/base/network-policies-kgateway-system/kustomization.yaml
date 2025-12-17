@@ -5,3 +5,4 @@ kind: Kustomization
 resources:
   - ./allow-external-ingress.yaml
   - ./allow-egress-to-kagent.yaml
+  - ./allow-egress-to-external-apis.yaml
