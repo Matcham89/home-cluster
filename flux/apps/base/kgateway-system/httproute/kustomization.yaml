@@ -5,3 +5,6 @@ kind: Kustomization
 resources:
   - ./a2a.yaml
   - ./youtube-mcp.yaml
+  - ./claude1.yaml
+  - ./claude2.yaml
+  - ./claude3.yaml
