@@ -27,6 +27,10 @@ spec:
         targetLabel: namespace
       - targetLabel: gateway_instance
         replacement: gateway1
+    metricRelabelings:
+      - sourceLabels: [__name__]
+        regex: '.*_info'
+        action: drop
 # ---
 # # PodMonitor for agentgateway2
 # apiVersion: monitoring.coreos.com/v1
