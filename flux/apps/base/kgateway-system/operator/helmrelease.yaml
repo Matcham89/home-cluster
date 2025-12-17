@@ -7,7 +7,7 @@ spec:
   interval: 1m0s
   url: oci://cr.kgateway.dev/kgateway-dev/charts/kgateway
   ref:
-    tag: v2.1.0-main
+    tag: v2.2.0-main
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
