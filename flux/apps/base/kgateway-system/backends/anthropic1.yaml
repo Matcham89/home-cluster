@@ -1,18 +1,17 @@
 ---
 apiVersion: agentgateway.dev/v1alpha1
-kind: Backend
+kind: AgentgatewayBackend
 metadata:
   labels:
     app: agentgateway1
   name: anthropic1
   namespace: kgateway-system
 spec:
-  type: AI
   ai:
-    llm:
-        anthropic:
-          authToken:
-            kind: SecretRef
-            secretRef:
-              name: anthropic-secret
-          model: "claude-3-5-haiku-latest"
+    provider:
+      anthropic:
+        model: "claude-opus-4-5"
+  policies:
+    auth:
+      secretRef:
+        name: anthropic-secret
