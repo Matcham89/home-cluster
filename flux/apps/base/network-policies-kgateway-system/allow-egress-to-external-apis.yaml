@@ -8,7 +8,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: agentgateway
+      gateway.networking.k8s.io/gateway-class-name: agentgateway
   policyTypes:
   - Egress
   egress:
