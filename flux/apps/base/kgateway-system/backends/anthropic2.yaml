@@ -15,5 +15,5 @@ spec:
             kind: SecretRef
             secretRef:
               name: anthropic-secret
-          model: "claude-3-5-haiku-latest"
-          apiVersion: "2023-06-01"
+          model: "claude-opus-4-5"
+          apiVersion: "2025-11-01"
