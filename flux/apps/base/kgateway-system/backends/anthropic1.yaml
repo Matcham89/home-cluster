@@ -16,4 +16,4 @@ spec:
             secretRef:
               name: anthropic-secret
           model: "claude-opus-4-5"
-          apiVersion: "2025-11-01"
+          apiVersion: "2023-06-01"
