@@ -15,4 +15,5 @@ resources:
   - k8s-pods.yaml
   - kagent-traces.yaml
   - kagent-llm-usage.yaml
+  - kgateway.yaml
   - istio-mesh-dashboard.yaml
