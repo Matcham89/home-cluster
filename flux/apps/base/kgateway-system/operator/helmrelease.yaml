@@ -37,7 +37,6 @@ spec:
     gateway:
       aiExtension:
         enabled: true
-      enabled: true
     agentgateway:
       enabled: true
     controller:
