@@ -17,5 +17,5 @@ spec:
     backendRefs:
     - name: anthropic1
       namespace: kgateway-system
-      group: gateway.kgateway.dev
-      kind: Backend
+      group: agentgateway.dev
+      kind: AgentgatewayBackend
