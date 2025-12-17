@@ -14,12 +14,6 @@ spec:
     - path:
         type: PathPrefix
         value: /anthropic
-    filters:
-    - type: URLRewrite
-      urlRewrite:
-        path:
-          type: ReplaceFullPath
-          replaceFullPath: /v1/chat/completions
     backendRefs:
     - name: anthropic3
       namespace: kgateway-system
