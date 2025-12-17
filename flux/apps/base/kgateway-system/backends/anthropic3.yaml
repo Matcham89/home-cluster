@@ -1,5 +1,5 @@
 ---
-apiVersion: gateway.kgateway.dev/v1alpha1
+apiVersion: agentgateway.dev/v1alpha1
 kind: Backend
 metadata:
   labels:
