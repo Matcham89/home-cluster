@@ -66,7 +66,7 @@ spec:
           cpu: 500m
           memory: 512Mi
 
-      memBallastSizeMbs: 1024
+      memBallastSizeMbs: 256
       multitenancyEnabled: false
       # -- If true, Tempo will report anonymous usage data about the shape of a deployment to Grafana Labs
       reportingEnabled: true
