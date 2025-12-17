@@ -42,3 +42,48 @@ spec:
     controller:
       image:
         pullPolicy: Always
+
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: agentgateway-controller
+spec:
+  interval: 1m0s
+  url: oci://ghcr.io/kgateway-dev/charts/agentgateway
+  ref:
+    tag: v2.2.0-main
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: agentgateway-controller
+spec:
+  interval: 1m0s
+  releaseName: agentgateway-controller
+  chartRef:
+    kind: OCIRepository
+    name: agentgateway
+  install:
+    strategy:
+      name: RetryOnFailure
+    createNamespace: true
+    timeout: 10m
+    crds: Skip
+  upgrade:
+    strategy:
+      name: RetryOnFailure
+    cleanupOnFail: true
+    timeout: 10m
+  # Note: Kubernetes 1.34+ has stricter label validation that rejects '+' in labels
+  # Fixed by enabling DisableChartDigestTracking feature gate in helm-controller
+  # See: https://github.com/fluxcd/flux2/issues/4910
+  values:
+    gateway:
+      aiExtension:
+        enabled: true
+    agentgateway:
+      enabled: true
+    controller:
+      image:
+        pullPolicy: Always
