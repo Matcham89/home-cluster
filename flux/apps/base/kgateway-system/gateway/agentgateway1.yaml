@@ -1,0 +1,23 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: agentgateway1
+  namespace: kgateway-system
+  labels:
+    app: agentgateway1
+spec:
+  gatewayClassName: agentgateway
+  listeners:
+  - protocol: HTTP
+    port: 8080
+    name: http
+  - protocol: HTTPS
+    port: 8443
+    name: https
+    hostname: "agentgateway.kubegit.com"
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - name: agentgateway-tls
+        kind: Secret

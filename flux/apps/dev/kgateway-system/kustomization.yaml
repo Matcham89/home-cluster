@@ -21,3 +21,4 @@ resources:
   - ./referencegrants/ks.yaml
   - ./peerauthentication/ks.yaml
   - ./observability/ks.yaml
+  - ./secrets/ks.yaml

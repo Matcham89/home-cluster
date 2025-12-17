@@ -1,0 +1,18 @@
+---
+apiVersion: gateway.kgateway.dev/v1alpha1
+kind: Backend
+metadata:
+  labels:
+    app: agentgateway3
+  name: anthropic3
+  namespace: kgateway-system
+spec:
+  type: AI
+  ai:
+    llm:
+        anthropic:
+          authToken:
+            kind: SecretRef
+            secretRef:
+              name: anthropic-secret
+          model: "claude-3-5-haiku-latest"
