@@ -138,7 +138,7 @@ The same HTTPListenerPolicy resources work with Envoy-based gateways:
 
 ```yaml
 # Applies to Envoy proxy via HTTPListenerPolicy
-apiVersion: gateway.kgateway.dev/v1alpha1
+apiVersion: agentgateway.dev/v1alpha1
 kind: HTTPListenerPolicy
 metadata:
   name: logging-policy

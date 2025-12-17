@@ -1,7 +1,7 @@
 ---
 # Backend for YouTube MCP Server
 # Uses static configuration for SSE protocol
-apiVersion: gateway.kgateway.dev/v1alpha1
+apiVersion: agentgateway.dev/v1alpha1
 kind: Backend
 metadata:
   name: youtube-mcp-backend
