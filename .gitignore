@@ -5,7 +5,6 @@
 *.p12
 *.env
 .env.*
-secrets/
 id_rsa*
 
 # Temporary files
