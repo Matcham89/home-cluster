@@ -6,6 +6,7 @@ resources:
   - ./kube-prometheus-stack.yaml
   - ./ocirepository.yaml
   - dashboards
+  - prometheus-rules
 configMapGenerator:
   - name: flux-kube-state-metrics-config
     files:
