@@ -13,8 +13,8 @@ resources:
   - ./resource-quotas/ks.yaml
   - ./network-policies/ks.yaml
   - ./gateway/ks.yaml
-  - ./gatewayparameters/ks.yaml
-  - ./httplistenerspolicy/ks.yaml
+  - ./agentgatewayparameters/ks.yaml
+  - ./agentgatewaypolicy/ks.yaml
   - ./backends/ks.yaml
   - ./httproute/ks.yaml
   - ./certificate/ks.yaml
