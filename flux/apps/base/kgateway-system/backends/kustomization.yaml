@@ -3,7 +3,8 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ./youtube-mcp.yaml
+  # Disabled due to schema changes in v2.2.0-main - MCP backend not supported in current CRD
+  # - ./youtube-mcp.yaml
   - ./anthropic1.yaml
   - ./anthropic2.yaml
   - ./anthropic3.yaml
