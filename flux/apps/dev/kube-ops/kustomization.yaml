@@ -18,4 +18,5 @@ resources:
   - ./metal-lb/resources/ks.yaml
   - ./limit-ranges/ks.yaml
   - ./resource-quotas/ks.yaml
-  - ./network-policies/ks.yaml
+  # DISABLED: Commented out for easier development/deployment
+  # - ./network-policies/ks.yaml

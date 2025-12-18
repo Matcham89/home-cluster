@@ -15,7 +15,8 @@ resources:
   - ./istio/secrets/ks.yaml
   - ./istio/httproutes/ks.yaml
   - ./istio/referencegrants/ks.yaml
-  - ./network-policies/ks.yaml
+  # DISABLED: Commented out for easier development/deployment
+  # - ./network-policies/ks.yaml
   - ./kiali/operator/ks.yaml
   - ./kiali/secrets/ks.yaml
   - ./kiali/cr/ks.yaml
