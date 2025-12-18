@@ -3,15 +3,15 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app kgateway-gatewayparameters
+  name: &app kgateway-agentgatewaypolicy
 spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: kgateway-operator
+    - name: kgateway-gateway
   interval: 1h
-  path: ./flux/apps/base/kgateway-system/gatewayparameters
+  path: ./flux/apps/base/kgateway-system/agentgatewaypolicy
   sourceRef:
     kind: GitRepository
     name: flux-system

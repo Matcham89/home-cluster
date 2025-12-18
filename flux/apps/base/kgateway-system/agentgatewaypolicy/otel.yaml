@@ -1,5 +1,5 @@
 apiVersion: agentgateway.dev/v1alpha1
-kind: HTTPListenerPolicy
+kind: AgentgatewayPolicy
 metadata:
   name: logging-policy
   namespace: kgateway-system

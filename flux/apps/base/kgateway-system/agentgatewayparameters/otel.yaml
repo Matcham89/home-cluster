@@ -1,6 +1,6 @@
 ---
 apiVersion: agentgateway.dev/v1alpha1
-kind: GatewayParameters
+kind: AgentgatewayParameters
 metadata:
   name: agentgateway-otel
   namespace: kgateway-system
