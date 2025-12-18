@@ -4,5 +4,5 @@ kind: Kustomization
 resources:
   - agentgateway.yaml
   - agentgateway1.yaml
-  - agentgateway2.yaml
-  - agentgateway3.yaml
+  # - agentgateway2.yaml
+  # - agentgateway3.yaml
