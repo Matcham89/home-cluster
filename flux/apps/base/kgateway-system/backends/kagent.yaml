@@ -1,5 +1,5 @@
 apiVersion: agentgateway.dev/v1alpha1
-kind: Backend
+kind: AgentgatewayBackend
 metadata:
   name: kagent-backend
   namespace: kgateway-system

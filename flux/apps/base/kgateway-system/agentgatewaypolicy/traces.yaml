@@ -1,5 +1,5 @@
 apiVersion: agentgateway.dev/v1alpha1
-kind: HTTPListenerPolicy
+kind: AgentgatewayPolicy
 metadata:
   name: tracing-policy
   namespace: kgateway-system
