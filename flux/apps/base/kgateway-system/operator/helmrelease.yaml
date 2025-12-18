@@ -84,6 +84,10 @@ spec:
         enabled: true
     agentgateway:
       enabled: true
+      image:
+        repository: ghcr.io/agentgateway/agentgateway
+        tag: 0.11.0-alpha.5e5533a2c6bfb8914d69662b06aef48b4e7b85d5
+        pullPolicy: Always
     controller:
       image:
         pullPolicy: Always
