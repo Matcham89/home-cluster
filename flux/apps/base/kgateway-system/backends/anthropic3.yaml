@@ -8,10 +8,12 @@ metadata:
   namespace: kgateway-system
 spec:
   ai:
-    provider:
-      anthropic:
-        model: "claude-haiku-4-5"
-  policies:
-    auth:
-      secretRef:
-        name: anthropic-secret
+    groups:
+      - providers:
+          - name: anthropic-haiku
+            anthropic:
+              model: "claude-haiku-4-5"
+            policies:
+              auth:
+                secretRef:
+                  name: anthropic-secret
