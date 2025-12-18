@@ -14,6 +14,12 @@ spec:
     - path:
         type: PathPrefix
         value: /anthropic
+    filters:
+    - type: URLRewrite
+      urlRewrite:
+        path:
+          type: ReplacePrefixMatch
+          replacePrefixMatch: /v1/messages
     backendRefs:
     - name: anthropic1
       namespace: kgateway-system
