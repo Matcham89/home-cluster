@@ -4,7 +4,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: otel-collector
-  namespace: kgateway
+  namespace: kgateway-system
   labels:
     app: otel-collector
 spec:
@@ -24,7 +24,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: kgateway-controller
-  namespace: kgateway
+  namespace: kgateway-system
   labels:
     app.kubernetes.io/name: kgateway
     app.kubernetes.io/component: controller
@@ -35,7 +35,7 @@ spec:
       app.kubernetes.io/component: controller-manager
   namespaceSelector:
     matchNames:
-      - kgateway
+      - kgateway-system
   endpoints:
     - port: metrics
       interval: 30s
@@ -46,7 +46,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: kgateway-proxy
-  namespace: kgateway
+  namespace: kgateway-system
   labels:
     kgateway: kube-gateway
 spec:
@@ -55,7 +55,7 @@ spec:
       kgateway: kube-gateway
   namespaceSelector:
     matchNames:
-      - kgateway
+      - kgateway-system
   endpoints:
     - port: http-metrics
       interval: 30s
