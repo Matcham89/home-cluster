@@ -1,6 +1,6 @@
 ---
 # Allow external traffic to agentgateway LoadBalancer
-# Required for Slack bot to access the A2A API
+# Required for Slack bot to access the A2A API and Anthropic gateways
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -8,7 +8,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: agentgateway
+      gateway.networking.k8s.io/gateway-class-name: agentgateway
   policyTypes:
   - Ingress
   ingress:
