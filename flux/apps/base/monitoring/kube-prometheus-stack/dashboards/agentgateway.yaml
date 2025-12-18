@@ -25,9 +25,8 @@ data:
       "editable": true,
       "fiscalYearStartMonth": 0,
       "graphTooltip": 0,
-      "id": null,
+      "id": 16,
       "links": [],
-      "liveNow": false,
       "panels": [
         {
           "datasource": "Prometheus",
@@ -42,7 +41,7 @@ data:
                 "steps": [
                   {
                     "color": "green",
-                    "value": null
+                    "value": 0
                   },
                   {
                     "color": "yellow",
@@ -55,7 +54,8 @@ data:
                 ]
               },
               "unit": "currencyUSD"
-            }
+            },
+            "overrides": []
           },
           "gridPos": {
             "h": 8,
@@ -65,16 +65,21 @@ data:
           },
           "id": 1,
           "options": {
+            "minVizHeight": 75,
+            "minVizWidth": 75,
             "orientation": "auto",
             "reduceOptions": {
-              "values": false,
-              "calcs": ["lastNotNull"],
-              "fields": ""
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
             },
             "showThresholdLabels": false,
-            "showThresholdMarkers": true
+            "showThresholdMarkers": true,
+            "sizing": "auto"
           },
-          "pluginVersion": "9.0.0",
+          "pluginVersion": "12.2.1",
           "targets": [
             {
               "expr": "agentgateway:cost_usd:total_daily",
@@ -92,17 +97,22 @@ data:
                 "mode": "palette-classic"
               },
               "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
                 "axisLabel": "",
                 "axisPlacement": "auto",
                 "barAlignment": 0,
+                "barWidthFactor": 0.6,
                 "drawStyle": "line",
                 "fillOpacity": 20,
                 "gradientMode": "none",
                 "hideFrom": {
+                  "legend": false,
                   "tooltip": false,
-                  "viz": false,
-                  "legend": false
+                  "viz": false
                 },
+                "insertNulls": false,
                 "lineInterpolation": "linear",
                 "lineWidth": 2,
                 "pointSize": 5,
@@ -110,6 +120,7 @@ data:
                   "type": "linear"
                 },
                 "showPoints": "never",
+                "showValues": false,
                 "spanNulls": false,
                 "stacking": {
                   "group": "A",
@@ -125,12 +136,13 @@ data:
                 "steps": [
                   {
                     "color": "green",
-                    "value": null
+                    "value": 0
                   }
                 ]
               },
               "unit": "currencyUSD"
-            }
+            },
+            "overrides": []
           },
           "gridPos": {
             "h": 8,
@@ -141,14 +153,21 @@ data:
           "id": 2,
           "options": {
             "legend": {
-              "calcs": ["last", "max"],
+              "calcs": [
+                "last",
+                "max"
+              ],
               "displayMode": "table",
-              "placement": "bottom"
+              "placement": "bottom",
+              "showLegend": true
             },
             "tooltip": {
-              "mode": "multi"
+              "hideZeros": false,
+              "mode": "multi",
+              "sort": "none"
             }
           },
+          "pluginVersion": "12.2.1",
           "targets": [
             {
               "expr": "agentgateway:cost_usd:by_gateway",
@@ -172,12 +191,13 @@ data:
                 "steps": [
                   {
                     "color": "green",
-                    "value": null
+                    "value": 0
                   }
                 ]
               },
               "unit": "short"
-            }
+            },
+            "overrides": []
           },
           "gridPos": {
             "h": 4,
@@ -191,16 +211,24 @@ data:
             "graphMode": "area",
             "justifyMode": "auto",
             "orientation": "auto",
+            "percentChangeColorMode": "standard",
             "reduceOptions": {
-              "values": false,
-              "calcs": ["lastNotNull"],
-              "fields": ""
-            }
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
           },
-          "pluginVersion": "9.0.0",
+          "pluginVersion": "12.2.1",
           "targets": [
             {
+              "editorMode": "builder",
               "expr": "agentgateway:input_tokens:total",
+              "range": true,
               "refId": "A"
             }
           ],
@@ -220,12 +248,13 @@ data:
                 "steps": [
                   {
                     "color": "green",
-                    "value": null
+                    "value": 0
                   }
                 ]
               },
               "unit": "short"
-            }
+            },
+            "overrides": []
           },
           "gridPos": {
             "h": 4,
@@ -239,13 +268,19 @@ data:
             "graphMode": "area",
             "justifyMode": "auto",
             "orientation": "auto",
+            "percentChangeColorMode": "standard",
             "reduceOptions": {
-              "values": false,
-              "calcs": ["lastNotNull"],
-              "fields": ""
-            }
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
           },
-          "pluginVersion": "9.0.0",
+          "pluginVersion": "12.2.1",
           "targets": [
             {
               "expr": "agentgateway:output_tokens:total",
@@ -268,7 +303,7 @@ data:
                 "steps": [
                   {
                     "color": "green",
-                    "value": null
+                    "value": 0
                   },
                   {
                     "color": "yellow",
@@ -281,7 +316,8 @@ data:
                 ]
               },
               "unit": "currencyUSD"
-            }
+            },
+            "overrides": []
           },
           "gridPos": {
             "h": 4,
@@ -295,13 +331,19 @@ data:
             "graphMode": "area",
             "justifyMode": "auto",
             "orientation": "auto",
+            "percentChangeColorMode": "standard",
             "reduceOptions": {
-              "values": false,
-              "calcs": ["lastNotNull"],
-              "fields": ""
-            }
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
           },
-          "pluginVersion": "9.0.0",
+          "pluginVersion": "12.2.1",
           "targets": [
             {
               "expr": "agentgateway:cost_usd:total_hourly",
@@ -324,12 +366,13 @@ data:
                 "steps": [
                   {
                     "color": "green",
-                    "value": null
+                    "value": 0
                   }
                 ]
               },
               "unit": "currencyUSD"
-            }
+            },
+            "overrides": []
           },
           "gridPos": {
             "h": 4,
@@ -343,13 +386,19 @@ data:
             "graphMode": "area",
             "justifyMode": "auto",
             "orientation": "auto",
+            "percentChangeColorMode": "standard",
             "reduceOptions": {
-              "values": false,
-              "calcs": ["lastNotNull"],
-              "fields": ""
-            }
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
           },
-          "pluginVersion": "9.0.0",
+          "pluginVersion": "12.2.1",
           "targets": [
             {
               "expr": "agentgateway:cost_usd:total_weekly",
@@ -372,7 +421,7 @@ data:
                 "steps": [
                   {
                     "color": "green",
-                    "value": null
+                    "value": 0
                   },
                   {
                     "color": "yellow",
@@ -385,7 +434,8 @@ data:
                 ]
               },
               "unit": "currencyUSD"
-            }
+            },
+            "overrides": []
           },
           "gridPos": {
             "h": 4,
@@ -399,13 +449,19 @@ data:
             "graphMode": "area",
             "justifyMode": "auto",
             "orientation": "auto",
+            "percentChangeColorMode": "standard",
             "reduceOptions": {
-              "values": false,
-              "calcs": ["lastNotNull"],
-              "fields": ""
-            }
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showPercentChange": false,
+            "textMode": "auto",
+            "wideLayout": true
           },
-          "pluginVersion": "9.0.0",
+          "pluginVersion": "12.2.1",
           "targets": [
             {
               "expr": "agentgateway:cost_usd:total_monthly",
@@ -423,17 +479,22 @@ data:
                 "mode": "palette-classic"
               },
               "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
                 "axisLabel": "",
                 "axisPlacement": "auto",
                 "barAlignment": 0,
+                "barWidthFactor": 0.6,
                 "drawStyle": "line",
                 "fillOpacity": 10,
                 "gradientMode": "none",
                 "hideFrom": {
+                  "legend": false,
                   "tooltip": false,
-                  "viz": false,
-                  "legend": false
+                  "viz": false
                 },
+                "insertNulls": false,
                 "lineInterpolation": "linear",
                 "lineWidth": 2,
                 "pointSize": 5,
@@ -441,6 +502,7 @@ data:
                   "type": "linear"
                 },
                 "showPoints": "never",
+                "showValues": false,
                 "spanNulls": false,
                 "stacking": {
                   "group": "A",
@@ -456,12 +518,13 @@ data:
                 "steps": [
                   {
                     "color": "green",
-                    "value": null
+                    "value": 0
                   }
                 ]
               },
               "unit": "short"
-            }
+            },
+            "overrides": []
           },
           "gridPos": {
             "h": 8,
@@ -472,23 +535,34 @@ data:
           "id": 8,
           "options": {
             "legend": {
-              "calcs": ["last", "max"],
+              "calcs": [
+                "last",
+                "max"
+              ],
               "displayMode": "table",
-              "placement": "bottom"
+              "placement": "bottom",
+              "showLegend": true
             },
             "tooltip": {
-              "mode": "multi"
+              "hideZeros": false,
+              "mode": "multi",
+              "sort": "none"
             }
           },
+          "pluginVersion": "12.2.1",
           "targets": [
             {
-              "expr": "rate(agentgateway_ai_tokens_input_total[5m])",
+              "editorMode": "builder",
+              "expr": "rate(agentgateway:input_tokens:by_gateway[5m])",
               "legendFormat": "{{ gateway_instance }} - input",
+              "range": true,
               "refId": "A"
             },
             {
-              "expr": "rate(agentgateway_ai_tokens_output_total[5m])",
+              "editorMode": "builder",
+              "expr": "rate(agentgateway:output_tokens:by_gateway[5m])",
               "legendFormat": "{{ gateway_instance }} - output",
+              "range": true,
               "refId": "B"
             }
           ],
@@ -503,17 +577,22 @@ data:
                 "mode": "palette-classic"
               },
               "custom": {
+                "axisBorderShow": false,
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
                 "axisLabel": "",
                 "axisPlacement": "auto",
                 "barAlignment": 0,
+                "barWidthFactor": 0.6,
                 "drawStyle": "line",
                 "fillOpacity": 20,
                 "gradientMode": "none",
                 "hideFrom": {
+                  "legend": false,
                   "tooltip": false,
-                  "viz": false,
-                  "legend": false
+                  "viz": false
                 },
+                "insertNulls": false,
                 "lineInterpolation": "smooth",
                 "lineWidth": 2,
                 "pointSize": 5,
@@ -521,6 +600,7 @@ data:
                   "type": "linear"
                 },
                 "showPoints": "never",
+                "showValues": false,
                 "spanNulls": false,
                 "stacking": {
                   "group": "A",
@@ -536,7 +616,7 @@ data:
                 "steps": [
                   {
                     "color": "green",
-                    "value": null
+                    "value": 0
                   },
                   {
                     "color": "red",
@@ -545,7 +625,8 @@ data:
                 ]
               },
               "unit": "currencyUSD"
-            }
+            },
+            "overrides": []
           },
           "gridPos": {
             "h": 8,
@@ -556,14 +637,21 @@ data:
           "id": 9,
           "options": {
             "legend": {
-              "calcs": ["last", "max"],
+              "calcs": [
+                "last",
+                "max"
+              ],
               "displayMode": "table",
-              "placement": "bottom"
+              "placement": "bottom",
+              "showLegend": true
             },
             "tooltip": {
-              "mode": "single"
+              "hideZeros": false,
+              "mode": "single",
+              "sort": "none"
             }
           },
+          "pluginVersion": "12.2.1",
           "targets": [
             {
               "expr": "agentgateway:cost_usd:total_daily",
@@ -575,10 +663,14 @@ data:
           "type": "timeseries"
         }
       ],
+      "preload": false,
       "refresh": "30s",
-      "schemaVersion": 36,
-      "style": "dark",
-      "tags": ["agentgateway", "cost", "llm"],
+      "schemaVersion": 42,
+      "tags": [
+        "agentgateway",
+        "cost",
+        "llm"
+      ],
       "templating": {
         "list": []
       },
@@ -590,6 +682,5 @@ data:
       "timezone": "",
       "title": "AgentGateway - Multi-Gateway Cost Tracking",
       "uid": "agentgateway-cost",
-      "version": 1,
-      "weekStart": ""
+      "version": 1
     }
