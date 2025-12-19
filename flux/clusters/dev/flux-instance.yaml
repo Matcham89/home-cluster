@@ -57,5 +57,14 @@ spec:
           - op: add
             path: /spec/template/spec/containers/0/args/-
             value: --feature-gates=DisableChartDigestTracking=true
+      # Add Gateway access label to flux-system namespace
+      # This prevents the FluxInstance from removing the label during hourly reconciliation
+      - target:
+          kind: Namespace
+          name: flux-system
+        patch: |
+          - op: add
+            path: /metadata/labels/istio-gateway-access
+            value: "true"
   wait: true
   migrateResources: true
