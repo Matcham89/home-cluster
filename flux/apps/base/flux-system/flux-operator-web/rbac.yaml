@@ -1,81 +1,81 @@
 ---
-# Grant flux admins group full edit access to Flux resources
+# Grant flux-admins group full edit access to Flux resources
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: flux-admins-edit-flux-resources
   annotations:
-    description: "Grants flux admins group from Authentik edit access to Flux resources"
+    description: "Grants flux-admins group from Authentik edit access to Flux resources"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: flux-edit-flux-system
 subjects:
   - kind: Group
-    name: flux admins
+    name: flux-admins
     apiGroup: rbac.authorization.k8s.io
 ---
-# Grant flux admins group edit access to FluxInstance and ResourceSet objects
+# Grant flux-admins group edit access to FluxInstance and ResourceSet objects
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: flux-admins-edit-flux-operator
   annotations:
-    description: "Grants flux admins group from Authentik edit access to FluxInstance and ResourceSet objects"
+    description: "Grants flux-admins group from Authentik edit access to FluxInstance and ResourceSet objects"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: flux-operator-edit
 subjects:
   - kind: Group
-    name: flux admins
+    name: flux-admins
     apiGroup: rbac.authorization.k8s.io
 ---
-# Grant flux admins group view access to Flux resources
+# Grant flux-admins group view access to Flux resources
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: flux-admins-view-flux-resources
   annotations:
-    description: "Grants flux admins group from Authentik view access to Flux resources"
+    description: "Grants flux-admins group from Authentik view access to Flux resources"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: flux-view-flux-system
 subjects:
   - kind: Group
-    name: flux admins
+    name: flux-admins
     apiGroup: rbac.authorization.k8s.io
 ---
-# Grant flux admins group view access to FluxInstance and ResourceSet objects
+# Grant flux-admins group view access to FluxInstance and ResourceSet objects
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: flux-admins-view-flux-operator
   annotations:
-    description: "Grants flux admins group from Authentik view access to FluxInstance and ResourceSet objects"
+    description: "Grants flux-admins group from Authentik view access to FluxInstance and ResourceSet objects"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: flux-operator-view
 subjects:
   - kind: Group
-    name: flux admins
+    name: flux-admins
     apiGroup: rbac.authorization.k8s.io
 ---
-# Grant flux admins cluster-wide view access to all resources
+# Grant flux-admins cluster-wide view access to all resources
 # This is needed for the Flux UI to discover and display resources
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
   name: flux-admins-cluster-view
   annotations:
-    description: "Grants flux admins group cluster-wide view access for Flux UI resource discovery"
+    description: "Grants flux-admins group cluster-wide view access for Flux UI resource discovery"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
   name: view
 subjects:
   - kind: Group
-    name: flux admins
+    name: flux-admins
     apiGroup: rbac.authorization.k8s.io
