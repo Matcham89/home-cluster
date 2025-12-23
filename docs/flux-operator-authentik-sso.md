@@ -1,627 +1,493 @@
-# Flux Operator Web UI with Authentik SSO
+# How to Secure Flux Web UI with Authentik SSO and Kubernetes Gateway API
 
-A complete guide to implementing Single Sign-On (SSO) for the Flux Operator Web UI using Authentik as the identity provider with Kubernetes Gateway API.
+**TL;DR:** Lock down your Flux dashboard with OAuth2/OIDC authentication using Authentik, External Secrets, and Gateway API. No more exposed management UIs in production.
 
-## Table of Contents
+---
 
-- [Overview](#overview)
-- [Architecture](#architecture)
-- [Prerequisites](#prerequisites)
-- [Implementation Steps](#implementation-steps)
-  - [1. Authentik Configuration](#1-authentik-configuration)
-  - [2. Secret Management](#2-secret-management)
-  - [3. Flux Operator Configuration](#3-flux-operator-configuration)
-  - [4. Gateway Configuration](#4-gateway-configuration)
-- [Verification](#verification)
-- [Troubleshooting](#troubleshooting)
-- [References](#references)
+## Why This Matters
 
-## Overview
+Picture this: Your Flux Web UI is managing production workloads across multiple clusters. One misconfiguration, one leaked URL, and suddenly anyone can view (or worse, manipulate) your entire GitOps pipeline.
 
-This guide demonstrates how to secure the Flux Operator Web UI with OAuth2/OIDC authentication using Authentik as the identity provider. The solution uses:
+**The problem?** Most guides show you how to *expose* Flux, but not how to *secure* it properly.
 
-- **Flux Operator**: GitOps operator with built-in web UI
-- **Authentik**: Modern identity provider with OAuth2/OIDC support
-- **Gateway API**: Kubernetes-native API for managing ingress traffic
-- **External Secrets**: Bitwarden integration for secret management
+**The solution?** A modern authentication stack that gives you:
+- ✅ **Single Sign-On** via OIDC (no shared passwords)
+- ✅ **Secrets managed externally** (Bitwarden + External Secrets Operator)
+- ✅ **Cloud-native routing** with Gateway API instead of legacy Ingress
+- ✅ **Production-grade security** out of the box
 
-## Architecture
+By the end of this guide, you'll have a fully authenticated Flux dashboard that integrates with your existing identity provider.
 
-```
-┌─────────────────┐
-│     User        │
-└────────┬────────┘
-         │ 1. Access https://flux.example.com
-         ▼
-┌─────────────────────┐
-│  Gateway (Istio)    │ 2. Routes to Flux Web UI
-└────────┬────────────┘
-         │
-         ▼
-┌─────────────────────┐
-│  Flux Operator      │ 3. Checks authentication
-│  Web UI (Port 9080) │
-└────────┬────────────┘
-         │ 4. Not authenticated
-         │
-         ▼
-┌─────────────────────┐
-│     Authentik       │ 5. OAuth2 redirect
-│  (Identity Provider)│ 6. User authenticates
-└────────┬────────────┘
-         │
-         │ 7. Redirect back with token
-         ▼
-┌─────────────────────┐
-│  Flux Web UI        │ 8. Validates token
-│                     │ 9. Grants access
-└─────────────────────┘
-```
+---
 
 ## Prerequisites
 
-### Required Components
+Before we begin, make sure you have:
 
-- **Kubernetes Cluster** (v1.25+)
-- **Flux Operator** installed and operational
-- **Authentik** instance (v2023.x or later)
-- **Gateway API** implementation (Istio, Envoy Gateway, etc.)
-- **External Secrets Operator** (optional, for secret management)
-- **cert-manager** or TLS certificates for HTTPS
+- **A Kubernetes cluster** (1.25+) with Gateway API CRDs installed
+- **Flux Operator** deployed ([installation guide](https://fluxcd.io/flux/installation/))
+- **Authentik** running (self-hosted or cloud) - [docs here](https://docs.goauthentik.io/)
+- **External Secrets Operator** installed ([quickstart](https://external-secrets.io/latest/introduction/getting-started/))
+- **A Gateway controller** (I'm using Istio, but Envoy Gateway or others work too)
+- **DNS configured** for your domain (e.g., `flux.example.com`)
 
-### Required Permissions
+> **Not using Bitwarden?** You can adapt this guide for any secret backend that External Secrets supports (AWS Secrets Manager, HashiCorp Vault, etc.)
 
-- Cluster admin access or permissions to:
-  - Create secrets in `flux-system` namespace
-  - Create ResourceSets, HTTPRoutes
-  - Label namespaces
-  - Manage Gateway resources
-
-### DNS Configuration
-
-- Domain pointing to your Gateway load balancer
-- Example: `flux.example.com` → Gateway IP address
-
-## Implementation Steps
-
-### 1. Authentik Configuration
-
-#### Create OAuth2/OIDC Application
-
-1. Log into Authentik admin interface
-2. Navigate to **Applications** → **Applications**
-3. Click **Create** and configure:
-
-**Basic Settings:**
-- **Name**: `Flux Web UI`
-- **Slug**: `flux-web-ui`
-- **Provider**: Create new OAuth2/OpenID Provider
-
-**Provider Configuration:**
-- **Name**: `Flux Web UI Provider`
-- **Authentication flow**: `default-authentication-flow`
-- **Authorization flow**: `default-provider-authorization-explicit-consent`
-
-**OAuth2 Settings:**
-- **Client type**: `Confidential`
-- **Client ID**: Generate or set custom (e.g., `flux-web-ui-client`)
-- **Client Secret**: Generate and save securely
-- **Redirect URIs**: `https://flux.example.com/oauth2/callback`
-- **Signing Key**: `authentik Self-signed Certificate`
-
-**Advanced Settings:**
-- **Scopes**: `openid`, `profile`, `email`
-- **Subject mode**: `Based on the User's hashed ID`
-- **Include claims in id_token**: ✓ Enabled
-
-4. Click **Create** and note down:
-   - Client ID
-   - Client Secret
-   - Issuer URL (found in provider details, typically: `https://authentik.example.com/application/o/flux-web-ui/`)
-
-#### Configure Group Mappings (Optional)
-
-For RBAC integration:
-
-1. Navigate to **Customisation** → **Property Mappings**
-2. Create **Scope Mapping**:
-   - **Name**: `Groups`
-   - **Scope name**: `groups`
-   - **Expression**:
-     ```python
-     return {
-       "groups": [group.name for group in user.ak_groups.all()]
-     }
-     ```
-3. Add this mapping to your OAuth2 provider's scopes
-
-### 2. Secret Management
-
-Choose one of the following methods to store OAuth2 credentials:
-
-#### Option A: External Secrets (Recommended)
-
-**2.1. Store credentials in Bitwarden Secrets Manager:**
-
-Create two secrets in your Bitwarden organization:
-- **Secret 1**: `flux-oauth-client-id`
-  - Key: `client-id`
-  - Value: `<your-client-id>`
-- **Secret 2**: `flux-oauth-client-secret`
-  - Key: `client-secret`
-  - Value: `<your-client-secret>`
-
-**2.2. Create ExternalSecret resource:**
-
-Create `flux/apps/base/flux-system/flux-operator-web/externalsecret.yaml`:
-
-```yaml
 ---
-apiVersion: external-secrets.io/v1
+
+## Architecture: The 30,000-Foot View
+
+Here's what we're building:
+```
+┌─────────────┐
+│   Browser   │
+└──────┬──────┘
+       │ 1. Request: flux.example.com
+       ▼
+┌─────────────────────┐
+│  Gateway API (Istio)│
+│  HTTPRoute          │
+└──────┬──────────────┘
+       │ 2. Route to flux-operator:9080
+       ▼
+┌─────────────────────┐      ┌──────────────────┐
+│  Flux Web UI        │◄─────┤  External Secret │
+│  (OAuth2 enabled)   │      │  (from Bitwarden)│
+└──────┬──────────────┘      └──────────────────┘
+       │ 3. OAuth redirect
+       ▼
+┌─────────────────────┐
+│    Authentik IdP    │
+│  (OIDC Provider)    │
+└─────────────────────┘
+```
+
+**The flow:**
+1. User hits `flux.example.com` → Gateway API routes to Flux pod
+2. Flux sees no auth cookie → redirects to Authentik login
+3. User authenticates → Authentik sends them back with OAuth token
+4. Flux validates token → serves the dashboard
+
+---
+
+## Step 1: Configure Authentik (Your Identity Provider)
+
+Authentik needs to know that Flux exists as a trusted application. Think of this as registering Flux in your "identity passport system."
+
+### 1.1 Create the OAuth2 Application
+
+1. Navigate to **Applications → Providers** in Authentik
+2. Click **Create** and select **OAuth2/OpenID Provider**
+3. Fill in the details:
+
+| Field | Value | Why |
+|-------|-------|-----|
+| **Name** | `Flux Web UI` | Human-readable identifier |
+| **Client Type** | `Confidential` | Requires client secret (more secure) |
+| **Redirect URI** | `https://flux.example.com/oauth2/callback` | Where Authentik sends users after login |
+| **Client ID** | (auto-generated) | You'll need this for Flux config |
+| **Client Secret** | (auto-generated) | Store this securely! |
+
+4. Under **Advanced Settings**, note the **OpenID Configuration URL**:
+```
+   https://authentik.example.com/application/o/flux-web-ui/
+```
+
+### 1.2 Save Your Credentials
+
+You'll need three pieces of information:
+- **Client ID**: `abc123...`
+- **Client Secret**: `supersecret456...`
+- **Issuer URL**: `https://authentik.example.com/application/o/flux-web-ui/`
+
+**🔒 Security Note:** Never commit these to Git! We'll handle them properly in the next step.
+
+---
+
+## Step 2: Store Credentials in Bitwarden + External Secrets
+
+Hardcoding secrets in Git is the #1 GitOps anti-pattern. Instead, we'll use **External Secrets Operator** to pull credentials from Bitwarden at runtime.
+
+### 2.1 Add Secrets to Bitwarden
+
+1. In Bitwarden (or your Secrets Manager instance), create two new secrets:
+   - `flux-web-client-id` → paste your Client ID
+   - `flux-web-client-secret` → paste your Client Secret
+
+2. Note the secret UUIDs for each (you'll see them in the Bitwarden UI)
+
+### 2.2 Create the ExternalSecret Resource
+```yaml
+apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
   name: flux-web-client
   namespace: flux-system
+  annotations:
+    # Optional: Document what this secret is for
+    description: "OAuth2 credentials for Flux Web UI authentication"
 spec:
+  # Refresh every hour in case credentials rotate
   refreshInterval: 1h
+  
+  # Reference our Bitwarden SecretStore
   secretStoreRef:
     name: bitwarden-secretsmanager
     kind: ClusterSecretStore
+  
+  # The Kubernetes Secret that will be created
   target:
     name: flux-web-client
     creationPolicy: Owner
+  
+  # Map Bitwarden secrets to K8s secret keys
   data:
     - secretKey: client-id
       remoteRef:
-        key: "<bitwarden-secret-id-1>"
-        property: client-id
+        key: "<your-bitwarden-client-id-uuid>"
+    
     - secretKey: client-secret
       remoteRef:
-        key: "<bitwarden-secret-id-2>"
-        property: client-secret
+        key: "<your-bitwarden-client-secret-uuid>"
 ```
 
-#### Option B: Manual Kubernetes Secret
-
+**Apply it:**
 ```bash
-kubectl create secret generic flux-web-client \
-  --from-literal=client-id='<your-client-id>' \
-  --from-literal=client-secret='<your-client-secret>' \
-  -n flux-system
+kubectl apply -f flux-web-externalsecret.yaml
+
+# Verify the secret was created
+kubectl get secret flux-web-client -n flux-system
 ```
 
-### 3. Flux Operator Configuration
+> **💡 Pro Tip:** If you're just testing locally, you can create a standard Secret manually:
+> ```bash
+> kubectl create secret generic flux-web-client \
+>   --from-literal=client-id=your-client-id \
+>   --from-literal=client-secret=your-client-secret \
+>   -n flux-system
+> ```
 
-#### 3.1. Create ResourceSet
-
-The ResourceSet manages the Flux Operator deployment with OAuth2 configuration.
-
-Create `flux/apps/base/flux-system/flux-operator-web/flux-operator-config.yaml`:
-
-```yaml
 ---
+
+## Step 3: Configure Flux Operator with OAuth2
+
+Now for the main event. We'll use a **FluxInstance** (if using Flux Operator) or modify your existing Flux HelmRelease to enable OAuth2.
+
+### 3.1 The Complete Configuration
+```yaml
 apiVersion: fluxcd.controlplane.io/v1
-kind: ResourceSet
+kind: FluxInstance
 metadata:
-  name: flux-operator
+  name: flux
   namespace: flux-system
 spec:
-  inputs:
-    - domain: "example.com"  # Replace with your domain
-  resources:
-    # OCI Repository for Flux Operator Helm Chart
-    - apiVersion: source.toolkit.fluxcd.io/v1
-      kind: OCIRepository
-      metadata:
-        name: << inputs.provider.name >>
-        namespace: << inputs.provider.namespace >>
-      spec:
-        interval: 30m
-        url: oci://ghcr.io/controlplaneio-fluxcd/charts/flux-operator
-        layerSelector:
-          mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
-          operation: copy
-        ref:
-          semver: '*'
-
-    # Helm Release with OAuth2 Configuration
-    - apiVersion: helm.toolkit.fluxcd.io/v2
-      kind: HelmRelease
-      metadata:
-        name: << inputs.provider.name >>
-        namespace: << inputs.provider.namespace >>
-      spec:
-        interval: 30m
-        releaseName: << inputs.provider.name >>
-        serviceAccountName: << inputs.provider.name >>
-        chartRef:
-          kind: OCIRepository
-          name: << inputs.provider.name >>
-        values:
-          web:
-            config:
-              baseURL: "https://flux.<< inputs.domain >>"
-              authentication:
-                type: OAuth2
-                oauth2:
-                  provider: OIDC
-                  issuerURL: "https://authentik.example.com/application/o/flux-web-ui/"
-            ingress:
-              enabled: false  # Using Gateway API instead
-        valuesFrom:
-          - kind: Secret
-            name: flux-web-client
-            valuesKey: client-id
-            targetPath: web.config.authentication.oauth2.clientID
-          - kind: Secret
-            name: flux-web-client
-            valuesKey: client-secret
-            targetPath: web.config.authentication.oauth2.clientSecret
+  # ... your existing Flux config ...
+  
+  distribution:
+    # Enable the Web UI component
+    components:
+      - web-ui
+    
+    version: "2.x"
+  
+  # Web UI specific configuration
+  values:
+    web:
+      # Base configuration
+      config:
+        # CRITICAL: Must match your actual domain
+        baseURL: "https://flux.example.com"
+        
+        # Enable OAuth2 authentication
+        authentication:
+          type: OAuth2
+          oauth2:
+            provider: OIDC  # Generic OIDC provider (Authentik speaks OIDC)
+            
+            # This is the OpenID Configuration URL from Authentik
+            issuerURL: "https://authentik.example.com/application/o/flux-web-ui/"
+            
+            # Optional: Request specific scopes
+            scopes:
+              - openid
+              - profile
+              - email
+      
+      # Disable built-in Ingress (we're using Gateway API instead)
+      ingress:
+        enabled: false
+    
+    # Pull OAuth2 credentials from our ExternalSecret
+    valuesFrom:
+      - kind: Secret
+        name: flux-web-client
+        valuesKey: client-id
+        targetPath: web.config.authentication.oauth2.clientID
+      
+      - kind: Secret
+        name: flux-web-client
+        valuesKey: client-secret
+        targetPath: web.config.authentication.oauth2.clientSecret
 ```
 
-**Key Configuration Points:**
+### 3.2 What's Happening Here?
 
-| Field | Purpose | Example |
-|-------|---------|---------|
-| `inputs.domain` | Your base domain | `example.com` |
-| `baseURL` | Full URL to Flux Web UI | `https://flux.example.com` |
-| `issuerURL` | Authentik OIDC issuer endpoint | `https://authentik.example.com/application/o/flux-web-ui/` |
-| `provider` | OAuth2 provider type | `OIDC` (generic OpenID Connect) |
-| `valuesFrom` | Secret references for credentials | References `flux-web-client` secret |
+- **`baseURL`**: Where users will access Flux (must match your HTTPRoute hostname)
+- **`issuerURL`**: Tells Flux where to validate OAuth tokens
+- **`valuesFrom`**: Injects secrets from Kubernetes Secret into Helm values at runtime
+- **`ingress.enabled: false`**: We're using Gateway API, so we don't need the default Ingress
 
-**Template Variables Explained:**
-
-- `<< inputs.domain >>` - Replaced with value from `spec.inputs[].domain`
-- `<< inputs.provider.name >>` - Auto-generated from ResourceSet metadata name (`flux-operator`)
-- `<< inputs.provider.namespace >>` - Auto-generated from ResourceSet metadata namespace (`flux-system`)
-
-#### 3.2. Create HTTPRoute
-
-Add to the same file or create separately:
-
-```yaml
 ---
+
+## Step 4: Route Traffic with Gateway API
+
+Gateway API is the modern replacement for Ingress, with better separation of concerns and more powerful routing capabilities.
+
+### 4.1 Ensure Namespace Access
+
+First, label your namespace so the Gateway can route to it:
+```bash
+kubectl label namespace flux-system istio-gateway-access=true
+```
+
+### 4.2 Create the HTTPRoute
+```yaml
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: flux-web
   namespace: flux-system
 spec:
+  # Which Gateway should handle this route
   parentRefs:
-    - group: gateway.networking.k8s.io
-      kind: Gateway
-      name: istio-gateway  # Replace with your Gateway name
-      namespace: istio-system  # Replace with your Gateway namespace
+    - name: istio-gateway      # Your Gateway name
+      namespace: istio-system  # Gateway namespace
+  
+  # What hostname(s) this route responds to
   hostnames:
-    - "flux.example.com"  # Replace with your domain
+    - "flux.example.com"
+  
+  # Routing rules
   rules:
     - matches:
         - path:
             type: PathPrefix
-            value: /
+            value: "/"
+      
+      # Where to send the traffic
       backendRefs:
-        - name: flux-operator
-          namespace: flux-system
-          port: 9080
+        - name: flux-operator    # Service name
+          port: 9080             # Flux Web UI port
+          weight: 100
 ```
 
-#### 3.3. Create Kustomization
+### 4.3 Apply and Verify
+```bash
+# Apply the HTTPRoute
+kubectl apply -f flux-httproute.yaml
 
-Create `flux/apps/base/flux-system/flux-operator-web/kustomization.yaml`:
-
-```yaml
----
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-resources:
-  - externalsecret.yaml  # If using External Secrets
-  - flux-operator-config.yaml
+# Check the route status
+kubectl get httproute flux-web -n flux-system -o yaml
 ```
 
-#### 3.4. Deploy via Flux
+Look for `status.parents[].conditions` with `type: Accepted` and `status: True`.
 
-Create environment-specific Kustomization at `flux/apps/dev/flux-system/flux-operator-web/ks.yaml`:
-
-```yaml
 ---
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
+
+## Verification Checklist
+
+Let's make sure everything is wired up correctly before we test in a browser.
+
+| Component | Command | Success Indicator |
+|-----------|---------|-------------------|
+| **ExternalSecret** | `kubectl get externalsecret flux-web-client -n flux-system` | `SecretSynced: True` |
+| **K8s Secret** | `kubectl get secret flux-web-client -n flux-system` | `Data: 2` (client-id, client-secret) |
+| **Flux Instance** | `kubectl get fluxinstance flux -n flux-system` | `Ready: True` |
+| **Web UI Pod** | `kubectl get pods -n flux-system \| grep web` | Pod running |
+| **HTTPRoute** | `kubectl get httproute flux-web -n flux-system` | `Accepted: True` |
+
+### Test the Full Flow
+
+1. Open your browser to `https://flux.example.com`
+2. **Expected:** You should be immediately redirected to Authentik's login page
+3. Log in with your Authentik credentials
+4. **Expected:** You're redirected back to `https://flux.example.com/oauth2/callback`
+5. **Expected:** You land on the Flux Web UI dashboard, fully authenticated!
+
+---
+
+## Troubleshooting Guide
+
+Things not working? Here are the most common issues and fixes:
+
+### Issue: Redirect Loop (Keep bouncing between Flux and Authentik)
+
+**Causes:**
+- ❌ Redirect URI mismatch in Authentik
+- ❌ `baseURL` in Flux config doesn't match actual URL
+- ❌ Missing `/oauth2/callback` path in Authentik redirect URI
+
+**Fix:**
+```bash
+# Check Flux's configured callback URL
+kubectl get fluxinstance flux -n flux-system -o jsonpath='{.spec.values.web.config.baseURL}'
+
+# Should output: https://flux.example.com
+# Authentik redirect URI must be: https://flux.example.com/oauth2/callback
+```
+
+### Issue: "Unable to retrieve OpenID configuration"
+
+**Causes:**
+- ❌ Wrong `issuerURL` in Flux config
+- ❌ Authentik not reachable from inside the cluster
+- ❌ Network policy blocking egress
+
+**Fix:**
+```bash
+# Test if Flux pod can reach Authentik
+kubectl exec -n flux-system deployment/flux-operator-web -- \
+  curl -k https://authentik.example.com/application/o/flux-web-ui/.well-known/openid-configuration
+
+# Should return JSON with OAuth2 endpoints
+```
+
+### Issue: HTTPRoute shows "Accepted: False"
+
+**Causes:**
+- ❌ Gateway can't access the namespace
+- ❌ Wrong Gateway name/namespace in `parentRefs`
+- ❌ Service doesn't exist or wrong port
+
+**Fix:**
+```bash
+# Verify Gateway exists
+kubectl get gateway -A
+
+# Check Gateway's allowed routes
+kubectl get gateway istio-gateway -n istio-system -o yaml | grep -A 10 allowedRoutes
+
+# Ensure service exists
+kubectl get svc flux-operator -n flux-system
+```
+
+### Issue: "Client authentication failed"
+
+**Causes:**
+- ❌ Client secret mismatch
+- ❌ ExternalSecret not syncing properly
+
+**Fix:**
+```bash
+# Check if secret has data
+kubectl get secret flux-web-client -n flux-system -o jsonpath='{.data}'
+
+# Compare with Authentik
+# Decode the secret
+kubectl get secret flux-web-client -n flux-system -o jsonpath='{.data.client-id}' | base64 -d
+```
+
+---
+
+## Going Further: Advanced Configurations
+
+### Option 1: Add Authorization Rules
+
+Want to restrict access to specific users or groups? Add this to your Flux config:
+```yaml
+web:
+  config:
+    authentication:
+      oauth2:
+        # ... existing config ...
+        
+        # Only allow users in "platform-team" group
+        allowedGroups:
+          - platform-team
+```
+
+### Option 2: Enable RBAC in Flux
+
+Flux Web UI supports Kubernetes RBAC. Create a `RoleBinding` to control what authenticated users can do:
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
 metadata:
-  name: flux-system-flux-operator-web
+  name: flux-web-viewers
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: view  # Read-only access
+subjects:
+  - kind: Group
+    name: platform-team  # From your OIDC claims
+    apiGroup: rbac.authorization.k8s.io
+```
+
+### Option 3: Add Rate Limiting
+
+Protect against brute force attempts with Gateway API rate limiting:
+```yaml
+# (Istio example - syntax varies by Gateway implementation)
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: BackendTrafficPolicy
+metadata:
+  name: flux-rate-limit
   namespace: flux-system
 spec:
-  interval: 30m
-  path: ./flux/apps/base/flux-system/flux-operator-web
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-  wait: true
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: HTTPRoute
+    name: flux-web
+  
+  rateLimits:
+    - match:
+        path: /oauth2/callback
+      limit: 10      # requests
+      window: 1m     # per minute
 ```
-
-Add this Kustomization to your environment's main kustomization file:
-
-```yaml
-# flux/apps/dev/flux-system/kustomization.yaml
-resources:
-  - ./flux-operator-web/ks.yaml
-  # ... other resources
-```
-
-### 4. Gateway Configuration
-
-#### 4.1. Enable Namespace Access
-
-Your Gateway must allow HTTPRoutes from the `flux-system` namespace:
-
-**Option A: Label-based Selection** (Recommended)
-
-If your Gateway uses namespace selectors:
-
-```bash
-kubectl label namespace flux-system istio-gateway-access=true
-```
-
-Make this persistent by adding to your namespace infrastructure component:
-
-```yaml
-# flux/infra/namespace-privileged/namespace.yaml
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: not-used
-  labels:
-    istio-gateway-access: "true"
-    # ... other labels
-```
-
-**Option B: Gateway Configuration**
-
-Ensure your Gateway allows routes from `flux-system`:
-
-```yaml
-apiVersion: gateway.networking.k8s.io/v1
-kind: Gateway
-metadata:
-  name: istio-gateway
-  namespace: istio-system
-spec:
-  gatewayClassName: istio
-  listeners:
-    - name: https
-      port: 443
-      protocol: HTTPS
-      hostname: '*.example.com'
-      allowedRoutes:
-        namespaces:
-          from: Selector
-          selector:
-            matchLabels:
-              istio-gateway-access: "true"
-      tls:
-        mode: Terminate
-        certificateRefs:
-          - name: tls-cert
-```
-
-#### 4.2. Verify Gateway Status
-
-```bash
-kubectl get gateway -n istio-system
-kubectl get httproute -n flux-system
-```
-
-Expected output:
-```
-NAME          CLASS   ADDRESS         PROGRAMMED   AGE
-istio-gateway istio   192.168.1.100   True         5d
-
-NAME        HOSTNAMES              AGE
-flux-web    ["flux.example.com"]   5m
-```
-
-## Verification
-
-### 1. Check Resource Status
-
-```bash
-# ExternalSecret (if using)
-kubectl get externalsecret flux-web-client -n flux-system
-# Should show: READY=True, STATUS=SecretSynced
-
-# Secret
-kubectl get secret flux-web-client -n flux-system
-kubectl get secret flux-web-client -n flux-system -o jsonpath='{.data}' | jq 'keys'
-# Should show: ["client-id", "client-secret"]
-
-# ResourceSet
-kubectl get resourceset flux-operator -n flux-system
-# Should show: READY=True
-
-# HelmRelease
-kubectl get helmrelease flux-operator -n flux-system
-# Should show: READY=True, STATUS=Helm upgrade succeeded
-
-# HTTPRoute
-kubectl get httproute flux-web -n flux-system -o jsonpath='{.status.parents[0].conditions[?(@.type=="Accepted")]}'
-# Should show: status=True, reason=Accepted
-```
-
-### 2. Check Pod Logs
-
-```bash
-kubectl logs -n flux-system deployment/flux-operator | grep -i auth
-```
-
-Expected log entry:
-```json
-{
-  "level":"info",
-  "msg":"authentication initialized successfully",
-  "authProvider":"OAuth2/OIDC"
-}
-```
-
-### 3. Test Web Access
-
-```bash
-curl -I https://flux.example.com
-```
-
-Expected response headers:
-```
-HTTP/2 200
-set-cookie: auth-provider=eyJhdXRoZW50aWNhdGVkIjpmYWxzZSwicHJvdmlkZXIiOiJPSURDIiwidXJsIjoiaHR0cHM6Ly9mbHV4LmV4YW1wbGUuY29tL29hdXRoMi9hdXRob3JpemUifQ; Path=/; SameSite=Lax
-```
-
-### 4. Browser Test
-
-1. Navigate to `https://flux.example.com`
-2. You should be redirected to Authentik login page
-3. Authenticate with your Authentik credentials
-4. Upon successful authentication, you'll be redirected back to Flux Web UI
-5. You should see the Flux dashboard
-
-## Troubleshooting
-
-### HTTPRoute Not Accepted
-
-**Symptom:**
-```bash
-kubectl get httproute flux-web -n flux-system
-# STATUS: NotAllowedByListeners
-```
-
-**Solution:**
-```bash
-# Add required label to namespace
-kubectl label namespace flux-system istio-gateway-access=true
-
-# Verify Gateway allows the namespace
-kubectl get gateway <gateway-name> -n <gateway-namespace> -o yaml | grep -A 10 allowedRoutes
-```
-
-### Authentication Loop
-
-**Symptom:** Continuously redirected between Flux UI and Authentik
-
-**Possible Causes:**
-
-1. **Incorrect Redirect URI:**
-   - Verify in Authentik: `https://flux.example.com/oauth2/callback`
-   - Must match exactly (including trailing slash)
-
-2. **Client Secret Mismatch:**
-   ```bash
-   # Check secret content
-   kubectl get secret flux-web-client -n flux-system -o jsonpath='{.data.client-secret}' | base64 -d
-   ```
-
-3. **Issuer URL Incorrect:**
-   - Verify it ends with trailing slash: `https://authentik.example.com/application/o/flux-web-ui/`
-   - Check Authentik provider details for exact URL
-
-### Secret Not Found
-
-**Symptom:**
-```
-Error: secret "flux-web-client" not found
-```
-
-**Solution:**
-
-```bash
-# Check ExternalSecret status
-kubectl describe externalsecret flux-web-client -n flux-system
-
-# Check ClusterSecretStore
-kubectl get clustersecretstore
-
-# Manual secret creation as fallback
-kubectl create secret generic flux-web-client \
-  --from-literal=client-id='<client-id>' \
-  --from-literal=client-secret='<client-secret>' \
-  -n flux-system
-```
-
-### TLS Certificate Issues
-
-**Symptom:** Browser shows certificate errors
-
-**Solution:**
-
-Ensure your Gateway has valid TLS certificates:
-
-```bash
-kubectl get secret <cert-secret> -n <gateway-namespace>
-
-# If using cert-manager
-kubectl get certificate -n <gateway-namespace>
-```
-
-### Web UI Not Loading
-
-**Symptom:** 503 Service Unavailable
-
-**Checks:**
-
-```bash
-# Verify pod is running
-kubectl get pods -n flux-system -l app.kubernetes.io/name=flux-operator
-
-# Check service
-kubectl get svc flux-operator -n flux-system
-
-# Test service directly
-kubectl port-forward -n flux-system svc/flux-operator 9080:9080
-curl http://localhost:9080/healthz
-
-# Check HTTPRoute backend references
-kubectl get httproute flux-web -n flux-system -o yaml | grep -A 5 backendRefs
-```
-
-## Key Learnings
-
-### ResourceSet vs HelmRelease
-
-The ResourceSet provides several advantages over standalone HelmRelease:
-
-1. **Templating**: Variables like `<< inputs.domain >>` for environment-agnostic configs
-2. **Multi-Resource**: Deploy HelmRelease, OCIRepository, and HTTPRoute in one file
-3. **GitOps Adoption**: Can take over existing Helm installations
-4. **Auto-naming**: `<< inputs.provider.name >>` generates consistent resource names
-
-### Why OIDC Provider Type?
-
-Even though Authentik is the identity provider, we use `provider: OIDC` (not `provider: authentik`) because:
-- Flux Operator uses generic OIDC implementation
-- Works with any OIDC-compliant provider
-- More portable across different identity providers
-
-### Gateway API vs Ingress
-
-This setup uses Gateway API instead of Ingress because:
-- More expressive routing capabilities
-- Better multi-tenancy support
-- Native support in modern service meshes (Istio, Linkerd)
-- Graduated to GA in Kubernetes 1.29
-
-## References
-
-- [Flux Operator Documentation](https://fluxoperator.dev/)
-- [Flux Operator SSO with Keycloak](https://fluxoperator.dev/docs/web-ui/sso-keycloak/)
-- [Authentik OAuth2 Provider](https://goauthentik.io/docs/providers/oauth2/)
-- [Kubernetes Gateway API](https://gateway-api.sigs.k8s.io/)
-- [External Secrets Operator](https://external-secrets.io/)
-- [ResourceSet CRD Specification](https://fluxoperator.dev/docs/crds/resourceset/)
-
-## License
-
-This documentation is provided as-is under MIT License.
 
 ---
 
-**Author**: [Your Name]
-**Date**: 2025-12-19
-**Flux Operator Version**: v0.37.1
-**Kubernetes Version**: v1.29+
+## Key Takeaways
+
+You've just built a production-ready, secure GitOps management layer using:
+
+✅ **OAuth2/OIDC authentication** (no more shared passwords floating around)  
+✅ **External secret management** (credentials never touch Git)  
+✅ **Modern Gateway API** (goodbye old-school Ingress)  
+✅ **Defense in depth** (RBAC + OAuth2 + rate limiting)
+
+**The result?** Your Flux dashboard is now as secure as your production APIs. No exposed UIs, no credential leaks, just clean OIDC-backed access control.
+
+---
+
+## Next Steps
+
+Want to take this further?
+
+- **Set up monitoring**: Add Grafana dashboards to track auth failures and access patterns
+- **Enable audit logging**: Configure Authentik to log all auth events to your SIEM
+- **Multi-cluster setup**: Use Flux's multi-tenancy features to manage multiple clusters from one UI
+- **Add MFA**: Enable two-factor authentication in Authentik for an extra security layer
+
+---
+
+## Useful Resources
+
+- [Flux Operator Documentation](https://fluxcd.io/flux/operator/)
+- [Authentik Provider Configuration](https://docs.goauthentik.io/docs/providers/oauth2/)
+- [Kubernetes Gateway API Spec](https://gateway-api.sigs.k8s.io/)
+- [External Secrets Operator](https://external-secrets.io/)
+
+---
+
+**Questions or issues?** Drop a comment below or reach out on [Twitter/LinkedIn]. I'm always happy to help troubleshoot!
+
+**Found this helpful?** Consider subscribing to my YouTube channel where I break down Cloud and Kubernetes concepts with real-world implementations like this one.
+
+Happy deploying! 🚀
+
+---
+
+*Last updated: [DATE]*
