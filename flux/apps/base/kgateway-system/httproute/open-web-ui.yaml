@@ -1,0 +1,89 @@
+---
+# HTTPRoute for browser access to Open WebUI
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: open-webui
+  namespace: kgateway-system
+  labels:
+    app: agentgateway
+spec:
+  parentRefs:
+    - name: agentgateway
+      namespace: kgateway-system
+  hostnames:
+    - "open-webui.kubegit.com"
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      filters:
+        - type: RequestHeaderModifier
+          requestHeaderModifier:
+            set:
+              - name: X-Forwarded-Port
+                value: "443"
+              - name: X-Forwarded-Proto
+                value: "https"
+      backendRefs:
+        - name: open-webui-backend
+          namespace: kgateway-system
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
+---
+# Static backend pointing to Open WebUI service
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: open-webui-backend
+  namespace: kgateway-system
+  labels:
+    app: agentgateway
+spec:
+  static:
+    host: open-webui.open-webui.svc.cluster.local
+    port: 80
+---
+# HTTPRoute for Open WebUI to access Ollama through gateway
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: ollama-api
+  namespace: kgateway-system
+  labels:
+    app: agentgateway
+spec:
+  parentRefs:
+    - name: agentgateway
+      namespace: kgateway-system
+  hostnames:
+    - "ollama.kubegit.com"
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: ollama-backend
+          namespace: kgateway-system
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
+---
+# AI backend for Ollama (OpenAI-compatible API)
+# Model passthrough - supports all Ollama models (qwen2.5:14b, qwen2.5:32b, llama3.1:70b, etc.)
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: ollama-backend
+  namespace: kgateway-system
+  labels:
+    app: agentgateway
+spec:
+  ai:
+    groups:
+      - providers:
+          - name: ollama
+            openai: {}  # No model specified - passes through model from request
+            host: "192.168.1.200"
+            port: 11434

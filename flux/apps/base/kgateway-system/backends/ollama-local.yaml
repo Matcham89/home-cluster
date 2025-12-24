@@ -1,0 +1,19 @@
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  labels:
+    app: agentgateway
+  name: ollama-local
+  namespace: kgateway-system
+spec:
+  ai:
+    groups:
+      - providers:
+          - name: anthropic-opus
+            anthropic:
+              model: "claude-opus-4-5"
+            policies:
+              auth:
+                secretRef:
+                  name: anthropic-secret
