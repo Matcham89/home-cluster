@@ -1,0 +1,15 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: open-webui-tls
+  namespace: kgateway-system
+  labels:
+    app: open-webui
+spec:
+  secretName: open-webui-tls
+  issuerRef:
+    name: letsencrypt-cloudflare
+    kind: ClusterIssuer
+  dnsNames:
+    - open-webui.kubegit.com
