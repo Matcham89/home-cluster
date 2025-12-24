@@ -19,4 +19,13 @@ spec:
       certificateRefs:
       - name: agentgateway-tls
         kind: Secret
+  - protocol: HTTPS
+    port: 8443
+    name: https-openwebui
+    hostname: "open-webui.kubegit.com"
+    tls:
+      mode: Terminate
+      certificateRefs:
+      - name: open-webui-tls
+        kind: Secret
 
