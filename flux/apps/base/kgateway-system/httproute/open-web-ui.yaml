@@ -11,6 +11,7 @@ spec:
   parentRefs:
     - name: agentgateway
       namespace: kgateway-system
+      sectionName: https
   hostnames:
     - "open-webui.kubegit.com"
   rules:
@@ -57,6 +58,7 @@ spec:
   parentRefs:
     - name: agentgateway
       namespace: kgateway-system
+      sectionName: https
   hostnames:
     - "ollama.kubegit.com"
   rules:
