@@ -400,7 +400,7 @@ data:
           "pluginVersion": "12.2.1",
           "targets": [
             {
-              "expr": "sum by (gen_ai_request_model) (increase(agentgateway_gen_ai_server_request_duration_count{route=\"kgateway-system/ollama-api\"}[1h]))",
+              "expr": "sum by (gen_ai_request_model) (increase(agentgateway_gen_ai_server_request_duration_count{route=\"kgateway-system/ollama-api|claude-api\"}[1h]))",
               "legendFormat": "{{ gen_ai_request_model }}",
               "refId": "A"
             }
@@ -813,19 +813,19 @@ data:
           "pluginVersion": "12.2.1",
           "targets": [
             {
-              "expr": "sum by (gen_ai_request_model) (increase(agentgateway_gen_ai_server_request_duration_count{route=\"kgateway-system/ollama-api\"}[1h]))",
+              "expr": "sum by (gen_ai_request_model) (increase(agentgateway_gen_ai_server_request_duration_count{route=\"kgateway-system/ollama-api|claude-api\"}[1h]))",
               "format": "table",
               "instant": true,
               "refId": "A"
             },
             {
-              "expr": "sum by (gen_ai_request_model) (increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type=\"input\", route=\"kgateway-system/ollama-api\"}[1h]))",
+              "expr": "sum by (gen_ai_request_model) (increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type=\"input\", route=\"kgateway-system/ollama-api|claude-api\"}[1h]))",
               "format": "table",
               "instant": true,
               "refId": "B"
             },
             {
-              "expr": "sum by (gen_ai_request_model) (increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type=\"output\", route=\"kgateway-system/ollama-api\"}[1h]))",
+              "expr": "sum by (gen_ai_request_model) (increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type=\"output\", route=\"kgateway-system/ollama-api|claude-api\"}[1h]))",
               "format": "table",
               "instant": true,
               "refId": "C"
@@ -944,7 +944,7 @@ data:
           "pluginVersion": "12.2.1",
           "targets": [
             {
-              "expr": "sum(increase(agentgateway_gen_ai_server_request_duration_count{route=\"kgateway-system/ollama-api\"}[$__rate_interval]))",
+              "expr": "sum(increase(agentgateway_gen_ai_server_request_duration_count{route=\"kgateway-system/ollama-api|claude-api\"}[$__rate_interval]))",
               "format": "time_series",
               "refId": "A"
             }
