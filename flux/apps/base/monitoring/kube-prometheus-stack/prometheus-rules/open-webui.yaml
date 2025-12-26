@@ -59,7 +59,7 @@ spec:
         - record: openwebui:requests:by_model:5m
           expr: |
             sum by (gen_ai_request_model) (
-              increase(agentgateway_gen_ai_client_operation_duration_count{
+              increase(agentgateway_gen_ai_server_request_duration_count{
                 route="kgateway-system/ollama-api"
               }[5m])
             )
@@ -68,12 +68,12 @@ spec:
         - record: openwebui:request_duration:by_model:avg
           expr: |
             sum by (gen_ai_request_model) (
-              rate(agentgateway_gen_ai_client_operation_duration_sum{
+              rate(agentgateway_gen_ai_server_request_duration_sum{
                 route="kgateway-system/ollama-api"
               }[5m])
             ) /
             sum by (gen_ai_request_model) (
-              rate(agentgateway_gen_ai_client_operation_duration_count{
+              rate(agentgateway_gen_ai_server_request_duration_count{
                 route="kgateway-system/ollama-api"
               }[5m])
             )
@@ -81,7 +81,7 @@ spec:
         # Total requests (all models)
         - record: openwebui:requests:total:5m
           expr: |
-            sum(increase(agentgateway_gen_ai_client_operation_duration_count{
+            sum(increase(agentgateway_gen_ai_server_request_duration_count{
               route="kgateway-system/ollama-api"
             }[5m]))
 
@@ -109,7 +109,7 @@ spec:
               }[1h])
             ) /
             sum by (gen_ai_request_model) (
-              increase(agentgateway_gen_ai_client_operation_duration_count{
+              increase(agentgateway_gen_ai_server_request_duration_count{
                 route="kgateway-system/ollama-api"
               }[1h])
             )
@@ -117,26 +117,26 @@ spec:
         # Total conversations (approximated by request count)
         - record: openwebui:conversations:hourly
           expr: |
-            sum(increase(agentgateway_gen_ai_client_operation_duration_count{
+            sum(increase(agentgateway_gen_ai_server_request_duration_count{
               route="kgateway-system/ollama-api"
             }[1h]))
 
         - record: openwebui:conversations:daily
           expr: |
-            sum(increase(agentgateway_gen_ai_client_operation_duration_count{
+            sum(increase(agentgateway_gen_ai_server_request_duration_count{
               route="kgateway-system/ollama-api"
             }[24h]))
 
         - record: openwebui:conversations:weekly
           expr: |
-            sum(increase(agentgateway_gen_ai_client_operation_duration_count{
+            sum(increase(agentgateway_gen_ai_server_request_duration_count{
               route="kgateway-system/ollama-api"
             }[7d]))
 
         # Request rate (requests per minute)
         - record: openwebui:request_rate:per_minute
           expr: |
-            rate(agentgateway_gen_ai_client_operation_duration_count{
+            rate(agentgateway_gen_ai_server_request_duration_count{
               route="kgateway-system/ollama-api"
             }[5m]) * 60
 
@@ -157,7 +157,7 @@ spec:
               }[1h])
             ) /
             sum by (gen_ai_request_model) (
-              increase(agentgateway_gen_ai_client_operation_duration_count{
+              increase(agentgateway_gen_ai_server_request_duration_count{
                 route="kgateway-system/ollama-api"
               }[1h])
             )
