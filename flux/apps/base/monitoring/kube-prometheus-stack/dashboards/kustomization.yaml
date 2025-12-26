@@ -18,3 +18,4 @@ resources:
   - kagent-llm-usage.yaml
   - kgateway.yaml
   - istio-mesh-dashboard.yaml
+  - open-webui.yaml
