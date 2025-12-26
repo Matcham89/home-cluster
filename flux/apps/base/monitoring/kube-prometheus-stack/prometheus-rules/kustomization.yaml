@@ -5,3 +5,4 @@ kind: Kustomization
 resources:
   - ./kagent-llm-tokens.yaml
   - ./agentgateway.yaml
+  - ./open-webui.yaml
