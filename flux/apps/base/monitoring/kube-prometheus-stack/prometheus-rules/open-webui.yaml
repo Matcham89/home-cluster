@@ -99,47 +99,65 @@ spec:
               route="kgateway-system/ollama-api"
             }[24h]))
 
-        # Ollama cost tracking (free/self-hosted, but track token usage for comparison)
-        # These are for informational purposes - what it would cost if using a paid provider
-        # Using qwen2.5 comparable pricing (similar to GPT-3.5): $0.50/1M input, $1.50/1M output
-        - record: openwebui:cost_equivalent_usd:hourly
+        # Conversation/Session metrics
+        # Average tokens per request (indicates conversation depth)
+        - record: openwebui:avg_tokens_per_request:by_model
           expr: |
-            (
-              sum(increase(agentgateway_gen_ai_client_token_usage_sum{
-                gen_ai_token_type="input",
+            sum by (gen_ai_request_model) (
+              increase(agentgateway_gen_ai_client_token_usage_sum{
                 route="kgateway-system/ollama-api"
-              }[1h])) * 0.50 / 1000000
-            ) + (
-              sum(increase(agentgateway_gen_ai_client_token_usage_sum{
-                gen_ai_token_type="output",
+              }[1h])
+            ) /
+            sum by (gen_ai_request_model) (
+              increase(agentgateway_gen_ai_client_operation_duration_count{
                 route="kgateway-system/ollama-api"
-              }[1h])) * 1.50 / 1000000
+              }[1h])
             )
 
-        - record: openwebui:cost_equivalent_usd:daily
+        # Total conversations (approximated by request count)
+        - record: openwebui:conversations:hourly
           expr: |
-            (
-              sum(increase(agentgateway_gen_ai_client_token_usage_sum{
-                gen_ai_token_type="input",
-                route="kgateway-system/ollama-api"
-              }[24h])) * 0.50 / 1000000
-            ) + (
-              sum(increase(agentgateway_gen_ai_client_token_usage_sum{
-                gen_ai_token_type="output",
-                route="kgateway-system/ollama-api"
-              }[24h])) * 1.50 / 1000000
-            )
+            sum(increase(agentgateway_gen_ai_client_operation_duration_count{
+              route="kgateway-system/ollama-api"
+            }[1h]))
 
-        - record: openwebui:cost_equivalent_usd:monthly
+        - record: openwebui:conversations:daily
           expr: |
-            (
-              sum(increase(agentgateway_gen_ai_client_token_usage_sum{
-                gen_ai_token_type="input",
-                route="kgateway-system/ollama-api"
-              }[30d])) * 0.50 / 1000000
-            ) + (
-              sum(increase(agentgateway_gen_ai_client_token_usage_sum{
+            sum(increase(agentgateway_gen_ai_client_operation_duration_count{
+              route="kgateway-system/ollama-api"
+            }[24h]))
+
+        - record: openwebui:conversations:weekly
+          expr: |
+            sum(increase(agentgateway_gen_ai_client_operation_duration_count{
+              route="kgateway-system/ollama-api"
+            }[7d]))
+
+        # Request rate (requests per minute)
+        - record: openwebui:request_rate:per_minute
+          expr: |
+            rate(agentgateway_gen_ai_client_operation_duration_count{
+              route="kgateway-system/ollama-api"
+            }[5m]) * 60
+
+        # Token throughput (tokens per second)
+        - record: openwebui:token_throughput:per_second
+          expr: |
+            rate(agentgateway_gen_ai_client_token_usage_sum{
+              route="kgateway-system/ollama-api"
+            }[5m])
+
+        # Average output tokens per request (response length)
+        - record: openwebui:avg_output_tokens:by_model
+          expr: |
+            sum by (gen_ai_request_model) (
+              increase(agentgateway_gen_ai_client_token_usage_sum{
                 gen_ai_token_type="output",
                 route="kgateway-system/ollama-api"
-              }[30d])) * 1.50 / 1000000
+              }[1h])
+            ) /
+            sum by (gen_ai_request_model) (
+              increase(agentgateway_gen_ai_client_operation_duration_count{
+                route="kgateway-system/ollama-api"
+              }[1h])
             )
