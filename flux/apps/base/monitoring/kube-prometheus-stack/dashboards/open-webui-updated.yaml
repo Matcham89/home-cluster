@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: open-webui-dashboard
+  name: open-webui-multi-gateway
   namespace: monitoring
   labels:
     grafana_dashboard: "1"
