@@ -24,12 +24,13 @@ data:
       },
       "editable": true,
       "fiscalYearStartMonth": 0,
-      "graphTooltip": 0,
+      "graphTooltip": 1,
       "id": null,
       "links": [],
       "panels": [
         {
           "datasource": "Prometheus",
+          "description": "Total number of LLM requests (conversations) in the last hour",
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -40,8 +41,16 @@ data:
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
+                    "color": "blue",
                     "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 10
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 50
                   }
                 ]
               },
@@ -49,8 +58,8 @@ data:
             }
           },
           "gridPos": {
-            "h": 4,
-            "w": 6,
+            "h": 5,
+            "w": 4,
             "x": 0,
             "y": 0
           },
@@ -58,7 +67,7 @@ data:
           "options": {
             "colorMode": "value",
             "graphMode": "area",
-            "justifyMode": "auto",
+            "justifyMode": "center",
             "orientation": "auto",
             "reduceOptions": {
               "calcs": [
@@ -67,20 +76,21 @@ data:
               "fields": "",
               "values": false
             },
-            "textMode": "auto"
+            "textMode": "value_and_name"
           },
           "pluginVersion": "12.2.1",
           "targets": [
             {
-              "expr": "openwebui:requests:total:5m",
+              "expr": "openwebui:conversations:hourly",
               "refId": "A"
             }
           ],
-          "title": "Total Requests (5m)",
+          "title": "Conversations (1h)",
           "type": "stat"
         },
         {
           "datasource": "Prometheus",
+          "description": "Total conversations in the last 24 hours",
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -100,16 +110,16 @@ data:
             }
           },
           "gridPos": {
-            "h": 4,
-            "w": 6,
-            "x": 6,
+            "h": 5,
+            "w": 4,
+            "x": 4,
             "y": 0
           },
           "id": 2,
           "options": {
             "colorMode": "value",
             "graphMode": "area",
-            "justifyMode": "auto",
+            "justifyMode": "center",
             "orientation": "auto",
             "reduceOptions": {
               "calcs": [
@@ -118,7 +128,59 @@ data:
               "fields": "",
               "values": false
             },
-            "textMode": "auto"
+            "textMode": "value_and_name"
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "expr": "openwebui:conversations:daily",
+              "refId": "A"
+            }
+          ],
+          "title": "Conversations (24h)",
+          "type": "stat"
+        },
+        {
+          "datasource": "Prometheus",
+          "description": "Total input tokens processed in last 5 minutes",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "short"
+            }
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 4,
+            "x": 8,
+            "y": 0
+          },
+          "id": 3,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "center",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "value_and_name"
           },
           "pluginVersion": "12.2.1",
           "targets": [
@@ -132,6 +194,7 @@ data:
         },
         {
           "datasource": "Prometheus",
+          "description": "Total output tokens generated in last 5 minutes",
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -151,16 +214,16 @@ data:
             }
           },
           "gridPos": {
-            "h": 4,
-            "w": 6,
+            "h": 5,
+            "w": 4,
             "x": 12,
             "y": 0
           },
-          "id": 3,
+          "id": 4,
           "options": {
             "colorMode": "value",
             "graphMode": "area",
-            "justifyMode": "auto",
+            "justifyMode": "center",
             "orientation": "auto",
             "reduceOptions": {
               "calcs": [
@@ -169,7 +232,7 @@ data:
               "fields": "",
               "values": false
             },
-            "textMode": "auto"
+            "textMode": "value_and_name"
           },
           "pluginVersion": "12.2.1",
           "targets": [
@@ -183,6 +246,7 @@ data:
         },
         {
           "datasource": "Prometheus",
+          "description": "Current request rate (requests per minute)",
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -193,25 +257,29 @@ data:
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "yellow",
+                    "color": "text",
                     "value": null
+                  },
+                  {
+                    "color": "green",
+                    "value": 1
                   }
                 ]
               },
-              "unit": "currencyUSD"
+              "unit": "reqpm"
             }
           },
           "gridPos": {
-            "h": 4,
-            "w": 6,
-            "x": 18,
+            "h": 5,
+            "w": 4,
+            "x": 16,
             "y": 0
           },
-          "id": 4,
+          "id": 5,
           "options": {
             "colorMode": "value",
             "graphMode": "area",
-            "justifyMode": "auto",
+            "justifyMode": "center",
             "orientation": "auto",
             "reduceOptions": {
               "calcs": [
@@ -220,20 +288,129 @@ data:
               "fields": "",
               "values": false
             },
-            "textMode": "auto"
+            "textMode": "value_and_name"
           },
           "pluginVersion": "12.2.1",
           "targets": [
             {
-              "expr": "openwebui:cost_equivalent_usd:daily",
+              "expr": "openwebui:request_rate:per_minute",
               "refId": "A"
             }
           ],
-          "title": "Cost Equivalent (Daily) - If using paid API",
+          "title": "Request Rate",
           "type": "stat"
         },
         {
           "datasource": "Prometheus",
+          "description": "Total tokens (input + output) processed in last hour",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "blue",
+                    "value": null
+                  }
+                ]
+              },
+              "unit": "short"
+            }
+          },
+          "gridPos": {
+            "h": 5,
+            "w": 4,
+            "x": 20,
+            "y": 0
+          },
+          "id": 6,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "area",
+            "justifyMode": "center",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "value_and_name"
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "expr": "openwebui:tokens:hourly",
+              "refId": "A"
+            }
+          ],
+          "title": "Total Tokens (1h)",
+          "type": "stat"
+        },
+        {
+          "datasource": "Prometheus",
+          "description": "Distribution of requests by model",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                }
+              },
+              "mappings": []
+            }
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 8,
+            "x": 0,
+            "y": 5
+          },
+          "id": 7,
+          "options": {
+            "displayLabels": [
+              "name",
+              "percent"
+            ],
+            "legend": {
+              "calcs": [],
+              "displayMode": "table",
+              "placement": "right",
+              "showLegend": true,
+              "values": [
+                "value",
+                "percent"
+              ]
+            },
+            "pieType": "donut",
+            "tooltip": {
+              "mode": "single"
+            }
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "expr": "sum by (gen_ai_request_model) (increase(agentgateway_gen_ai_client_operation_duration_count{route=\"kgateway-system/ollama-api\"}[1h]))",
+              "legendFormat": "{{ gen_ai_request_model }}",
+              "refId": "A"
+            }
+          ],
+          "title": "Model Usage Distribution",
+          "type": "piechart"
+        },
+        {
+          "datasource": "Prometheus",
+          "description": "Number of requests per model over time",
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -287,19 +464,19 @@ data:
           },
           "gridPos": {
             "h": 8,
-            "w": 12,
-            "x": 0,
-            "y": 4
+            "w": 16,
+            "x": 8,
+            "y": 5
           },
-          "id": 5,
+          "id": 8,
           "options": {
             "legend": {
               "calcs": [
                 "sum",
-                "last"
+                "lastNotNull"
               ],
               "displayMode": "table",
-              "placement": "bottom",
+              "placement": "right",
               "showLegend": true
             },
             "tooltip": {
@@ -315,66 +492,12 @@ data:
               "refId": "A"
             }
           ],
-          "title": "Requests by Model (5m)",
+          "title": "Conversations by Model",
           "type": "timeseries"
         },
         {
           "datasource": "Prometheus",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
-              "custom": {
-                "hideFrom": {
-                  "legend": false,
-                  "tooltip": false,
-                  "viz": false
-                }
-              },
-              "mappings": []
-            }
-          },
-          "gridPos": {
-            "h": 8,
-            "w": 12,
-            "x": 12,
-            "y": 4
-          },
-          "id": 6,
-          "options": {
-            "displayLabels": [
-              "percent"
-            ],
-            "legend": {
-              "calcs": [
-                "sum"
-              ],
-              "displayMode": "table",
-              "placement": "right",
-              "showLegend": true,
-              "values": [
-                "value"
-              ]
-            },
-            "pieType": "donut",
-            "tooltip": {
-              "mode": "multi"
-            }
-          },
-          "pluginVersion": "12.2.1",
-          "targets": [
-            {
-              "expr": "sum by (gen_ai_request_model) (increase(agentgateway_gen_ai_client_operation_duration_count{route=\"kgateway-system/ollama-api\"}[1h]))",
-              "legendFormat": "{{ gen_ai_request_model }}",
-              "refId": "A"
-            }
-          ],
-          "title": "Model Usage Distribution (1h)",
-          "type": "piechart"
-        },
-        {
-          "datasource": "Prometheus",
+          "description": "Token usage breakdown by model and type",
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -389,8 +512,8 @@ data:
                 "barAlignment": 0,
                 "barWidthFactor": 0.6,
                 "drawStyle": "line",
-                "fillOpacity": 20,
-                "gradientMode": "none",
+                "fillOpacity": 30,
+                "gradientMode": "opacity",
                 "hideFrom": {
                   "legend": false,
                   "tooltip": false,
@@ -430,17 +553,17 @@ data:
             "h": 8,
             "w": 12,
             "x": 0,
-            "y": 12
+            "y": 13
           },
-          "id": 7,
+          "id": 9,
           "options": {
             "legend": {
               "calcs": [
                 "sum",
-                "last"
+                "mean"
               ],
               "displayMode": "table",
-              "placement": "bottom",
+              "placement": "right",
               "showLegend": true
             },
             "tooltip": {
@@ -461,11 +584,12 @@ data:
               "refId": "B"
             }
           ],
-          "title": "Token Usage by Model (5m)",
+          "title": "Token Usage by Model",
           "type": "timeseries"
         },
         {
           "datasource": "Prometheus",
+          "description": "Average response time per model",
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -475,7 +599,7 @@ data:
                 "axisBorderShow": false,
                 "axisCenteredZero": false,
                 "axisColorMode": "text",
-                "axisLabel": "Duration (seconds)",
+                "axisLabel": "Duration",
                 "axisPlacement": "auto",
                 "barAlignment": 0,
                 "barWidthFactor": 0.6,
@@ -521,17 +645,17 @@ data:
             "h": 8,
             "w": 12,
             "x": 12,
-            "y": 12
+            "y": 13
           },
-          "id": 8,
+          "id": 10,
           "options": {
             "legend": {
               "calcs": [
                 "mean",
-                "last"
+                "lastNotNull"
               ],
               "displayMode": "table",
-              "placement": "bottom",
+              "placement": "right",
               "showLegend": true
             },
             "tooltip": {
@@ -547,11 +671,12 @@ data:
               "refId": "A"
             }
           ],
-          "title": "Average Response Time by Model",
+          "title": "Response Time by Model",
           "type": "timeseries"
         },
         {
           "datasource": "Prometheus",
+          "description": "Comprehensive statistics per model",
           "fieldConfig": {
             "defaults": {
               "color": {
@@ -580,7 +705,7 @@ data:
               {
                 "matcher": {
                   "id": "byName",
-                  "options": "Input Tokens"
+                  "options": "Conversations"
                 },
                 "properties": [
                   {
@@ -588,6 +713,67 @@ data:
                     "value": {
                       "type": "color-text"
                     }
+                  },
+                  {
+                    "id": "color",
+                    "value": {
+                      "mode": "continuous-GrYlRd"
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Avg Response Time (s)"
+                },
+                "properties": [
+                  {
+                    "id": "unit",
+                    "value": "s"
+                  },
+                  {
+                    "id": "decimals",
+                    "value": 1
+                  },
+                  {
+                    "id": "custom.cellOptions",
+                    "value": {
+                      "type": "color-background"
+                    }
+                  },
+                  {
+                    "id": "color",
+                    "value": {
+                      "mode": "continuous-RdYlGr",
+                      "reverse": true
+                    }
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Avg Tokens/Request"
+                },
+                "properties": [
+                  {
+                    "id": "decimals",
+                    "value": 0
+                  },
+                  {
+                    "id": "custom.cellOptions",
+                    "value": {
+                      "type": "gauge"
+                    }
+                  },
+                  {
+                    "id": "min",
+                    "value": 0
+                  },
+                  {
+                    "id": "max",
+                    "value": 4000
                   },
                   {
                     "id": "color",
@@ -596,36 +782,16 @@ data:
                     }
                   }
                 ]
-              },
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Output Tokens"
-                },
-                "properties": [
-                  {
-                    "id": "custom.cellOptions",
-                    "value": {
-                      "type": "color-text"
-                    }
-                  },
-                  {
-                    "id": "color",
-                    "value": {
-                      "mode": "continuous-BlPu"
-                    }
-                  }
-                ]
               }
             ]
           },
           "gridPos": {
-            "h": 8,
+            "h": 9,
             "w": 24,
             "x": 0,
-            "y": 20
+            "y": 21
           },
-          "id": 9,
+          "id": 11,
           "options": {
             "cellHeight": "sm",
             "footer": {
@@ -640,30 +806,41 @@ data:
             "sortBy": [
               {
                 "desc": true,
-                "displayName": "Total Tokens"
+                "displayName": "Conversations"
               }
             ]
           },
           "pluginVersion": "12.2.1",
           "targets": [
             {
-              "expr": "sum by (gen_ai_request_model) (increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type=\"input\", route=\"kgateway-system/ollama-api\"}[1h]))",
+              "expr": "sum by (gen_ai_request_model) (increase(agentgateway_gen_ai_client_operation_duration_count{route=\"kgateway-system/ollama-api\"}[1h]))",
               "format": "table",
               "instant": true,
-              "legendFormat": "__auto",
               "refId": "A"
             },
             {
-              "expr": "sum by (gen_ai_request_model) (increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type=\"output\", route=\"kgateway-system/ollama-api\"}[1h]))",
+              "expr": "sum by (gen_ai_request_model) (increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type=\"input\", route=\"kgateway-system/ollama-api\"}[1h]))",
               "format": "table",
               "instant": true,
               "refId": "B"
             },
             {
-              "expr": "sum by (gen_ai_request_model) (increase(agentgateway_gen_ai_client_operation_duration_count{route=\"kgateway-system/ollama-api\"}[1h]))",
+              "expr": "sum by (gen_ai_request_model) (increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type=\"output\", route=\"kgateway-system/ollama-api\"}[1h]))",
               "format": "table",
               "instant": true,
               "refId": "C"
+            },
+            {
+              "expr": "openwebui:avg_tokens_per_request:by_model",
+              "format": "table",
+              "instant": true,
+              "refId": "D"
+            },
+            {
+              "expr": "openwebui:request_duration:by_model:avg",
+              "format": "table",
+              "instant": true,
+              "refId": "E"
             }
           ],
           "title": "Model Statistics (Last Hour)",
@@ -677,24 +854,15 @@ data:
               "options": {
                 "excludeByName": {
                   "Time": true,
-                  "__name__": true,
-                  "container": true,
-                  "endpoint": true,
-                  "gateway_instance": true,
-                  "gen_ai_provider_name": true,
-                  "gen_ai_token_type": true,
-                  "instance": true,
-                  "job": true,
-                  "namespace": true,
-                  "pod": true,
-                  "route": true,
-                  "service": true
+                  "__name__": true
                 },
                 "indexByName": {},
                 "renameByName": {
-                  "Value #A": "Input Tokens",
-                  "Value #B": "Output Tokens",
-                  "Value #C": "Requests",
+                  "Value #A": "Conversations",
+                  "Value #B": "Input Tokens",
+                  "Value #C": "Output Tokens",
+                  "Value #D": "Avg Tokens/Request",
+                  "Value #E": "Avg Response Time (s)",
                   "gen_ai_request_model": "Model"
                 }
               }
@@ -708,10 +876,7 @@ data:
                   "operator": "+",
                   "right": "Output Tokens"
                 },
-                "mode": "binary",
-                "reduce": {
-                  "reducer": "sum"
-                }
+                "mode": "binary"
               }
             }
           ],
@@ -719,94 +884,73 @@ data:
         },
         {
           "datasource": "Prometheus",
+          "description": "Request activity heatmap - shows when the system is most active",
           "fieldConfig": {
             "defaults": {
-              "color": {
-                "mode": "palette-classic"
-              },
               "custom": {
-                "axisBorderShow": false,
-                "axisCenteredZero": false,
-                "axisColorMode": "text",
-                "axisLabel": "",
-                "axisPlacement": "auto",
-                "barAlignment": 0,
-                "barWidthFactor": 0.6,
-                "drawStyle": "line",
-                "fillOpacity": 20,
-                "gradientMode": "none",
                 "hideFrom": {
                   "legend": false,
                   "tooltip": false,
                   "viz": false
                 },
-                "insertNulls": false,
-                "lineInterpolation": "smooth",
-                "lineWidth": 2,
-                "pointSize": 5,
                 "scaleDistribution": {
                   "type": "linear"
-                },
-                "showPoints": "never",
-                "spanNulls": false,
-                "stacking": {
-                  "group": "A",
-                  "mode": "none"
-                },
-                "thresholdsStyle": {
-                  "mode": "off"
                 }
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": null
-                  }
-                ]
-              },
-              "unit": "currencyUSD"
+              }
             }
           },
           "gridPos": {
             "h": 8,
             "w": 24,
             "x": 0,
-            "y": 28
+            "y": 30
           },
-          "id": 10,
+          "id": 12,
           "options": {
+            "calculate": false,
+            "cellGap": 2,
+            "cellValues": {},
+            "color": {
+              "exponent": 0.5,
+              "fill": "dark-orange",
+              "mode": "scheme",
+              "reverse": false,
+              "scale": "exponential",
+              "scheme": "Spectral",
+              "steps": 128
+            },
+            "exemplars": {
+              "color": "rgba(255,0,255,0.7)"
+            },
+            "filterValues": {
+              "le": 1e-9
+            },
             "legend": {
-              "calcs": [
-                "last",
-                "max"
-              ],
-              "displayMode": "table",
-              "placement": "bottom",
-              "showLegend": true
+              "show": true
+            },
+            "rowsFrame": {
+              "layout": "auto"
             },
             "tooltip": {
-              "mode": "multi",
-              "sort": "none"
+              "mode": "single",
+              "showColorScale": false,
+              "yHistogram": false
+            },
+            "yAxis": {
+              "axisPlacement": "left",
+              "reverse": false
             }
           },
           "pluginVersion": "12.2.1",
           "targets": [
             {
-              "expr": "openwebui:cost_equivalent_usd:hourly",
-              "legendFormat": "Hourly Cost Equivalent",
+              "expr": "sum(increase(agentgateway_gen_ai_client_operation_duration_count{route=\"kgateway-system/ollama-api\"}[$__rate_interval]))",
+              "format": "time_series",
               "refId": "A"
-            },
-            {
-              "expr": "openwebui:cost_equivalent_usd:daily",
-              "legendFormat": "Daily Cost Equivalent",
-              "refId": "B"
             }
           ],
-          "title": "Cost Equivalent Over Time (What you would pay if using GPT-3.5 pricing)",
-          "type": "timeseries"
+          "title": "Request Activity Over Time",
+          "type": "heatmap"
         }
       ],
       "refresh": "30s",
@@ -826,7 +970,7 @@ data:
       },
       "timepicker": {},
       "timezone": "",
-      "title": "Open WebUI - Ollama Usage Tracking",
+      "title": "Open WebUI - Ollama Usage & Conversations",
       "uid": "open-webui-usage",
-      "version": 1
+      "version": 2
     }
