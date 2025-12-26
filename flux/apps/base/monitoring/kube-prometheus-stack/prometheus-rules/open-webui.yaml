@@ -1,5 +1,5 @@
 ---
-# PrometheusRule for Open WebUI specific metrics
+# PrometheusRule for Open WebUI specific metrics (Ollama + Claude)
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
@@ -12,19 +12,19 @@ spec:
     - name: open_webui_usage_tracking
       interval: 30s
       rules:
-        # Token usage for ollama route (Open WebUI traffic)
+        # Token usage for all routes (Ollama + Claude)
         - record: openwebui:input_tokens:5m
           expr: |
             sum(increase(agentgateway_gen_ai_client_token_usage_sum{
               gen_ai_token_type="input",
-              route="kgateway-system/ollama-api"
+              route=~"kgateway-system/(ollama-api|claude-api)"
             }[5m]))
 
         - record: openwebui:output_tokens:5m
           expr: |
             sum(increase(agentgateway_gen_ai_client_token_usage_sum{
               gen_ai_token_type="output",
-              route="kgateway-system/ollama-api"
+              route=~"kgateway-system/(ollama-api|claude-api)"
             }[5m]))
 
         # Token usage by model

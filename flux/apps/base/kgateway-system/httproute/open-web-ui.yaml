@@ -28,10 +28,10 @@ spec:
               - name: X-Forwarded-Proto
                 value: "https"
       backendRefs:
-        - name: open-webui-backend
-          namespace: kgateway-system
-          group: agentgateway.dev
-          kind: AgentgatewayBackend
+        - name: open-webui
+          namespace: open-webui
+          kind: Service
+          port: 80
 ---
 # Static backend pointing to Open WebUI service
 apiVersion: agentgateway.dev/v1alpha1
@@ -46,7 +46,33 @@ spec:
     host: open-webui.open-webui.svc.cluster.local
     port: 80
 ---
-# HTTPRoute for Open WebUI to access Ollama through gateway
+# HTTPRoute for /v1/models endpoint (direct passthrough, no AI parsing)
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: ollama-models
+  namespace: kgateway-system
+  labels:
+    app: agentgateway
+spec:
+  parentRefs:
+    - name: agentgateway
+      namespace: kgateway-system
+      sectionName: http
+  hostnames:
+    - "ollama.kubegit.com"
+  rules:
+    - matches:
+        - path:
+            type: Exact
+            value: /v1/models
+      backendRefs:
+        - name: ollama-passthrough
+          namespace: kgateway-system
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
+---
+# HTTPRoute for chat completions (AI backend with token tracking)
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
@@ -58,22 +84,44 @@ spec:
   parentRefs:
     - name: agentgateway
       namespace: kgateway-system
-      sectionName: https
+      sectionName: http
   hostnames:
     - "ollama.kubegit.com"
   rules:
     - matches:
         - path:
             type: PathPrefix
-            value: /
+            value: /v1/chat
+      backendRefs:
+        - name: ollama-backend
+          namespace: kgateway-system
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /v1/completions
       backendRefs:
         - name: ollama-backend
           namespace: kgateway-system
           group: agentgateway.dev
           kind: AgentgatewayBackend
 ---
-# AI backend for Ollama (OpenAI-compatible API)
-# Model passthrough - supports all Ollama models (qwen2.5:14b, qwen2.5:32b, llama3.1:70b, etc.)
+# Static backend for /v1/models endpoint (no AI parsing)
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: ollama-passthrough
+  namespace: kgateway-system
+  labels:
+    app: agentgateway
+spec:
+  static:
+    host: "192.168.1.200"
+    port: 11434
+---
+# AI backend for chat/completions (OpenAI-compatible API with token tracking)
+# Model passthrough - supports all Ollama models
 apiVersion: agentgateway.dev/v1alpha1
 kind: AgentgatewayBackend
 metadata:
@@ -86,6 +134,86 @@ spec:
     groups:
       - providers:
           - name: ollama
-            openai: {}  # No model specified - passes through model from request
+            openai: {}  # Passthrough mode - supports all models
             host: "192.168.1.200"
             port: 11434
+---
+# HTTPRoute for Claude models endpoint (static response)
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: claude-models
+  namespace: kgateway-system
+  labels:
+    app: agentgateway
+spec:
+  parentRefs:
+    - name: agentgateway
+      namespace: kgateway-system
+      sectionName: http
+  hostnames:
+    - "claude.kubegit.com"
+  rules:
+    - matches:
+        - path:
+            type: Exact
+            value: /v1/models
+      backendRefs:
+        - name: claude-models-backend
+          namespace: kgateway-system
+          kind: Service
+          port: 80
+---
+# HTTPRoute for Claude chat completions
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: claude-api
+  namespace: kgateway-system
+  labels:
+    app: agentgateway
+spec:
+  parentRefs:
+    - name: agentgateway
+      namespace: kgateway-system
+      sectionName: http
+  hostnames:
+    - "claude.kubegit.com"
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /v1/chat
+      backendRefs:
+        - name: claude-backend
+          namespace: kgateway-system
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /v1/completions
+      backendRefs:
+        - name: claude-backend
+          namespace: kgateway-system
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
+---
+# AI backend for Claude (Anthropic API with model passthrough)
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: claude-backend
+  namespace: kgateway-system
+  labels:
+    app: agentgateway
+spec:
+  ai:
+    groups:
+      - providers:
+          - name: claude
+            anthropic: {}  # Passthrough mode - supports all models
+            policies:
+              auth:
+                secretRef:
+                  name: anthropic-secret
