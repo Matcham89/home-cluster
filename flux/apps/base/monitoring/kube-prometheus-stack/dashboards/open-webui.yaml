@@ -174,7 +174,7 @@ data:
             {
               "expr": "openwebui:anthropic:cost_usd:daily or vector(0)",
               "refId": "A",
-              "legendFormat": "Anthropic Cost"
+              "legendFormat": "Daily"
             }
           ],
           "fieldConfig": {
@@ -300,8 +300,7 @@ data:
           "targets": [
             {
               "expr": "openwebui:anthropic:cost_usd:weekly or vector(0)",
-              "refId": "A",
-              "legendFormat": "Weekly Cost"
+              "refId": "A"
             }
           ],
           "fieldConfig": {
@@ -354,8 +353,7 @@ data:
           "targets": [
             {
               "expr": "sum(increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type=\"input\",route=~\"kgateway-system/$gateway\"}[1h])) or vector(0)",
-              "refId": "A",
-              "legendFormat": "Input Tokens"
+              "refId": "A"
             }
           ],
           "fieldConfig": {
@@ -393,8 +391,7 @@ data:
           "targets": [
             {
               "expr": "sum(increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type=\"output\",route=~\"kgateway-system/$gateway\"}[1h])) or vector(0)",
-              "refId": "A",
-              "legendFormat": "Output Tokens"
+              "refId": "A"
             }
           ],
           "fieldConfig": {
@@ -432,8 +429,7 @@ data:
           "targets": [
             {
               "expr": "sum(increase(agentgateway_gen_ai_server_request_duration_count{route=~\"kgateway-system/$gateway\"}[1h])) or vector(0)",
-              "refId": "A",
-              "legendFormat": "Conversations"
+              "refId": "A"
             }
           ],
           "fieldConfig": {
@@ -470,8 +466,7 @@ data:
           "targets": [
             {
               "expr": "sum(rate(agentgateway_gen_ai_server_request_duration_sum{route=~\"kgateway-system/$gateway\"}[5m])) / sum(rate(agentgateway_gen_ai_server_request_duration_count{route=~\"kgateway-system/$gateway\"}[5m])) or vector(0)",
-              "refId": "A",
-              "legendFormat": "Avg Response Time"
+              "refId": "A"
             }
           ],
           "fieldConfig": {
@@ -780,22 +775,30 @@ data:
             {
               "expr": "openwebui:anthropic:conversations:hourly or vector(0)",
               "refId": "A",
-              "legendFormat": "Anthropic (1h)"
+              "legendFormat": "Anthropic (1h)",
+              "instant": true,
+              "format": "time_series"
             },
             {
               "expr": "openwebui:ollama:conversations:hourly or vector(0)",
               "refId": "B",
-              "legendFormat": "Ollama (1h)"
+              "legendFormat": "Ollama (1h)",
+              "instant": true,
+              "format": "time_series"
             },
             {
               "expr": "openwebui:anthropic:conversations:daily or vector(0)",
               "refId": "C",
-              "legendFormat": "Anthropic (24h)"
+              "legendFormat": "Anthropic (24h)",
+              "instant": true,
+              "format": "time_series"
             },
             {
               "expr": "openwebui:ollama:conversations:daily or vector(0)",
               "refId": "D",
-              "legendFormat": "Ollama (24h)"
+              "legendFormat": "Ollama (24h)",
+              "instant": true,
+              "format": "time_series"
             }
           ],
           "fieldConfig": {
@@ -804,7 +807,57 @@ data:
               "color": {
                 "mode": "palette-classic"
               }
-            }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byFrameRefID",
+                  "options": "A"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Anthropic (1h)"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byFrameRefID",
+                  "options": "B"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Ollama (1h)"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byFrameRefID",
+                  "options": "C"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Anthropic (24h)"
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byFrameRefID",
+                  "options": "D"
+                },
+                "properties": [
+                  {
+                    "id": "displayName",
+                    "value": "Ollama (24h)"
+                  }
+                ]
+              }
+            ]
           },
           "options": {
             "orientation": "horizontal",
