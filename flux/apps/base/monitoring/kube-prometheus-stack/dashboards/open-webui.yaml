@@ -174,7 +174,7 @@ data:
             {
               "expr": "openwebui:anthropic:cost_usd:daily or vector(0)",
               "refId": "A",
-              "legendFormat": "Daily"
+              "legendFormat": "Anthropic Cost"
             }
           ],
           "fieldConfig": {
@@ -300,7 +300,8 @@ data:
           "targets": [
             {
               "expr": "openwebui:anthropic:cost_usd:weekly or vector(0)",
-              "refId": "A"
+              "refId": "A",
+              "legendFormat": "Weekly Cost"
             }
           ],
           "fieldConfig": {
@@ -353,7 +354,8 @@ data:
           "targets": [
             {
               "expr": "sum(increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type=\"input\",route=~\"kgateway-system/$gateway\"}[1h])) or vector(0)",
-              "refId": "A"
+              "refId": "A",
+              "legendFormat": "Input Tokens"
             }
           ],
           "fieldConfig": {
@@ -391,7 +393,8 @@ data:
           "targets": [
             {
               "expr": "sum(increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type=\"output\",route=~\"kgateway-system/$gateway\"}[1h])) or vector(0)",
-              "refId": "A"
+              "refId": "A",
+              "legendFormat": "Output Tokens"
             }
           ],
           "fieldConfig": {
@@ -429,7 +432,8 @@ data:
           "targets": [
             {
               "expr": "sum(increase(agentgateway_gen_ai_server_request_duration_count{route=~\"kgateway-system/$gateway\"}[1h])) or vector(0)",
-              "refId": "A"
+              "refId": "A",
+              "legendFormat": "Conversations"
             }
           ],
           "fieldConfig": {
@@ -466,7 +470,8 @@ data:
           "targets": [
             {
               "expr": "sum(rate(agentgateway_gen_ai_server_request_duration_sum{route=~\"kgateway-system/$gateway\"}[5m])) / sum(rate(agentgateway_gen_ai_server_request_duration_count{route=~\"kgateway-system/$gateway\"}[5m])) or vector(0)",
-              "refId": "A"
+              "refId": "A",
+              "legendFormat": "Avg Response Time"
             }
           ],
           "fieldConfig": {
