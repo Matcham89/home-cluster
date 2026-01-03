@@ -8,119 +8,136 @@ metadata:
 data:
   postgres-standalone.json: |-
     {
+      "uid": "postgres-homelab-accurate",
       "title": "PostgreSQL Standalone (Docker / Homelab)",
-      "uid": "postgres-homelab",
-      "schemaVersion": 39,
       "timezone": "browser",
+      "schemaVersion": 39,
+      "version": 1,
       "refresh": "30s",
       "panels": [
-
         {
           "type": "stat",
           "title": "Postgres Reachable",
+          "id": 1,
           "gridPos": { "x": 0, "y": 0, "w": 6, "h": 4 },
           "targets": [
             {
-              "expr": "max(pg_up)",
-              "instant": true
+              "expr": "up{job=\"postgres-exporter\"}",
+              "refId": "A"
             }
           ],
           "options": {
-            "reduceOptions": { "calcs": ["lastNotNull"] }
+            "reduceOptions": { "calcs": ["lastNotNull"] },
+            "colorMode": "value",
+            "textMode": "value"
           },
           "fieldConfig": {
             "defaults": {
               "mappings": [
-                {
-                  "type": "value",
-                  "options": {
-                    "0": { "text": "NO", "color": "red" },
-                    "1": { "text": "YES", "color": "green" }
-                  }
-                }
-              ]
+                { "type": "value", "options": { "0": { "text": "NO" }, "1": { "text": "YES" } } }
+              ],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "red", "value": 0 },
+                  { "color": "green", "value": 1 }
+                ]
+              }
             }
           }
         },
-
         {
           "type": "stat",
           "title": "Postgres Uptime",
+          "id": 2,
           "gridPos": { "x": 6, "y": 0, "w": 6, "h": 4 },
           "targets": [
             {
-              "expr": "time() - max(pg_postmaster_start_time_seconds)",
-              "instant": true
+              "expr": "time() - process_start_time_seconds{job=\"postgres-exporter\"}",
+              "refId": "A"
             }
           ],
-          "options": {
-            "reduceOptions": { "calcs": ["lastNotNull"] }
-          },
           "fieldConfig": {
-            "defaults": { "unit": "s" }
+            "defaults": {
+              "unit": "s"
+            }
           }
         },
-
         {
           "type": "stat",
           "title": "Total Database Size",
+          "id": 3,
           "gridPos": { "x": 12, "y": 0, "w": 6, "h": 4 },
           "targets": [
             {
               "expr": "sum(pg_database_size_bytes{datname!~\"template.*\"})",
-              "instant": true
+              "refId": "A"
             }
           ],
-          "options": {
-            "reduceOptions": { "calcs": ["lastNotNull"] }
-          },
           "fieldConfig": {
-            "defaults": { "unit": "decbytes" }
+            "defaults": {
+              "unit": "bytes"
+            }
           }
         },
-
+        {
+          "type": "stat",
+          "title": "Active Connections",
+          "id": 4,
+          "gridPos": { "x": 18, "y": 0, "w": 6, "h": 4 },
+          "targets": [
+            {
+              "expr": "sum(pg_stat_activity_count)",
+              "refId": "A"
+            }
+          ]
+        },
         {
           "type": "timeseries",
           "title": "Transactions / Second",
-          "gridPos": { "x": 0, "y": 4, "w": 24, "h": 7 },
+          "id": 5,
+          "gridPos": { "x": 0, "y": 4, "w": 24, "h": 6 },
           "targets": [
             {
-              "expr": "rate(pg_stat_database_xact_commit[5m]) + rate(pg_stat_database_xact_rollback[5m])",
-              "legendFormat": "TPS"
+              "expr": "sum(rate(pg_stat_database_xact_commit[5m]) + rate(pg_stat_database_xact_rollback[5m]))",
+              "refId": "A"
             }
-          ]
-        },
-
-        {
-          "type": "timeseries",
-          "title": "Active Connections",
-          "gridPos": { "x": 0, "y": 11, "w": 12, "h": 6 },
-          "targets": [
-            {
-              "expr": "sum(pg_stat_activity_count{state=\"active\"})",
-              "legendFormat": "Active"
+          ],
+          "fieldConfig": {
+            "defaults": {
+              "unit": "ops"
             }
-          ]
+          }
         },
-
         {
           "type": "timeseries",
           "title": "Cache Hit Ratio (%)",
-          "gridPos": { "x": 12, "y": 11, "w": 12, "h": 6 },
+          "id": 6,
+          "gridPos": { "x": 0, "y": 10, "w": 24, "h": 6 },
           "targets": [
             {
-              "expr": "100 * sum(rate(pg_stat_database_blks_hit[5m])) / (sum(rate(pg_stat_database_blks_hit[5m])) + sum(rate(pg_stat_database_blks_read[5m])))",
-              "legendFormat": "Hit Ratio"
+              "expr": "(\n  sum(rate(pg_stat_database_blks_hit[5m]))\n  /\n  (\n    sum(rate(pg_stat_database_blks_hit[5m]))\n    + sum(rate(pg_stat_database_blks_read[5m]))\n  )\n) * 100",
+              "refId": "A"
             }
           ],
           "fieldConfig": {
             "defaults": {
               "unit": "percent",
-              "min": 90,
-              "max": 100
+              "min": 0,
+              "max": 100,
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "red", "value": 0 },
+                  { "color": "orange", "value": 90 },
+                  { "color": "green", "value": 95 }
+                ]
+              }
             }
           }
         }
-
-      ]
+      ],
+      "templating": {
+        "list": []
+      }
     }
