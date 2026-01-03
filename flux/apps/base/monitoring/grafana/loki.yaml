@@ -132,18 +132,6 @@ spec:
 
     singleBinary:
       replicas: 0
-
-    # Expose gateway via LoadBalancer for external Grafana access
-    gateway:
-      service:
-        type: LoadBalancer
-        loadBalancerIP: "192.168.1.206"
-      resources:
-        limits:
-          memory: 256Mi
-        requests:
-          cpu: 50m
-          memory: 128Mi
     
     persistence:
       # -- What to do with the volume when the StatefulSet is scaled down.
