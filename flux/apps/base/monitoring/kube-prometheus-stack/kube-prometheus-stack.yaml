@@ -97,6 +97,34 @@ spec:
               labels:
                 service: 'postgres-external'
                 instance: 'external-db'
+
+        - job_name: 'seaweedfs-master'
+          static_configs:
+            - targets: ['seaweedfs-master-metrics-external.external-services.svc.cluster.local:9324']
+              labels:
+                service: 'seaweedfs'
+                component: 'master'
+
+        - job_name: 'seaweedfs-volume'
+          static_configs:
+            - targets: ['seaweedfs-volume-metrics-external.external-services.svc.cluster.local:9327']
+              labels:
+                service: 'seaweedfs'
+                component: 'volume'
+
+        - job_name: 'seaweedfs-filer'
+          static_configs:
+            - targets: ['seaweedfs-filer-metrics-external.external-services.svc.cluster.local:9328']
+              labels:
+                service: 'seaweedfs'
+                component: 'filer'
+
+        - job_name: 'seaweedfs-s3'
+          static_configs:
+            - targets: ['seaweedfs-s3-metrics-external.external-services.svc.cluster.local:9329']
+              labels:
+                service: 'seaweedfs'
+                component: 's3'
     grafana:
       enabled: true
       grafana.ini:
