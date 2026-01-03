@@ -60,9 +60,11 @@ spec:
           ruler: loki-ruler
           admin: loki-admin
         s3:
-          # Internal DNS to SeaweedFS Filer S3 service
-          endpoint: http://seaweedfs-filer.monitoring.svc.cluster.local:8333
+          # External SeaweedFS S3 service
+          endpoint: http://seaweedfs-s3-external.external-services.svc.cluster.local:8333
           insecure: true
+          s3ForcePathStyle: true
+          # Credentials will be provided via environment variables or secret
 
     deploymentMode: SimpleScalable
 
@@ -70,6 +72,9 @@ spec:
     # 1 replica each for home lab with optimized resources
     backend:
       replicas: 1
+      extraEnvFrom:
+        - secretRef:
+            name: loki-s3-credentials
       resources:
         limits:
           memory: 2Gi
@@ -79,6 +84,9 @@ spec:
 
     read:
       replicas: 1
+      extraEnvFrom:
+        - secretRef:
+            name: loki-s3-credentials
       resources:
         limits:
           memory: 1Gi
@@ -88,6 +96,9 @@ spec:
 
     write:
       replicas: 1
+      extraEnvFrom:
+        - secretRef:
+            name: loki-s3-credentials
       resources:
         limits:
           memory: 1Gi
