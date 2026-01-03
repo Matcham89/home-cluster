@@ -19,3 +19,4 @@ resources:
   - kgateway.yaml
   - istio-mesh-dashboard.yaml
   - open-webui.yaml
+  - postgres.yaml
