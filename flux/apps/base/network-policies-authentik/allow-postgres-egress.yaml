@@ -1,5 +1,5 @@
 ---
-# Allow Authentik pods to connect to PostgreSQL database
+# Allow Authentik pods to connect to external PostgreSQL database
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
@@ -11,14 +11,10 @@ spec:
   policyTypes:
   - Egress
   egress:
-  # Allow connection to CNPG postgres in cnpg-system namespace
+  # Allow connection to external PostgreSQL (192.168.1.100:5432)
   - to:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: cnpg-system
-      podSelector:
-        matchLabels:
-          cnpg.io/cluster: postgres
+    - ipBlock:
+        cidr: 192.168.1.100/32
     ports:
     - port: 5432
       protocol: TCP
