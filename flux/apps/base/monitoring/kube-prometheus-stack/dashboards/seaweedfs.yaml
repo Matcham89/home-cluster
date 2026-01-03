@@ -1,0 +1,295 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: seaweedfs-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  seaweedfs-accurate-readable.json: |-
+    {
+      "uid": "seaweedfs-accurate-readable",
+      "title": "SeaweedFS (Accurate / Readable)",
+      "tags": ["seaweedfs", "storage", "homelab"],
+      "timezone": "browser",
+      "schemaVersion": 39,
+      "version": 1,
+      "refresh": "30s",
+      "templating": {
+        "list": [
+          {
+            "name": "DS_PROMETHEUS",
+            "type": "datasource",
+            "query": "prometheus",
+            "refresh": 1
+          },
+          {
+            "name": "job_master",
+            "type": "constant",
+            "query": "seaweedfs-master",
+            "hide": 2
+          },
+          {
+            "name": "job_volume",
+            "type": "constant",
+            "query": "seaweedfs-volume",
+            "hide": 2
+          },
+          {
+            "name": "job_filer",
+            "type": "constant",
+            "query": "seaweedfs-filer",
+            "hide": 2
+          },
+          {
+            "name": "job_s3",
+            "type": "constant",
+            "query": "seaweedfs-s3",
+            "hide": 2
+          },
+          {
+            "name": "master_instance",
+            "type": "query",
+            "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+            "refresh": 1,
+            "query": { "query": "label_values(up{job=\"$job_master\"}, instance)" }
+          },
+          {
+            "name": "volume_instance",
+            "type": "query",
+            "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+            "refresh": 1,
+            "query": { "query": "label_values(up{job=\"$job_volume\"}, instance)" }
+          },
+          {
+            "name": "filer_instance",
+            "type": "query",
+            "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+            "refresh": 1,
+            "query": { "query": "label_values(up{job=\"$job_filer\"}, instance)" }
+          },
+          {
+            "name": "s3_instance",
+            "type": "query",
+            "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+            "refresh": 1,
+            "query": { "query": "label_values(up{job=\"$job_s3\"}, instance)" }
+          }
+        ]
+      },
+      "panels": [
+        {
+          "type": "stat",
+          "title": "Master Reachable",
+          "id": 1,
+          "gridPos": { "x": 0, "y": 0, "w": 6, "h": 4 },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "targets": [
+            { "expr": "max(up{job=\"$job_master\",instance=\"$master_instance\"})", "instant": true, "refId": "A" }
+          ],
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "textMode": "value", "graphMode": "none", "justifyMode": "center" },
+          "fieldConfig": {
+            "defaults": {
+              "decimals": 0,
+              "mappings": [{ "type": "value", "options": { "0": { "text": "NO" }, "1": { "text": "YES" } } }],
+              "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": 0 }, { "color": "green", "value": 1 }] }
+            }
+          }
+        },
+        {
+          "type": "stat",
+          "title": "Volume Reachable",
+          "id": 2,
+          "gridPos": { "x": 6, "y": 0, "w": 6, "h": 4 },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "targets": [
+            { "expr": "max(up{job=\"$job_volume\",instance=\"$volume_instance\"})", "instant": true, "refId": "A" }
+          ],
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "textMode": "value", "graphMode": "none", "justifyMode": "center" },
+          "fieldConfig": {
+            "defaults": {
+              "decimals": 0,
+              "mappings": [{ "type": "value", "options": { "0": { "text": "NO" }, "1": { "text": "YES" } } }],
+              "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": 0 }, { "color": "green", "value": 1 }] }
+            }
+          }
+        },
+        {
+          "type": "stat",
+          "title": "Filer Reachable",
+          "id": 3,
+          "gridPos": { "x": 12, "y": 0, "w": 6, "h": 4 },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "targets": [
+            { "expr": "max(up{job=\"$job_filer\",instance=\"$filer_instance\"})", "instant": true, "refId": "A" }
+          ],
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "textMode": "value", "graphMode": "none", "justifyMode": "center" },
+          "fieldConfig": {
+            "defaults": {
+              "decimals": 0,
+              "mappings": [{ "type": "value", "options": { "0": { "text": "NO" }, "1": { "text": "YES" } } }],
+              "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": 0 }, { "color": "green", "value": 1 }] }
+            }
+          }
+        },
+        {
+          "type": "stat",
+          "title": "S3 Reachable",
+          "id": 4,
+          "gridPos": { "x": 18, "y": 0, "w": 6, "h": 4 },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "targets": [
+            { "expr": "max(up{job=\"$job_s3\",instance=\"$s3_instance\"})", "instant": true, "refId": "A" }
+          ],
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "textMode": "value", "graphMode": "none", "justifyMode": "center" },
+          "fieldConfig": {
+            "defaults": {
+              "decimals": 0,
+              "mappings": [{ "type": "value", "options": { "0": { "text": "NO" }, "1": { "text": "YES" } } }],
+              "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": 0 }, { "color": "green", "value": 1 }] }
+            }
+          }
+        },
+
+        {
+          "type": "stat",
+          "title": "Master Leader",
+          "id": 5,
+          "gridPos": { "x": 0, "y": 4, "w": 6, "h": 4 },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "targets": [
+            { "expr": "max(SeaweedFS_master_is_leader)", "instant": true, "refId": "A" }
+          ],
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "textMode": "value", "graphMode": "none", "justifyMode": "center" },
+          "fieldConfig": {
+            "defaults": {
+              "decimals": 0,
+              "mappings": [{ "type": "value", "options": { "0": { "text": "NO" }, "1": { "text": "YES" } } }],
+              "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": 0 }, { "color": "green", "value": 1 }] }
+            }
+          }
+        },
+        {
+          "type": "stat",
+          "title": "Volume Max Volumes (Configured)",
+          "id": 6,
+          "gridPos": { "x": 6, "y": 4, "w": 6, "h": 4 },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "targets": [
+            { "expr": "max(SeaweedFS_volumeServer_max_volumes)", "instant": true, "refId": "A" }
+          ],
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "textMode": "value", "graphMode": "none", "justifyMode": "center" }
+        },
+        {
+          "type": "stat",
+          "title": "Disk Space Low",
+          "id": 7,
+          "gridPos": { "x": 12, "y": 4, "w": 6, "h": 4 },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "targets": [
+            { "expr": "max(SeaweedFS_volumeServer_read_only_volumes{type=\"isDiskSpaceLow\"})", "instant": true, "refId": "A" }
+          ],
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "textMode": "value", "graphMode": "none", "justifyMode": "center" },
+          "fieldConfig": {
+            "defaults": {
+              "decimals": 0,
+              "mappings": [{ "type": "value", "options": { "0": { "text": "NO" }, "1": { "text": "YES" } } }],
+              "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": 0 }, { "color": "red", "value": 1 }] }
+            }
+          }
+        },
+        {
+          "type": "stat",
+          "title": "Read-Only Volumes",
+          "id": 8,
+          "gridPos": { "x": 18, "y": 4, "w": 6, "h": 4 },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "targets": [
+            { "expr": "sum(SeaweedFS_volumeServer_read_only_volumes{type=\"IsReadOnly\"})", "instant": true, "refId": "A" }
+          ],
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "textMode": "value", "graphMode": "none", "justifyMode": "center" },
+          "fieldConfig": {
+            "defaults": {
+              "decimals": 0,
+              "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "orange", "value": 1 }, { "color": "red", "value": 5 }] }
+            }
+          }
+        },
+
+        {
+          "type": "timeseries",
+          "title": "Master Heartbeats (rate)",
+          "id": 20,
+          "gridPos": { "x": 0, "y": 8, "w": 12, "h": 7 },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "targets": [
+            { "expr": "rate(SeaweedFS_master_received_heartbeats[5m])", "legendFormat": "{{type}}", "refId": "A" }
+          ],
+          "options": { "legend": { "displayMode": "table", "placement": "right", "calcs": ["lastNotNull"] } }
+        },
+        {
+          "type": "timeseries",
+          "title": "Read-Only Flags (by collection/type)",
+          "id": 21,
+          "gridPos": { "x": 12, "y": 8, "w": 12, "h": 7 },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "targets": [
+            { "expr": "max by (collection,type) (SeaweedFS_volumeServer_read_only_volumes)", "legendFormat": "{{collection}} / {{type}}", "refId": "A" }
+          ],
+          "fieldConfig": { "defaults": { "min": 0 } },
+          "options": { "legend": { "displayMode": "table", "placement": "right", "calcs": ["lastNotNull"] } }
+        },
+
+        {
+          "type": "timeseries",
+          "title": "Filer Store Ops (requests/sec)",
+          "id": 30,
+          "gridPos": { "x": 0, "y": 15, "w": 12, "h": 7 },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "targets": [
+            { "expr": "sum by (store,type) (rate(SeaweedFS_filerStore_request_seconds_count[5m]))", "legendFormat": "{{store}} / {{type}}", "refId": "A" }
+          ],
+          "options": { "legend": { "displayMode": "table", "placement": "right", "calcs": ["lastNotNull"] } }
+        },
+        {
+          "type": "timeseries",
+          "title": "Filer Store Latency p95 (seconds)",
+          "id": 31,
+          "gridPos": { "x": 12, "y": 15, "w": 12, "h": 7 },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.95, sum by (le,store,type) (rate(SeaweedFS_filerStore_request_seconds_bucket[5m])))",
+              "legendFormat": "{{store}} / {{type}}",
+              "refId": "A"
+            }
+          ],
+          "fieldConfig": { "defaults": { "unit": "s" } },
+          "options": { "legend": { "displayMode": "table", "placement": "right", "calcs": ["lastNotNull"] } }
+        },
+
+        {
+          "type": "timeseries",
+          "title": "Process RSS (bytes) - all components",
+          "id": 40,
+          "gridPos": { "x": 0, "y": 22, "w": 12, "h": 7 },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "targets": [
+            { "expr": "process_resident_memory_bytes{job=~\"seaweedfs-(master|volume|filer|s3)\"}", "legendFormat": "{{job}}", "refId": "A" }
+          ],
+          "fieldConfig": { "defaults": { "unit": "decbytes" } },
+          "options": { "legend": { "displayMode": "table", "placement": "right", "calcs": ["lastNotNull"] } }
+        },
+        {
+          "type": "timeseries",
+          "title": "Go Routines - all components",
+          "id": 41,
+          "gridPos": { "x": 12, "y": 22, "w": 12, "h": 7 },
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "targets": [
+            { "expr": "go_goroutines{job=~\"seaweedfs-(master|volume|filer|s3)\"}", "legendFormat": "{{job}}", "refId": "A" }
+          ],
+          "options": { "legend": { "displayMode": "table", "placement": "right", "calcs": ["lastNotNull"] } }
+        }
+      ]
+    }
