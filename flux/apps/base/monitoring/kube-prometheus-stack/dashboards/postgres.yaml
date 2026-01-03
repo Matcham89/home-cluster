@@ -12,7 +12,7 @@ data:
       "title": "PostgreSQL Standalone (Accurate / Readable)",
       "timezone": "browser",
       "schemaVersion": 39,
-      "version": 1,
+      "version": 2,
       "refresh": "30s",
       "templating": {
         "list": [
@@ -29,10 +29,7 @@ data:
             "refresh": 1,
             "includeAll": false,
             "multi": false,
-            "query": {
-              "query": "label_values(pg_database_size_bytes, datname)",
-              "refId": "A"
-            },
+            "query": { "query": "label_values(pg_database_size_bytes, datname)", "refId": "A" },
             "regex": "^(?!template0$|template1$).+",
             "current": { "selected": false, "text": "homelab", "value": "homelab" }
           },
@@ -43,10 +40,7 @@ data:
             "refresh": 1,
             "includeAll": false,
             "multi": false,
-            "query": {
-              "query": "label_values(pg_settings_port, server)",
-              "refId": "A"
-            },
+            "query": { "query": "label_values(pg_settings_port, server)", "refId": "A" },
             "current": { "selected": false, "text": "postgres:5432", "value": "postgres:5432" }
           }
         ]
@@ -56,16 +50,31 @@ data:
           "type": "stat",
           "title": "Postgres Reachable",
           "id": 1,
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "gridPos": { "x": 0, "y": 0, "w": 6, "h": 4 },
           "targets": [
             { "expr": "max(pg_up)", "instant": true, "refId": "A" }
           ],
-          "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "value", "textMode": "value" },
+          "options": {
+            "reduceOptions": { "calcs": ["lastNotNull"] },
+            "textMode": "value",
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "center"
+          },
           "fieldConfig": {
             "defaults": {
               "decimals": 0,
-              "mappings": [{ "type": "value", "options": { "0": { "text": "NO" }, "1": { "text": "YES" } } }],
-              "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": 0 }, { "color": "green", "value": 1 }] }
+              "mappings": [
+                { "type": "value", "options": { "0": { "text": "NO" }, "1": { "text": "YES" } } }
+              ],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "red", "value": 0 },
+                  { "color": "green", "value": 1 }
+                ]
+              }
             }
           }
         },
@@ -73,16 +82,31 @@ data:
           "type": "stat",
           "title": "Exporter Scrape Error",
           "id": 2,
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "gridPos": { "x": 6, "y": 0, "w": 6, "h": 4 },
           "targets": [
             { "expr": "max(pg_exporter_last_scrape_error)", "instant": true, "refId": "A" }
           ],
-          "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "value", "textMode": "value" },
+          "options": {
+            "reduceOptions": { "calcs": ["lastNotNull"] },
+            "textMode": "value",
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "center"
+          },
           "fieldConfig": {
             "defaults": {
               "decimals": 0,
-              "mappings": [{ "type": "value", "options": { "0": { "text": "OK" }, "1": { "text": "ERROR" } } }],
-              "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": 0 }, { "color": "red", "value": 1 }] }
+              "mappings": [
+                { "type": "value", "options": { "0": { "text": "OK" }, "1": { "text": "ERROR" } } }
+              ],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  { "color": "green", "value": 0 },
+                  { "color": "red", "value": 1 }
+                ]
+              }
             }
           }
         },
@@ -90,22 +114,36 @@ data:
           "type": "stat",
           "title": "Last Scrape Duration",
           "id": 3,
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "gridPos": { "x": 12, "y": 0, "w": 6, "h": 4 },
           "targets": [
             { "expr": "max(pg_exporter_last_scrape_duration_seconds)", "instant": true, "refId": "A" }
           ],
-          "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "value", "textMode": "value" },
+          "options": {
+            "reduceOptions": { "calcs": ["lastNotNull"] },
+            "textMode": "value",
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "center"
+          },
           "fieldConfig": { "defaults": { "unit": "s" } }
         },
         {
           "type": "stat",
           "title": "Selected DB Size",
           "id": 4,
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "gridPos": { "x": 18, "y": 0, "w": 6, "h": 4 },
           "targets": [
             { "expr": "pg_database_size_bytes{datname=\"$db\"}", "instant": true, "refId": "A" }
           ],
-          "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "value", "textMode": "value" },
+          "options": {
+            "reduceOptions": { "calcs": ["lastNotNull"] },
+            "textMode": "value",
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "center"
+          },
           "fieldConfig": { "defaults": { "unit": "decbytes" } }
         },
 
@@ -113,6 +151,7 @@ data:
           "type": "timeseries",
           "title": "Transactions / Second (Selected DB)",
           "id": 5,
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "gridPos": { "x": 0, "y": 4, "w": 12, "h": 7 },
           "targets": [
             {
@@ -127,9 +166,10 @@ data:
           "type": "timeseries",
           "title": "Connections (Selected DB)",
           "id": 6,
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "gridPos": { "x": 12, "y": 4, "w": 12, "h": 7 },
           "targets": [
-            { "expr": "sum(pg_stat_database_numbackends{datname=\"$db\"})", "legendFormat": "Backends", "refId": "A" }
+            { "expr": "pg_stat_database_numbackends{datname=\"$db\"}", "legendFormat": "Backends", "refId": "A" }
           ]
         },
 
@@ -137,6 +177,7 @@ data:
           "type": "timeseries",
           "title": "Cache Hit Ratio (%) (Selected DB)",
           "id": 7,
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "gridPos": { "x": 0, "y": 11, "w": 12, "h": 7 },
           "targets": [
             {
@@ -165,10 +206,11 @@ data:
           "type": "timeseries",
           "title": "Block IO Time (ms/s) (Selected DB)",
           "id": 8,
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "gridPos": { "x": 12, "y": 11, "w": 12, "h": 7 },
           "targets": [
-            { "expr": "rate(pg_stat_database_blk_read_time{datname=\"$db\"}[5m])", "legendFormat": "Read time ms/s", "refId": "A" },
-            { "expr": "rate(pg_stat_database_blk_write_time{datname=\"$db\"}[5m])", "legendFormat": "Write time ms/s", "refId": "B" }
+            { "expr": "rate(pg_stat_database_blk_read_time{datname=\"$db\"}[5m])", "legendFormat": "Read ms/s", "refId": "A" },
+            { "expr": "rate(pg_stat_database_blk_write_time{datname=\"$db\"}[5m])", "legendFormat": "Write ms/s", "refId": "B" }
           ]
         },
 
@@ -176,13 +218,10 @@ data:
           "type": "timeseries",
           "title": "Locks by Mode (Selected DB)",
           "id": 9,
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "gridPos": { "x": 0, "y": 18, "w": 24, "h": 8 },
           "targets": [
-            {
-              "expr": "sum by (mode) (pg_locks_count{datname=\"$db\"})",
-              "legendFormat": "{{mode}}",
-              "refId": "A"
-            }
+            { "expr": "sum by (mode) (pg_locks_count{datname=\"$db\"})", "legendFormat": "{{mode}}", "refId": "A" }
           ]
         },
 
@@ -190,6 +229,7 @@ data:
           "type": "timeseries",
           "title": "WAL Size & Segments",
           "id": 10,
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "gridPos": { "x": 0, "y": 26, "w": 24, "h": 7 },
           "targets": [
             { "expr": "pg_wal_size_bytes", "legendFormat": "WAL size", "refId": "A" },
@@ -202,6 +242,7 @@ data:
           "type": "timeseries",
           "title": "Rows Changed (Selected DB)",
           "id": 11,
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
           "gridPos": { "x": 0, "y": 33, "w": 24, "h": 7 },
           "targets": [
             { "expr": "rate(pg_stat_database_tup_inserted{datname=\"$db\"}[5m])", "legendFormat": "Inserted/s", "refId": "A" },
