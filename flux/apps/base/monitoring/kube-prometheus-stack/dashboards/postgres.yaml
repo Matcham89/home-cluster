@@ -1,15 +1,15 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: postgres-dashboard
+  name: postgres-standalone-dashboard
   namespace: monitoring
   labels:
     grafana_dashboard: "1"
 data:
   postgres-monitor.json: |-
     {
-      "title": "PostgreSQL Monitor",
-      "uid": "pg-external",
+      "title": "PostgreSQL Standalone Monitor",
+      "uid": "pg-standalone-external",
       "tags": ["postgres", "external-services"],
       "timezone": "browser",
       "schemaVersion": 39,
@@ -18,7 +18,7 @@ data:
           "title": "Database Status",
           "type": "stat",
           "gridPos": {"h": 4, "w": 4, "x": 0, "y": 0},
-          "targets": [{"expr": "pg_up{service=\"postgres-external\"}"}],
+          "targets": [{"expr": "pg_up{service=\"postgres-external\"}", "legendFormat": "Status"}],
           "fieldConfig": {
             "defaults": {
               "mappings": [
@@ -28,32 +28,39 @@ data:
           }
         },
         {
-          "title": "Total DB Size",
+          "title": "Uptime",
           "type": "stat",
           "gridPos": {"h": 4, "w": 4, "x": 4, "y": 0},
-          "targets": [{"expr": "sum(pg_database_size_bytes{service=\"postgres-external\"})"}],
+          "targets": [{"expr": "time() - pg_postmaster_start_time_seconds{service=\"postgres-external\"}", "legendFormat": "Uptime"}],
+          "fieldConfig": {
+            "defaults": {"unit": "s", "color": {"mode": "fixed", "fixedColor": "blue"}}
+          }
+        },
+        {
+          "title": "Database Size (Used)",
+          "type": "stat",
+          "gridPos": {"h": 4, "w": 4, "x": 8, "y": 0},
+          "targets": [{"expr": "sum(pg_database_size_bytes{service=\"postgres-external\"})", "legendFormat": "Used Space"}],
           "fieldConfig": {"defaults": {"unit": "bytes"}}
         },
         {
-          "title": "Cache Hit Ratio",
-          "type": "gauge",
-          "gridPos": {"h": 4, "w": 8, "x": 8, "y": 0},
-          "description": "Index/Data hit rate. Values > 90% are healthy.",
-          "targets": [{
-            "expr": "sum(rate(pg_stat_database_blks_hit{service=\"postgres-external\"}[5m])) / (sum(rate(pg_stat_database_blks_hit{service=\"postgres-external\"}[5m])) + sum(rate(pg_stat_database_blks_read{service=\"postgres-external\"}[5m])))"
-          }],
+          "title": "Longest Query (Slow Query)",
+          "type": "stat",
+          "gridPos": {"h": 4, "w": 6, "x": 12, "y": 0},
+          "description": "Duration of the longest currently running transaction.",
+          "targets": [{"expr": "pg_stat_activity_max_tx_duration{service=\"postgres-external\"}", "legendFormat": "Duration"}],
           "fieldConfig": {
             "defaults": {
-              "unit": "percentunit", "min": 0, "max": 1,
-              "thresholds": {"mode": "absolute", "steps": [{"color": "red", "value": null}, {"color": "orange", "value": 0.7}, {"color": "green", "value": 0.9}]}
+              "unit": "s",
+              "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "orange", "value": 30}, {"color": "red", "value": 60}]}
             }
           }
         },
         {
           "title": "Active Connections",
           "type": "gauge",
-          "gridPos": {"h": 4, "w": 8, "x": 16, "y": 0},
-          "targets": [{"expr": "sum(pg_stat_activity_count{service=\"postgres-external\"})"}],
+          "gridPos": {"h": 4, "w": 6, "x": 18, "y": 0},
+          "targets": [{"expr": "sum(pg_stat_activity_count{service=\"postgres-external\"})", "legendFormat": "Total"}],
           "fieldConfig": {
             "defaults": {
               "min": 0, "max": 100,
@@ -64,40 +71,31 @@ data:
         {
           "title": "Transactions Per Second",
           "type": "timeseries",
-          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 4},
+          "gridPos": {"h": 8, "w": 24, "x": 0, "y": 4},
           "targets": [
             {"expr": "rate(pg_stat_database_xact_commit{service=\"postgres-external\"}[5m])", "legendFormat": "Commits"},
             {"expr": "rate(pg_stat_database_xact_rollback{service=\"postgres-external\"}[5m])", "legendFormat": "Rollbacks"}
           ],
-          "options": {"legend": {"displayMode": "table", "placement": "right"}}
+          "options": {
+            "legend": {"displayMode": "table", "placement": "right", "calcs": ["mean", "last"]}
+          }
         },
         {
-          "title": "I/O - Tuples Read vs Fetched",
+          "title": "Database Cache Hit Ratio",
           "type": "timeseries",
-          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 4},
-          "description": "High 'returned' vs low 'fetched' indicates sequential scans (missing indexes).",
-          "targets": [
-            {"expr": "sum(rate(pg_stat_database_tup_returned{service=\"postgres-external\"}[5m]))", "legendFormat": "Returned (Scan)"},
-            {"expr": "sum(rate(pg_stat_database_tup_fetched{service=\"postgres-external\"}[5m]))", "legendFormat": "Fetched (Index)"}
-          ]
+          "gridPos": {"h": 7, "w": 12, "x": 0, "y": 12},
+          "targets": [{
+            "expr": "sum(rate(pg_stat_database_blks_hit{service=\"postgres-external\"}[5m])) / (sum(rate(pg_stat_database_blks_hit{service=\"postgres-external\"}[5m])) + sum(rate(pg_stat_database_blks_read{service=\"postgres-external\"}[5m])))",
+            "legendFormat": "Hit Ratio"
+          }],
+          "fieldConfig": {"defaults": {"unit": "percentunit", "min": 0, "max": 1}}
         },
         {
-          "title": "Deadlocks & Conflicts",
+          "title": "Storage Growth (Daily)",
           "type": "timeseries",
-          "gridPos": {"h": 6, "w": 12, "x": 0, "y": 12},
-          "targets": [
-            {"expr": "pg_stat_database_deadlocks{service=\"postgres-external\"}", "legendFormat": "Deadlocks"},
-            {"expr": "pg_stat_database_conflicts{service=\"postgres-external\"}", "legendFormat": "Conflicts"}
-          ],
-          "fieldConfig": {"defaults": {"color": {"mode": "fixed", "fixedColor": "red"}}}
-        },
-        {
-          "title": "Temporary Files (Disk Pressure)",
-          "type": "timeseries",
-          "gridPos": {"h": 6, "w": 12, "x": 12, "y": 12},
-          "description": "Amount of data written to disk because work_mem was exceeded.",
-          "targets": [{"expr": "rate(pg_stat_database_temp_bytes{service=\"postgres-external\"}[5m])", "legendFormat": "Temp Bytes/s"}],
-          "fieldConfig": {"defaults": {"unit": "Bps"}}
+          "gridPos": {"h": 7, "w": 12, "x": 12, "y": 12},
+          "targets": [{"expr": "sum(pg_database_size_bytes{service=\"postgres-external\"})", "legendFormat": "DB Size"}],
+          "fieldConfig": {"defaults": {"unit": "bytes"}}
         }
       ],
       "templating": {
@@ -109,6 +107,5 @@ data:
             "refresh": 1
           }
         ]
-      },
-      "time": {"from": "now-1h", "to": "now"}
+      }
     }
