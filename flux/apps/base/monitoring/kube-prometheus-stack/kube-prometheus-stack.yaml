@@ -90,6 +90,13 @@ spec:
         enableFeatures:
           - native-histograms
         enableRemoteWriteReceiver: true
+        additionalScrapeConfigs:
+        - job_name: 'postgres-external'
+          static_configs:
+            - targets: ['postgres-exporter-external.external-services.svc.cluster.local:9187']
+              labels:
+                service: 'postgres-external'
+                instance: 'external-db'
     grafana:
       enabled: true
       grafana.ini:

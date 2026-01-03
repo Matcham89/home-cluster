@@ -1,0 +1,33 @@
+---
+# Additional scrape configs for external services
+# Add this to prometheusSpec.additionalScrapeConfigs in kube-prometheus-stack.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: additional-scrape-configs
+  namespace: monitoring
+type: Opaque
+stringData:
+  prometheus-additional.yaml: |
+    # Scrape external PostgreSQL exporter
+    - job_name: 'postgres-external'
+      static_configs:
+        - targets: ['postgres-exporter-external.external-services.svc.cluster.local:9187']
+          labels:
+            service: 'postgres-external'
+            instance: 'external-db'
+
+    # Scrape SeaweedFS metrics
+    - job_name: 'seaweedfs-master'
+      static_configs:
+        - targets: ['seaweedfs-master-external.external-services.svc.cluster.local:9327']
+          labels:
+            service: 'seaweedfs'
+            component: 'master'
+
+    # Scrape Qdrant metrics
+    - job_name: 'qdrant-external'
+      static_configs:
+        - targets: ['qdrant-external.external-services.svc.cluster.local:6333']
+          labels:
+            service: 'qdrant'

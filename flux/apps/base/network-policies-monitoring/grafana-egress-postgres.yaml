@@ -35,14 +35,10 @@ spec:
       podSelector:
         matchLabels:
           app: ztunnel
-  # Allow PostgreSQL connection
+  # Allow PostgreSQL connection to external database
   - to:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: cnpg-system
-      podSelector:
-        matchLabels:
-          cnpg.io/cluster: postgres
+    - ipBlock:
+        cidr: 192.168.1.100/32
     ports:
     - protocol: TCP
       port: 5432

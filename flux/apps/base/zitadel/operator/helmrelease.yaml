@@ -45,7 +45,7 @@ spec:
           Enabled: false
         Database:
           Postgres:
-            Host: postgres-rw.cnpg-system.svc.cluster.local
+            Host: postgres-external.external-services.svc.cluster.local
             Port: 5432
             Database: home-cluster
             MaxOpenConns: 20

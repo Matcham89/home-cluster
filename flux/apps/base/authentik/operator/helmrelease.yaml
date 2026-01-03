@@ -39,7 +39,7 @@ spec:
     global:
       env:
         - name: AUTHENTIK_POSTGRESQL__HOST
-          value: "postgres-rw.cnpg-system.svc.cluster.local"
+          value: "postgres-external.external-services.svc.cluster.local"
         - name: AUTHENTIK_POSTGRESQL__PORT
           value: "5432"
         - name: AUTHENTIK_POSTGRESQL__NAME
@@ -68,8 +68,8 @@ spec:
     authentik:
       secret_key: "Y6uBt0OEytLaHYyfyoCDmUozVg3jnchZgc5JFf51zuS8f9Mu55pBe5YCLXzvwHfmKCUsEzNhV6HgI0Hw"
       postgresql:
-        host: postgres-rw.cnpg-system.svc.cluster.local
-        name: authentik
+        host: postgres-external.external-services.svc.cluster.local
+        name: home-cluster
         user: file:///postgres-creds/username
         password: file:///postgres-creds/password
         port: 5432
