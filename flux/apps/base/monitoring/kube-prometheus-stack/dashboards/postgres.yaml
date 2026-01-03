@@ -8,9 +8,9 @@ metadata:
 data:
   postgres-monitor.json: |-
     {
-      "title": "PostgreSQL Standalone Monitor",
-      "uid": "pg-standalone-external",
-      "tags": ["postgres", "external-services"],
+      "title": "PostgreSQL Standalone Monitor (Fixed)",
+      "uid": "pg-standalone-external-fixed",
+      "tags": ["postgres", "external"],
       "timezone": "browser",
       "schemaVersion": 39,
       "panels": [
@@ -23,32 +23,35 @@ data:
             "defaults": {
               "mappings": [
                 {"options": {"0": {"text": "DOWN", "color": "red"}, "1": {"text": "UP", "color": "green"}}, "type": "value"}
-              ]
+              ],
+              "color": {"mode": "thresholds"}
             }
-          }
+          },
+          "options": {"graphMode": "none", "textMode": "value"}
         },
         {
           "title": "Uptime",
           "type": "stat",
           "gridPos": {"h": 4, "w": 4, "x": 4, "y": 0},
-          "targets": [{"expr": "time() - pg_postmaster_start_time_seconds{service=\"postgres-external\"}", "legendFormat": "Uptime"}],
+          "targets": [{"expr": "time() - pg_postmaster_start_time_seconds{service=\"postgres-external\"}", "legendFormat": "Running Time"}],
           "fieldConfig": {
             "defaults": {"unit": "s", "color": {"mode": "fixed", "fixedColor": "blue"}}
-          }
+          },
+          "options": {"graphMode": "none"}
         },
         {
           "title": "Database Size (Used)",
           "type": "stat",
           "gridPos": {"h": 4, "w": 4, "x": 8, "y": 0},
-          "targets": [{"expr": "sum(pg_database_size_bytes{service=\"postgres-external\"})", "legendFormat": "Used Space"}],
-          "fieldConfig": {"defaults": {"unit": "bytes"}}
+          "targets": [{"expr": "sum(pg_database_size_bytes{service=\"postgres-external\"})", "legendFormat": "Size"}],
+          "fieldConfig": {"defaults": {"unit": "decbytes", "color": {"mode": "fixed", "fixedColor": "semi-dark-orange"}}},
+          "options": {"graphMode": "area"}
         },
         {
           "title": "Longest Query (Slow Query)",
           "type": "stat",
           "gridPos": {"h": 4, "w": 6, "x": 12, "y": 0},
-          "description": "Duration of the longest currently running transaction.",
-          "targets": [{"expr": "pg_stat_activity_max_tx_duration{service=\"postgres-external\"}", "legendFormat": "Duration"}],
+          "targets": [{"expr": "pg_stat_activity_max_tx_duration{service=\"postgres-external\"}", "legendFormat": "Active Duration"}],
           "fieldConfig": {
             "defaults": {
               "unit": "s",
@@ -60,7 +63,7 @@ data:
           "title": "Active Connections",
           "type": "gauge",
           "gridPos": {"h": 4, "w": 6, "x": 18, "y": 0},
-          "targets": [{"expr": "sum(pg_stat_activity_count{service=\"postgres-external\"})", "legendFormat": "Total"}],
+          "targets": [{"expr": "sum(pg_stat_activity_count{service=\"postgres-external\"})", "legendFormat": "Total Connections"}],
           "fieldConfig": {
             "defaults": {
               "min": 0, "max": 100,
@@ -81,7 +84,7 @@ data:
           }
         },
         {
-          "title": "Database Cache Hit Ratio",
+          "title": "Cache Hit Ratio Trend",
           "type": "timeseries",
           "gridPos": {"h": 7, "w": 12, "x": 0, "y": 12},
           "targets": [{
@@ -91,11 +94,11 @@ data:
           "fieldConfig": {"defaults": {"unit": "percentunit", "min": 0, "max": 1}}
         },
         {
-          "title": "Storage Growth (Daily)",
+          "title": "Storage Growth Trend",
           "type": "timeseries",
           "gridPos": {"h": 7, "w": 12, "x": 12, "y": 12},
-          "targets": [{"expr": "sum(pg_database_size_bytes{service=\"postgres-external\"})", "legendFormat": "DB Size"}],
-          "fieldConfig": {"defaults": {"unit": "bytes"}}
+          "targets": [{"expr": "sum(pg_database_size_bytes{service=\"postgres-external\"})", "legendFormat": "Total Bytes Used"}],
+          "fieldConfig": {"defaults": {"unit": "decbytes"}}
         }
       ],
       "templating": {
