@@ -8,9 +8,9 @@ metadata:
 data:
   postgres-monitor.json: |-
     {
-      "title": "PostgreSQL Standalone Monitor (Fixed)",
-      "uid": "pg-standalone-external-fixed",
-      "tags": ["postgres", "external"],
+      "title": "PostgreSQL Standalone Monitor (Final)",
+      "uid": "pg-standalone-final",
+      "tags": ["postgres"],
       "timezone": "browser",
       "schemaVersion": 39,
       "panels": [
@@ -18,13 +18,17 @@ data:
           "title": "Database Status",
           "type": "stat",
           "gridPos": {"h": 4, "w": 4, "x": 0, "y": 0},
-          "targets": [{"expr": "pg_up{service=\"postgres-external\"}", "legendFormat": "Status"}],
+          "targets": [{
+            "expr": "pg_up{service=\"postgres-external\"}", 
+            "legendFormat": "Status",
+            "instant": true
+          }],
           "fieldConfig": {
             "defaults": {
               "mappings": [
                 {"options": {"0": {"text": "DOWN", "color": "red"}, "1": {"text": "UP", "color": "green"}}, "type": "value"}
               ],
-              "color": {"mode": "thresholds"}
+              "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}]}
             }
           },
           "options": {"graphMode": "none", "textMode": "value"}
@@ -33,37 +37,36 @@ data:
           "title": "Uptime",
           "type": "stat",
           "gridPos": {"h": 4, "w": 4, "x": 4, "y": 0},
-          "targets": [{"expr": "time() - pg_postmaster_start_time_seconds{service=\"postgres-external\"}", "legendFormat": "Running Time"}],
+          "targets": [{
+            "expr": "time() - pg_postmaster_start_time_seconds{service=\"postgres-external\"}", 
+            "legendFormat": "Running Time",
+            "instant": true
+          }],
           "fieldConfig": {
             "defaults": {"unit": "s", "color": {"mode": "fixed", "fixedColor": "blue"}}
           },
           "options": {"graphMode": "none"}
         },
         {
-          "title": "Database Size (Used)",
+          "title": "Used Space",
           "type": "stat",
           "gridPos": {"h": 4, "w": 4, "x": 8, "y": 0},
-          "targets": [{"expr": "sum(pg_database_size_bytes{service=\"postgres-external\"})", "legendFormat": "Size"}],
-          "fieldConfig": {"defaults": {"unit": "decbytes", "color": {"mode": "fixed", "fixedColor": "semi-dark-orange"}}},
-          "options": {"graphMode": "area"}
-        },
-        {
-          "title": "Longest Query (Slow Query)",
-          "type": "stat",
-          "gridPos": {"h": 4, "w": 6, "x": 12, "y": 0},
-          "targets": [{"expr": "pg_stat_activity_max_tx_duration{service=\"postgres-external\"}", "legendFormat": "Active Duration"}],
-          "fieldConfig": {
-            "defaults": {
-              "unit": "s",
-              "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "orange", "value": 30}, {"color": "red", "value": 60}]}
-            }
-          }
+          "targets": [{
+            "expr": "sum(pg_database_size_bytes{service=\"postgres-external\"})", 
+            "legendFormat": "Size",
+            "instant": true
+          }],
+          "fieldConfig": {"defaults": {"unit": "decbytes", "color": {"mode": "fixed", "fixedColor": "orange"}}},
+          "options": {"graphMode": "none"}
         },
         {
           "title": "Active Connections",
           "type": "gauge",
-          "gridPos": {"h": 4, "w": 6, "x": 18, "y": 0},
-          "targets": [{"expr": "sum(pg_stat_activity_count{service=\"postgres-external\"})", "legendFormat": "Total Connections"}],
+          "gridPos": {"h": 4, "w": 12, "x": 12, "y": 0},
+          "targets": [{
+            "expr": "sum(pg_stat_activity_count{service=\"postgres-external\"})", 
+            "legendFormat": "Connections"
+          }],
           "fieldConfig": {
             "defaults": {
               "min": 0, "max": 100,
@@ -84,20 +87,28 @@ data:
           }
         },
         {
-          "title": "Cache Hit Ratio Trend",
+          "title": "Slowest Query Duration",
           "type": "timeseries",
-          "gridPos": {"h": 7, "w": 12, "x": 0, "y": 12},
+          "gridPos": {"h": 8, "w": 12, "x": 0, "y": 12},
           "targets": [{
-            "expr": "sum(rate(pg_stat_database_blks_hit{service=\"postgres-external\"}[5m])) / (sum(rate(pg_stat_database_blks_hit{service=\"postgres-external\"}[5m])) + sum(rate(pg_stat_database_blks_read{service=\"postgres-external\"}[5m])))",
-            "legendFormat": "Hit Ratio"
+            "expr": "pg_stat_activity_max_tx_duration{service=\"postgres-external\"}", 
+            "legendFormat": "Duration"
           }],
-          "fieldConfig": {"defaults": {"unit": "percentunit", "min": 0, "max": 1}}
+          "fieldConfig": {
+            "defaults": {
+              "unit": "s",
+              "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}, {"color": "red", "value": 30}]}
+            }
+          }
         },
         {
-          "title": "Storage Growth Trend",
+          "title": "Database Size Trend",
           "type": "timeseries",
-          "gridPos": {"h": 7, "w": 12, "x": 12, "y": 12},
-          "targets": [{"expr": "sum(pg_database_size_bytes{service=\"postgres-external\"})", "legendFormat": "Total Bytes Used"}],
+          "gridPos": {"h": 8, "w": 12, "x": 12, "y": 12},
+          "targets": [{
+            "expr": "sum(pg_database_size_bytes{service=\"postgres-external\"})", 
+            "legendFormat": "Total Usage"
+          }],
           "fieldConfig": {"defaults": {"unit": "decbytes"}}
         }
       ],
