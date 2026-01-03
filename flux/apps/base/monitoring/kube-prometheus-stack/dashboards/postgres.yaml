@@ -1,19 +1,56 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: postgres-homelab-accurate
+  name: postgres-standalone-dashboard
   namespace: monitoring
   labels:
     grafana_dashboard: "1"
 data:
   postgres-standalone.json: |-
     {
-      "uid": "postgres-homelab-accurate",
-      "title": "PostgreSQL Standalone (Docker / Homelab)",
+      "uid": "postgres-standalone-accurate",
+      "title": "PostgreSQL Standalone (Accurate / Readable)",
       "timezone": "browser",
       "schemaVersion": 39,
       "version": 1,
       "refresh": "30s",
+      "templating": {
+        "list": [
+          {
+            "name": "DS_PROMETHEUS",
+            "type": "datasource",
+            "query": "prometheus",
+            "refresh": 1
+          },
+          {
+            "name": "db",
+            "type": "query",
+            "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+            "refresh": 1,
+            "includeAll": false,
+            "multi": false,
+            "query": {
+              "query": "label_values(pg_database_size_bytes, datname)",
+              "refId": "A"
+            },
+            "regex": "^(?!template0$|template1$).+",
+            "current": { "selected": false, "text": "homelab", "value": "homelab" }
+          },
+          {
+            "name": "server",
+            "type": "query",
+            "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+            "refresh": 1,
+            "includeAll": false,
+            "multi": false,
+            "query": {
+              "query": "label_values(pg_settings_port, server)",
+              "refId": "A"
+            },
+            "current": { "selected": false, "text": "postgres:5432", "value": "postgres:5432" }
+          }
+        ]
+      },
       "panels": [
         {
           "type": "stat",
@@ -21,102 +58,90 @@ data:
           "id": 1,
           "gridPos": { "x": 0, "y": 0, "w": 6, "h": 4 },
           "targets": [
-            {
-              "expr": "up{job=\"postgres-exporter\"}",
-              "refId": "A"
-            }
+            { "expr": "max(pg_up)", "instant": true, "refId": "A" }
           ],
-          "options": {
-            "reduceOptions": { "calcs": ["lastNotNull"] },
-            "colorMode": "value",
-            "textMode": "value"
-          },
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "value", "textMode": "value" },
           "fieldConfig": {
             "defaults": {
-              "mappings": [
-                { "type": "value", "options": { "0": { "text": "NO" }, "1": { "text": "YES" } } }
-              ],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  { "color": "red", "value": 0 },
-                  { "color": "green", "value": 1 }
-                ]
-              }
+              "decimals": 0,
+              "mappings": [{ "type": "value", "options": { "0": { "text": "NO" }, "1": { "text": "YES" } } }],
+              "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": 0 }, { "color": "green", "value": 1 }] }
             }
           }
         },
         {
           "type": "stat",
-          "title": "Postgres Uptime",
+          "title": "Exporter Scrape Error",
           "id": 2,
           "gridPos": { "x": 6, "y": 0, "w": 6, "h": 4 },
           "targets": [
-            {
-              "expr": "time() - process_start_time_seconds{job=\"postgres-exporter\"}",
-              "refId": "A"
-            }
+            { "expr": "max(pg_exporter_last_scrape_error)", "instant": true, "refId": "A" }
           ],
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "value", "textMode": "value" },
           "fieldConfig": {
             "defaults": {
-              "unit": "s"
+              "decimals": 0,
+              "mappings": [{ "type": "value", "options": { "0": { "text": "OK" }, "1": { "text": "ERROR" } } }],
+              "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": 0 }, { "color": "red", "value": 1 }] }
             }
           }
         },
         {
           "type": "stat",
-          "title": "Total Database Size",
+          "title": "Last Scrape Duration",
           "id": 3,
           "gridPos": { "x": 12, "y": 0, "w": 6, "h": 4 },
           "targets": [
-            {
-              "expr": "sum(pg_database_size_bytes{datname!~\"template.*\"})",
-              "refId": "A"
-            }
+            { "expr": "max(pg_exporter_last_scrape_duration_seconds)", "instant": true, "refId": "A" }
           ],
-          "fieldConfig": {
-            "defaults": {
-              "unit": "bytes"
-            }
-          }
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "value", "textMode": "value" },
+          "fieldConfig": { "defaults": { "unit": "s" } }
         },
         {
           "type": "stat",
-          "title": "Active Connections",
+          "title": "Selected DB Size",
           "id": 4,
           "gridPos": { "x": 18, "y": 0, "w": 6, "h": 4 },
           "targets": [
-            {
-              "expr": "sum(pg_stat_activity_count)",
-              "refId": "A"
-            }
-          ]
+            { "expr": "pg_database_size_bytes{datname=\"$db\"}", "instant": true, "refId": "A" }
+          ],
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "value", "textMode": "value" },
+          "fieldConfig": { "defaults": { "unit": "decbytes" } }
         },
+
         {
           "type": "timeseries",
-          "title": "Transactions / Second",
+          "title": "Transactions / Second (Selected DB)",
           "id": 5,
-          "gridPos": { "x": 0, "y": 4, "w": 24, "h": 6 },
+          "gridPos": { "x": 0, "y": 4, "w": 12, "h": 7 },
           "targets": [
             {
-              "expr": "sum(rate(pg_stat_database_xact_commit[5m]) + rate(pg_stat_database_xact_rollback[5m]))",
+              "expr": "rate(pg_stat_database_xact_commit{datname=\"$db\"}[5m]) + rate(pg_stat_database_xact_rollback{datname=\"$db\"}[5m])",
+              "legendFormat": "TPS",
               "refId": "A"
             }
           ],
-          "fieldConfig": {
-            "defaults": {
-              "unit": "ops"
-            }
-          }
+          "fieldConfig": { "defaults": { "unit": "ops" } }
         },
         {
           "type": "timeseries",
-          "title": "Cache Hit Ratio (%)",
+          "title": "Connections (Selected DB)",
           "id": 6,
-          "gridPos": { "x": 0, "y": 10, "w": 24, "h": 6 },
+          "gridPos": { "x": 12, "y": 4, "w": 12, "h": 7 },
+          "targets": [
+            { "expr": "sum(pg_stat_database_numbackends{datname=\"$db\"})", "legendFormat": "Backends", "refId": "A" }
+          ]
+        },
+
+        {
+          "type": "timeseries",
+          "title": "Cache Hit Ratio (%) (Selected DB)",
+          "id": 7,
+          "gridPos": { "x": 0, "y": 11, "w": 12, "h": 7 },
           "targets": [
             {
-              "expr": "(\n  sum(rate(pg_stat_database_blks_hit[5m]))\n  /\n  (\n    sum(rate(pg_stat_database_blks_hit[5m]))\n    + sum(rate(pg_stat_database_blks_read[5m]))\n  )\n) * 100",
+              "expr": "100 * rate(pg_stat_database_blks_hit{datname=\"$db\"}[5m]) / (rate(pg_stat_database_blks_hit{datname=\"$db\"}[5m]) + rate(pg_stat_database_blks_read{datname=\"$db\"}[5m]))",
+              "legendFormat": "Hit Ratio",
               "refId": "A"
             }
           ],
@@ -135,9 +160,54 @@ data:
               }
             }
           }
+        },
+        {
+          "type": "timeseries",
+          "title": "Block IO Time (ms/s) (Selected DB)",
+          "id": 8,
+          "gridPos": { "x": 12, "y": 11, "w": 12, "h": 7 },
+          "targets": [
+            { "expr": "rate(pg_stat_database_blk_read_time{datname=\"$db\"}[5m])", "legendFormat": "Read time ms/s", "refId": "A" },
+            { "expr": "rate(pg_stat_database_blk_write_time{datname=\"$db\"}[5m])", "legendFormat": "Write time ms/s", "refId": "B" }
+          ]
+        },
+
+        {
+          "type": "timeseries",
+          "title": "Locks by Mode (Selected DB)",
+          "id": 9,
+          "gridPos": { "x": 0, "y": 18, "w": 24, "h": 8 },
+          "targets": [
+            {
+              "expr": "sum by (mode) (pg_locks_count{datname=\"$db\"})",
+              "legendFormat": "{{mode}}",
+              "refId": "A"
+            }
+          ]
+        },
+
+        {
+          "type": "timeseries",
+          "title": "WAL Size & Segments",
+          "id": 10,
+          "gridPos": { "x": 0, "y": 26, "w": 24, "h": 7 },
+          "targets": [
+            { "expr": "pg_wal_size_bytes", "legendFormat": "WAL size", "refId": "A" },
+            { "expr": "pg_wal_segments", "legendFormat": "WAL segments", "refId": "B" }
+          ],
+          "fieldConfig": { "defaults": { "unit": "decbytes" } }
+        },
+
+        {
+          "type": "timeseries",
+          "title": "Rows Changed (Selected DB)",
+          "id": 11,
+          "gridPos": { "x": 0, "y": 33, "w": 24, "h": 7 },
+          "targets": [
+            { "expr": "rate(pg_stat_database_tup_inserted{datname=\"$db\"}[5m])", "legendFormat": "Inserted/s", "refId": "A" },
+            { "expr": "rate(pg_stat_database_tup_updated{datname=\"$db\"}[5m])", "legendFormat": "Updated/s", "refId": "B" },
+            { "expr": "rate(pg_stat_database_tup_deleted{datname=\"$db\"}[5m])", "legendFormat": "Deleted/s", "refId": "C" }
+          ]
         }
-      ],
-      "templating": {
-        "list": []
-      }
+      ]
     }
