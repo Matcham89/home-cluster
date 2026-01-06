@@ -1,19 +1,19 @@
----
-# yaml-language-server: $schema=https://json.schemastore.org/kustomization
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-namespace: cnpg-system
-# DISABLED: Changed from namespace-istio-enabled to namespace-privileged
-# to disable Istio ambient mode for easier development
-components:
-  - ../../../infra/namespace-privileged
+# ---
+# # yaml-language-server: $schema=https://json.schemastore.org/kustomization
+# apiVersion: kustomize.config.k8s.io/v1beta1
+# kind: Kustomization
+# namespace: cnpg-system
+# # DISABLED: Changed from namespace-istio-enabled to namespace-privileged
+# # to disable Istio ambient mode for easier development
+# components:
+#   - ../../../infra/namespace-privileged
 
-resources:
-  - ./operator/ks.yaml
-  - ./cluster/ks.yaml
-  - ./limit-ranges/ks.yaml
-  - ./resource-quotas/ks.yaml
-  # DISABLED: Commented out for easier development/deployment
-  # - ./network-policies/ks.yaml
-  - ./peerauthentication/ks.yaml
+# resources:
+#   - ./operator/ks.yaml
+#   - ./cluster/ks.yaml
+#   - ./limit-ranges/ks.yaml
+#   - ./resource-quotas/ks.yaml
+#   # DISABLED: Commented out for easier development/deployment
+#   # - ./network-policies/ks.yaml
+#   - ./peerauthentication/ks.yaml
 
