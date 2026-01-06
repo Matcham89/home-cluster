@@ -5,8 +5,9 @@ kind: Kustomization
 resources:
   - ./kube-prometheus-stack.yaml
   - ./ocirepository.yaml
-  - dashboards
-  - prometheus-rules
+  - ./dashboards
+  - ./prometheus-rules
+  - ./secrets
 configMapGenerator:
   - name: flux-kube-state-metrics-config
     files:
