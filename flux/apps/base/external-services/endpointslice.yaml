@@ -1,0 +1,346 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: external-services
+  labels:
+    name: external-services
+---
+# PostgreSQL External Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-external
+  namespace: external-services
+spec:
+  ports:
+  - port: 5432
+    targetPort: 5432
+    protocol: TCP
+  clusterIP: None
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: postgres-external
+  namespace: external-services
+  labels:
+    kubernetes.io/service-name: postgres-external
+addressType: IPv4
+endpoints:
+- addresses:
+  - "192.168.1.100"  # Docker host IP
+ports:
+- port: 5432
+  protocol: TCP
+---
+# Qdrant External Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: qdrant-external
+  namespace: external-services
+spec:
+  ports:
+  - name: http
+    port: 6333
+    targetPort: 6333
+    protocol: TCP
+  - name: grpc
+    port: 6334
+    targetPort: 6334
+    protocol: TCP
+  clusterIP: None
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: qdrant-external
+  namespace: external-services
+  labels:
+    kubernetes.io/service-name: qdrant-external
+addressType: IPv4
+endpoints:
+- addresses:
+  - "192.168.1.100"
+ports:
+- name: http
+  port: 6333
+  protocol: TCP
+- name: grpc
+  port: 6334
+  protocol: TCP
+---
+# SeaweedFS S3 External Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: seaweedfs-s3-external
+  namespace: external-services
+spec:
+  ports:
+  - port: 8333
+    targetPort: 8333
+    protocol: TCP
+  clusterIP: None
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: seaweedfs-s3-external
+  namespace: external-services
+  labels:
+    kubernetes.io/service-name: seaweedfs-s3-external
+addressType: IPv4
+endpoints:
+- addresses:
+  - "192.168.1.100"
+ports:
+- port: 8333
+  protocol: TCP
+---
+# SeaweedFS Filer External Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: seaweedfs-filer-external
+  namespace: external-services
+spec:
+  ports:
+  - port: 8888
+    targetPort: 8888
+    protocol: TCP
+  clusterIP: None
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: seaweedfs-filer-external
+  namespace: external-services
+  labels:
+    kubernetes.io/service-name: seaweedfs-filer-external
+addressType: IPv4
+endpoints:
+- addresses:
+  - "192.168.1.100"
+ports:
+- port: 8888
+  protocol: TCP
+---
+# SeaweedFS Master External Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: seaweedfs-master-external
+  namespace: external-services
+spec:
+  ports:
+  - port: 9333
+    targetPort: 9333
+    protocol: TCP
+  clusterIP: None
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: seaweedfs-master-external
+  namespace: external-services
+  labels:
+    kubernetes.io/service-name: seaweedfs-master-external
+addressType: IPv4
+endpoints:
+- addresses:
+  - "192.168.1.100"
+ports:
+- port: 9333
+  protocol: TCP
+---
+# Ollama External Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: ollama-external
+  namespace: external-services
+spec:
+  ports:
+  - port: 11434
+    targetPort: 11434
+    protocol: TCP
+  clusterIP: None
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: ollama-external
+  namespace: external-services
+  labels:
+    kubernetes.io/service-name: ollama-external
+addressType: IPv4
+endpoints:
+- addresses:
+  - "192.168.1.100"
+ports:
+- port: 11434
+  protocol: TCP
+---
+# Postgres Exporter External Service (for Prometheus)
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-exporter-external
+  namespace: external-services
+  labels:
+    app: postgres-exporter
+spec:
+  ports:
+  - port: 9187
+    targetPort: 9187
+    protocol: TCP
+  clusterIP: None
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: postgres-exporter-external
+  namespace: external-services
+  labels:
+    kubernetes.io/service-name: postgres-exporter-external
+addressType: IPv4
+endpoints:
+- addresses:
+  - "192.168.1.100"
+ports:
+- port: 9187
+  protocol: TCP
+---
+# SeaweedFS Master Metrics
+apiVersion: v1
+kind: Service
+metadata:
+  name: seaweedfs-master-metrics-external
+  namespace: external-services
+  labels:
+    app: seaweedfs
+    component: master
+spec:
+  ports:
+  - port: 9324
+    targetPort: 9324
+    protocol: TCP
+    name: metrics
+  clusterIP: None
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: seaweedfs-master-metrics-external
+  namespace: external-services
+  labels:
+    kubernetes.io/service-name: seaweedfs-master-metrics-external
+addressType: IPv4
+endpoints:
+- addresses:
+  - "192.168.1.100"
+ports:
+- name: metrics
+  port: 9324
+  protocol: TCP
+---
+# SeaweedFS Volume Metrics
+apiVersion: v1
+kind: Service
+metadata:
+  name: seaweedfs-volume-metrics-external
+  namespace: external-services
+  labels:
+    app: seaweedfs
+    component: volume
+spec:
+  ports:
+  - port: 9327
+    targetPort: 9327
+    protocol: TCP
+    name: metrics
+  clusterIP: None
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: seaweedfs-volume-metrics-external
+  namespace: external-services
+  labels:
+    kubernetes.io/service-name: seaweedfs-volume-metrics-external
+addressType: IPv4
+endpoints:
+- addresses:
+  - "192.168.1.100"
+ports:
+- name: metrics
+  port: 9327
+  protocol: TCP
+---
+# SeaweedFS Filer Metrics
+apiVersion: v1
+kind: Service
+metadata:
+  name: seaweedfs-filer-metrics-external
+  namespace: external-services
+  labels:
+    app: seaweedfs
+    component: filer
+spec:
+  ports:
+  - port: 9328
+    targetPort: 9328
+    protocol: TCP
+    name: metrics
+  clusterIP: None
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: seaweedfs-filer-metrics-external
+  namespace: external-services
+  labels:
+    kubernetes.io/service-name: seaweedfs-filer-metrics-external
+addressType: IPv4
+endpoints:
+- addresses:
+  - "192.168.1.100"
+ports:
+- name: metrics
+  port: 9328
+  protocol: TCP
+---
+# SeaweedFS S3 Metrics
+apiVersion: v1
+kind: Service
+metadata:
+  name: seaweedfs-s3-metrics-external
+  namespace: external-services
+  labels:
+    app: seaweedfs
+    component: s3
+spec:
+  ports:
+  - port: 9329
+    targetPort: 9329
+    protocol: TCP
+    name: metrics
+  clusterIP: None
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: seaweedfs-s3-metrics-external
+  namespace: external-services
+  labels:
+    kubernetes.io/service-name: seaweedfs-s3-metrics-external
+addressType: IPv4
+endpoints:
+- addresses:
+  - "192.168.1.100"
+ports:
+- name: metrics
+  port: 9329
+  protocol: TCP
