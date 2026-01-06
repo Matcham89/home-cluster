@@ -77,7 +77,7 @@ spec:
       replicas: 1
       extraEnvFrom:
         - secretRef:
-            name: loki-s3-credentials
+            name: s3-credentials
       resources:
         limits:
           memory: 2Gi
@@ -89,7 +89,7 @@ spec:
       replicas: 1
       extraEnvFrom:
         - secretRef:
-            name: loki-s3-credentials
+            name: s3-credentials
       resources:
         limits:
           memory: 1Gi
@@ -101,7 +101,7 @@ spec:
       replicas: 1
       extraEnvFrom:
         - secretRef:
-            name: loki-s3-credentials
+            name: s3-credentials
       resources:
         limits:
           memory: 1Gi
