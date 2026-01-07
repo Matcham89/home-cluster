@@ -4,7 +4,8 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ./helmrepository.yaml
-  - ./loki.yaml
-  - ./promtail.yaml
+  # DISABLED: Loki depends on SeaweedFS S3 storage which has been removed
+  # - ./loki.yaml
+  # - ./promtail.yaml
   - ./tempo.yaml
 
