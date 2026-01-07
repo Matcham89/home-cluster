@@ -41,21 +41,41 @@ spec:
               period: 24h
       ingester:
         chunk_encoding: snappy
+      # Index caching for faster queries
+      storage_config:
+        tsdb_shipper:
+          cache_ttl: 24h
+          cache_location: /var/loki/index-cache
+        index_queries_cache_config:
+          memcached_client:
+            consistent_hash: true
+            timeout: 1s
       querier:
-        # Reduced for home lab - 2 concurrent queries is sufficient
-        max_concurrent: 2
+        max_concurrent: 8
+        query_timeout: 5m
+      query_range:
+        # Split large queries into smaller chunks for faster processing
+        split_queries_by_interval: 15m
+        # Parallelize subqueries
+        parallelise_shardable_queries: true
+        # Cache query results
+        cache_results: true
       pattern_ingester:
         enabled: true
       limits_config:
         allow_structured_metadata: true
         volume_enabled: true
-        # Home lab: 1 hour retention, 30 days on disk
-        retention_period: 48h  # 2 days
-        # Per-stream rate limits (reduced for home lab)
+        retention_period: 24h
         ingestion_rate_mb: 4
         ingestion_burst_size_mb: 6
         per_stream_rate_limit: 3MB
         per_stream_rate_limit_burst: 15MB
+        max_query_lookback: 24h
+        max_query_length: 24h
+        max_query_parallelism: 16
+        max_entries_limit_per_query: 10000
+        max_streams_per_user: 0
+        max_global_streams_per_user: 0
       storage:
         type: s3
         bucketNames:
@@ -72,7 +92,6 @@ spec:
     deploymentMode: SimpleScalable
 
     # SimpleScalable uses only 3 components: read, write, backend
-    # 1 replica each for home lab with optimized resources
     backend:
       replicas: 1
       extraEnvFrom:
@@ -80,9 +99,10 @@ spec:
             name: s3-credentials
       resources:
         limits:
+          cpu: 1000m
           memory: 2Gi
         requests:
-          cpu: 100m
+          cpu: 250m
           memory: 1Gi
 
     read:
@@ -92,10 +112,11 @@ spec:
             name: s3-credentials
       resources:
         limits:
-          memory: 1Gi
+          cpu: 1000m
+          memory: 2Gi
         requests:
-          cpu: 100m
-          memory: 512Mi
+          cpu: 250m
+          memory: 1Gi
 
     write:
       replicas: 1
@@ -137,11 +158,14 @@ spec:
     
     persistence:
       # -- What to do with the volume when the StatefulSet is scaled down.
-      whenScaled: Delete
+      # Retain to keep index cache for faster restarts
+      whenScaled: Retain
       # -- What to do with the volumes when the StatefulSet is deleted.
-      whenDeleted: Delete
+      # Retain to avoid rebuilding cache from S3
+      whenDeleted: Retain
       # -- Enable StatefulSetAutoDeletePVC feature
-      enableStatefulSetAutoDeletePVC: true
+      # Disabled to match whenDeleted: Retain
+      enableStatefulSetAutoDeletePVC: false
       # -- Enable StatefulSetRecreation for changes to PVC size.
       # This means that the StatefulSet will be deleted, recreated (with the same name) and rolled when a change to the
       # PVC size is detected. That way the PVC can be resized without manual intervention.
@@ -152,7 +176,7 @@ spec:
       accessModes:
         - ReadWriteOnce
       # -- Size of persistent disk
-      size: 10Gi  # Reduced for 2-day retention
+      size: 5Gi  # Optimized for 24-hour retention
       # -- Storage class to be used.
       # If defined, storageClassName: <storageClass>.
       # If set to "-", storageClassName: "", which disables dynamic provisioning.
@@ -166,25 +190,27 @@ spec:
       # -- Labels for volume claim
       labels: {}
     # Home lab optimized cache configuration
-    # Dramatically reduced memory requirements for 2-day retention
+    # Increased cache sizes for better query performance
     chunksCache:
       enabled: true
-      # Reduced from default ~10Gi to 1Gi for home lab
-      allocatedMemory: 1024
+      # Increased to 2Gi for better query performance
+      allocatedMemory: 2048
       resources:
         limits:
-          memory: 1536Mi
+          cpu: 500m
+          memory: 3Gi
         requests:
           cpu: 100m
-          memory: 1Gi
+          memory: 2Gi
 
     resultsCache:
       enabled: true
-      # Reduced from default ~512Mi to 256Mi for home lab
-      allocatedMemory: 256
+      # Increased to 512Mi for better query caching
+      allocatedMemory: 512
       resources:
         limits:
-          memory: 512Mi
+          cpu: 500m
+          memory: 768Mi
         requests:
           cpu: 50m
-          memory: 256Mi
+          memory: 512Mi
