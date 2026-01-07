@@ -16,5 +16,3 @@ spec:
   targetNamespace: authentik
   dependsOn:
     - name: authentik-secrets
-    - name: cnpg-cluster
-      namespace: cnpg-system
