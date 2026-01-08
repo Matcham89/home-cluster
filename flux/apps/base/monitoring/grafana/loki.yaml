@@ -112,10 +112,11 @@ spec:
             name: s3-credentials
       resources:
         limits:
-          memory: 1Gi
+          cpu: 1000m
+          memory: 2Gi
         requests:
           cpu: 100m
-          memory: 512Mi
+          memory: 1Gi
 
     # Disable Distributed mode components
     ingester:
