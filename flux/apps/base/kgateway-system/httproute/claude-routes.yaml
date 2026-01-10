@@ -1,0 +1,135 @@
+---
+# ============================================================================
+# CLAUDE HTTP ROUTES
+# ============================================================================
+# Each route connects a gateway to its corresponding backend.
+# Routes handle both /v1/chat/completions and /v1/completions endpoints.
+#
+# NO hostname matching required - routes accept all traffic on the gateway.
+# This allows using IP addresses directly without /etc/hosts entries.
+# ============================================================================
+
+# ============================================================================
+# ROUTE 1: Claude Sonnet 4.5
+# ============================================================================
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: claude-sonnet-route
+  namespace: kgateway-system
+  labels:
+    app: claude-sonnet
+    model: sonnet-4-5
+    provider: anthropic
+spec:
+  parentRefs:
+    - name: claude-sonnet-gateway
+      namespace: kgateway-system
+      sectionName: http
+  # No hostname restriction - accepts all requests to the gateway IP
+  rules:
+    # OpenAI-compatible chat completions endpoint
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /v1/chat
+      backendRefs:
+        - name: claude-sonnet-backend
+          namespace: kgateway-system
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
+
+    # OpenAI-compatible completions endpoint
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /v1/completions
+      backendRefs:
+        - name: claude-sonnet-backend
+          namespace: kgateway-system
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
+
+---
+# ============================================================================
+# ROUTE 2: Claude Opus 4.5
+# ============================================================================
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: claude-opus-route
+  namespace: kgateway-system
+  labels:
+    app: claude-opus
+    model: opus-4-5
+    provider: anthropic
+spec:
+  parentRefs:
+    - name: claude-opus-gateway
+      namespace: kgateway-system
+      sectionName: http
+  # No hostname restriction - accepts all requests to the gateway IP
+  rules:
+    # OpenAI-compatible chat completions endpoint
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /v1/chat
+      backendRefs:
+        - name: claude-opus-backend
+          namespace: kgateway-system
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
+
+    # OpenAI-compatible completions endpoint
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /v1/completions
+      backendRefs:
+        - name: claude-opus-backend
+          namespace: kgateway-system
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
+
+---
+# ============================================================================
+# ROUTE 3: Claude Haiku 4.5
+# ============================================================================
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: claude-haiku-route
+  namespace: kgateway-system
+  labels:
+    app: claude-haiku
+    model: haiku-4-5
+    provider: anthropic
+spec:
+  parentRefs:
+    - name: claude-haiku-gateway
+      namespace: kgateway-system
+      sectionName: http
+  # No hostname restriction - accepts all requests to the gateway IP
+  rules:
+    # OpenAI-compatible chat completions endpoint
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /v1/chat
+      backendRefs:
+        - name: claude-haiku-backend
+          namespace: kgateway-system
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
+
+    # OpenAI-compatible completions endpoint
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /v1/completions
+      backendRefs:
+        - name: claude-haiku-backend
+          namespace: kgateway-system
+          group: agentgateway.dev
+          kind: AgentgatewayBackend

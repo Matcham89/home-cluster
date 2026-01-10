@@ -8,4 +8,6 @@ resources:
   - ./anthropic1.yaml
   - ./anthropic2.yaml
   - ./anthropic3.yaml
+  # Claude multi-gateway backends (one backend per model with hardcoded model)
+  - ./claude-backends.yaml
 

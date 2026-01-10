@@ -6,3 +6,5 @@ resources:
   - agentgateway1.yaml
   - agentgateway2.yaml
   - agentgateway3.yaml
+  # Claude multi-gateway architecture (one gateway per model)
+  - claude-gateways.yaml

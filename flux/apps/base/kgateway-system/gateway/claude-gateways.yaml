@@ -1,0 +1,81 @@
+---
+# ============================================================================
+# CLAUDE MULTI-GATEWAY ARCHITECTURE
+# ============================================================================
+# This manifest creates three independent gateways, one for each Claude model.
+# Each gateway has its own IP address, allowing for:
+#   - Independent rate limiting per model
+#   - Separate policies and monitoring
+#   - Firewall rules per model
+#   - Model enforcement (cannot be overridden by client)
+#
+# NO nginx deployment needed - model is hardcoded in the backend!
+# ============================================================================
+
+# ============================================================================
+# GATEWAY 1: Claude Sonnet 4.5
+# ============================================================================
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: claude-sonnet-gateway
+  namespace: kgateway-system
+  labels:
+    app: claude-sonnet
+    model: sonnet-4-5
+    provider: anthropic
+spec:
+  gatewayClassName: agentgateway
+  listeners:
+    - name: http
+      port: 8091
+      protocol: HTTP
+      allowedRoutes:
+        namespaces:
+          from: Same
+
+---
+# ============================================================================
+# GATEWAY 2: Claude Opus 4.5
+# ============================================================================
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: claude-opus-gateway
+  namespace: kgateway-system
+  labels:
+    app: claude-opus
+    model: opus-4-5
+    provider: anthropic
+spec:
+  gatewayClassName: agentgateway
+  listeners:
+    - name: http
+      port: 8092
+      protocol: HTTP
+      allowedRoutes:
+        namespaces:
+          from: Same
+
+---
+# ============================================================================
+# GATEWAY 3: Claude Haiku 4.5
+# ============================================================================
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: claude-haiku-gateway
+  namespace: kgateway-system
+  labels:
+    app: claude-haiku
+    model: haiku-4-5
+    provider: anthropic
+spec:
+  gatewayClassName: agentgateway
+  listeners:
+    - name: http
+      port: 8093
+      protocol: HTTP
+      allowedRoutes:
+        namespaces:
+          from: Same
