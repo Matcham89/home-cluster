@@ -1,0 +1,234 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: claude-gateway-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  claude-gateway-dashboard.json: |
+    {
+      "dashboard": {
+        "title": "Claude Multi-Gateway Monitoring",
+        "tags": ["agentgateway", "claude", "cost"],
+        "timezone": "browser",
+        "refresh": "30s",
+        "time": {
+          "from": "now-6h",
+          "to": "now"
+        },
+        "panels": [
+          {
+            "title": "Total Cost Overview",
+            "type": "stat",
+            "gridPos": {"h": 4, "w": 6, "x": 0, "y": 0},
+            "targets": [
+              {
+                "expr": "agentgateway:cost_usd:total_daily",
+                "legendFormat": "Daily"
+              },
+              {
+                "expr": "agentgateway:cost_usd:total_weekly",
+                "legendFormat": "Weekly"
+              },
+              {
+                "expr": "agentgateway:cost_usd:total_monthly",
+                "legendFormat": "Monthly"
+              }
+            ],
+            "options": {
+              "graphMode": "none",
+              "colorMode": "value",
+              "orientation": "horizontal",
+              "textMode": "value_and_name"
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "currencyUSD",
+                "decimals": 2
+              }
+            }
+          },
+          {
+            "title": "Hourly Cost Rate",
+            "type": "gauge",
+            "gridPos": {"h": 4, "w": 6, "x": 6, "y": 0},
+            "targets": [
+              {
+                "expr": "agentgateway:cost_usd:total_hourly"
+              }
+            ],
+            "options": {
+              "showThresholdLabels": false,
+              "showThresholdMarkers": true
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "currencyUSD",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {"value": 0, "color": "green"},
+                    {"value": 1.5, "color": "yellow"},
+                    {"value": 2.1, "color": "red"}
+                  ]
+                },
+                "max": 5
+              }
+            }
+          },
+          {
+            "title": "Cost by Gateway (Last 24h)",
+            "type": "piechart",
+            "gridPos": {"h": 4, "w": 6, "x": 12, "y": 0},
+            "targets": [
+              {
+                "expr": "agentgateway:cost_usd:by_gateway",
+                "legendFormat": "{{gateway_instance}}"
+              }
+            ],
+            "options": {
+              "legend": {
+                "displayMode": "table",
+                "placement": "right",
+                "values": ["value"]
+              }
+            },
+            "fieldConfig": {
+              "defaults": {
+                "unit": "currencyUSD"
+              }
+            }
+          },
+          {
+            "title": "Token Usage Trend",
+            "type": "timeseries",
+            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 4},
+            "targets": [
+              {
+                "expr": "rate(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type=\"input\"}[5m])",
+                "legendFormat": "{{gateway_instance}} - Input"
+              },
+              {
+                "expr": "rate(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type=\"output\"}[5m])",
+                "legendFormat": "{{gateway_instance}} - Output"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "reqps",
+                "custom": {
+                  "lineWidth": 2,
+                  "fillOpacity": 10
+                }
+              }
+            }
+          },
+          {
+            "title": "Cost Trend (Hourly)",
+            "type": "timeseries",
+            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 4},
+            "targets": [
+              {
+                "expr": "agentgateway:cost_usd:total_hourly",
+                "legendFormat": "Total Cost/Hour"
+              },
+              {
+                "expr": "50/24",
+                "legendFormat": "Daily Threshold ($50/day)"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "currencyUSD",
+                "custom": {
+                  "lineWidth": 2
+                }
+              },
+              "overrides": [
+                {
+                  "matcher": {"id": "byName", "options": "Daily Threshold ($50/day)"},
+                  "properties": [
+                    {"id": "color", "value": {"mode": "fixed", "fixedColor": "red"}},
+                    {"id": "custom.lineStyle", "value": {"dash": [10, 10]}}
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "title": "Requests by Gateway",
+            "type": "timeseries",
+            "gridPos": {"h": 8, "w": 12, "x": 0, "y": 12},
+            "targets": [
+              {
+                "expr": "rate(agentgateway_gen_ai_client_duration_seconds_count[5m])",
+                "legendFormat": "{{gateway_instance}}"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "reqps"
+              }
+            }
+          },
+          {
+            "title": "Response Time (P95)",
+            "type": "timeseries",
+            "gridPos": {"h": 8, "w": 12, "x": 12, "y": 12},
+            "targets": [
+              {
+                "expr": "histogram_quantile(0.95, rate(agentgateway_gen_ai_client_duration_seconds_bucket[5m]))",
+                "legendFormat": "{{gateway_instance}} - P95"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "s"
+              }
+            }
+          },
+          {
+            "title": "Gateway Status",
+            "type": "table",
+            "gridPos": {"h": 8, "w": 24, "x": 0, "y": 20},
+            "targets": [
+              {
+                "expr": "up{job=~\".*agentgateway.*\"}",
+                "format": "table",
+                "instant": true
+              }
+            ],
+            "transformations": [
+              {
+                "id": "organize",
+                "options": {
+                  "excludeByName": {"Time": true},
+                  "renameByName": {
+                    "instance": "Instance",
+                    "job": "Job",
+                    "Value": "Status"
+                  }
+                }
+              }
+            ],
+            "fieldConfig": {
+              "overrides": [
+                {
+                  "matcher": {"id": "byName", "options": "Status"},
+                  "properties": [
+                    {
+                      "id": "mappings",
+                      "value": [
+                        {"type": "value", "value": "1", "text": "UP", "color": "green"},
+                        {"type": "value", "value": "0", "text": "DOWN", "color": "red"}
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
