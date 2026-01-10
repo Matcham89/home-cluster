@@ -1,0 +1,87 @@
+---
+# ============================================================================
+# CLAUDE AGENTGATEWAY BACKENDS
+# ============================================================================
+# Each backend is configured with a specific Claude model hardcoded.
+# This ensures that clients cannot override the model - the gateway enforces
+# which model gets used based on which endpoint they connect to.
+#
+# All backends use the same Anthropic API credentials from the secret.
+# ============================================================================
+
+# ============================================================================
+# BACKEND 1: Claude Sonnet 4.5
+# ============================================================================
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: claude-sonnet-backend
+  namespace: kgateway-system
+  labels:
+    app: claude-sonnet
+    model: sonnet-4-5
+    provider: anthropic
+spec:
+  ai:
+    groups:
+      - providers:
+          - name: anthropic-sonnet
+            anthropic:
+              # Model is HARDCODED - client cannot override
+              model: "claude-sonnet-4-5"
+            policies:
+              auth:
+                secretRef:
+                  name: anthropic-secret
+
+---
+# ============================================================================
+# BACKEND 2: Claude Opus 4.5
+# ============================================================================
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: claude-opus-backend
+  namespace: kgateway-system
+  labels:
+    app: claude-opus
+    model: opus-4-5
+    provider: anthropic
+spec:
+  ai:
+    groups:
+      - providers:
+          - name: anthropic-opus
+            anthropic:
+              # Model is HARDCODED - client cannot override
+              model: "claude-opus-4-5"
+            policies:
+              auth:
+                secretRef:
+                  name: anthropic-secret
+
+---
+# ============================================================================
+# BACKEND 3: Claude Haiku 4.5
+# ============================================================================
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: claude-haiku-backend
+  namespace: kgateway-system
+  labels:
+    app: claude-haiku
+    model: haiku-4-5
+    provider: anthropic
+spec:
+  ai:
+    groups:
+      - providers:
+          - name: anthropic-haiku
+            anthropic:
+              # Model is HARDCODED - client cannot override
+              model: "claude-haiku-4-5"
+            policies:
+              auth:
+                secretRef:
+                  name: anthropic-secret

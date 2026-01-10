@@ -8,3 +8,5 @@ resources:
   - ./claude1.yaml
   - ./claude2.yaml
   - ./claude3.yaml
+  # Claude multi-gateway routes (OpenAI-compatible endpoints)
+  - ./claude-routes.yaml
