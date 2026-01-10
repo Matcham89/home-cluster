@@ -123,11 +123,10 @@ spec:
         replacement: gateway3
 
 ---
-# PodMonitor for agentgateway1
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
-  name: agentgateway1
+  name: claude-sonnet
   namespace: monitoring
   labels:
     app: claude-sonnet
@@ -156,11 +155,10 @@ spec:
         regex: '.*_info'
         action: drop
 ---
-# PodMonitor for agentgateway2
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
-  name: agentgateway2
+  name: claude-opus
   namespace: monitoring
   labels:
     app: claude-opus
@@ -185,11 +183,10 @@ spec:
       - targetLabel: gateway_instance
         replacement: claude-opus
 ---
-# PodMonitor for agentgateway3
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
-  name: agentgateway3
+  name: claude-haiku
   namespace: monitoring
   labels:
     app: claude-haiku
