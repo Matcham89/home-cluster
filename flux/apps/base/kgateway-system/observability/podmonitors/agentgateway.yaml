@@ -1,212 +1,74 @@
-# PodMonitor for base agentgateway
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
-  name: agentgateway
+  name: agentgateway-gateways
   namespace: monitoring
   labels:
+    release: kube-prometheus-stack
     app: agentgateway
-    release: kube-prometheus-stack
 spec:
-  selector:
-    matchLabels:
-      gateway.networking.k8s.io/gateway-name: agentgateway
   namespaceSelector:
     matchNames:
       - kgateway-system
-  podMetricsEndpoints:
-  - port: metrics
-    path: /metrics
-    interval: 30s
-    scrapeTimeout: 10s
-    relabelings:
-      - sourceLabels: [__meta_kubernetes_pod_name]
-        targetLabel: pod
-      - sourceLabels: [__meta_kubernetes_namespace]
-        targetLabel: namespace
-      - targetLabel: gateway_instance
-        replacement: gateway0
-    metricRelabelings:
-      - sourceLabels: [__name__]
-        regex: '.*_info'
-        action: drop
----
-# PodMonitor for agentgateway1
-apiVersion: monitoring.coreos.com/v1
-kind: PodMonitor
-metadata:
-  name: agentgateway1
-  namespace: monitoring
-  labels:
-    app: agentgateway1
-    release: kube-prometheus-stack
-spec:
-  selector:
-    matchLabels:
-      gateway.networking.k8s.io/gateway-name: agentgateway1
-  namespaceSelector:
-    matchNames:
-      - kgateway-system
-  podMetricsEndpoints:
-  - port: metrics
-    path: /metrics
-    interval: 30s
-    scrapeTimeout: 10s
-    relabelings:
-      - sourceLabels: [__meta_kubernetes_pod_name]
-        targetLabel: pod
-      - sourceLabels: [__meta_kubernetes_namespace]
-        targetLabel: namespace
-      - targetLabel: gateway_instance
-        replacement: gateway1
-    metricRelabelings:
-      - sourceLabels: [__name__]
-        regex: '.*_info'
-        action: drop
----
-# PodMonitor for agentgateway2
-apiVersion: monitoring.coreos.com/v1
-kind: PodMonitor
-metadata:
-  name: agentgateway2
-  namespace: monitoring
-  labels:
-    app: agentgateway2
-    release: kube-prometheus-stack
-spec:
-  selector:
-    matchLabels:
-      gateway.networking.k8s.io/gateway-name: agentgateway2
-  namespaceSelector:
-    matchNames:
-      - kgateway-system
-  podMetricsEndpoints:
-  - port: metrics
-    path: /metrics
-    interval: 30s
-    scrapeTimeout: 10s
-    relabelings:
-      - sourceLabels: [__meta_kubernetes_pod_name]
-        targetLabel: pod
-      - sourceLabels: [__meta_kubernetes_namespace]
-        targetLabel: namespace
-      - targetLabel: gateway_instance
-        replacement: gateway2
----
-# PodMonitor for agentgateway3
-apiVersion: monitoring.coreos.com/v1
-kind: PodMonitor
-metadata:
-  name: agentgateway3
-  namespace: monitoring
-  labels:
-    app: agentgateway3
-    release: kube-prometheus-stack
-spec:
-  selector:
-    matchLabels:
-      gateway.networking.k8s.io/gateway-name: agentgateway3
-  namespaceSelector:
-    matchNames:
-      - kgateway-system
-  podMetricsEndpoints:
-  - port: metrics
-    path: /metrics
-    interval: 30s
-    scrapeTimeout: 10s
-    relabelings:
-      - sourceLabels: [__meta_kubernetes_pod_name]
-        targetLabel: pod
-      - sourceLabels: [__meta_kubernetes_namespace]
-        targetLabel: namespace
-      - targetLabel: gateway_instance
-        replacement: gateway3
 
----
-apiVersion: monitoring.coreos.com/v1
-kind: PodMonitor
-metadata:
-  name: claude-sonnet
-  namespace: monitoring
-  labels:
-    app: claude-sonnet
-    release: kube-prometheus-stack
-spec:
+  # This cleanly targets ONLY dataplane pods because they all have:
+  # gateway.networking.k8s.io/gateway-name=<gateway object name>
+  # Your controller pod does NOT, so it won't be scraped.
   selector:
-    matchLabels:
-      gateway.networking.k8s.io/gateway-name: agentgateway1
-  namespaceSelector:
-    matchNames:
-      - kgateway-system
+    matchExpressions:
+      - key: gateway.networking.k8s.io/gateway-name
+        operator: Exists
+
   podMetricsEndpoints:
-  - port: metrics
-    path: /metrics
-    interval: 30s
-    scrapeTimeout: 10s
-    relabelings:
-      - sourceLabels: [__meta_kubernetes_pod_name]
-        targetLabel: pod
-      - sourceLabels: [__meta_kubernetes_namespace]
-        targetLabel: namespace
-      - targetLabel: gateway_instance
-        replacement: claude-sonnet
-    metricRelabelings:
-      - sourceLabels: [__name__]
-        regex: '.*_info'
-        action: drop
----
-apiVersion: monitoring.coreos.com/v1
-kind: PodMonitor
-metadata:
-  name: claude-opus
-  namespace: monitoring
-  labels:
-    app: claude-opus
-    release: kube-prometheus-stack
-spec:
-  selector:
-    matchLabels:
-      gateway.networking.k8s.io/gateway-name: agentgateway2
-  namespaceSelector:
-    matchNames:
-      - kgateway-system
-  podMetricsEndpoints:
-  - port: metrics
-    path: /metrics
-    interval: 30s
-    scrapeTimeout: 10s
-    relabelings:
-      - sourceLabels: [__meta_kubernetes_pod_name]
-        targetLabel: pod
-      - sourceLabels: [__meta_kubernetes_namespace]
-        targetLabel: namespace
-      - targetLabel: gateway_instance
-        replacement: claude-opus
----
-apiVersion: monitoring.coreos.com/v1
-kind: PodMonitor
-metadata:
-  name: claude-haiku
-  namespace: monitoring
-  labels:
-    app: claude-haiku
-    release: kube-prometheus-stack
-spec:
-  selector:
-    matchLabels:
-      gateway.networking.k8s.io/gateway-name: agentgateway3
-  namespaceSelector:
-    matchNames:
-      - kgateway-system
-  podMetricsEndpoints:
-  - port: metrics
-    path: /metrics
-    interval: 30s
-    scrapeTimeout: 10s
-    relabelings:
-      - sourceLabels: [__meta_kubernetes_pod_name]
-        targetLabel: pod
-      - sourceLabels: [__meta_kubernetes_namespace]
-        targetLabel: namespace
-      - targetLabel: gateway_instance
-        replacement: claude-haiku
+    - port: metrics
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s
+
+      relabelings:
+        # Basics
+        - sourceLabels: [__meta_kubernetes_pod_name]
+          targetLabel: pod
+        - sourceLabels: [__meta_kubernetes_namespace]
+          targetLabel: namespace
+
+        # Canonical gateway identity (matches Gateway object name)
+        - sourceLabels: [__meta_kubernetes_pod_label_gateway_networking_k8s_io_gateway_name]
+          targetLabel: gateway_name
+
+        # Keep compatibility with your existing rules/dashboards:
+        # gateway_instance == gateway_name (truthy, stable, no guessing)
+        - sourceLabels: [__meta_kubernetes_pod_label_gateway_networking_k8s_io_gateway_name]
+          targetLabel: gateway_instance
+
+        # Optional: tag Claude gateways with provider/model (only when it matches)
+        - sourceLabels: [gateway_name]
+          regex: claude-(sonnet|opus|haiku)-gateway
+          targetLabel: provider
+          replacement: anthropic
+
+        - sourceLabels: [gateway_name]
+          regex: claude-sonnet-gateway
+          targetLabel: model
+          replacement: sonnet-4-5
+
+        - sourceLabels: [gateway_name]
+          regex: claude-opus-gateway
+          targetLabel: model
+          replacement: opus-4-5
+
+        - sourceLabels: [gateway_name]
+          regex: claude-haiku-gateway
+          targetLabel: model
+          replacement: haiku-4-5
+
+        # Optional: tag ollama gateway
+        - sourceLabels: [gateway_name]
+          regex: gateway-ollama
+          targetLabel: provider
+          replacement: ollama
+
+      metricRelabelings:
+        - sourceLabels: [__name__]
+          regex: '.*_info'
+          action: drop
