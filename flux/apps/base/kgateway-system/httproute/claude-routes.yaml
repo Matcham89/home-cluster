@@ -50,6 +50,25 @@ spec:
           group: agentgateway.dev
           kind: AgentgatewayBackend
 
+    - matches:
+        - path:
+            type: Exact
+            value: /v1/models
+      backendRefs:
+        - name: claude-sonnet-backend
+          namespace: kgateway-system
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
+
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: claude-sonnet-backend
+          namespace: kgateway-system
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
 ---
 # ============================================================================
 # ROUTE 2: Claude Opus 4.5
@@ -92,6 +111,25 @@ spec:
           group: agentgateway.dev
           kind: AgentgatewayBackend
 
+    - matches:
+        - path:
+            type: Exact
+            value: /v1/models
+      backendRefs:
+        - name: claude-opus-backend
+          namespace: kgateway-system
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
+
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
+      backendRefs:
+        - name: claude-opus-backend
+          namespace: kgateway-system
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
 ---
 # ============================================================================
 # ROUTE 3: Claude Haiku 4.5
@@ -128,6 +166,26 @@ spec:
         - path:
             type: PathPrefix
             value: /v1/completions
+      backendRefs:
+        - name: claude-haiku-backend
+          namespace: kgateway-system
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
+
+    - matches:
+        - path:
+            type: Exact
+            value: /v1/models
+      backendRefs:
+        - name: claude-haiku-backend
+          namespace: kgateway-system
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
+
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /
       backendRefs:
         - name: claude-haiku-backend
           namespace: kgateway-system
