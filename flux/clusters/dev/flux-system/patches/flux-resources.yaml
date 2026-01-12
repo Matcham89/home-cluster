@@ -1,0 +1,81 @@
+---
+# Right-sized resource limits for Flux controllers
+# Based on actual usage: 0.19 cores / 0.59 GiB total
+# Provides 3-4x headroom for spikes while reducing waste
+# CPU: requests only (no limits to avoid CFS throttling)
+# Memory: both requests and limits (to prevent OOM)
+
+# Source Controller - handles git/oci/helm repositories
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: source-controller
+  namespace: flux-system
+spec:
+  template:
+    spec:
+      containers:
+      - name: manager
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            memory: 512Mi
+
+---
+# Kustomize Controller - reconciles Kustomizations
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kustomize-controller
+  namespace: flux-system
+spec:
+  template:
+    spec:
+      containers:
+      - name: manager
+        resources:
+          requests:
+            cpu: 200m
+            memory: 256Mi
+          limits:
+            memory: 1Gi
+
+---
+# Helm Controller - reconciles HelmReleases
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: helm-controller
+  namespace: flux-system
+spec:
+  template:
+    spec:
+      containers:
+      - name: manager
+        resources:
+          requests:
+            cpu: 200m
+            memory: 256Mi
+          limits:
+            memory: 1Gi
+
+---
+# Notification Controller - handles events and webhooks
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-controller
+  namespace: flux-system
+spec:
+  template:
+    spec:
+      containers:
+      - name: manager
+        resources:
+          requests:
+            cpu: 50m
+            memory: 128Mi
+          limits:
+            memory: 256Mi
