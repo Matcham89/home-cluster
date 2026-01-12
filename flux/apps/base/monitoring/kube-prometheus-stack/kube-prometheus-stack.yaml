@@ -38,7 +38,6 @@ spec:
             cpu: 50m
             memory: 128Mi
           limits:
-            cpu: 200m
             memory: 256Mi
     kubeStateMetrics:
       enabled: true
@@ -51,7 +50,6 @@ spec:
           cpu: 50m
           memory: 64Mi
         limits:
-          cpu: 200m
           memory: 256Mi
       prometheus:
         monitor:
@@ -69,7 +67,6 @@ spec:
           cpu: 50m
           memory: 64Mi
         limits:
-          cpu: 200m
           memory: 256Mi
     prometheus:
       enabled: true
@@ -82,7 +79,6 @@ spec:
             cpu: 200m
             memory: 1Gi
           limits:
-            cpu: 1000m
             memory: 2Gi
         ruleSelectorNilUsesHelmValues: false
         serviceMonitorSelectorNilUsesHelmValues: false
@@ -209,7 +205,6 @@ spec:
               cpu: 50m
               memory: 64Mi
             limits:
-              cpu: 200m
               memory: 256Mi
         datasources:
           resources:
@@ -217,14 +212,12 @@ spec:
               cpu: 50m
               memory: 64Mi
             limits:
-              cpu: 200m
               memory: 256Mi
       resources:
         requests:
           cpu: 100m
           memory: 256Mi
         limits:
-          cpu: 500m
           memory: 512Mi
     prometheusOperator:
       resources:
@@ -232,5 +225,4 @@ spec:
           cpu: 50m
           memory: 128Mi
         limits:
-          cpu: 200m
           memory: 256Mi
