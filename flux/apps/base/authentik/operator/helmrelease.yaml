@@ -84,7 +84,6 @@ spec:
           cpu: 250m
           memory: 768Mi
         limits:
-          cpu: 1000m
           memory: 1Gi
       volumes:
         - name: postgres-creds

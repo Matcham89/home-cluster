@@ -86,7 +86,6 @@ spec:
             name: s3-credentials
       resources:
         limits:
-          cpu: 500m
           memory: 1Gi
         requests:
           cpu: 100m
@@ -99,7 +98,6 @@ spec:
             name: s3-credentials
       resources:
         limits:
-          cpu: 500m
           memory: 1Gi
         requests:
           cpu: 100m
@@ -112,7 +110,6 @@ spec:
             name: s3-credentials
       resources:
         limits:
-          cpu: 500m
           memory: 1536Mi
         requests:
           cpu: 100m
@@ -185,7 +182,6 @@ spec:
       allocatedMemory: 512
       resources:
         limits:
-          cpu: 500m
           memory: 1Gi
         requests:
           cpu: 100m
@@ -197,7 +193,6 @@ spec:
       allocatedMemory: 256
       resources:
         limits:
-          cpu: 200m
           memory: 512Mi
         requests:
           cpu: 50m
