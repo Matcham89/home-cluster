@@ -8,8 +8,13 @@ metadata:
   name: default-limits
 spec:
   limits:
-  - default:
-      memory: 256Mi
+  - type: Container
     defaultRequest:
-      memory: 64Mi
-    type: Container
+      cpu: 10m
+      memory: 128Mi
+    default:
+      memory: 512Mi
+
+
+
+
