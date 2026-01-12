@@ -27,14 +27,6 @@ spec:
     name: flux-kube-state-metrics-config
     valuesKey: kube-state-metrics-config.yaml
   values:
-    # Config-reloader sidecar resources (top-level, applies to all Prometheus/Alertmanager instances)
-    prometheusConfigReloader:
-      resources:
-        requests:
-          cpu: 50m
-          memory: 50Mi
-        limits:
-          memory: 128Mi
     alertmanager:
       enabled: true
       service:
