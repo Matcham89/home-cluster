@@ -1,16 +1,16 @@
 ---
 # Resource quota patch for flux-system namespace
-# Current usage: CPU limits=11/14 (92%), Memory limits=7Gi/10Gi (39%)
-# Flux controllers and GitOps automation components
-# Increased CPU from 12 to 14 for high utilization, reduced memory from 18Gi to 10Gi
+# Right-sized based on actual usage: 0.19 cores / 0.59 GiB
+# Flux controllers now allocated: 0.55 cores / 2.25 GiB (with 3-4x headroom)
+# Quota provides additional buffer for flux-operator-web and other components
 apiVersion: v1
 kind: ResourceQuota
 metadata:
   name: namespace-quota
 spec:
   hard:
-    requests.cpu: "6"
-    requests.memory: 8Gi
-    limits.memory: 10Gi
+    requests.cpu: "2"
+    requests.memory: 4Gi
+    limits.memory: 6Gi
     persistentvolumeclaims: "10"
     pods: "50"
