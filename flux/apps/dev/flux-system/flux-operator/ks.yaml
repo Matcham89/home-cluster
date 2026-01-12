@@ -6,7 +6,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 30m
-  path: ./flux/apps/base/flux-system/flux-operator-web
+  path: ./flux/apps/base/flux-system/flux-operator
   prune: true
   sourceRef:
     kind: GitRepository
