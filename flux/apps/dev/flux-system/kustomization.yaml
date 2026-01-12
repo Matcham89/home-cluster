@@ -12,6 +12,6 @@ resources:
   - ./monitoring/ks.yaml
   - ./limit-ranges/ks.yaml
   - ./resource-quotas/ks.yaml
-  - ./flux-operator-web/ks.yaml
+  - ./flux-operator/ks.yaml
   # DISABLED: Commented out for easier development/deployment
   # - ./network-policies/ks.yaml
