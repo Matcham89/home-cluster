@@ -4,7 +4,7 @@ metadata:
   name: kagent-backend
   namespace: kgateway-system
 spec:
-  type: Static
-  hosts:
-    - host: kagent-controller.kagent.svc.cluster.local
-      port: 8083
+  static:
+    hosts:
+      - host: kagent-controller.kagent.svc.cluster.local
+        port: 8083
