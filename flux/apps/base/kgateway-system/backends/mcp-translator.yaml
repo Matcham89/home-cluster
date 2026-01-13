@@ -2,10 +2,12 @@ apiVersion: agentgateway.dev/v1alpha1
 kind: AgentgatewayBackend
 metadata:
   name: k8s-agent-mcp-translator
+  namespace: kgateway-system
 spec:
-  type: OpenAPI
-  openapi:
-    specUrl: http://kagent-controller.kagent.svc.cluster.local:8083/swagger.json
-  hosts:
-    - host: kagent-controller.kagent.svc.cluster.local
-      port: 8083
+  mcp:
+    targets:
+      - name: k8s-agent-target
+        openapi: 
+          schema:
+            url: http://kagent-controller.kagent.svc.cluster.local:8083/swagger.json
+          host: kagent-controller.kagent.svc.cluster.local:8083
