@@ -57,7 +57,6 @@ spec:
       runAsUser: 1000
     podSecurityContext:
       fsGroup: 1000
-    # Controller resources
     controller:
       resources:
         limits:
@@ -66,7 +65,7 @@ spec:
           cpu: 100m
           memory: 128Mi
       service:
-        appProtocol: kgateway.dev/a2a
+        appProtocol: kgateway.dev/mcp
 
     agents:
       k8s-agent:
