@@ -22,4 +22,4 @@ spec:
           namespace: kgateway-system
           group: agentgateway.dev
           kind: AgentgatewayBackend
-          port: 8083
+
