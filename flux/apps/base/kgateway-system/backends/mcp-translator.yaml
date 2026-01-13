@@ -1,16 +1,16 @@
-apiVersion: gateway.kgateway.dev/v1alpha1
-kind: Backend
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
 metadata:
   name: k8s-agent-mcp-translator
   namespace: kgateway-system
 spec:
-  type: MCP
   mcp:
+    # 1. The OpenAPI spec URL goes here (peer to 'targets')
+    openapi:
+      url: http://kagent-controller.kagent.svc.cluster.local:8083/swagger.json
+    # 2. Define the network destination for the final REST calls
     targets:
       - name: k8s-agent-target
-        openapi:
-          url: http://kagent-controller.kagent.svc.cluster.local:8083/swagger.json
         static:
           host: kagent-controller.kagent.svc.cluster.local
           port: 8083
-          protocol: StreamableHTTP
