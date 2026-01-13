@@ -1,10 +1,11 @@
 ---
 # ============================================================================
-# CLAUDE AGENTGATEWAY BACKENDS
+# CLAUDE AGENTGATEWAY BACKENDS WITH OIDC AUTHENTICATION
 # ============================================================================
-# Each backend is configured with a specific Claude model hardcoded.
-# This ensures that clients cannot override the model - the gateway enforces
-# which model gets used based on which endpoint they connect to.
+# Each backend is configured with:
+# 1. Hardcoded Claude model (cannot be overridden by client)
+# 2. MCP authentication via Authentik OIDC
+# 3. Authorization rules based on JWT claims and scopes
 #
 # All backends use the same Anthropic API credentials from the secret.
 # ============================================================================
@@ -34,6 +35,48 @@ spec:
                 secretRef:
                   name: anthropic-secret
 
+  # MCP Authentication Configuration
+  mcpAuthentication:
+    # Authentik OIDC issuer URL for this application
+    issuer: https://authentik.kubegit.com/application/o/claude-sonnet-kubegit-com/
+
+    # JWKS endpoint for token validation
+    jwksUrl: https://authentik.kubegit.com/application/o/claude-sonnet-kubegit-com/jwks/
+
+    # Resource metadata for OAuth 2.0 resource server
+    resourceMetadata:
+      # This backend's resource identifier
+      resource: http://192.168.1.206:8091/
+
+      # Scopes supported by this resource
+      scopesSupported:
+        - openid
+        - email
+        - profile
+        - claude:read
+        - claude:chat
+        - claude:models
+        - claude:sonnet
+
+      # How clients can present bearer tokens
+      bearerMethodsSupported:
+        - header    # Authorization: Bearer <token>
+        - query     # ?access_token=<token>
+        - body      # access_token in POST body
+
+  # MCP Authorization Rules (CEL expressions)
+  mcpAuthorization:
+    rules:
+      # Rule 1: Must have valid JWT subject (authenticated user)
+      - 'has(jwt.sub) && jwt.sub != ""'
+
+      # Rule 2: Must have required scope for chat access
+      - 'has(jwt.scope) && jwt.scope.contains("claude:chat")'
+
+      # Rule 3: Optionally restrict to specific user group
+      # Uncomment to enable group-based access control:
+      # - 'has(jwt.groups) && ("Claude Users" in jwt.groups || "claude-sonnet-users" in jwt.groups)'
+
 ---
 # ============================================================================
 # BACKEND 2: Claude Opus 4.5
@@ -60,6 +103,39 @@ spec:
                 secretRef:
                   name: anthropic-secret
 
+  # MCP Authentication Configuration
+  mcpAuthentication:
+    issuer: https://authentik.kubegit.com/application/o/claude-opus-kubegit-com/
+    jwksUrl: https://authentik.kubegit.com/application/o/claude-opus-kubegit-com/jwks/
+
+    resourceMetadata:
+      resource: http://192.168.1.210:8092/
+      scopesSupported:
+        - openid
+        - email
+        - profile
+        - claude:read
+        - claude:chat
+        - claude:models
+        - claude:opus
+      bearerMethodsSupported:
+        - header
+        - query
+        - body
+
+  # MCP Authorization Rules
+  # Opus is expensive - require specific group membership
+  mcpAuthorization:
+    rules:
+      # Rule 1: Must have valid JWT subject
+      - 'has(jwt.sub) && jwt.sub != ""'
+
+      # Rule 2: Must have required scope
+      - 'has(jwt.scope) && jwt.scope.contains("claude:chat")'
+
+      # Rule 3: Opus is expensive - require specific group membership
+      - 'has(jwt.groups) && ("claude-opus-users" in jwt.groups || "Claude Admins" in jwt.groups)'
+
 ---
 # ============================================================================
 # BACKEND 3: Claude Haiku 4.5
@@ -85,3 +161,37 @@ spec:
               auth:
                 secretRef:
                   name: anthropic-secret
+
+  # MCP Authentication Configuration
+  mcpAuthentication:
+    issuer: https://authentik.kubegit.com/application/o/claude-haiku-kubegit-com/
+    jwksUrl: https://authentik.kubegit.com/application/o/claude-haiku-kubegit-com/jwks/
+
+    resourceMetadata:
+      resource: http://192.168.1.211:8093/
+      scopesSupported:
+        - openid
+        - email
+        - profile
+        - claude:read
+        - claude:chat
+        - claude:models
+        - claude:haiku
+      bearerMethodsSupported:
+        - header
+        - query
+        - body
+
+  # MCP Authorization Rules
+  # Haiku is cost-effective - allow broader access
+  mcpAuthorization:
+    rules:
+      # Rule 1: Must have valid JWT subject
+      - 'has(jwt.sub) && jwt.sub != ""'
+
+      # Rule 2: Must have required scope
+      - 'has(jwt.scope) && jwt.scope.contains("claude:chat")'
+
+      # Rule 3: Haiku is cost-effective - optionally restrict to specific groups
+      # Uncomment to enable group-based access control:
+      # - 'has(jwt.groups) && "Claude Users" in jwt.groups'
