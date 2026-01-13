@@ -18,7 +18,8 @@ spec:
             type: PathPrefix
             value: /api/a2a/
       backendRefs:
-        - name: kagent-controller
-          namespace: kagent
-          kind: Service
+        - name: kagent-backend
+          namespace: kgateway-system
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
           port: 8083
