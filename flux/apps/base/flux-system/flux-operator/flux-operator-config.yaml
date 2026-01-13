@@ -6,6 +6,9 @@ metadata:
 spec:
   inputs:
     - domain: "kubegit.com"
+      provider:
+        name: flux-operator
+        namespace: flux-system
   resources:
     - apiVersion: source.toolkit.fluxcd.io/v1
       kind: OCIRepository
