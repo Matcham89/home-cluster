@@ -12,4 +12,5 @@ resources:
   - ./claude-backends.yaml
   - ./kagent.yaml
   - ./mcp-translator.yaml
+  - ./claude-code.yaml
 
