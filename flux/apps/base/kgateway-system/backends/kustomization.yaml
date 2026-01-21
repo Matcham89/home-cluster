@@ -11,6 +11,6 @@ resources:
   # Claude multi-gateway backends (one backend per model with hardcoded model)
   - ./claude-backends.yaml
   - ./kagent.yaml
-  - ./mcp-translator.yaml
+  # - ./mcp-translator.yaml
   - ./claude-code.yaml
 
