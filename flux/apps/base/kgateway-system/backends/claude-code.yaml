@@ -31,9 +31,7 @@ spec:
     groups:
       - providers:
           - name: anthropic
-            anthropic:
-              # Model is HARDCODED - client cannot override
-              model: "claude-sonnet-4-5"
+            anthropic: {}
             policies:
               auth:
                 secretRef:
