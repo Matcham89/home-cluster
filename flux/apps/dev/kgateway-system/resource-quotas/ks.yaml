@@ -9,7 +9,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   interval: 1h
-  path: ./flux/apps/dev/kgateway-system/resource-quota-override
+  path: ./flux/apps/base/resource-quotas
   sourceRef:
     kind: GitRepository
     name: flux-system

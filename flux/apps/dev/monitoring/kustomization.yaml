@@ -12,7 +12,7 @@ resources:
   - ./kube-prometheus-stack/ks.yaml
   - ./open-telemetry/ks.yaml
   - ./limit-range-override
-  - ./resource-quota-override
+  - ./resource-quotas/ks.yaml
   # DISABLED: Commented out for easier development/deployment
   # - ./network-policies/ks.yaml
   # - ./seaweedfs/ks.yaml
