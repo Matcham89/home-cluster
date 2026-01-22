@@ -51,6 +51,9 @@ spec:
     - matches:
         - path:
             type: PathPrefix
+            value: /v1/chat/completions
+        - path:
+            type: PathPrefix
             value: /v1/messages
         - path:
             type: PathPrefix
