@@ -11,6 +11,5 @@ spec:
   hard:
     requests.cpu: "2"
     requests.memory: 4Gi
-    limits.memory: 8Gi
     persistentvolumeclaims: "10"
     pods: "50"
