@@ -25,18 +25,29 @@ spec:
     cleanupOnFail: true
     timeout: 10m
   values:
+    cni:
+      resources:
+        limits:
+          memory: 600Mi
+        requests:
+          cpu: 100m
+          memory: 100Mi
     ambient:
       # If enabled, ambient redirection will be enabled
       enabled: true
       # If ambient is enabled, this selector will be used to identify the ambient-enabled pods
-      enablementSelectors: 
-      - podSelector:
-          matchLabels: {istio.io/dataplane-mode: ambient}
-      - podSelector:
-          matchExpressions:
-          - { key: istio.io/dataplane-mode, operator: NotIn, values: [none] }
-        namespaceSelector:
-          matchLabels: {istio.io/dataplane-mode: ambient}
+      enablementSelectors:
+        - podSelector:
+            matchLabels: { istio.io/dataplane-mode: ambient }
+        - podSelector:
+            matchExpressions:
+              - {
+                  key: istio.io/dataplane-mode,
+                  operator: NotIn,
+                  values: [none],
+                }
+          namespaceSelector:
+            matchLabels: { istio.io/dataplane-mode: ambient }
       # Set ambient config dir path: defaults to /etc/ambient-config
       configDir: ""
       # If enabled, and ambient is enabled, DNS redirection will be enabled
