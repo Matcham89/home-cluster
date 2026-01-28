@@ -37,6 +37,8 @@ spec:
           name: << inputs.provider.name >>
         values:
           web:
+            rbac:
+              createRoles: true
             config:
               baseURL: "https://flux.<< inputs.domain >>"
               authentication:
@@ -55,6 +57,19 @@ spec:
             name: flux-web-client
             valuesKey: client-secret
             targetPath: web.config.authentication.oauth2.clientSecret
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: flux-web-platform-team
+subjects:
+  - kind: Group
+    name: flux-admins
+    apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: flux-web-admin
+  apiGroup: rbac.authorization.k8s.io
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute

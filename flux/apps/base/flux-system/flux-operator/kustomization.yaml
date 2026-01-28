@@ -4,4 +4,4 @@ kind: Kustomization
 resources:
   - externalsecret.yaml
   - flux-operator-config.yaml
-  - rbac.yaml
+
