@@ -6,3 +6,4 @@ resources:
   - longhorn.yaml
   - monitoring.yaml
   - authentik.yaml
+  - n8n.yaml
