@@ -5,3 +5,4 @@ kind: Kustomization
 resources:
   - ./github.yaml
   - ./youtube.yaml
+  - ./flux.yaml

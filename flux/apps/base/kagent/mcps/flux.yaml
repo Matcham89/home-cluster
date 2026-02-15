@@ -1,0 +1,43 @@
+apiVersion: kagent.dev/v1alpha1
+kind: MCPServer
+metadata:
+  name: flux-mcp
+  namespace: kagent
+  annotations:
+    kmcp.dev/project-name: flux-mcp
+  labels:
+    app.kubernetes.io/name: flux-mcp
+    kmcp.dev/framework: flux-operator-mcp
+spec:
+  deployment:
+    image: ghcr.io/controlplaneio-fluxcd/flux-operator-mcp:v0.41.1
+    cmd: /flux-operator-mcp
+    args:
+      - serve
+    port: 3000
+  stdioTransport: {}
+  transportType: stdio
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flux-mcp-kagent
+  namespace: kagent
+  annotations:
+    kagent.dev/mcp-service-path: /mcp
+    kagent.dev/mcp-service-port: "3000"
+  labels:
+    kagent.dev/mcp-service: "true"
+    app.kubernetes.io/name: flux-mcp
+    app: flux-mcp
+spec:
+  selector:
+    app.kubernetes.io/instance: flux-mcp
+    app.kubernetes.io/name: flux-mcp
+  ports:
+    - appProtocol: kgateway.dev/mcp
+      name: mcp
+      port: 3000
+      protocol: TCP
+      targetPort: 3000
+  type: ClusterIP
