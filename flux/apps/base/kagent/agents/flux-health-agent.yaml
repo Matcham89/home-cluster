@@ -79,14 +79,14 @@ spec:
             - reconcile_flux_kustomization
             - reconcile_flux_helmrelease
         type: McpServer
-      - builtinTool:
-          name: GetResources
-        type: BuiltinTool
-      - builtinTool:
-          name: ListEvents
-        type: BuiltinTool
-      - builtinTool:
-          name: GetPodLogs
-        type: BuiltinTool
+      - builtin:
+          name: kagent.tools.k8s.GetResources
+        type: Builtin
+      - builtin:
+          name: kagent.tools.k8s.GetEvents
+        type: Builtin
+      - builtin:
+          name: kagent.tools.k8s.GetPodLogs
+        type: Builtin
 
   description: An AI Agent that checks Flux reconciliation and pod health in a namespace after changes are applied.
