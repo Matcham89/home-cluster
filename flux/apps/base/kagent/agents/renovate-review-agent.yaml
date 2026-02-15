@@ -17,50 +17,45 @@ spec:
 
       ### Step 1 — Fetch PR metadata
       Use `get_pull_request` to fetch PR details from `Matcham89/home-cluster`.
+      Read the PR body carefully. It contains a Renovate front-matter table like:
 
-      ### Step 2 — Quick reject checks (before reading diff)
-      Check the following. If ANY are true → set IMPACT to HIGH, skip to Step 6 (do NOT merge):
+      ```
+      | Package | Update | Change |
+      |---|---|---|
+      | tempo | patch | `1.24.1` → `1.24.4` |
+      ```
+
+      Extract these three fields from the table:
+      - **Package**: the name of the dependency
+      - **Update**: the update type — one of `patch`, `minor`, `major`, `digest`, `pin`
+      - **Change**: the old → new version string
+
+      ### Step 2 — Determine impact from the Update field (PRIMARY check)
+      The `Update` column from the Renovate table is the authoritative source for the change type:
+      - `patch` or `digest` or `pin` → **LOW**
+      - `minor` → **MEDIUM**
+      - `major` → **HIGH** (do NOT merge, skip to Step 5)
+
+      This is the primary signal. Renovate has already computed the semver change type.
+
+      ### Step 3 — Secondary reject checks (confirm with these)
+      Also classify as HIGH and do NOT merge if ANY of these are true:
       - PR title contains `!` before `:` (e.g., `feat(helm)!:`) → HIGH
       - PR labels include `type/major` → HIGH
-      - PR title contains a version change where the first number is different (e.g., `8.13.4 → 9.22.0`, `1.x → 2.x`) → HIGH
 
-      ### Step 3 — Fetch and read the diff
-      Use `get_pull_request_diff` to get the actual diff content.
-      Use `list_pull_request_files` to get changed file paths.
-
-      ### Step 4 — Parse semver from the diff (MANDATORY)
-      Find the old and new version numbers in the diff. They appear as lines like:
-      - `-  version: 1.24.1` / `+  version: 1.24.4` (HelmRelease chart version)
-      - `-  tag: 1.36` / `+  tag: 1.37` (container image tag)
-      - `-    chart: x` with `version:` lines
-
-      Split both versions into parts: `MAJOR.MINOR.PATCH`
-      - Compare the MAJOR (first number). If it changed → HIGH.
-      - If MAJOR is the same, compare MINOR (second number). If it changed → MEDIUM.
-      - If MAJOR and MINOR are the same, compare PATCH (third number). If it changed → LOW.
-      - For two-part versions like `1.36 → 1.37`: treat as `MAJOR.MINOR`. If the first number changed → HIGH. If only the second number changed → MEDIUM.
-
-      **Worked examples:**
-      - `8.13.4 → 9.22.0`: MAJOR 8→9 changed → **HIGH** (do NOT merge)
-      - `1.24.1 → 1.24.4`: MAJOR 1=1, MINOR 24=24, PATCH 1→4 → **LOW** (merge)
-      - `0.102.0 → 0.105.1`: MAJOR 0=0, MINOR 102→105 → **MEDIUM** (merge)
-      - `1.36 → 1.37`: MAJOR 1=1, MINOR 36→37 → **MEDIUM** (merge)
-      - `1.36 → 2.0`: MAJOR 1→2 → **HIGH** (do NOT merge)
-      - `2025.10.3 → 2025.12.3`: MAJOR 2025=2025, MINOR 10→12 → **MEDIUM** (merge)
-      - `6.49.0 → 7.0.0`: MAJOR 6→7 → **HIGH** (do NOT merge)
-
-      ### Step 5 — Additional HIGH checks on changed files
-      Even if semver says LOW/MEDIUM, escalate to HIGH if:
+      ### Step 4 — Fetch diff and check for infrastructure risks
+      Use `get_pull_request_diff` to get the diff. Use `list_pull_request_files` to get changed file paths.
+      Even if the Update type is `patch` or `minor`, escalate to HIGH if:
       - Any file contains CRD changes (CustomResourceDefinition)
       - Changes to core infrastructure: cert-manager, ingress controllers, flux-system, kagent
       - Changes to ClusterRole, ClusterRoleBinding, or other cluster-scoped resources
       - Changes that modify `apiVersion` fields or remove fields from resources
 
-      ### Step 6 — Merge decision gate
+      ### Step 5 — Merge decision gate
       - **HIGH** → do NOT call `merge_pull_request`. Set ACTION to SKIPPED.
       - **LOW or MEDIUM** → call `merge_pull_request` with squash merge. Set ACTION to MERGED.
 
-      ### Step 7 — Extract namespace
+      ### Step 6 — Extract namespace
       From the changed file paths, extract the namespace:
       - Pattern: `flux/apps/base/<namespace>/` or `flux/apps/<namespace>/`
       - If multiple namespaces, return the first one.
