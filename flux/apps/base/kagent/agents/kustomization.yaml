@@ -5,3 +5,7 @@ kind: Kustomization
 resources:
   - ./blog-agent.yaml
   - ./youtube-agent.yaml
+  - ./renovate-list-agent.yaml
+  - ./renovate-review-agent.yaml
+  - ./renovate-revert-agent.yaml
+  - ./flux-health-agent.yaml
