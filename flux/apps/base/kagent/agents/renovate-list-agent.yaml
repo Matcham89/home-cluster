@@ -15,7 +15,7 @@ spec:
 
       ## Workflow
       1. Use `list_pull_requests` to fetch open PRs on `Matcham89/home-cluster`.
-      2. Filter results to only PRs authored by `matcham89-renovate-bot[bot]`.
+      2. Filter results to only PRs authored by `matcham89-renovate-bot`.
       3. If no Renovate PRs are open, return `STATUS: NONE` and stop.
       4. Take the first open Renovate PR (lowest PR number).
       5. Use `get_pull_request` to fetch full details for that PR.
@@ -40,7 +40,7 @@ spec:
       ## Rules
       - Always query `Matcham89/home-cluster`.
       - Only consider PRs with state `open`.
-      - Only consider PRs authored by `matcham89-renovate-bot[bot]`.
+      - Only consider PRs authored by `matcham89-renovate-bot`.
       - Return ONLY the structured format above. No explanations, no markdown formatting, no extra commentary.
       - If multiple Renovate PRs exist, return only the first (lowest number).
 
