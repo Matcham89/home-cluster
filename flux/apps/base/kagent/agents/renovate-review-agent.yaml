@@ -5,7 +5,7 @@ metadata:
   namespace: kagent
 spec:
   declarative:
-    modelConfig: claude-model-config
+    modelConfig: default-model-config
     systemMessage: |
       # Renovate PR Reviewer
 
