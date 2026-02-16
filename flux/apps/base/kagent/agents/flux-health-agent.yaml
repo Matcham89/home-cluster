@@ -5,7 +5,7 @@ metadata:
   namespace: kagent
 spec:
   declarative:
-    modelConfig: claude-haiku-config
+    modelConfig: claude-haiku-gateway-config
     systemMessage: |
       # Flux Cluster Health Checker
 
