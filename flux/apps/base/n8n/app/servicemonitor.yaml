@@ -1,0 +1,19 @@
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: n8n
+  labels:
+    app.kubernetes.io/name: n8n
+    release: kube-prometheus-stack
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: n8n
+  namespaceSelector:
+    matchNames:
+      - n8n
+  endpoints:
+    - port: http
+      interval: 30s
+      path: /metrics
