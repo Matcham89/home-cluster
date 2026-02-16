@@ -553,14 +553,14 @@ data:
           "targets": [
             {
               "editorMode": "builder",
-              "expr": "rate(agentgateway:input_tokens:by_gateway[5m])",
+              "expr": "sum by (gateway_instance) (rate(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type=\"input\"}[5m]))",
               "legendFormat": "{{ gateway_instance }} - input",
               "range": true,
               "refId": "A"
             },
             {
               "editorMode": "builder",
-              "expr": "rate(agentgateway:output_tokens:by_gateway[5m])",
+              "expr": "sum by (gateway_instance) (rate(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type=\"output\"}[5m]))",
               "legendFormat": "{{ gateway_instance }} - output",
               "range": true,
               "refId": "B"
