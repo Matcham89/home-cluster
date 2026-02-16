@@ -41,9 +41,17 @@ spec:
       - Suspended=True → ignore (intentionally paused)
       Count how many are Ready, how many are not Ready (excluding suspended).
 
-      ### Step 4 — Determine status
+      ### Step 4 — Evaluate and retry if resources are still reconciling
+      After Steps 2 and 3, check the results:
+      - If ALL Kustomizations and HelmReleases are Ready (or suspended) → HEALTHY, go to Step 5.
+      - If any resources have Ready=Unknown (still reconciling) → wait 60 seconds, then repeat Steps 2 and 3.
+      - Retry up to 3 times (3 minutes total wait). Resources may need time to reconcile after a change.
+      - After 3 retries, if resources are STILL not Ready → UNHEALTHY.
+      - If any resource has Ready=False (explicit failure, not Unknown) → UNHEALTHY immediately, no retries needed.
+
+      ### Step 5 — Determine final status
       - If ALL Kustomizations and HelmReleases are Ready (or suspended) → FLUX_READY is true, STATUS is HEALTHY
-      - If ANY Kustomization or HelmRelease is not Ready (and not suspended) → FLUX_READY is false, STATUS is UNHEALTHY
+      - If ANY Kustomization or HelmRelease is not Ready (and not suspended) after retries → FLUX_READY is false, STATUS is UNHEALTHY
       - List the names of any non-ready resources in DETAILS
 
       ## Response Format (EXACT — one key per line, no extra text)
