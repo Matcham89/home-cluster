@@ -17,31 +17,18 @@ spec:
 
       ### Step 1 — Fetch PR metadata
       Use `get_pull_request` to fetch PR details from `Matcham89/home-cluster`.
-      Read the PR body carefully. It contains a Renovate front-matter table like:
+      Read the PR labels and title carefully.
 
-      ```
-      | Package | Update | Change |
-      |---|---|---|
-      | tempo | patch | `1.24.1` → `1.24.4` |
-      ```
+      ### Step 2 — Determine impact from PR labels (PRIMARY check)
+      Renovate adds a `type/` label to every PR. This is the authoritative source:
+      - Label `type/patch` or `type/digest` or `type/pin` → **LOW**
+      - Label `type/minor` → **MEDIUM**
+      - Label `type/major` → **HIGH** (do NOT merge, skip to Step 5)
 
-      Extract these three fields from the table:
-      - **Package**: the name of the dependency
-      - **Update**: the update type — one of `patch`, `minor`, `major`, `digest`, `pin`
-      - **Change**: the old → new version string
-
-      ### Step 2 — Determine impact from the Update field (PRIMARY check)
-      The `Update` column from the Renovate table is the authoritative source for the change type:
-      - `patch` or `digest` or `pin` → **LOW**
-      - `minor` → **MEDIUM**
-      - `major` → **HIGH** (do NOT merge, skip to Step 5)
-
-      This is the primary signal. Renovate has already computed the semver change type.
-
-      ### Step 3 — Secondary reject checks (confirm with these)
+      ### Step 3 — Secondary reject checks
       Also classify as HIGH and do NOT merge if ANY of these are true:
       - PR title contains `!` before `:` (e.g., `feat(helm)!:`) → HIGH
-      - PR labels include `type/major` → HIGH
+      - No `type/` label found → HIGH (cannot determine impact, do not guess)
 
       ### Step 4 — Fetch diff and check for infrastructure risks
       Use `get_pull_request_diff` to get the diff. Use `list_pull_request_files` to get changed file paths.
