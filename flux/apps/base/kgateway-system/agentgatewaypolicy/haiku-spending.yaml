@@ -1,11 +1,12 @@
 ---
-# Token-based spending limit for the Haiku gateway
-# Anthropic Haiku limit: 50,000 input tokens/min
-# Set to 40,000 to leave headroom for other consumers
+# Retry policy for the Haiku gateway
+# Instead of rejecting requests with a local rate limit, let requests
+# through to Anthropic and automatically retry on 429 (rate limit) with
+# exponential backoff. The caller never sees rate limit errors.
 apiVersion: agentgateway.dev/v1alpha1
 kind: AgentgatewayPolicy
 metadata:
-  name: haiku-spending-limit
+  name: haiku-retry-policy
   namespace: kgateway-system
 spec:
   targetRefs:
@@ -13,7 +14,9 @@ spec:
       kind: HTTPRoute
       name: claude-haiku-route
   traffic:
-    rateLimit:
-      local:
-        - tokens: 40000
-          unit: Minutes
+    retry:
+      attempts: 5
+      backoff: 30s
+      codes:
+        - 429
+        - 529
