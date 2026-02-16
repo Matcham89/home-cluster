@@ -1228,9 +1228,9 @@ data:
         "list": [
           {
             "current": {
-              "selected": true,
-              "text": "n8n.*",
-              "value": "n8n.*"
+              "selected": false,
+              "text": "All",
+              "value": "$__all"
             },
             "datasource": "Prometheus",
             "definition": "label_values(agentgateway:cost_usd:by_gateway, gateway_instance)",
@@ -1244,7 +1244,7 @@ data:
               "refId": "PrometheusVariableQueryEditor-VariableQuery"
             },
             "refresh": 1,
-            "regex": "/n8n.*/",
+            "regex": "",
             "skipUrlSync": false,
             "type": "query"
           }
