@@ -1,12 +1,18 @@
 ---
-# Retry policy for the Haiku gateway
-# Instead of rejecting requests with a local rate limit, let requests
-# through to Anthropic and automatically retry on 429 (rate limit) with
-# exponential backoff. The caller never sees rate limit errors.
+# Haiku gateway resiliency policy
+#
+# Two layers of protection:
+# 1. Token rate limit (50k/min) — matches Anthropic's org limit, prevents
+#    wasting quota on requests that will just be rejected upstream.
+#    Requests exceeding this get a fast 429 locally instead of burning
+#    tokens and round-trip time to Anthropic.
+# 2. Retry on 429/529 — if a request does hit a rate limit (either local
+#    or upstream from Anthropic), the gateway retries with backoff.
+#    The caller never sees rate limit errors.
 apiVersion: agentgateway.dev/v1alpha1
 kind: AgentgatewayPolicy
 metadata:
-  name: haiku-retry-policy
+  name: haiku-resiliency
   namespace: kgateway-system
 spec:
   targetRefs:
@@ -14,6 +20,10 @@ spec:
       kind: HTTPRoute
       name: claude-haiku-route
   traffic:
+    rateLimit:
+      local:
+        - tokens: 50000
+          unit: Minutes
     retry:
       attempts: 5
       backoff: 30s
