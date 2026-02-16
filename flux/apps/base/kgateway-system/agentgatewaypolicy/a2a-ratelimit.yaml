@@ -1,0 +1,17 @@
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayPolicy
+metadata:
+  name: a2a-ratelimit
+  namespace: kgateway-system
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: a2a
+  traffic:
+    rateLimit:
+      local:
+        - requests: 5
+          burst: 2
+          unit: Minutes
