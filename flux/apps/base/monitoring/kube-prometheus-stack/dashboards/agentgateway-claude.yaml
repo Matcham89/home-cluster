@@ -267,7 +267,7 @@ data:
           "pluginVersion": "12.2.1",
           "targets": [
             {
-              "expr": "sum_over_time(agentgateway:cost_usd:by_gateway{gateway_instance=~\"$gateway_instance\"}[24h])",
+              "expr": "sum(sum by (gateway_instance) (increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type=\"input\", gateway_instance=~\"$gateway_instance\"}[24h])) * 1.00 / 1000000) + sum(sum by (gateway_instance) (increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type=\"output\", gateway_instance=~\"$gateway_instance\"}[24h])) * 5.00 / 1000000)",
               "refId": "A"
             }
           ],
@@ -308,7 +308,7 @@ data:
           "pluginVersion": "12.2.1",
           "targets": [
             {
-              "expr": "sum_over_time(agentgateway:cost_usd:by_gateway{gateway_instance=~\"$gateway_instance\"}[7d])",
+              "expr": "sum(sum by (gateway_instance) (increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type=\"input\", gateway_instance=~\"$gateway_instance\"}[7d])) * 1.00 / 1000000) + sum(sum by (gateway_instance) (increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type=\"output\", gateway_instance=~\"$gateway_instance\"}[7d])) * 5.00 / 1000000)",
               "refId": "A"
             }
           ],
