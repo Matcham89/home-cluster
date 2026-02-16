@@ -546,12 +546,12 @@ data:
           "pluginVersion": "12.2.1",
           "targets": [
             {
-              "expr": "rate(agentgateway:input_tokens:by_gateway{gateway_instance=~\"$gateway_instance\"}[5m])",
+              "expr": "sum by (gateway_instance) (rate(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type=\"input\", gateway_instance=~\"$gateway_instance\"}[5m]))",
               "legendFormat": "{{ gateway_instance }} - input",
               "refId": "A"
             },
             {
-              "expr": "rate(agentgateway:output_tokens:by_gateway{gateway_instance=~\"$gateway_instance\"}[5m])",
+              "expr": "sum by (gateway_instance) (rate(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type=\"output\", gateway_instance=~\"$gateway_instance\"}[5m]))",
               "legendFormat": "{{ gateway_instance }} - output",
               "refId": "B"
             }
