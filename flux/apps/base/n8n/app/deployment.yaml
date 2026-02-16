@@ -56,6 +56,12 @@ spec:
               value: "5678"
             - name: WEBHOOK_URL
               value: https://n8n.kubegit.com/
+            - name: N8N_METRICS
+              value: "true"
+            - name: N8N_METRICS_INCLUDE_WORKFLOW_ID_LABEL
+              value: "true"
+            - name: N8N_METRICS_INCLUDE_API_ENDPOINTS
+              value: "true"
           resources:
             requests:
               cpu: 100m

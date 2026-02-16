@@ -21,5 +21,6 @@ resources:
   - istio-mesh-dashboard.yaml
   - open-webui.yaml
   - postgres.yaml
+  - n8n.yaml
   - seaweedfs.yaml
 
