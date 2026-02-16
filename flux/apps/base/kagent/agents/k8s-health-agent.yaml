@@ -5,7 +5,7 @@ metadata:
   namespace: kagent
 spec:
   declarative:
-    modelConfig: default-model-config
+    modelConfig: claude-model-config
     systemMessage: |
       # Kubernetes Pod Health Checker
 
