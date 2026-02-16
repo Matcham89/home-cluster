@@ -1,0 +1,19 @@
+---
+# Token-based spending limit for the Haiku gateway
+# Anthropic Haiku limit: 50,000 input tokens/min
+# Set to 40,000 to leave headroom for other consumers
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayPolicy
+metadata:
+  name: haiku-spending-limit
+  namespace: kgateway-system
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: claude-haiku-route
+  traffic:
+    rateLimit:
+      local:
+        - tokens: 40000
+          unit: Minutes
