@@ -32,49 +32,49 @@ spec:
           expr: |
             sum by (gateway_instance) (increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type="output"}[5m]))
 
-        # Calculate cost per gateway (Claude 3.5 Haiku pricing: $0.80/1M input, $4.00/1M output)
+        # Calculate cost per gateway (Claude Haiku 4.5 pricing: $1.00/1M input, $5.00/1M output)
         - record: agentgateway:cost_usd:by_gateway
           expr: |
             (
-              sum by (gateway_instance) (increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type="input"}[1h])) * 0.80 / 1000000
+              sum by (gateway_instance) (increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type="input"}[1h])) * 1.00 / 1000000
             ) + (
-              sum by (gateway_instance) (increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type="output"}[1h])) * 4.00 / 1000000
+              sum by (gateway_instance) (increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type="output"}[1h])) * 5.00 / 1000000
             )
 
         # Calculate total cost across all gateways (hourly)
         - record: agentgateway:cost_usd:total_hourly
           expr: |
             (
-              sum(increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type="input"}[1h])) * 0.80 / 1000000
+              sum(increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type="input"}[1h])) * 1.00 / 1000000
             ) + (
-              sum(increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type="output"}[1h])) * 4.00 / 1000000
+              sum(increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type="output"}[1h])) * 5.00 / 1000000
             )
 
         # Calculate cumulative cost (daily)
         - record: agentgateway:cost_usd:total_daily
           expr: |
             (
-              sum(increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type="input"}[24h])) * 0.80 / 1000000
+              sum(increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type="input"}[24h])) * 1.00 / 1000000
             ) + (
-              sum(increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type="output"}[24h])) * 4.00 / 1000000
+              sum(increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type="output"}[24h])) * 5.00 / 1000000
             )
 
         # Calculate cumulative cost (weekly)
         - record: agentgateway:cost_usd:total_weekly
           expr: |
             (
-              sum(increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type="input"}[7d])) * 0.80 / 1000000
+              sum(increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type="input"}[7d])) * 1.00 / 1000000
             ) + (
-              sum(increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type="output"}[7d])) * 4.00 / 1000000
+              sum(increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type="output"}[7d])) * 5.00 / 1000000
             )
 
         # Calculate cumulative cost (monthly)
         - record: agentgateway:cost_usd:total_monthly
           expr: |
             (
-              sum(increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type="input"}[30d])) * 0.80 / 1000000
+              sum(increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type="input"}[30d])) * 1.00 / 1000000
             ) + (
-              sum(increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type="output"}[30d])) * 4.00 / 1000000
+              sum(increase(agentgateway_gen_ai_client_token_usage_sum{gen_ai_token_type="output"}[30d])) * 5.00 / 1000000
             )
 
     - name: agentgateway_cost_alerts
