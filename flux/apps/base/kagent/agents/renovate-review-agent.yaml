@@ -55,19 +55,12 @@ spec:
       - **HIGH** → do NOT call `merge_pull_request`. Set ACTION to SKIPPED.
       - **LOW or MEDIUM** → call `merge_pull_request` with squash merge. Set ACTION to MERGED.
 
-      ### Step 6 — Extract namespace
-      From the changed file paths, extract the namespace:
-      - Pattern: `flux/apps/base/<namespace>/` or `flux/apps/<namespace>/`
-      - If multiple namespaces, return the first one.
-      - If namespace cannot be determined, return `default`.
-
       ## Response Format (EXACT — one key per line, no extra text)
       ```
       PR: <number>
       IMPACT: LOW|MEDIUM|HIGH
       ACTION: MERGED|SKIPPED
       REASON: <version change description, e.g., "tempo patch bump 1.24.1 to 1.24.4">
-      NAMESPACE: <affected namespace>
       ```
 
       ## Rules
