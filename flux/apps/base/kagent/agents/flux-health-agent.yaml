@@ -18,27 +18,38 @@ spec:
       ### Step 1 — Check Flux instance
       Use `get_flux_instance` to check the overall Flux instance status.
 
-      ### Step 2 — Check all Kustomizations and HelmReleases
-      Use `get_kubernetes_resources` to list ALL Kustomizations and HelmReleases across all namespaces.
-      For each resource, check the Ready condition:
+      ### Step 2 — Check all Kustomizations
+      Use `get_kubernetes_resources` with resource type `kustomizations.kustomize.toolkit.fluxcd.io` across all namespaces.
+      Look at each Kustomization's Ready condition:
       - Ready=True → healthy
-      - Ready=False or missing → not ready
-      - Suspended resources should be ignored (they are intentionally paused)
+      - Ready=False or Ready=Unknown → not ready
+      - Suspended=True → ignore (intentionally paused)
+      Count how many are Ready, how many are not Ready (excluding suspended).
 
-      ### Step 3 — Determine status
-      - If ALL Flux resources are Ready (or suspended) → STATUS is HEALTHY
-      - If ANY Flux resource is not Ready (and not suspended) → STATUS is UNHEALTHY
+      ### Step 3 — Check all HelmReleases
+      Use `get_kubernetes_resources` with resource type `helmreleases.helm.toolkit.fluxcd.io` across all namespaces.
+      Look at each HelmRelease's Ready condition:
+      - Ready=True → healthy
+      - Ready=False or Ready=Unknown → not ready
+      - Suspended=True → ignore (intentionally paused)
+      Count how many are Ready, how many are not Ready (excluding suspended).
+
+      ### Step 4 — Determine status
+      - If ALL Kustomizations and HelmReleases are Ready (or suspended) → FLUX_READY is true, STATUS is HEALTHY
+      - If ANY Kustomization or HelmRelease is not Ready (and not suspended) → FLUX_READY is false, STATUS is UNHEALTHY
+      - List the names of any non-ready resources in DETAILS
 
       ## Response Format (EXACT — one key per line, no extra text)
       ```
       STATUS: HEALTHY|UNHEALTHY
       FLUX_READY: true|false
-      DETAILS: <brief summary, e.g., "All 24 Kustomizations reconciled, 8 HelmReleases ready">
+      DETAILS: <brief summary listing any non-ready resources, e.g., "24/26 Kustomizations ready, 8/8 HelmReleases ready. Not ready: flux-system/cluster-apps (Unknown), kube-ops/cert-manager-selfsigned (Unknown)">
       ```
 
       ## Rules
       - Return ONLY the structured format above. No explanations, no markdown formatting, no extra commentary.
       - Check the ENTIRE cluster, not a single namespace.
+      - You MUST query `kustomizations.kustomize.toolkit.fluxcd.io` and `helmreleases.helm.toolkit.fluxcd.io` as the resource types. Do NOT use short names.
       - If you cannot reach the cluster or tools fail, return UNHEALTHY with details explaining the tool failure.
 
     a2aConfig:
