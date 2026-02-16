@@ -1,48 +1,40 @@
 ---
-# yaml-language-server: $schema=https://github.com/fluxcd-community/flux2-schemas/raw/main/helmrepository-source-v1.json
-# Reference to Helm repository
-apiVersion: source.toolkit.fluxcd.io/v1
-kind: HelmRepository
-metadata:
-  name: longhorn
-spec:
-  interval: 10m
-  url: https://charts.longhorn.io
-# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
----
-apiVersion: helm.toolkit.fluxcd.io/v2
+apiVersion: helm.toolkit.fluxcd.io/v2beta1
 kind: HelmRelease
 metadata:
   name: longhorn
+  namespace: longhorn-system
 spec:
-  # Override Release name to avoid the pattern Namespace-Release
-  # Ref: https://fluxcd.io/flux/components/helm/api/v2/#helm.toolkit.fluxcd.io/v2.HelmRelease
-  interval: 10m
   chart:
     spec:
       chart: longhorn
-      version: 1.11.0
+      version: 1.10.1
       sourceRef:
         kind: HelmRepository
         name: longhorn
+        namespace: flux-system
+  interval: 1h0m0s
   install:
-    strategy:
-      name: RetryOnFailure
-    createNamespace: true
-    timeout: 10m
-  upgrade:
-    strategy:
-      name: RetryOnFailure
-    cleanupOnFail: true
-    timeout: 10m
+    remediation:
+      retries: 5
   values:
     defaultSettings:
-      # Reduced from default 12% to prevent resource request/limit conflicts
-      # Instance manager pods were failing with: requests (954m) > limits (500m)
-      # Setting to 5% provides adequate performance while staying within resource limits
-      guaranteedInstanceManagerCPU: 5
-      # Increase storage over-provisioning from 100% to 200% (Longhorn default)
-      # This allows scheduling up to 2x physical storage capacity
-      # Safe for typical workloads as volumes are rarely fully utilized simultaneously
-      # Required to support current volume requirements with 30% reserved storage
-      storageOverProvisioningPercentage: 200
+      defaultReplicaCount: 2
+      defaultEngineImage: longhornio/longhorn-engine:v1.5.2
+      defaultInstanceManagerImage: longhornio/instance-manager:v1.5.2
+      defaultBackingImageManagerImage: longhornio/backing-image-manager:v1.5.2
+      defaultBackingImageControllerImage: longhornio/backing-image-controller:v1.5.2
+      defaultSystemManagedComponentsImage: longhornio/system-manager:v1.5.2
+      replicas: 2
+      createDefaultDisk: false
+      defaultDataPath: /var/lib/longhorn
+      supportNodeSelector: true
+      supportToleration: true
+      supportAffinity: true
+      shareManagerImage: longhornio/share-manager:v1.5.2
+      shareManagerUIImage: longhornio/share-manager-ui:v1.5.2
+      shareManagerRestAPIImage: longhornio/share-manager-rest-api:v1.5.2
+  upgrade:
+    remediation:
+      retries: 5
+
