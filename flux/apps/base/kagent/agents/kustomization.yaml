@@ -9,3 +9,4 @@ resources:
   - ./renovate-review-agent.yaml
   - ./renovate-revert-agent.yaml
   - ./flux-health-agent.yaml
+  - ./k8s-health-agent.yaml
