@@ -5,7 +5,7 @@ metadata:
   namespace: kagent
 spec:
   declarative:
-    modelConfig: claude-model-config
+    modelConfig: claude-haiku-config
     systemMessage: |
       # Renovate PR Lister
 
