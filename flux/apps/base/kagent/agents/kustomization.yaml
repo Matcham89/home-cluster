@@ -7,6 +7,7 @@ resources:
   - ./youtube-agent.yaml
   - ./renovate-list-agent.yaml
   - ./renovate-review-agent.yaml
+  - ./renovate-merge-agent.yaml
   - ./renovate-revert-agent.yaml
   - ./flux-health-agent.yaml
   - ./k8s-health-agent.yaml

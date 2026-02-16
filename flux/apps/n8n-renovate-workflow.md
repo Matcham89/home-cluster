@@ -11,7 +11,12 @@ Cron (every 30 min)
   STATUS: FOUND
   │
   ▼
-[2] Review PR ─── ACTION: SKIPPED ──► [1] List PRs (next PR)
+[2] Review PR ─── IMPACT: HIGH ──► [1] List PRs (next PR)
+  │
+  IMPACT: LOW or MEDIUM
+  │
+  ▼
+[3] Merge PR ─── ACTION: FAILED ──► Stop
   │
   ACTION: MERGED
   │
@@ -19,16 +24,16 @@ Cron (every 30 min)
   Wait 60s
   │
   ▼
-[3] Flux Health ─── STATUS: HEALTHY ──► [4] K8s Health
+[4] Flux Health ─── STATUS: HEALTHY ──► [5] K8s Health
   │                                        │
   │                                        ├── HEALTHY ──► [1] List PRs (next PR)
   │                                        │
-  │                                        └── UNHEALTHY ──► [5] Revert
+  │                                        └── UNHEALTHY ──► [6] Revert
   │
   STATUS: UNHEALTHY
   │
   ▼
-[5] Revert PR ──► Wait 60s ──► [3] Flux Health ──► Stop
+[6] Revert PR ──► Wait 60s ──► [4] Flux Health ──► Stop
 ```
 
 ## Base URL
@@ -102,7 +107,7 @@ return [{ json: output }];
 
 ---
 
-### Node 3 — Review and Merge PR
+### Node 3 — Review PR (review only, no merge)
 
 **HTTP Request:**
 ```
@@ -130,7 +135,7 @@ Content-Type: application/json
 }
 ```
 
-**Response parsing (same Function pattern):**
+**Response parsing:**
 ```javascript
 const response = $input.first().json;
 const artifact = response.result.artifacts[0].parts[0].text;
@@ -149,12 +154,68 @@ return [{ json: output }];
 
 **Output example:**
 ```json
-{ "PR": "49", "IMPACT": "LOW", "ACTION": "MERGED", "REASON": "patch dependency update" }
+{ "PR": "49", "IMPACT": "LOW", "REASON": "type/patch label, tempo 1.24.1 to 1.24.4" }
+```
+
+**Route (IF node):**
+- `IMPACT` equals `LOW` or `MEDIUM` → Node 3b (Merge)
+- `IMPACT` equals `HIGH` → Loop back to Node 2 (list next PR)
+
+---
+
+### Node 3b — Merge PR (separate agent, merge only)
+
+**HTTP Request:**
+```
+POST http://192.168.1.202:8080/api/a2a/kagent/renovate-merge-agent/
+Content-Type: application/json
+```
+
+**Body (use expression for PR number):**
+```json
+{
+  "jsonrpc": "2.0",
+  "id": "2b",
+  "method": "message/send",
+  "params": {
+    "message": {
+      "role": "user",
+      "parts": [
+        {
+          "kind": "text",
+          "text": "Merge PR {{ $json.PR }}"
+        }
+      ]
+    }
+  }
+}
+```
+
+**Response parsing:**
+```javascript
+const response = $input.first().json;
+const artifact = response.result.artifacts[0].parts[0].text;
+const lines = artifact.split('\n');
+
+const output = {};
+for (const line of lines) {
+  const match = line.match(/^(\w+):\s*(.+)$/);
+  if (match) {
+    output[match[1]] = match[2].trim();
+  }
+}
+
+return [{ json: output }];
+```
+
+**Output example:**
+```json
+{ "PR": "49", "ACTION": "MERGED" }
 ```
 
 **Route (IF node):**
 - `ACTION` equals `MERGED` → Wait 60s → Node 4
-- `ACTION` equals `SKIPPED` → Loop back to Node 2 (list next PR)
+- `ACTION` equals `FAILED` → Stop
 
 ---
 
