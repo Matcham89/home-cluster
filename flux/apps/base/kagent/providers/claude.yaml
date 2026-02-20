@@ -8,7 +8,7 @@ spec:
   apiKeySecretKey: ANTHROPIC_API_KEY
   model: claude-sonnet-4-5-20250929
   provider: Anthropic
-  anthropic:
+  openAI:
     baseUrl: http://claude-sonnet-gateway.kgateway-system.svc.cluster.local:8091/v1
 # ---
 # apiVersion: kagent.dev/v1alpha2
@@ -34,5 +34,5 @@ spec:
   apiKeySecretKey: ANTHROPIC_API_KEY
   model: claude-haiku-4-5-20251001
   provider: Anthropic
-  anthropic:
+  openAI:
     baseUrl: http://claude-haiku-gateway.kgateway-system.svc.cluster.local:8093/v1
