@@ -8,19 +8,20 @@ spec:
   apiKeySecretKey: ANTHROPIC_API_KEY
   model: claude-sonnet-4-5-20250929
   provider: Anthropic
-  anthropic: {}
----
-apiVersion: kagent.dev/v1alpha2
-kind: ModelConfig
-metadata:
-  name: claude-haiku-config
-  namespace: kagent
-spec:
-  apiKeySecret: kagent-anthropic
-  apiKeySecretKey: ANTHROPIC_API_KEY
-  model: claude-haiku-4-5-20251001
-  provider: Anthropic
-  anthropic: {}
+  anthropic:
+    baseUrl: http://claude-sonnet-gateway.kgateway-system.svc.cluster.local:8093/v1
+# ---
+# apiVersion: kagent.dev/v1alpha2
+# kind: ModelConfig
+# metadata:
+#   name: claude-haiku-config
+#   namespace: kagent
+# spec:
+#   apiKeySecret: kagent-anthropic
+#   apiKeySecretKey: ANTHROPIC_API_KEY
+#   model: claude-haiku-4-5-20251001
+#   provider: Anthropic
+  
 ---
 # Routes LLM calls through agentgateway for token-based rate limiting
 apiVersion: kagent.dev/v1alpha2
@@ -32,6 +33,6 @@ spec:
   apiKeySecret: kagent-anthropic
   apiKeySecretKey: ANTHROPIC_API_KEY
   model: claude-haiku-4-5-20251001
-  provider: OpenAI
-  openAI:
+  provider: Anthropic
+  anthropic:
     baseUrl: http://claude-haiku-gateway.kgateway-system.svc.cluster.local:8093/v1
