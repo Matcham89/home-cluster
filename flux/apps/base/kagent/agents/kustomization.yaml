@@ -3,6 +3,7 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
+  - ./renovate-assistant-agent.yaml
   - ./blog-agent.yaml
   - ./youtube-agent.yaml
   - ./renovate-list-agent.yaml
