@@ -7,3 +7,4 @@ resources:
   - monitoring.yaml
   - authentik.yaml
   - n8n.yaml
+  - rundeck.yaml
