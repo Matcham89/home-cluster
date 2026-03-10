@@ -1,0 +1,68 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rundeck
+  labels:
+    app.kubernetes.io/name: rundeck
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: rundeck
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: rundeck
+    spec:
+      containers:
+        - name: rundeck
+          image: rundeck/rundeck:5.8.0
+          ports:
+            - containerPort: 4440
+          env:
+            - name: RUNDECK_GRAILS_URL
+              value: "https://rundeck.kubegit.com"
+            - name: RUNDECK_DATABASE_DRIVER
+              value: org.postgresql.Driver
+            - name: RUNDECK_DATABASE_URL
+              value: "jdbc:postgresql://postgres-external.external-services.svc.cluster.local:5432/rundeck"
+            - name: RUNDECK_DATABASE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: rundeck-postgres-credentials
+                  key: username
+            - name: RUNDECK_DATABASE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: rundeck-postgres-credentials
+                  key: password
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              memory: 1Gi
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 4440
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            failureThreshold: 6
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 4440
+            initialDelaySeconds: 120
+            periodSeconds: 20
+            failureThreshold: 3
+          volumeMounts:
+            - name: rundeck-data
+              mountPath: /home/rundeck/server/data
+      volumes:
+        - name: rundeck-data
+          persistentVolumeClaim:
+            claimName: rundeck-data
