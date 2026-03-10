@@ -1,9 +1,0 @@
----
-# yaml-language-server: $schema=https://json.schemastore.org/kustomization
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-resources:
-  - ./certs-job.yaml
-  # - ./database-setup-job.yaml  # Temporarily disabled - causing issues
-  - ./helmrelease.yaml
-  - ./helmrepository.yaml
