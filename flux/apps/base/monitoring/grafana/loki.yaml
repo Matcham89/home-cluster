@@ -55,7 +55,7 @@ spec:
         ingestion_rate_mb: 4
         ingestion_burst_size_mb: 6
         per_stream_rate_limit: 3MB
-        per_stream_rate_limit_burst: 15MB
+        per_stream_rate_limit_burst: 8MB
         # Query performance optimizations
         max_query_lookback: 24h
         max_query_length: 24h
@@ -110,7 +110,7 @@ spec:
             name: s3-credentials
       resources:
         limits:
-          memory: 1536Mi
+          memory: 2Gi
         requests:
           cpu: 100m
           memory: 512Mi
