@@ -8,4 +8,4 @@ metadata:
   labels:
     kubernetes.io/metadata.name: not-used
     istio-gateway-access: "true"
-    istio.io/dataplane-mode: ambient
+    istio.io/dataplane-mode: none
