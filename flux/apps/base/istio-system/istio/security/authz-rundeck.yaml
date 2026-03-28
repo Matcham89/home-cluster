@@ -2,14 +2,17 @@
 apiVersion: security.istio.io/v1
 kind: AuthorizationPolicy
 metadata:
-  name: kiali-ingress-authz
-  namespace: istio-system
+  name: rundeck-ingress-authz
+  namespace: rundeck
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: kiali
+      app.kubernetes.io/name: rundeck
   action: ALLOW
   rules:
     - from:
         - source:
             namespaces: ["istio-system"]
+    - from:
+        - source:
+            namespaces: ["rundeck"]

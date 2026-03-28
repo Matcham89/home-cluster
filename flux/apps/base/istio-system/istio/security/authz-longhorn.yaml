@@ -3,13 +3,16 @@ apiVersion: security.istio.io/v1
 kind: AuthorizationPolicy
 metadata:
   name: longhorn-ingress-authz
-  namespace: cnpg-system
+  namespace: longhorn-system
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: longhorn
+      app.kubernetes.io/name: longhorn-ui
   action: ALLOW
   rules:
-    # Allow all traffic when no sidecar is present
-    # If sidecars are added later, restrict to istio-system namespace
-    - {}
+    - from:
+        - source:
+            namespaces: ["istio-system"]
+    - from:
+        - source:
+            namespaces: ["longhorn-system"]
