@@ -1,6 +1,4 @@
 ---
-# DISABLED: Enable strict mTLS for all services in the mesh
-# Changed to PERMISSIVE to allow easier development/deployment
 apiVersion: security.istio.io/v1
 kind: PeerAuthentication
 metadata:
@@ -8,4 +6,4 @@ metadata:
   namespace: istio-system
 spec:
   mtls:
-    mode: PERMISSIVE
+    mode: STRICT

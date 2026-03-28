@@ -10,6 +10,9 @@ spec:
       app.kubernetes.io/name: kagent
   action: ALLOW
   rules:
-    # Allow all traffic when no sidecar is present
-    # If sidecars are added later, restrict to istio-system namespace
-    - {}
+    - from:
+        - source:
+            namespaces: ["istio-system"]
+    - from:
+        - source:
+            namespaces: ["kagent"]
