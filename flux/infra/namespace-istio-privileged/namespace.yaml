@@ -9,6 +9,7 @@ metadata:
     kubernetes.io/metadata.name: not-used
     istio-gateway-access: "true"
     istio.io/dataplane-mode: ambient
+    istio.io/use-waypoint: waypoint
     pod-security.kubernetes.io/enforce: privileged
     pod-security.kubernetes.io/audit: privileged
     pod-security.kubernetes.io/warn: privileged

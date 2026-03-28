@@ -14,4 +14,5 @@ resources:
   - ./limit-range-override
   - ./resource-quotas/ks.yaml
   - ./network-policies/ks.yaml
+  - ./waypoint/ks.yaml
   # - ./seaweedfs/ks.yaml
