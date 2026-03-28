@@ -3,7 +3,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app authentik-network-policies
+  name: &app cnpg-system-network-policies
 spec:
   commonMetadata:
     labels:
@@ -14,7 +14,7 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: authentik
+  targetNamespace: cnpg-system
   timeout: 5m
   prune: true
   wait: true
@@ -23,18 +23,18 @@ spec:
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app authentik-network-policies-specific
+  name: &app cnpg-system-network-policies-specific
 spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   interval: 1h
-  path: ./flux/apps/base/network-policies/authentik
+  path: ./flux/apps/base/network-policies/cnpg-system
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: authentik
+  targetNamespace: cnpg-system
   timeout: 5m
   prune: true
   wait: true

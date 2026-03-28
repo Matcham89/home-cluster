@@ -9,7 +9,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   interval: 1h
-  path: ./flux/apps/base/network-policies
+  path: ./flux/apps/base/network-policies/shared
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -29,7 +29,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   interval: 1h
-  path: ./flux/apps/base/network-policies-istio-system
+  path: ./flux/apps/base/network-policies/istio-system
   sourceRef:
     kind: GitRepository
     name: flux-system
