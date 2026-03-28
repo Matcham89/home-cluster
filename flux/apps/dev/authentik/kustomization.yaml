@@ -13,4 +13,4 @@ resources:
   - ./resource-quotas/ks.yaml
   - ./network-policies/ks.yaml
   - ./waypoint/ks.yaml
-
+  - ./security/ks.yaml
