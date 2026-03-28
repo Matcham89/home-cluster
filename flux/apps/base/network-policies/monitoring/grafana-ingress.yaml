@@ -18,5 +18,5 @@ spec:
           kubernetes.io/metadata.name: istio-system
       podSelector:
         matchLabels:
-          istio: ingressgateway
+          app.kubernetes.io/name: istio-gateway
 ---
