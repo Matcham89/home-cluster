@@ -220,6 +220,8 @@ spec:
           memory: 256Mi
         limits:
           memory: 512Mi
+    kubeProxy:
+      enabled: false
     prometheusOperator:
       resources:
         requests:
