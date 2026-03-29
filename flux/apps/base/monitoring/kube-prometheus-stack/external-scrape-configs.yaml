@@ -1,6 +1,6 @@
 ---
-# Additional scrape configs for external services
-# Add this to prometheusSpec.additionalScrapeConfigs in kube-prometheus-stack.yaml
+# Additional scrape configs for external services that don't expose ServiceMonitors.
+# PostgreSQL and SeaweedFS are now in-cluster and scraped via PodMonitor/ServiceMonitor.
 apiVersion: v1
 kind: Secret
 metadata:
@@ -9,22 +9,6 @@ metadata:
 type: Opaque
 stringData:
   prometheus-additional.yaml: |
-    # Scrape external PostgreSQL exporter
-    - job_name: 'postgres-external'
-      static_configs:
-        - targets: ['postgres-exporter-external.external-services.svc.cluster.local:9187']
-          labels:
-            service: 'postgres-external'
-            instance: 'external-db'
-
-    # Scrape SeaweedFS metrics
-    - job_name: 'seaweedfs-master'
-      static_configs:
-        - targets: ['seaweedfs-master-external.external-services.svc.cluster.local:9327']
-          labels:
-            service: 'seaweedfs'
-            component: 'master'
-
     # Scrape Qdrant metrics
     - job_name: 'qdrant-external'
       static_configs:

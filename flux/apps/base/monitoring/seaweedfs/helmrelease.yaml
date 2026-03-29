@@ -53,7 +53,7 @@ spec:
         - name: data
           type: "persistentVolumeClaim"
           storageClass: "longhorn"
-          size: "10Gi" # Size of your chunk storage
+          size: "75Gi" # Sized for 50GB migrated data + headroom
       logs:
         type: "emptyDir"
     # Ensure Longhorn volumes are writable by the container user
@@ -72,6 +72,8 @@ spec:
       s3:
         enabled: true
         port: 8333
+        enableAuth: true
+        existingConfigSecret: seaweedfs-s3-config
         createBuckets:
           - name: loki-chunks
             anonymousRead: false

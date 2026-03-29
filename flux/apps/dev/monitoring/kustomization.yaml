@@ -16,4 +16,5 @@ resources:
   - ./network-policies/ks.yaml
   - ./waypoint/ks.yaml
   - ./security/ks.yaml
-  # - ./seaweedfs/ks.yaml
+  - ./seaweedfs-secrets/ks.yaml
+  - ./seaweedfs/ks.yaml

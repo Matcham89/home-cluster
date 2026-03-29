@@ -70,8 +70,8 @@ spec:
           ruler: loki-ruler
           admin: loki-admin
         s3:
-          # External SeaweedFS S3 service
-          endpoint: http://seaweedfs-s3-external.external-services.svc.cluster.local:8333
+          # In-cluster SeaweedFS S3 via filer
+          endpoint: http://seaweedfs-filer.monitoring.svc.cluster.local:8333
           insecure: true
           s3ForcePathStyle: true
           # Credentials will be provided via environment variables or secret

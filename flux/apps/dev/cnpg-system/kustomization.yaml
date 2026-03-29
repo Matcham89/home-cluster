@@ -7,4 +7,7 @@ components:
   - ../../../infra/namespace-istio-privileged
 
 resources:
+  - ./secrets/ks.yaml
+  - ./operator/ks.yaml
+  - ./cluster/ks.yaml
   - ./network-policies/ks.yaml

@@ -1,13 +1,13 @@
 ---
-# Allow Grafana to egress to the CloudNativePG postgres cluster
+# Allow Rundeck pods to connect to the CloudNativePG postgres cluster
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: grafana-egress-postgres
+  name: allow-postgres-egress
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: grafana
+        app.kubernetes.io/name: rundeck
   policyTypes:
   - Egress
   egress:
@@ -19,5 +19,5 @@ spec:
         matchLabels:
           cnpg.io/cluster: postgres
     ports:
-    - protocol: TCP
-      port: 5432
+    - port: 5432
+      protocol: TCP

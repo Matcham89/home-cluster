@@ -1,0 +1,50 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgres
+  namespace: cnpg-system
+spec:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:18
+
+  postgresql:
+    parameters:
+      timezone: "America/Edmonton"
+      max_connections: "200"
+      shared_buffers: "1GB"
+      effective_cache_size: "3GB"
+      maintenance_work_mem: "256MB"
+      wal_buffers: "16MB"
+      checkpoint_completion_target: "0.9"
+      min_wal_size: "1GB"
+      max_wal_size: "4GB"
+      default_statistics_target: "100"
+      random_page_cost: "1.1"
+      effective_io_concurrency: "200"
+      work_mem: "5MB"
+      autovacuum_worker_slots: "16"
+
+  # Bootstrap from scratch — migrate data manually after cluster is up.
+  # To migrate: use pg_dump on 192.168.1.100 and pg_restore into postgres-rw.
+  bootstrap:
+    initdb:
+      database: homelab
+      owner: postgres
+      secret:
+        name: postgres-superuser
+      postInitSQL:
+        - CREATE DATABASE n8n;
+        - CREATE DATABASE "home-cluster";
+        - CREATE DATABASE rundeck;
+
+  superuserSecret:
+    name: postgres-superuser
+
+  storage:
+    size: 20Gi
+    storageClass: longhorn
+
+  # Expose PodMonitor for Prometheus scraping
+  monitoring:
+    enablePodMonitor: true
