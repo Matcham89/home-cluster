@@ -38,13 +38,6 @@ spec:
       retries: 3
       strategy: rollback
   values:
-    # Opt the operator pod out of Istio ambient mesh.
-    # The kube-apiserver calls the admission webhook (port 9443) directly with
-    # its own TLS. ztunnel intercepts all pod traffic in ambient mode and wraps
-    # the connection, causing an EOF. Disabling ambient redirection on the
-    # operator pod lets the API server reach the webhook unmodified.
-    podLabels:
-      ambient.istio.io/redirection: disabled
     resources:
       requests:
         cpu: 100m
