@@ -16,3 +16,6 @@ spec:
     - from:
         - source:
             namespaces: ["n8n"]
+    - from:
+        - source:
+            namespaces: ["monitoring"]
