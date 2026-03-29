@@ -61,11 +61,11 @@ spec:
       resources:
         requests:
           cpu: 100m
-          memory: 256Mi
-        limits:
           memory: 512Mi
+        limits:
+          memory: 1Gi
 
-      memBallastSizeMbs: 256
+      memBallastSizeMbs: 128
       multitenancyEnabled: false
       # -- If true, Tempo will report anonymous usage data about the shape of a deployment to Grafana Labs
       reportingEnabled: true
