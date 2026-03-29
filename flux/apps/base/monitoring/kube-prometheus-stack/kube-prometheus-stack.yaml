@@ -222,6 +222,10 @@ spec:
           memory: 512Mi
     kubeProxy:
       enabled: false
+    kubeControllerManager:
+      enabled: false
+    kubeScheduler:
+      enabled: false
     prometheusOperator:
       resources:
         requests:
