@@ -100,6 +100,7 @@ spec:
             processors:
               - service-graphs
               - span-metrics
+              - local-blocks
 
         # -- Path to the per tenant override config file. The values of the `per_tenant_overrides` config below will be written to the default path `/conf/overrides.yaml`. Users can set tenant-specific overrides settings in a separate file and point per_tenant_override_config to it if not using the per_tenant_overrides block below.
         per_tenant_override_config: /conf/overrides.yaml
@@ -241,6 +242,8 @@ spec:
                     - gen.ai.usage.input_tokens
                     - gen.ai.usage.output_tokens
                   enable_target_info: true
+                local_blocks:
+                  flush_to_storage: true
           {{- end }}
 
     tempoQuery:
