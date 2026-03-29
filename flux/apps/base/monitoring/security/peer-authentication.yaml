@@ -1,0 +1,27 @@
+---
+# Admission webhooks in monitoring are called by kube-apiserver which has no Istio
+# identity and cannot present mTLS client certificates. Scoped PERMISSIVE allows
+# webhook calls through while all other inbound traffic remains STRICT.
+apiVersion: security.istio.io/v1
+kind: PeerAuthentication
+metadata:
+  name: opentelemetry-operator-webhook-permissive
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: opentelemetry-operator
+  mtls:
+    mode: PERMISSIVE
+---
+apiVersion: security.istio.io/v1
+kind: PeerAuthentication
+metadata:
+  name: prometheus-operator-webhook-permissive
+  namespace: monitoring
+spec:
+  selector:
+    matchLabels:
+      app: kube-prometheus-stack-operator
+  mtls:
+    mode: PERMISSIVE

@@ -4,7 +4,8 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ./a2a.yaml
-  - ./youtube-mcp.yaml
+  # Disabled: references gateway.kgateway.dev/Backend kind not supported in current CRD version
+  # - ./youtube-mcp.yaml
   - ./claude1.yaml
   - ./claude2.yaml
   - ./claude3.yaml

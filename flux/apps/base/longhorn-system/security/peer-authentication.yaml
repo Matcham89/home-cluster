@@ -1,0 +1,15 @@
+---
+# longhorn-admission-webhook is served by longhorn-manager pods. kube-apiserver
+# calls it without an Istio identity (failurePolicy: Fail), so PERMISSIVE is
+# required to allow webhook admission calls through while other traffic stays STRICT.
+apiVersion: security.istio.io/v1
+kind: PeerAuthentication
+metadata:
+  name: longhorn-webhook-permissive
+  namespace: longhorn-system
+spec:
+  selector:
+    matchLabels:
+      app: longhorn-manager
+  mtls:
+    mode: PERMISSIVE
