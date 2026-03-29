@@ -7,7 +7,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: longhorn-ui
+      app: longhorn-ui
   action: ALLOW
   rules:
     - from:
