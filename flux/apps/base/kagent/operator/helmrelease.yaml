@@ -9,7 +9,7 @@ spec:
   url: oci://ghcr.io/kagent-dev/kagent/helm/kagent
   ref:
     # renovate: datasource=github-releases depName=kagent-dev/kagent
-    tag: 0.8.0-beta1
+    tag: 0.8.3
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -51,7 +51,7 @@ spec:
     securityContext:
       capabilities:
         drop:
-        - ALL
+          - ALL
       readOnlyRootFilesystem: false
       runAsNonRoot: true
       runAsUser: 1000
@@ -89,9 +89,9 @@ spec:
       cilium-debug-agent:
         enabled: false
 
-# ==============================================================================
-# OBSERVABILITY
-# ==============================================================================
+    # ==============================================================================
+    # OBSERVABILITY
+    # ==============================================================================
 
     otel:
       tracing:
@@ -108,3 +108,4 @@ spec:
             endpoint: http://otel-collector-collector-headless.monitoring.svc.cluster.local:4317
             timeout: 15
             insecure: true
+
