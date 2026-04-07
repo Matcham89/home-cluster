@@ -1,0 +1,178 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: github-webhook-receiver
+  namespace: kagent
+data:
+  main.py: |
+    #!/usr/bin/env python3
+    import hashlib
+    import hmac
+    import json
+    import os
+    import urllib.request
+    from http.server import HTTPServer, BaseHTTPRequestHandler
+
+    WEBHOOK_SECRET = os.environ.get("GITHUB_WEBHOOK_SECRET", "").encode()
+    KAGENT_URL = os.environ.get(
+        "KAGENT_URL",
+        "http://kagent-controller.kagent.svc.cluster.local:8083",
+    )
+    AGENT_ID = "code-supervisor-agent"
+
+
+    def verify_signature(body: bytes, sig_header: str) -> bool:
+        if not WEBHOOK_SECRET:
+            return True
+        if not sig_header or not sig_header.startswith("sha256="):
+            return False
+        expected = "sha256=" + hmac.new(WEBHOOK_SECRET, body, hashlib.sha256).hexdigest()
+        return hmac.compare_digest(expected, sig_header)
+
+
+    def call_kagent(repo: str, pr_number: int) -> int:
+        payload = {
+            "message": {
+                "role": "user",
+                "parts": [{"type": "text", "text": f"Review PR #{pr_number} in {repo}"}],
+            }
+        }
+        data = json.dumps(payload).encode()
+        url = f"{KAGENT_URL}/api/a2a/{AGENT_ID}/"
+        req = urllib.request.Request(
+            url, data=data, headers={"Content-Type": "application/json"}, method="POST"
+        )
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            return resp.status
+
+
+    class Handler(BaseHTTPRequestHandler):
+        def do_GET(self):
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(b"github-webhook-receiver ok")
+
+        def do_POST(self):
+            length = int(self.headers.get("Content-Length", 0))
+            body = self.rfile.read(length)
+
+            sig = self.headers.get("X-Hub-Signature-256", "")
+            if not verify_signature(body, sig):
+                self.send_response(401)
+                self.end_headers()
+                self.wfile.write(b"invalid signature")
+                return
+
+            event = self.headers.get("X-GitHub-Event", "")
+            if event != "pull_request":
+                self.send_response(200)
+                self.end_headers()
+                self.wfile.write(b"ignored")
+                return
+
+            try:
+                payload = json.loads(body)
+            except json.JSONDecodeError:
+                self.send_response(400)
+                self.end_headers()
+                self.wfile.write(b"invalid json")
+                return
+
+            action = payload.get("action", "")
+            if action not in ("opened", "synchronize", "reopened"):
+                self.send_response(200)
+                self.end_headers()
+                self.wfile.write(b"ignored")
+                return
+
+            repo = payload["repository"]["full_name"]
+            pr_number = payload["pull_request"]["number"]
+
+            try:
+                status = call_kagent(repo, pr_number)
+                self.send_response(200)
+                self.end_headers()
+                self.wfile.write(f"triggered kagent (HTTP {status})".encode())
+            except Exception as exc:
+                print(f"ERROR calling kagent: {exc}")
+                self.send_response(500)
+                self.end_headers()
+                self.wfile.write(str(exc).encode())
+
+        def log_message(self, fmt, *args):
+            print(f"{self.address_string()} {fmt % args}")
+
+
+    if __name__ == "__main__":
+        port = int(os.environ.get("PORT", "8080"))
+        print(f"github-webhook-receiver listening on :{port}")
+        HTTPServer(("0.0.0.0", port), Handler).serve_forever()
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: github-webhook-receiver
+  namespace: kagent
+  labels:
+    app: github-webhook-receiver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: github-webhook-receiver
+  template:
+    metadata:
+      labels:
+        app: github-webhook-receiver
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+      containers:
+        - name: receiver
+          image: python:3.12-slim
+          command: ["python", "/app/main.py"]
+          ports:
+            - containerPort: 8080
+              name: http
+          env:
+            - name: GITHUB_WEBHOOK_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: github-webhook-secret
+                  key: GITHUB_WEBHOOK_SECRET
+                  optional: true
+            - name: KAGENT_URL
+              value: "http://kagent-controller.kagent.svc.cluster.local:8083"
+          volumeMounts:
+            - name: script
+              mountPath: /app
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              memory: 64Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+      volumes:
+        - name: script
+          configMap:
+            name: github-webhook-receiver
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: github-webhook-receiver
+  namespace: kagent
+  labels:
+    app: github-webhook-receiver
+spec:
+  selector:
+    app: github-webhook-receiver
+  ports:
+    - port: 8080
+      targetPort: 8080
+      name: http
+  type: ClusterIP

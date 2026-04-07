@@ -6,3 +6,4 @@ resources:
   - ./claude.yaml
   - ./claude-sonnet.yaml
   - ./ollama.yaml
+  - ./gemini.yaml

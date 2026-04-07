@@ -19,3 +19,4 @@ resources:
   - ./providers/ks.yaml
   - ./mcps/ks.yaml
   - ./agents/ks.yaml
+  - ./github-webhook-receiver/ks.yaml

@@ -6,3 +6,4 @@ resources:
   - ./github.yaml
   - ./youtube.yaml
   - ./flux.yaml
+  - ./whatsapp.yaml

@@ -1,0 +1,52 @@
+---
+apiVersion: kagent.dev/v1alpha1
+kind: MCPServer
+metadata:
+  annotations:
+    kmcp.dev/description: MCP server for WhatsApp notifications via CallMeBot
+    kmcp.dev/project-name: whatsapp-mcp
+  labels:
+    app.kubernetes.io/component: mcp-server
+    app.kubernetes.io/instance: whatsapp-mcp
+    app.kubernetes.io/managed-by: kmcp
+    app.kubernetes.io/name: whatsapp-mcp
+    app.kubernetes.io/part-of: kmcp
+    kmcp.dev/framework: fastmcp-python
+    app: whatsapp-mcp
+  name: whatsapp-mcp
+  namespace: kagent
+spec:
+  deployment:
+    cmd: python
+    args:
+      - src/main.py
+    image: matcham89/whatsapp-mcp:0.1.0
+    port: 3000
+    secretRefs:
+      - name: callmebot-env-vars
+  stdioTransport: {}
+  transportType: stdio
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: whatsapp-mcp-kagent
+  namespace: kagent
+  annotations:
+    kagent.dev/mcp-service-path: /mcp
+    kagent.dev/mcp-service-port: "3000"
+  labels:
+    kagent.dev/mcp-service: "true"
+    app.kubernetes.io/name: whatsapp-mcp
+    app: whatsapp-mcp
+spec:
+  ports:
+    - appProtocol: kgateway.dev/mcp
+      name: mcp
+      port: 3000
+      protocol: TCP
+      targetPort: 3000
+  selector:
+    app.kubernetes.io/instance: whatsapp-mcp
+    app.kubernetes.io/name: whatsapp-mcp
+  type: ClusterIP

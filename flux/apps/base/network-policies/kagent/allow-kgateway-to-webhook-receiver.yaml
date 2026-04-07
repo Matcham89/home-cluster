@@ -1,0 +1,24 @@
+---
+# Allow agentgateway to reach the github-webhook-receiver
+# Required for GitHub webhook forwarding from the agentgateway ingress
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-kgateway-to-webhook-receiver
+spec:
+  podSelector:
+    matchLabels:
+      app: github-webhook-receiver
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kgateway-system
+          podSelector:
+            matchLabels:
+              app.kubernetes.io/name: agentgateway
+      ports:
+        - port: 8080
+          protocol: TCP

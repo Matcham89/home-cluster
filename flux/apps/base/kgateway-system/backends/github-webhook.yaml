@@ -1,0 +1,10 @@
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: github-webhook-backend
+  namespace: kgateway-system
+spec:
+  static:
+    host: github-webhook-receiver.kagent.svc.cluster.local
+    port: 8080
