@@ -6,7 +6,7 @@ metadata:
 spec:
   description: Posts a human-readable summary comment on the GitHub PR tagging the repo owner, summarising what the review pipeline found and what action is needed.
   declarative:
-    modelConfig: claude-haiku-config
+    modelConfig: gemini-flash
     systemMessage: |
       # PR Notifier
 

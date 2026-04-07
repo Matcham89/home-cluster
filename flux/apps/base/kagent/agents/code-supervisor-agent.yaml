@@ -6,7 +6,7 @@ metadata:
 spec:
   description: Orchestrates the full PR review pipeline. Coordinates the analyzer, commenter, notifier, and WhatsApp notification in sequence, then performs a QA verification pass to confirm all steps completed successfully.
   declarative:
-    modelConfig: claude-haiku-config
+    modelConfig: gemini-flash
     systemMessage: |
       # Code Supervisor
 

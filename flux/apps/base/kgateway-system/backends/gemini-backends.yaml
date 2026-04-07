@@ -7,7 +7,7 @@
 # ============================================================================
 
 # ============================================================================
-# BACKEND 1: Gemini 2.5 Flash
+# BACKEND 1: Gemini Flash — load balanced across Gemini, Haiku, Sonnet, GPT
 # ============================================================================
 apiVersion: agentgateway.dev/v1alpha1
 kind: AgentgatewayBackend
@@ -29,6 +29,27 @@ spec:
               auth:
                 secretRef:
                   name: google-secret
+          - name: claude-haiku
+            anthropic:
+              model: "claude-haiku-4-5"
+            policies:
+              auth:
+                secretRef:
+                  name: anthropic-secret
+          - name: claude-sonnet
+            anthropic:
+              model: "claude-sonnet-4-5"
+            policies:
+              auth:
+                secretRef:
+                  name: anthropic-secret
+          - name: gpt-4o-mini
+            openai:
+              model: "gpt-4.1-mini"
+            policies:
+              auth:
+                secretRef:
+                  name: openai-secret
 
 ---
 # ============================================================================
