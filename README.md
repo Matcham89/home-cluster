@@ -1,12 +1,13 @@
 # home-cluster
 
+test
 GitOps repository for Kubernetes home cluster managed by Flux.
 
 ## What is Flux?
 
 Flux is a GitOps operator that automatically syncs this Git repository to the Kubernetes cluster. Changes committed to this repo are automatically applied to the cluster. The cluster state is defined declaratively in Git - the single source of truth.
 
-https://fluxcd.io
+<https://fluxcd.io>
 
 ## Structure
 
@@ -43,6 +44,7 @@ Namespaces are templated in `flux/infra/` and consumed by apps in `flux/apps/dev
 - `namespace-istio-privileged` - Istio ambient mode + privileged security
 
 **Example:**
+
 ```yaml
 namespace: kube-ops
 components:
@@ -54,6 +56,7 @@ This DRY approach centralizes namespace configuration - security policies, Istio
 ## Deployed Applications
 
 ### Infrastructure
+
 - **Flux System** - GitOps operator
 - **Longhorn** - Distributed storage
 - **Cert Manager** - Certificate management
@@ -61,20 +64,25 @@ This DRY approach centralizes namespace configuration - security policies, Istio
 - **Metrics Server** - Resource metrics
 
 ### Service Mesh & Gateway
+
 - **Istio** - Service mesh
 - **Istio Gateway** - Ingress gateway
 - **Kiali** - Service mesh observability
 
 ### Database
+
 - **CNPG** - CloudNativePG operator
 
 ### Auth & Identity
+
 - **Authentik** - Identity provider
 
 ### Monitoring
+
 - **Kube Prometheus Stack** - Monitoring and alerting
 
 ### ML/AI
+
 - **KAgent** - AI agent platform
 
 ## Quick Start
