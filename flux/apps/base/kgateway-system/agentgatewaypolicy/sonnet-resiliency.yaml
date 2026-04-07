@@ -1,0 +1,32 @@
+---
+# Sonnet gateway resiliency policy
+#
+# Two layers of protection:
+# 1. Token rate limit (30k/min) — matches Anthropic's org limit for sonnet,
+#    prevents wasting quota on requests that will just be rejected upstream.
+#    Requests exceeding this get a fast 429 locally instead of burning
+#    tokens and round-trip time to Anthropic.
+# 2. Retry on 429/529 — if a request does hit a rate limit (either local
+#    or upstream from Anthropic), the gateway retries with backoff.
+#    The caller never sees rate limit errors.
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayPolicy
+metadata:
+  name: sonnet-resiliency
+  namespace: kgateway-system
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: claude-sonnet-route
+  traffic:
+    rateLimit:
+      local:
+        - tokens: 30000
+          unit: Minutes
+    retry:
+      attempts: 5
+      backoff: 30s
+      codes:
+        - 429
+        - 529

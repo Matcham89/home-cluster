@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - a2a-ratelimit.yaml
   - haiku-spending.yaml
+  - sonnet-resiliency.yaml
   # Disabled due to schema changes in v2.2.0-main
   # - otel.yaml
   # - traces.yaml
