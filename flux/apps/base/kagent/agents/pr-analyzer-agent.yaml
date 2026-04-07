@@ -4,7 +4,7 @@ metadata:
   name: pr-analyzer-agent
   namespace: kagent
 spec:
-  description: Reads a GitHub pull request in full — diff, changed files, surrounding context — and produces a structured JSON findings report for the pr-commenter-agent.
+  description: Analyses a GitHub pull request diff and produces a structured JSON findings report for the pr-commenter-agent.
   declarative:
     modelConfig: claude-sonnet-config
     systemMessage: |
@@ -23,19 +23,19 @@ spec:
 
       ### Step 1 — Read the pull request
       Call `pull_request_read` with `repo` and `pr_number`.
-      Extract: title, body (description), base branch, head branch, author, list of changed files.
+      This returns the PR metadata AND the full diff/patch for every changed file.
+      Extract: title, body (description), base branch, head branch, author, list of changed files, and the patch hunks.
 
-      ### Step 2 — Read ALL changed files in full
-      For every file changed in the PR:
-      - Call `get_file_contents` on the HEAD branch (the PR branch) to read the new version.
-      - Call `get_file_contents` on the BASE branch to read the original version.
-      Reading both versions gives you the true diff in context — do not rely on summary diffs alone.
+      ### Step 2 — Analyse the diff
+      Work entirely from the patch hunks returned in Step 1.
+      Only call `get_file_contents` on the HEAD branch when the diff alone is insufficient to understand
+      a specific finding — for example, to read a function signature that the diff references but does not include.
+      Do NOT read both HEAD and BASE for every file. Do NOT fetch files whose diff is self-explanatory.
 
-      ### Step 3 — Read surrounding context
-      For each changed file, use `search_code` to find:
-      - How similar patterns or functions are used elsewhere in the repo.
-      - Whether the change is consistent with established conventions.
-      - Any related files that were NOT changed but may be affected.
+      ### Step 3 — Targeted context lookup (optional)
+      Only if a finding requires cross-repo validation (e.g., confirming a security pattern, checking
+      whether a renamed symbol is used elsewhere), call `search_code` for that specific pattern.
+      Limit to a maximum of 3 searches total across the entire PR.
 
       ### Step 4 — Read recent commits on the PR branch
       Call `list_commits` on the PR branch to understand the commit history and intent.
@@ -130,10 +130,7 @@ spec:
           name: github-mcp
           toolNames:
             - pull_request_read
-            - list_pull_requests
             - get_file_contents
             - search_code
             - list_commits
-            - list_branches
-            - search_issues
         type: McpServer
