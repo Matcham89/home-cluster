@@ -5,3 +5,4 @@ kind: Kustomization
 resources:
   - ./claude.yaml
   - ./claude-sonnet.yaml
+  - ./ollama.yaml

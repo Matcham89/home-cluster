@@ -1,0 +1,10 @@
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: ollama-gemma4
+  namespace: kagent
+spec:
+  model: gemma4:latest
+  provider: Ollama
+  ollama:
+    host: http://ollama-external.external-services.svc.cluster.local:11434
