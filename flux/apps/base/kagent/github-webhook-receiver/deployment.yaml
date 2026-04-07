@@ -39,7 +39,7 @@ data:
             "params": {
                 "message": {
                     "role": "user",
-                    "parts": [{"type": "text", "text": f"Review PR #{pr_number} in {repo}"}],
+                    "parts": [{"kind": "text", "text": f"Review PR #{pr_number} in {repo}"}],
                 }
             },
         }
