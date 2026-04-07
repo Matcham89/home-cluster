@@ -7,7 +7,7 @@ resources:
   - ./youtube-agent.yaml
   - ./flux-health-agent.yaml
   - ./k8s-health-agent.yaml
-  - ./code-planner-agent.yaml
-  - ./code-writer-agent.yaml
-  - ./code-reviewer-agent.yaml
+  - ./pr-analyzer-agent.yaml
+  - ./pr-commenter-agent.yaml
+  - ./pr-notifier-agent.yaml
   - ./code-supervisor-agent.yaml
