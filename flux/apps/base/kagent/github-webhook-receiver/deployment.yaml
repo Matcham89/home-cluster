@@ -11,6 +11,7 @@ data:
     import hmac
     import json
     import os
+    import threading
     import urllib.request
     from http.server import HTTPServer, BaseHTTPRequestHandler
 
@@ -49,7 +50,7 @@ data:
         req = urllib.request.Request(
             url, data=data, headers={"Content-Type": "application/json"}, method="POST"
         )
-        with urllib.request.urlopen(req, timeout=10) as resp:
+        with urllib.request.urlopen(req, timeout=300) as resp:
             return resp.status
 
 
@@ -95,16 +96,17 @@ data:
             repo = payload["repository"]["full_name"]
             pr_number = payload["pull_request"]["number"]
 
-            try:
-                status = call_kagent(repo, pr_number)
-                self.send_response(200)
-                self.end_headers()
-                self.wfile.write(f"triggered kagent (HTTP {status})".encode())
-            except Exception as exc:
-                print(f"ERROR calling kagent: {exc}")
-                self.send_response(500)
-                self.end_headers()
-                self.wfile.write(str(exc).encode())
+            def trigger():
+                try:
+                    status = call_kagent(repo, pr_number)
+                    print(f"kagent triggered for {repo}#{pr_number} (HTTP {status})")
+                except Exception as exc:
+                    print(f"ERROR calling kagent for {repo}#{pr_number}: {exc}")
+
+            threading.Thread(target=trigger, daemon=True).start()
+            self.send_response(200)
+            self.end_headers()
+            self.wfile.write(f"triggered kagent for {repo}#{pr_number}".encode())
 
         def log_message(self, fmt, *args):
             print(f"{self.address_string()} {fmt % args}")
