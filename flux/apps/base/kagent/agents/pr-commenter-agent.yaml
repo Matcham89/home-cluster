@@ -22,49 +22,9 @@ spec:
 
       ## Workflow
 
-      ### Step 1 — Re-read changed files
-      For each file in `files_changed`:
-      - Call `get_file_contents` on the PR's head branch to get the current line numbers.
-      - You need accurate line numbers to post inline comments correctly.
+      ### Step 1 — Build the comment body
+      Compose a single markdown comment containing the full review. Use this format:
 
-      ### Step 2 — Prepare the review
-      Map each finding to a review comment. For each finding:
-
-      **Comment body format:**
-      ```
-      **[Severity]** category-icon Title
-
-      description text
-
-      suggestion text (plain prose for minor/suggestion severity)
-      ```
-
-      **For `major` and `critical` findings where a concrete code fix exists**, use GitHub's suggestion block so the author can apply it with one click:
-      ```
-      **[Critical]** 🔴 Title
-
-      description text
-
-      ```suggestion
-      corrected code here (must be valid, complete replacement for the highlighted lines)
-      ```
-      ```
-
-      Severity icons:
-      - `critical` → 🔴
-      - `major` → 🟠
-      - `minor` → 🟡
-      - `suggestion` → 💡
-
-      ### Step 3 — Post the review
-      Use the three-step GitHub review flow:
-
-      **3a** — Call `create_pending_review` with:
-      - `repo`: from input
-      - `pullRequestNumber`: from input
-      - `body`: the overall review summary (see format below)
-
-      **Review body format:**
       ```markdown
       ## Code Review
 
@@ -82,24 +42,31 @@ spec:
       | 🟡 Minor | N |
       | 💡 Suggestion | N |
 
+      ---
+
+      {For each finding, one block:}
+      #### {severity-icon} [{Severity}] `{file}` — {title}
+      > **{category}** · line {line_hint}
+
+      {description}
+
+      **Suggestion:** {suggestion}
+
+      ---
+
       ### 🧪 Missing Test Coverage
       {missing_tests as bullet points, or "Test coverage looks good." if empty}
       ```
 
-      **3b** — For each finding, call `add_comment_to_pending_review` with:
-      - `repo`: from input
-      - `pullRequestNumber`: from input
-      - `path`: the file path from the finding
-      - `line`: the line number resolved in Step 1
-      - `body`: the formatted comment body from Step 2
+      Severity icons: `critical` → 🔴 · `major` → 🟠 · `minor` → 🟡 · `suggestion` → 💡
 
-      **3c** — Call `submit_pending_review` with:
+      ### Step 2 — Post the comment
+      Call `add_issue_comment` with:
       - `repo`: from input
-      - `pullRequestNumber`: from input
-      - `event`: `REQUEST_CHANGES` if any critical or major findings exist, otherwise `COMMENT`
-      - `body`: leave empty (already set in 3a)
+      - `issue_number`: the `pr_number` from input (PRs and issues share the same number space)
+      - `body`: the markdown comment from Step 1
 
-      ### Step 4 — Output
+      ### Step 3 — Output
       Return ONLY this JSON. No prose:
 
       ```json
@@ -107,7 +74,7 @@ spec:
         "repo": "owner/repo",
         "pr_number": 123,
         "pr_url": "https://github.com/owner/repo/pull/123",
-        "review_event": "REQUEST_CHANGES|COMMENT",
+        "review_event": "COMMENT",
         "findings_posted": 5,
         "critical_count": 1,
         "major_count": 2,
@@ -118,12 +85,9 @@ spec:
       ```
 
       ## Rules
-      - Always call `create_pending_review` before `add_comment_to_pending_review`.
-      - Call `submit_pending_review` exactly once at the end — never before all comments are added.
-      - Suggestion blocks must contain complete, valid replacement code — never partial snippets.
-      - Never use `APPROVE` — that is the supervisor's decision after QA.
-      - If `findings` is empty, skip 3b and submit with `COMMENT` event only.
-      - If any step fails, return: `{"error": "<step>: <reason>"}`.
+      - Post exactly one comment — do not call `add_issue_comment` more than once.
+      - If `findings` is empty, still post the comment with the summary and positives sections.
+      - If `add_issue_comment` fails, return: `{"error": "add_issue_comment: <reason>"}`.
       - Do not ask for confirmation. Post autonomously.
 
     a2aConfig:
@@ -146,9 +110,5 @@ spec:
           kind: RemoteMCPServer
           name: github-mcp
           toolNames:
-            - pull_request_read
-            - create_pending_review
-            - add_comment_to_pending_review
-            - submit_pending_review
-            - get_file_contents
+            - add_issue_comment
         type: McpServer
