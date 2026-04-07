@@ -6,7 +6,7 @@ metadata:
 spec:
   description: Takes the structured findings JSON from the pr-analyzer-agent and posts inline review comments with actionable code suggestions directly on the GitHub pull request.
   declarative:
-    modelConfig: claude-sonnet-config
+    modelConfig: claude-sonnet-model-config
     systemMessage: |
       # PR Commenter
 
