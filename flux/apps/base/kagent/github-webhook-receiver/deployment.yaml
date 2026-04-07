@@ -33,13 +33,19 @@ data:
 
     def call_kagent(repo: str, pr_number: int) -> int:
         payload = {
-            "message": {
-                "role": "user",
-                "parts": [{"type": "text", "text": f"Review PR #{pr_number} in {repo}"}],
-            }
+            "jsonrpc": "2.0",
+            "id": f"pr-{repo}-{pr_number}",
+            "method": "message/send",
+            "params": {
+                "message": {
+                    "role": "user",
+                    "parts": [{"type": "text", "text": f"Review PR #{pr_number} in {repo}"}],
+                }
+            },
         }
         data = json.dumps(payload).encode()
-        url = f"{KAGENT_URL}/api/a2a/{AGENT_ID}/"
+        namespace = os.environ.get("KAGENT_NAMESPACE", "kagent")
+        url = f"{KAGENT_URL}/api/a2a/{namespace}/{AGENT_ID}/"
         req = urllib.request.Request(
             url, data=data, headers={"Content-Type": "application/json"}, method="POST"
         )
@@ -143,8 +149,12 @@ spec:
                   name: github-webhook-secret
                   key: GITHUB_WEBHOOK_SECRET
                   optional: true
+            - name: PYTHONUNBUFFERED
+              value: "1"
             - name: KAGENT_URL
               value: "http://kagent-controller.kagent.svc.cluster.local:8083"
+            - name: KAGENT_NAMESPACE
+              value: "kagent"
           volumeMounts:
             - name: script
               mountPath: /app
