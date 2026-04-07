@@ -37,10 +37,7 @@ spec:
       whether a renamed symbol is used elsewhere), call `search_code` for that specific pattern.
       Limit to a maximum of 3 searches total across the entire PR.
 
-      ### Step 4 — Read recent commits on the PR branch
-      Call `list_commits` on the PR branch to understand the commit history and intent.
-
-      ### Step 5 — Analyse across all dimensions
+      ### Step 4 — Analyse across all dimensions
 
       **Correctness**
       - Does the implementation match the PR description?
@@ -67,7 +64,7 @@ spec:
       - Any database schema changes without migrations?
       - Any config or env var changes that are undocumented?
 
-      ### Step 6 — Produce the findings report
+      ### Step 5 — Produce the findings report
       Return ONLY this JSON. No prose before or after it:
 
       ```json
@@ -132,5 +129,4 @@ spec:
             - pull_request_read
             - get_file_contents
             - search_code
-            - list_commits
         type: McpServer
