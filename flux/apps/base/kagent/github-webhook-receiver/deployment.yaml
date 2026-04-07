@@ -12,6 +12,7 @@ data:
     import json
     import os
     import threading
+    import time
     import urllib.request
     from http.server import HTTPServer, BaseHTTPRequestHandler
 
@@ -21,6 +22,24 @@ data:
         "http://kagent-controller.kagent.svc.cluster.local:8083",
     )
     AGENT_ID = "code-supervisor-agent"
+    DEDUP_WINDOW = 300  # seconds — ignore duplicate events for the same PR within this window
+
+    _dedup_lock = threading.Lock()
+    _dedup: dict[str, float] = {}  # key -> last triggered timestamp
+
+
+    def _is_duplicate(key: str) -> bool:
+        """Return True if this key was already triggered within DEDUP_WINDOW seconds."""
+        now = time.monotonic()
+        with _dedup_lock:
+            # Evict stale entries
+            stale = [k for k, t in _dedup.items() if now - t > DEDUP_WINDOW]
+            for k in stale:
+                del _dedup[k]
+            if key in _dedup:
+                return True
+            _dedup[key] = now
+            return False
 
 
     def verify_signature(body: bytes, sig_header: str) -> bool:
@@ -95,18 +114,26 @@ data:
 
             repo = payload["repository"]["full_name"]
             pr_number = payload["pull_request"]["number"]
+            dedup_key = f"{repo}#{pr_number}"
+
+            if _is_duplicate(dedup_key):
+                print(f"duplicate event for {dedup_key}, ignoring")
+                self.send_response(200)
+                self.end_headers()
+                self.wfile.write(f"duplicate ignored for {dedup_key}".encode())
+                return
 
             def trigger():
                 try:
                     status = call_kagent(repo, pr_number)
-                    print(f"kagent triggered for {repo}#{pr_number} (HTTP {status})")
+                    print(f"kagent triggered for {dedup_key} (HTTP {status})")
                 except Exception as exc:
-                    print(f"ERROR calling kagent for {repo}#{pr_number}: {exc}")
+                    print(f"ERROR calling kagent for {dedup_key}: {exc}")
 
             threading.Thread(target=trigger, daemon=True).start()
             self.send_response(200)
             self.end_headers()
-            self.wfile.write(f"triggered kagent for {repo}#{pr_number}".encode())
+            self.wfile.write(f"triggered kagent for {dedup_key}".encode())
 
         def log_message(self, fmt, *args):
             print(f"{self.address_string()} {fmt % args}")
