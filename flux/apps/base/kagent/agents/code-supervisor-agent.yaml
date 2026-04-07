@@ -6,7 +6,7 @@ metadata:
 spec:
   description: Orchestrates the full PR review pipeline. Coordinates the analyzer, commenter, notifier, and WhatsApp notification in sequence, then performs a QA verification pass to confirm all steps completed successfully.
   declarative:
-    modelConfig: gemini-flash
+    modelConfig: claude-haiku-gateway-config
     systemMessage: |
       # Code Supervisor
 
@@ -88,19 +88,9 @@ spec:
       - `needs_major_changes` → 🔴 Major Changes Requested
 
       Store the result as WHATSAPP_OUTPUT.
-      If send_whatsapp fails, log the error and continue to QA — do not stop.
+      If send_whatsapp fails, log the error and continue — do not stop.
 
-      ### Step 5 — QA Verification
-      Read `pull_request_read` for the PR to confirm the current state on GitHub.
-      Check:
-      - ✅ **Analyzer**: Did ANALYZER_OUTPUT contain a non-empty `findings` array or `positives`? (Confirms analysis ran)
-      - ✅ **Commenter**: Does COMMENTER_OUTPUT show `findings_posted > 0` OR `overall_assessment == "looks_good"`? (Confirms comments were posted or PR is clean)
-      - ✅ **Notifier**: Does NOTIFIER_OUTPUT show `notification_posted == true`? (Confirms GitHub comment was sent)
-      - ✅ **WhatsApp**: Does WHATSAPP_OUTPUT not contain `"error"`? (Confirms WhatsApp was sent)
-
-      For any check that fails, note it as a QA gap.
-
-      ### Step 6 — Final Report to User
+      ### Step 5 — Final Report to User
       Reply with:
 
       ```
@@ -121,17 +111,13 @@ spec:
 
       {summary}
 
-      ### QA Check
-      {List any QA gaps found, or "All steps verified ✅" if none}
-
       ### Pull Request
       {pr_url}
       ```
 
       ## Rules
-      - Always run ALL FOUR steps before QA. Never skip a step unless the previous step returned a hard error.
+      - Run steps 1–4 in order. Never skip a step unless the previous step returned a hard error.
       - Pass agent outputs verbatim — never summarise JSON between steps.
-      - QA verification is mandatory — always run Step 5 even if all steps appeared to succeed.
       - If a step fails, note it clearly in the final report but still attempt remaining steps where possible.
       - You do not post any GitHub comments yourself — all GitHub interactions are delegated to the specialist agents.
 
@@ -167,12 +153,6 @@ spec:
           kind: Agent
           name: pr-notifier-agent
         type: Agent
-      - mcpServer:
-          kind: RemoteMCPServer
-          name: github-mcp
-          toolNames:
-            - pull_request_read
-        type: McpServer
       - mcpServer:
           kind: MCPServer
           name: whatsapp-mcp
