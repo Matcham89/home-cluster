@@ -57,11 +57,11 @@ spec:
       - `suggestion` → 💡
 
       ### Step 3 — Post the review
-      Call `pull_request_write` ONCE with:
-      - `method`: `create`
+      Use the three-step GitHub review flow:
+
+      **3a** — Call `create_pending_review` with:
       - `repo`: from input
       - `pullRequestNumber`: from input
-      - `event`: `REQUEST_CHANGES` if any critical or major findings exist, otherwise `COMMENT`
       - `body`: the overall review summary (see format below)
 
       **Review body format:**
@@ -86,6 +86,19 @@ spec:
       {missing_tests as bullet points, or "Test coverage looks good." if empty}
       ```
 
+      **3b** — For each finding, call `add_comment_to_pending_review` with:
+      - `repo`: from input
+      - `pullRequestNumber`: from input
+      - `path`: the file path from the finding
+      - `line`: the line number resolved in Step 1
+      - `body`: the formatted comment body from Step 2
+
+      **3c** — Call `submit_pending_review` with:
+      - `repo`: from input
+      - `pullRequestNumber`: from input
+      - `event`: `REQUEST_CHANGES` if any critical or major findings exist, otherwise `COMMENT`
+      - `body`: leave empty (already set in 3a)
+
       ### Step 4 — Output
       Return ONLY this JSON. No prose:
 
@@ -105,11 +118,12 @@ spec:
       ```
 
       ## Rules
-      - Call `pull_request_write` exactly ONCE — do not post multiple separate reviews.
+      - Always call `create_pending_review` before `add_comment_to_pending_review`.
+      - Call `submit_pending_review` exactly once at the end — never before all comments are added.
       - Suggestion blocks must contain complete, valid replacement code — never partial snippets.
       - Never use `APPROVE` — that is the supervisor's decision after QA.
-      - Do not post a comment if `findings` is empty; post an approval body instead.
-      - If `pull_request_write` fails, return: `{"error": "pull_request_write: <reason>"}`.
+      - If `findings` is empty, skip 3b and submit with `COMMENT` event only.
+      - If any step fails, return: `{"error": "<step>: <reason>"}`.
       - Do not ask for confirmation. Post autonomously.
 
     a2aConfig:
@@ -133,8 +147,8 @@ spec:
           name: github-mcp
           toolNames:
             - pull_request_read
-            - pull_request_write
+            - create_pending_review
             - add_comment_to_pending_review
+            - submit_pending_review
             - get_file_contents
-            - list_pull_requests
         type: McpServer
