@@ -24,7 +24,7 @@ spec:
       - providers:
           - name: gemini-flash
             gemini:
-              model: "gemini-2.5-flash-preview-04-17"
+              model: "gemini-2.0-flash"
             policies:
               auth:
                 secretRef:
