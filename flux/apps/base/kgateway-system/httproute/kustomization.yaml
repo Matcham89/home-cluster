@@ -12,3 +12,4 @@ resources:
   - ./claude3.yaml
   # Claude multi-gateway routes (OpenAI-compatible endpoints)
   - ./claude-routes.yaml
+  - ./gemini-routes.yaml

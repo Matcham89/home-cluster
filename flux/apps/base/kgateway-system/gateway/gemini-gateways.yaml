@@ -1,0 +1,53 @@
+---
+# ============================================================================
+# GEMINI GATEWAYS
+# ============================================================================
+# One gateway per model, each with its own IP and port.
+#   8094 = Gemini Flash
+#   8095 = Gemini Pro
+# ============================================================================
+
+# ============================================================================
+# GATEWAY 1: Gemini 2.5 Flash
+# ============================================================================
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: gemini-flash-gateway
+  namespace: kgateway-system
+  labels:
+    app: gemini-flash
+    model: gemini-2-5-flash
+    provider: gemini
+spec:
+  gatewayClassName: agentgateway
+  listeners:
+    - name: http
+      port: 8094
+      protocol: HTTP
+      allowedRoutes:
+        namespaces:
+          from: Same
+
+---
+# ============================================================================
+# GATEWAY 2: Gemini 2.5 Pro
+# ============================================================================
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: gemini-pro-gateway
+  namespace: kgateway-system
+  labels:
+    app: gemini-pro
+    model: gemini-2-5-pro
+    provider: gemini
+spec:
+  gatewayClassName: agentgateway
+  listeners:
+    - name: http
+      port: 8095
+      protocol: HTTP
+      allowedRoutes:
+        namespaces:
+          from: Same

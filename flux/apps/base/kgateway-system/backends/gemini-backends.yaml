@@ -1,0 +1,56 @@
+---
+# ============================================================================
+# GEMINI AGENTGATEWAY BACKENDS
+# ============================================================================
+# Each backend is configured with a specific Gemini model hardcoded.
+# Ports: 8094 = Flash, 8095 = Pro
+# ============================================================================
+
+# ============================================================================
+# BACKEND 1: Gemini 2.5 Flash
+# ============================================================================
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: gemini-flash-backend
+  namespace: kgateway-system
+  labels:
+    app: gemini-flash
+    model: gemini-2-5-flash
+    provider: gemini
+spec:
+  ai:
+    groups:
+      - providers:
+          - name: gemini-flash
+            gemini:
+              model: "gemini-2.5-flash-preview-04-17"
+            policies:
+              auth:
+                secretRef:
+                  name: google-secret
+
+---
+# ============================================================================
+# BACKEND 2: Gemini 2.5 Pro
+# ============================================================================
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: gemini-pro-backend
+  namespace: kgateway-system
+  labels:
+    app: gemini-pro
+    model: gemini-2-5-pro
+    provider: gemini
+spec:
+  ai:
+    groups:
+      - providers:
+          - name: gemini-pro
+            gemini:
+              model: "gemini-2.5-pro-exp-03-25"
+            policies:
+              auth:
+                secretRef:
+                  name: google-secret
