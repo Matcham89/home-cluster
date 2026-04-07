@@ -1,0 +1,23 @@
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: github-webhook-receiver
+  namespace: kagent
+spec:
+  parentRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: istio-gateway
+      namespace: istio-system
+      sectionName: http
+  hostnames:
+    - agentgateway.kubegit.com
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /webhook/github
+      backendRefs:
+        - name: github-webhook-receiver
+          port: 8080
