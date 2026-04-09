@@ -20,4 +20,3 @@ resources:
   - ./mcps/ks.yaml
   - ./agents/ks.yaml
   - ./github-webhook-receiver/ks.yaml
-  - ./whatsapp-mcp/ks.yaml

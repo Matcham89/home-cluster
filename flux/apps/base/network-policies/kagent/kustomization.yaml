@@ -5,7 +5,3 @@ kind: Kustomization
 resources:
   - ./allow-kgateway-ingress.yaml
   - ./allow-kgateway-to-webhook-receiver.yaml
-  - ./allow-whatsapp-mcp-egress.yaml
-  - ./allow-kagent-to-whatsapp-mcp.yaml
-  - ./allow-whatsapp-mcp-to-k8s-agent.yaml
-  - ./allow-k8s-agent-from-whatsapp-mcp.yaml
