@@ -9,5 +9,5 @@ metadata:
     app: whatsapp-mcp
 spec:
   description: "Send WhatsApp messages via Baileys linked device"
-  protocol: SSE
-  url: http://whatsapp-mcp.kagent.svc.cluster.local:3000/sse
+  protocol: STREAMABLE_HTTP
+  url: http://whatsapp-mcp.kagent.svc.cluster.local:3000/mcp

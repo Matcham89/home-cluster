@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
+import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { z } from "zod";
 import makeWASocket, {
   useMultiFileAuthState,
@@ -9,8 +9,9 @@ import makeWASocket, {
   fetchLatestBaileysVersion,
 } from "@whiskeysockets/baileys";
 import pino from "pino";
-import { mkdirSync, readdirSync } from "fs";
+import { mkdirSync } from "fs";
 import qrcode from "qrcode-terminal";
+import { randomUUID } from "crypto";
 
 const AUTH_DIR = process.env.AUTH_DIR ?? "/data/auth";
 const PORT = parseInt(process.env.PORT ?? "3000", 10);
@@ -87,12 +88,7 @@ const sendMessageSchema = {
   async ({ phone, message }: { phone: string; message: string }) => {
     if (connectionState !== "open" || !waSocket) {
       return {
-        content: [
-          {
-            type: "text",
-            text: "Error: WhatsApp socket not connected. Check pod logs.",
-          },
-        ],
+        content: [{ type: "text", text: "Error: WhatsApp socket not connected. Check pod logs." }],
         isError: true,
       };
     }
@@ -102,10 +98,7 @@ const sendMessageSchema = {
 
     try {
       await waSocket.sendMessage(jid, { text: message });
-      log.info(
-        { phone: truncated, ts: new Date().toISOString() },
-        "Message sent"
-      );
+      log.info({ phone: truncated, ts: new Date().toISOString() }, "Message sent");
       return {
         content: [{ type: "text", text: `Message sent to ${phone}` }],
       };
@@ -120,27 +113,51 @@ const sendMessageSchema = {
   }
 );
 
-// Express + SSE transport
+// Express + Streamable HTTP transport
 const app = express();
 app.use(express.json());
 
-const transports: Record<string, SSEServerTransport> = {};
+const transports: Record<string, StreamableHTTPServerTransport> = {};
 
-app.get("/sse", async (req: Request, res: Response) => {
-  const transport = new SSEServerTransport("/message", res);
-  transports[transport.sessionId] = transport;
-  res.on("close", () => delete transports[transport.sessionId]);
-  await mcpServer.connect(transport);
-});
+app.post("/mcp", async (req: Request, res: Response) => {
+  const sessionId = req.headers["mcp-session-id"] as string | undefined;
 
-app.post("/message", async (req: Request, res: Response) => {
-  const sessionId = req.query.sessionId as string;
-  const transport = transports[sessionId];
-  if (!transport) {
-    res.status(404).json({ error: "Session not found" });
+  if (sessionId && transports[sessionId]) {
+    await transports[sessionId].handleRequest(req, res, req.body);
     return;
   }
-  await transport.handlePostMessage(req, res);
+
+  const transport = new StreamableHTTPServerTransport({
+    sessionIdGenerator: () => randomUUID(),
+    onsessioninitialized: (id) => {
+      transports[id] = transport;
+    },
+  });
+
+  transport.onclose = () => {
+    if (transport.sessionId) delete transports[transport.sessionId];
+  };
+
+  await mcpServer.connect(transport);
+  await transport.handleRequest(req, res, req.body);
+});
+
+app.get("/mcp", async (req: Request, res: Response) => {
+  const sessionId = req.headers["mcp-session-id"] as string | undefined;
+  if (!sessionId || !transports[sessionId]) {
+    res.status(400).json({ error: "Missing or unknown mcp-session-id" });
+    return;
+  }
+  await transports[sessionId].handleRequest(req, res);
+});
+
+app.delete("/mcp", async (req: Request, res: Response) => {
+  const sessionId = req.headers["mcp-session-id"] as string | undefined;
+  if (sessionId && transports[sessionId]) {
+    await transports[sessionId].close();
+    delete transports[sessionId];
+  }
+  res.status(200).end();
 });
 
 app.get("/healthz", (_req: Request, res: Response) => {
