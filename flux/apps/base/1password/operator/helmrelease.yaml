@@ -308,7 +308,7 @@ spec:
       replicas: 1
 
       # -- Denotes whether the 1Password Operator will automatically restart deployments based on associated updated secrets.
-      autoRestart: false
+      autoRestart: true
 
       # -- The name of 1Password Operator Application
       applicationName: onepassword-connect-operator
