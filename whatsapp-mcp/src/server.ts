@@ -71,9 +71,6 @@ async function connectToWhatsApp(attempt = 0): Promise<void> {
   });
 }
 
-// MCP Server
-const mcpServer = new McpServer({ name: "whatsapp-mcp", version: "1.0.0" });
-
 const sendMessageSchema = {
   phone: z
     .string()
@@ -81,57 +78,65 @@ const sendMessageSchema = {
   message: z.string().describe("Plain text message body to send."),
 };
 
-// Baileys' deep recursive types exceed tsc's instantiation depth limit; cast to bypass
-(mcpServer.tool as Function)(
-  "send_whatsapp_message",
-  "Send a plain-text WhatsApp message to a phone number via a linked device session.",
-  sendMessageSchema,
-  async ({ phone, message }: { phone: string; message: string }) => {
-    if (connectionState !== "open" || !waSocket) {
-      return {
-        content: [{ type: "text", text: "Error: WhatsApp socket not connected. Check pod logs." }],
-        isError: true,
-      };
-    }
+// Each MCP connection needs its own McpServer instance — the SDK only allows one
+// transport per server. This factory registers the tool on a fresh instance.
+function createMcpServer(): McpServer {
+  const server = new McpServer({ name: "whatsapp-mcp", version: "1.0.0" });
 
-    const jid = `${phone}@s.whatsapp.net`;
-    const truncated = `***${phone.slice(-4)}`;
+  // Baileys' deep recursive types exceed tsc's instantiation depth limit; cast to bypass
+  (server.tool as Function)(
+    "send_whatsapp_message",
+    "Send a plain-text WhatsApp message to a phone number via a linked device session.",
+    sendMessageSchema,
+    async ({ phone, message }: { phone: string; message: string }) => {
+      if (connectionState !== "open" || !waSocket) {
+        return {
+          content: [{ type: "text", text: "Error: WhatsApp socket not connected. Check pod logs." }],
+          isError: true,
+        };
+      }
 
-    try {
-      await waSocket.sendMessage(jid, { text: message });
-      log.info({ phone: truncated, ts: new Date().toISOString() }, "Message sent");
-      return {
-        content: [{ type: "text", text: `Message sent to ${phone}` }],
-      };
-    } catch (err) {
-      const error = err instanceof Error ? err.message : String(err);
-      log.error({ phone: truncated, error }, "Send failed");
-      return {
-        content: [{ type: "text", text: `Error: ${error}` }],
-        isError: true,
-      };
+      const jid = `${phone}@s.whatsapp.net`;
+      const truncated = `***${phone.slice(-4)}`;
+
+      try {
+        await waSocket.sendMessage(jid, { text: message });
+        log.info({ phone: truncated, ts: new Date().toISOString() }, "Message sent");
+        return {
+          content: [{ type: "text", text: `Message sent to ${phone}` }],
+        };
+      } catch (err) {
+        const error = err instanceof Error ? err.message : String(err);
+        log.error({ phone: truncated, error }, "Send failed");
+        return {
+          content: [{ type: "text", text: `Error: ${error}` }],
+          isError: true,
+        };
+      }
     }
-  }
-);
+  );
+
+  return server;
+}
 
 // Express + Streamable HTTP transport
 const app = express();
 app.use(express.json());
 
-const transports: Record<string, StreamableHTTPServerTransport> = {};
+const transports: Record<string, { transport: StreamableHTTPServerTransport; server: McpServer }> = {};
 
 app.post("/mcp", async (req: Request, res: Response) => {
   const sessionId = req.headers["mcp-session-id"] as string | undefined;
 
   if (sessionId && transports[sessionId]) {
-    await transports[sessionId].handleRequest(req, res, req.body);
+    await transports[sessionId].transport.handleRequest(req, res, req.body);
     return;
   }
 
   const transport = new StreamableHTTPServerTransport({
     sessionIdGenerator: () => randomUUID(),
     onsessioninitialized: (id) => {
-      transports[id] = transport;
+      transports[id] = { transport, server };
     },
   });
 
@@ -139,7 +144,8 @@ app.post("/mcp", async (req: Request, res: Response) => {
     if (transport.sessionId) delete transports[transport.sessionId];
   };
 
-  await mcpServer.connect(transport);
+  const server = createMcpServer();
+  await server.connect(transport);
   await transport.handleRequest(req, res, req.body);
 });
 
@@ -149,13 +155,13 @@ app.get("/mcp", async (req: Request, res: Response) => {
     res.status(400).json({ error: "Missing or unknown mcp-session-id" });
     return;
   }
-  await transports[sessionId].handleRequest(req, res);
+  await transports[sessionId].transport.handleRequest(req, res);
 });
 
 app.delete("/mcp", async (req: Request, res: Response) => {
   const sessionId = req.headers["mcp-session-id"] as string | undefined;
   if (sessionId && transports[sessionId]) {
-    await transports[sessionId].close();
+    await transports[sessionId].transport.close();
     delete transports[sessionId];
   }
   res.status(200).end();
@@ -168,7 +174,8 @@ app.get("/sse", async (req: Request, res: Response) => {
   const transport = new SSEServerTransport("/message", res);
   sseTransports[transport.sessionId] = transport;
   res.on("close", () => delete sseTransports[transport.sessionId]);
-  await mcpServer.connect(transport);
+  const server = createMcpServer();
+  await server.connect(transport);
 });
 
 app.post("/message", async (req: Request, res: Response) => {
@@ -178,7 +185,7 @@ app.post("/message", async (req: Request, res: Response) => {
     res.status(404).json({ error: "Session not found" });
     return;
   }
-  await transport.handlePostMessage(req, res);
+  await transport.handlePostMessage(req, res, req.body);
 });
 
 app.get("/healthz", (_req: Request, res: Response) => {

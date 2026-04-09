@@ -69,7 +69,7 @@ spec:
 
       ### Step 4 — WhatsApp
       Call the `send_whatsapp_message` tool with:
-      - `phone`: "8253657006"
+      - `phone`: "18253657006"
       - `message`: the following text (replace ALL placeholders with real values):
 
       ```
