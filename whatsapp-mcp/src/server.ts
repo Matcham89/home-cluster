@@ -9,6 +9,7 @@ import makeWASocket, {
 } from "@whiskeysockets/baileys";
 import pino from "pino";
 import { mkdirSync, readdirSync } from "fs";
+import qrcode from "qrcode-terminal";
 
 const AUTH_DIR = process.env.AUTH_DIR ?? "/data/auth";
 const PORT = parseInt(process.env.PORT ?? "3000", 10);
@@ -25,16 +26,11 @@ async function connectToWhatsApp(attempt = 0): Promise<void> {
 
   mkdirSync(AUTH_DIR, { recursive: true });
 
-  if (readdirSync(AUTH_DIR).length === 0) {
-    log.info("[whatsapp-mcp] No session found. Scan QR code to link device.");
-  }
-
   const { state, saveCreds } = await useMultiFileAuthState(AUTH_DIR);
 
   const sock = makeWASocket({
     auth: state,
     logger: pino({ level: "silent" }) as any,
-    printQRInTerminal: true,
   });
 
   waSocket = sock;
@@ -42,7 +38,12 @@ async function connectToWhatsApp(attempt = 0): Promise<void> {
 
   sock.ev.on("creds.update", saveCreds);
 
-  sock.ev.on("connection.update", async ({ connection, lastDisconnect }) => {
+  sock.ev.on("connection.update", async ({ connection, lastDisconnect, qr }) => {
+    if (qr) {
+      log.info("[whatsapp-mcp] No session found. Scan QR code to link device.");
+      qrcode.generate(qr, { small: true });
+    }
+
     if (connection === "open") {
       connectionState = "open";
       log.info("WhatsApp connection open");

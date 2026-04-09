@@ -1,0 +1,17 @@
+---
+# Allow whatsapp-mcp to reach WhatsApp Web servers
+# Baileys uses HTTPS and WebSocket (both port 443) to connect to WhatsApp's cloud
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-whatsapp-mcp-egress
+spec:
+  podSelector:
+    matchLabels:
+      app: whatsapp-mcp
+  policyTypes:
+    - Egress
+  egress:
+    - ports:
+        - port: 443
+          protocol: TCP
