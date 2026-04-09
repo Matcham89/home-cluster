@@ -14,7 +14,7 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: kube-ops
+  targetNamespace: 1password
   timeout: 5m
   prune: true
   wait: true
