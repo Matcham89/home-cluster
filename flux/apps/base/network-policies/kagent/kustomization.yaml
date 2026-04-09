@@ -6,3 +6,4 @@ resources:
   - ./allow-kgateway-ingress.yaml
   - ./allow-kgateway-to-webhook-receiver.yaml
   - ./allow-whatsapp-mcp-egress.yaml
+  - ./allow-kagent-to-whatsapp-mcp.yaml
