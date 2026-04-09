@@ -18,8 +18,47 @@ const AUTH_DIR = process.env.AUTH_DIR ?? "/data/auth";
 const PORT = parseInt(process.env.PORT ?? "3000", 10);
 const log = pino({ name: "whatsapp-mcp" });
 
+const ALLOWED_SENDERS = new Set(["18253657006"]);
+
 let waSocket: WASocket | null = null;
 let connectionState: "open" | "connecting" | "closed" = "closed";
+
+async function forwardToK8sAgent(text: string): Promise<string> {
+  const K8S_AGENT_URL = process.env.K8S_AGENT_URL ?? "http://k8s-agent.kagent:8080";
+
+  try {
+    const res = await fetch(K8S_AGENT_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        jsonrpc: "2.0",
+        id: randomUUID(),
+        method: "message/send",
+        params: {
+          message: {
+            role: "user",
+            parts: [{ kind: "text", text }],
+          },
+        },
+      }),
+    });
+
+    if (!res.ok) throw new Error(`k8s-agent returned ${res.status}`);
+
+    const data: any = await res.json();
+
+    const reply: string =
+      data?.result?.status?.message?.parts?.[0]?.text ??
+      data?.result?.artifacts?.[0]?.parts?.[0]?.text ??
+      "No response from k8s-agent";
+
+    return reply;
+  } catch (err) {
+    const error = err instanceof Error ? err.message : String(err);
+    log.error({ error }, "Failed to contact k8s-agent");
+    return `Error: could not reach k8s-agent — ${error}`;
+  }
+}
 
 async function connectToWhatsApp(attempt = 0): Promise<void> {
   if (attempt >= 5) {
@@ -43,6 +82,43 @@ async function connectToWhatsApp(attempt = 0): Promise<void> {
   connectionState = "connecting";
 
   sock.ev.on("creds.update", saveCreds);
+
+  sock.ev.on("messages.upsert", async ({ messages, type }) => {
+    if (type !== "notify") return;
+
+    for (const msg of messages) {
+      if (msg.key.fromMe) continue;
+
+      const jid = msg.key.remoteJid;
+      if (!jid) continue;
+
+      if (jid.endsWith("@g.us")) continue;
+
+      const phone = jid.replace("@s.whatsapp.net", "");
+      if (!ALLOWED_SENDERS.has(phone)) {
+        log.warn({ phone: `***${phone.slice(-4)}` }, "Ignored message from non-allowlisted sender");
+        continue;
+      }
+
+      const text =
+        msg.message?.conversation ??
+        msg.message?.extendedTextMessage?.text ??
+        null;
+
+      if (!text) continue;
+
+      log.info({ phone: `***${phone.slice(-4)}` }, "Received message, forwarding to k8s-agent");
+
+      try {
+        const reply = await forwardToK8sAgent(text);
+        await waSocket!.sendMessage(jid, { text: reply });
+        log.info({ phone: `***${phone.slice(-4)}` }, "Reply sent");
+      } catch (err) {
+        const error = err instanceof Error ? err.message : String(err);
+        log.error({ phone: `***${phone.slice(-4)}`, error }, "Failed to send reply");
+      }
+    }
+  });
 
   sock.ev.on("connection.update", async ({ connection, lastDisconnect, qr }) => {
     if (qr) {
@@ -89,6 +165,14 @@ function createMcpServer(): McpServer {
     "Send a plain-text WhatsApp message to a phone number via a linked device session.",
     sendMessageSchema,
     async ({ phone, message }: { phone: string; message: string }) => {
+      if (!ALLOWED_SENDERS.has(phone)) {
+        log.warn({ phone: `***${phone.slice(-4)}` }, "Rejected send to non-allowlisted number");
+        return {
+          content: [{ type: "text", text: `Error: phone ${phone} is not in the allowlist.` }],
+          isError: true,
+        };
+      }
+
       if (connectionState !== "open" || !waSocket) {
         return {
           content: [{ type: "text", text: "Error: WhatsApp socket not connected. Check pod logs." }],

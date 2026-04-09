@@ -1,0 +1,21 @@
+---
+# Allow whatsapp-mcp to reach k8s-agent A2A endpoint on port 8080
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-whatsapp-mcp-to-k8s-agent
+spec:
+  podSelector:
+    matchLabels:
+      app: whatsapp-mcp
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: kagent
+              kagent: k8s-agent
+      ports:
+        - port: 8080
+          protocol: TCP

@@ -1,0 +1,21 @@
+---
+# Allow k8s-agent to receive A2A requests from whatsapp-mcp on port 8080
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-k8s-agent-from-whatsapp-mcp
+spec:
+  podSelector:
+    matchLabels:
+      app: kagent
+      kagent: k8s-agent
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: whatsapp-mcp
+      ports:
+        - port: 8080
+          protocol: TCP

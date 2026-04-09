@@ -23,6 +23,9 @@ spec:
       containers:
         - name: whatsapp-mcp
           image: matcham89/whatsapp-mcp:latest
+          env:
+            - name: K8S_AGENT_URL
+              value: "http://k8s-agent.kagent:8080"
           ports:
             - containerPort: 3000
               name: http
