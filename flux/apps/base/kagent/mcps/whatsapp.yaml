@@ -1,6 +1,6 @@
 ---
-apiVersion: kagent.dev/v1alpha1
-kind: MCPServer
+apiVersion: kagent.dev/v1alpha2
+kind: RemoteMCPServer
 metadata:
   name: whatsapp-mcp
   namespace: kagent
@@ -9,4 +9,5 @@ metadata:
     app: whatsapp-mcp
 spec:
   description: "Send WhatsApp messages via Baileys linked device"
+  protocol: SSE
   url: http://whatsapp-mcp.kagent.svc.cluster.local:3000/sse

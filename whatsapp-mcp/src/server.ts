@@ -6,6 +6,7 @@ import makeWASocket, {
   useMultiFileAuthState,
   DisconnectReason,
   WASocket,
+  fetchLatestBaileysVersion,
 } from "@whiskeysockets/baileys";
 import pino from "pino";
 import { mkdirSync, readdirSync } from "fs";
@@ -27,8 +28,11 @@ async function connectToWhatsApp(attempt = 0): Promise<void> {
   mkdirSync(AUTH_DIR, { recursive: true });
 
   const { state, saveCreds } = await useMultiFileAuthState(AUTH_DIR);
+  const { version } = await fetchLatestBaileysVersion();
+  log.info({ version }, "Using WhatsApp Web version");
 
   const sock = makeWASocket({
+    version,
     auth: state,
     logger: pino({ level: "silent" }) as any,
   });

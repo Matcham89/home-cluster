@@ -156,7 +156,7 @@ spec:
           name: pr-notifier-agent
         type: Agent
       - mcpServer:
-          kind: MCPServer
+          kind: RemoteMCPServer
           name: whatsapp-mcp
           toolNames:
             - send_whatsapp_message
