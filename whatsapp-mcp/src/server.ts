@@ -20,6 +20,10 @@ const log = pino({ name: "whatsapp-mcp" });
 
 const ALLOWED_SENDERS = new Set(["18253657006"]);
 
+// WhatsApp privacy mode sends messages using @lid JIDs instead of phone@s.whatsapp.net.
+// We build this map from contacts events so we can resolve lids back to phone numbers.
+const lidToPhone = new Map<string, string>();
+
 let waSocket: WASocket | null = null;
 let connectionState: "open" | "connecting" | "closed" = "closed";
 
@@ -36,6 +40,7 @@ async function forwardToK8sAgent(text: string): Promise<string> {
         method: "message/send",
         params: {
           message: {
+            messageId: randomUUID(),
             role: "user",
             parts: [{ kind: "text", text }],
           },
@@ -46,6 +51,8 @@ async function forwardToK8sAgent(text: string): Promise<string> {
     if (!res.ok) throw new Error(`k8s-agent returned ${res.status}`);
 
     const data: any = await res.json();
+
+    if (data?.error) throw new Error(`k8s-agent error: ${data.error.message}`);
 
     const reply: string =
       data?.result?.status?.message?.parts?.[0]?.text ??
@@ -83,18 +90,45 @@ async function connectToWhatsApp(attempt = 0): Promise<void> {
 
   sock.ev.on("creds.update", saveCreds);
 
+  const updateLidMap = (contacts: { id: string; lid?: string }[]) => {
+    for (const c of contacts) {
+      if (c.lid && c.id.endsWith("@s.whatsapp.net")) {
+        lidToPhone.set(c.lid, c.id.replace("@s.whatsapp.net", ""));
+      }
+    }
+  };
+
+  sock.ev.on("contacts.upsert", updateLidMap);
+
   sock.ev.on("messages.upsert", async ({ messages, type }) => {
     if (type !== "notify") return;
 
     for (const msg of messages) {
-      if (msg.key.fromMe) continue;
-
       const jid = msg.key.remoteJid;
       if (!jid) continue;
 
       if (jid.endsWith("@g.us")) continue;
 
-      const phone = jid.replace("@s.whatsapp.net", "");
+      // fromMe=true means the account holder sent this message (e.g. self-chat / Saved Messages).
+      // We treat these as commands from the allowlisted user rather than skipping them.
+      // fromMe=false means someone else sent a message to the account holder.
+      let phone: string;
+      if (msg.key.fromMe) {
+        // Self-sent: derive phone from own JID stored in creds
+        const ownJid = sock.authState?.creds?.me?.id ?? "";
+        phone = ownJid.replace(/@.+$/, "").replace(/:\d+$/, "");
+        if (!phone) continue;
+      } else if (jid.endsWith("@lid")) {
+        const resolved = lidToPhone.get(jid);
+        if (!resolved) {
+          log.warn({ jid: `***${jid.slice(-8)}` }, "Received @lid message but no lid→phone mapping yet, skipping");
+          continue;
+        }
+        phone = resolved;
+      } else {
+        phone = jid.replace("@s.whatsapp.net", "");
+      }
+
       if (!ALLOWED_SENDERS.has(phone)) {
         log.warn({ phone: `***${phone.slice(-4)}` }, "Ignored message from non-allowlisted sender");
         continue;
