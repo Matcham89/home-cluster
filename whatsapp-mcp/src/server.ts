@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
+import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import { z } from "zod";
 import makeWASocket, {
   useMultiFileAuthState,
@@ -158,6 +159,26 @@ app.delete("/mcp", async (req: Request, res: Response) => {
     delete transports[sessionId];
   }
   res.status(200).end();
+});
+
+// SSE transport — used by Google ADK Python agent runtime
+const sseTransports: Record<string, SSEServerTransport> = {};
+
+app.get("/sse", async (req: Request, res: Response) => {
+  const transport = new SSEServerTransport("/message", res);
+  sseTransports[transport.sessionId] = transport;
+  res.on("close", () => delete sseTransports[transport.sessionId]);
+  await mcpServer.connect(transport);
+});
+
+app.post("/message", async (req: Request, res: Response) => {
+  const sessionId = req.query.sessionId as string;
+  const transport = sseTransports[sessionId];
+  if (!transport) {
+    res.status(404).json({ error: "Session not found" });
+    return;
+  }
+  await transport.handlePostMessage(req, res);
 });
 
 app.get("/healthz", (_req: Request, res: Response) => {
