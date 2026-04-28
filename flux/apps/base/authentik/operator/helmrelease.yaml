@@ -39,7 +39,7 @@ spec:
     global:
       env:
         - name: AUTHENTIK_POSTGRESQL__HOST
-          value: "postgres-external.external-services.svc.cluster.local"
+          value: "postgres-cluster-rw.databases.svc.cluster.local"
         - name: AUTHENTIK_POSTGRESQL__PORT
           value: "5432"
         - name: AUTHENTIK_POSTGRESQL__NAME
@@ -78,7 +78,7 @@ spec:
       ingress:
         enabled: false
         hosts:
-            - authentik.kubegit.com
+          - authentik.kubegit.com
       resources:
         requests:
           cpu: 250m
@@ -103,4 +103,3 @@ spec:
         - name: postgres-creds
           mountPath: /postgres-creds
           readOnly: true
-
