@@ -78,9 +78,8 @@ flux/apps/base/monitoring/
 ### Namespace Configuration
 
 The `monitoring` namespace is configured with:
-- **No Istio injection** - Uses `namespace-no-istio` component
-- **Prune disabled** - Prevents accidental deletion by Flux
-- **CNI**: Standard Flannel CNI (not istio-cni)
+- **PSS**: Privileged — uses `namespace-privileged` infra component
+- **CNI**: Standard Flannel CNI
 
 ### Scraping Configuration
 
@@ -155,32 +154,7 @@ kubectl port-forward -n monitoring svc/kube-prometheus-stack-alertmanager 9093:9
 
 ## Caveats and Important Notes
 
-### 1. **Istio Sidecar Injection**
-
-⚠️ The monitoring namespace **does NOT use Istio sidecars**. This is intentional to:
-- Avoid circular dependencies (monitoring Istio requires monitoring to be up)
-- Reduce complexity in the monitoring stack
-- Prevent CNI issues during pod startup
-
-If you need to add Istio in the future, you'll need to:
-1. Update the namespace configuration
-2. Ensure proper CNI configuration
-3. Configure proper network policies
-
-### 2. **CNI Configuration**
-
-The cluster uses **Flannel CNI** (not istio-cni). If you see errors like:
-```
-failed to find plugin "istio-cni" in path
-```
-
-This indicates incorrect CNI configuration on the nodes. The CNI config should be:
-```bash
-# Location: /var/lib/rancher/k3s/agent/etc/cni/net.d/10-flannel.conflist
-# Should contain: type: "flannel" (not istio-cni)
-```
-
-### 3. **PodMonitor/ServiceMonitor Labels**
+### 1. **PodMonitor/ServiceMonitor Labels**
 
 ⚠️ **Critical**: All PodMonitors and ServiceMonitors **must** have the label:
 ```yaml
