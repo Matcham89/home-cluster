@@ -8,4 +8,3 @@ resources:
   - ./longhorn.yaml
   - ./monitoring.yaml
   - ./n8n.yaml
-  - ./rundeck.yaml

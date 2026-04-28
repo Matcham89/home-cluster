@@ -34,14 +34,6 @@ spec:
   monitoring:
     enablePodMonitor: true
 
-  managed:
-    roles:
-      - name: rundeck
-        ensure: present
-        login: true
-        passwordSecret:
-          name: rundeck-postgres-credentials
-
   bootstrap:
     initdb:
       database: homelab
@@ -49,5 +41,3 @@ spec:
       postInitSQL:
         - CREATE DATABASE "home-cluster"
         - CREATE DATABASE n8n
-        - CREATE DATABASE rundeck
-        - GRANT ALL PRIVILEGES ON DATABASE rundeck TO rundeck
