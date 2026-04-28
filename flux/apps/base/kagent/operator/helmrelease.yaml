@@ -73,7 +73,7 @@ spec:
       kgateway-agent:
         enabled: true
       istio-agent:
-        enabled: true
+        enabled: false
       promql-agent:
         enabled: true
       observability-agent:

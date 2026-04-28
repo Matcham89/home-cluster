@@ -25,9 +25,6 @@ kubectl kustomize flux/apps/base/<app>  # Preview rendered output
 flux logs --follow --level=error
 kubectl describe kustomization <name> -n flux-system
 
-# Verify Istio ambient enrollment
-kubectl get pods -A -o json | jq -r '.items[] | select(.metadata.annotations["ambient.istio.io/redirection"] != null) | "\(.metadata.namespace)/\(.metadata.name)"' | sort
-kubectl logs -n istio-system -l app=ztunnel --tail=50 | grep "dst.addr"
 ```
 
 ## Architecture: Three-Layer GitOps
@@ -61,9 +58,6 @@ apps/base/<namespace>/<app>/
 │   ├── deployment.yaml (or helmrelease-*.yaml)
 │   ├── service.yaml
 │   └── servicemonitor.yaml       # if exposing metrics
-├── security/
-│   ├── authorization-policy.yaml # Istio AuthZ (required for ambient namespaces)
-│   └── peer-authentication.yaml  # only if overriding STRICT (e.g., webhook exceptions)
 ├── secrets/
 │   └── external-secret.yaml      # pulls from 1Password via ESO
 └── kustomization.yaml
@@ -73,7 +67,6 @@ apps/dev/<namespace>/
 ├── app/ks.yaml
 ├── security/ks.yaml
 ├── secrets/ks.yaml
-├── waypoint/ks.yaml              # deploys Istio waypoint (required for ambient namespaces)
 ├── network-policies/ks.yaml
 ├── limit-ranges/ks.yaml
 └── resource-quotas/ks.yaml
@@ -154,7 +147,7 @@ Key external services exposed this way:
 
 Reusable network policies live in `apps/base/network-policies/<namespace>/`. The pattern is:
 - Default deny-all ingress/egress as the base
-- Allow DNS (port 53), Istio ztunnel, and Prometheus scraping
+- Allow DNS (port 53) and Prometheus scraping
 - App-specific rules added per namespace (e.g., allow postgres egress for apps using CNPG)
 
 ## kgateway / Claude AI Gateways
@@ -165,14 +158,14 @@ Reusable network policies live in `apps/base/network-policies/<namespace>/`. The
 
 - Prometheus scrapes via `PodMonitor`/`ServiceMonitor` resources with label `release: kube-prometheus-stack`
 - Grafana dashboards auto-discovered via ConfigMap label `grafana_dashboard: "1"`
-- The monitoring namespace is **enrolled in Istio ambient** (`namespace-istio-privileged` component). Admission webhooks (otel-operator, prometheus-operator) use scoped `PERMISSIVE` PeerAuthentication so kube-apiserver can reach them — all other traffic stays STRICT.
+- The monitoring namespace uses the `namespace-privileged` infra component (privileged PSS).
 
 ## Key Dependencies (install order via `dependsOn`)
 
 ```
 cert-manager → (almost everything with TLS)
 cnpg-system  → (apps using PostgreSQL: authentik, n8n, etc.)
-istio-operator → istio-gateway → (all app namespaces with HTTPRoutes)
+ingress-gateway → (all app namespaces with HTTPRoutes)
 kube-prometheus-stack → (anything with ServiceMonitors)
 1password → external-secrets → (all apps with ExternalSecrets)
 ```
