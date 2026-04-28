@@ -7,6 +7,7 @@ spec:
   instances: 1
   imageName: ghcr.io/cloudnative-pg/postgresql:17
 
+  enableSuperuserAccess: true
   superuserSecret:
     name: postgres-superuser
 
