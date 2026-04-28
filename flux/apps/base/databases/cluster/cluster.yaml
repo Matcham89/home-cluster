@@ -28,7 +28,7 @@ spec:
       random_page_cost: "1.1"
       effective_io_concurrency: "200"
       work_mem: "5MB"
-TimeZone: "America/Edmonton"
+      TimeZone: "America/Edmonton"
 
   monitoring:
     enablePodMonitor: true
