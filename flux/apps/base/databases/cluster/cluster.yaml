@@ -1,0 +1,44 @@
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: postgres-cluster
+spec:
+  instances: 1
+  imageName: ghcr.io/cloudnative-pg/postgresql:17
+
+  superuserSecret:
+    name: postgres-superuser
+
+  storage:
+    size: 10Gi
+    storageClass: longhorn
+
+  postgresql:
+    parameters:
+      max_connections: "200"
+      shared_buffers: "1GB"
+      effective_cache_size: "3GB"
+      maintenance_work_mem: "256MB"
+      wal_buffers: "16MB"
+      checkpoint_completion_target: "0.9"
+      min_wal_size: "1GB"
+      max_wal_size: "4GB"
+      default_statistics_target: "100"
+      random_page_cost: "1.1"
+      effective_io_concurrency: "200"
+      work_mem: "5MB"
+      autovacuum_worker_slots: "16"
+      TimeZone: "America/Edmonton"
+
+  monitoring:
+    enablePodMonitor: true
+
+  bootstrap:
+    initdb:
+      database: homelab
+      owner: postgres
+      postInitSuperuserSQL:
+        - CREATE DATABASE "home-cluster"
+        - CREATE DATABASE n8n
+        - CREATE DATABASE rundeck

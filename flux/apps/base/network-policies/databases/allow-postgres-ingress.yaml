@@ -1,0 +1,32 @@
+---
+# Allow app namespaces and CNPG operator to reach postgres on 5432
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-postgres-ingress
+spec:
+  podSelector:
+    matchLabels:
+      cnpg.io/cluster: postgres-cluster
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: authentik
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: n8n
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: rundeck
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: cnpg-system
+      ports:
+        - port: 5432
+          protocol: TCP

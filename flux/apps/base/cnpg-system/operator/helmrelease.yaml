@@ -1,0 +1,37 @@
+---
+# yaml-language-server: $schema=https://github.com/fluxcd-community/flux2-schemas/raw/main/helmrepository-source-v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: cnpg
+spec:
+  interval: 10m
+  url: https://cloudnative-pg.github.io/charts
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: cnpg-operator
+spec:
+  interval: 10m
+  chart:
+    spec:
+      chart: cloudnative-pg
+      version: "0.22.0"
+      sourceRef:
+        kind: HelmRepository
+        name: cnpg
+  install:
+    strategy:
+      name: RetryOnFailure
+    createNamespace: true
+    timeout: 10m
+  upgrade:
+    strategy:
+      name: RetryOnFailure
+    cleanupOnFail: true
+    timeout: 10m
+  values:
+    crds:
+      create: true

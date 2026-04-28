@@ -1,0 +1,54 @@
+---
+# Allow Loki (monitoring) to reach SeaweedFS S3 and metrics endpoints
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-seaweedfs-external-ingress
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - port: 8333   # S3 (Loki)
+          protocol: TCP
+        - port: 9324   # master metrics
+          protocol: TCP
+        - port: 9327   # volume metrics
+          protocol: TCP
+        - port: 9328   # filer metrics
+          protocol: TCP
+        - port: 9329   # s3 metrics
+          protocol: TCP
+---
+# Allow SeaweedFS internal communication (master ↔ volume ↔ filer)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-seaweedfs-internal
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: storage
+      ports:
+        - port: 9333    # master gRPC
+          protocol: TCP
+        - port: 8888    # filer HTTP
+          protocol: TCP
+        - port: 8080    # volume HTTP
+          protocol: TCP
+        - port: 19333   # master raft
+          protocol: TCP
+        - port: 18888   # filer gRPC
+          protocol: TCP
+        - port: 18080   # volume gRPC
+          protocol: TCP

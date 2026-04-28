@@ -1,0 +1,107 @@
+---
+# yaml-language-server: $schema=https://github.com/fluxcd-community/flux2-schemas/raw/main/helmrepository-source-v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: seaweedfs
+spec:
+  interval: 10m
+  url: https://seaweedfs.github.io/seaweedfs/helm
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: seaweedfs
+spec:
+  interval: 10m
+  chart:
+    spec:
+      chart: seaweedfs
+      version: 4.17.0
+      sourceRef:
+        kind: HelmRepository
+        name: seaweedfs
+  install:
+    strategy:
+      name: RetryOnFailure
+    createNamespace: true
+    timeout: 10m
+  upgrade:
+    strategy:
+      name: RetryOnFailure
+    cleanupOnFail: true
+    timeout: 10m
+  values:
+    master:
+      enabled: true
+      replicas: 1
+      data:
+        type: "persistentVolumeClaim"
+        storageClass: "longhorn"
+        size: "1Gi"
+      logs:
+        type: "emptyDir"
+      resources:
+        requests:
+          memory: 256Mi
+          cpu: 500m
+        limits:
+          memory: 512Mi
+          cpu: "1"
+
+    volume:
+      enabled: true
+      replicas: 1
+      minFreeSpacePercent: 1
+      dataDirs:
+        - name: data
+          type: "persistentVolumeClaim"
+          storageClass: "longhorn"
+          size: "20Gi"
+      logs:
+        type: "emptyDir"
+      podSecurityContext:
+        fsGroup: 1000
+        runAsUser: 1000
+      resources:
+        requests:
+          memory: 512Mi
+          cpu: 250m
+        limits:
+          memory: 1Gi
+          cpu: 500m
+
+    filer:
+      enabled: true
+      replicas: 1
+      data:
+        type: "persistentVolumeClaim"
+        storageClass: "longhorn"
+        size: "5Gi"
+      logs:
+        type: "emptyDir"
+      s3:
+        enabled: true
+        port: 8333
+        createBuckets:
+          - name: loki-chunks
+            anonymousRead: false
+          - name: loki-ruler
+            anonymousRead: false
+          - name: loki-admin
+            anonymousRead: false
+      resources:
+        requests:
+          memory: 512Mi
+          cpu: 500m
+        limits:
+          memory: 1Gi
+          cpu: "1"
+
+    s3:
+      enabled: false
+      replicas: 1
+      enableAuth: false
+      logs:
+        type: "emptyDir"

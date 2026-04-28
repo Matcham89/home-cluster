@@ -1,0 +1,18 @@
+---
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: postgres-ingress-authz
+  namespace: databases
+spec:
+  selector:
+    matchLabels:
+      cnpg.io/cluster: postgres-cluster
+  action: ALLOW
+  rules:
+    - from:
+        - source:
+            namespaces: ["authentik", "n8n", "rundeck", "monitoring", "cnpg-system"]
+      to:
+        - operation:
+            ports: ["5432"]
