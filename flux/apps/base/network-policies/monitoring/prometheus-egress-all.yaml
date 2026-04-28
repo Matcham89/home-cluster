@@ -27,12 +27,15 @@ spec:
       protocol: TCP
     - port: 53
       protocol: UDP
-  # Allow API server access for service discovery
+  # Allow API server access for service discovery.
+  # Talos control plane pods use hostNetwork (node IPs), so podSelector can't target them.
   - to:
-    - namespaceSelector: {}
-      podSelector:
-        matchLabels:
-          component: apiserver
+    - ipBlock:
+        cidr: 192.168.1.181/32
+    - ipBlock:
+        cidr: 192.168.1.182/32
+    - ipBlock:
+        cidr: 192.168.1.183/32
     ports:
-    - port: 443
+    - port: 6443
       protocol: TCP
