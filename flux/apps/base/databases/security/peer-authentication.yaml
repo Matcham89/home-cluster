@@ -1,0 +1,15 @@
+---
+# CNPG operator (cnpg-system) connects to postgres pods on port 8000 over plain HTTP
+# to extract instance status. STRICT mTLS blocks this cross-namespace plain connection.
+# PERMISSIVE allows the operator health-check through while other traffic stays STRICT.
+apiVersion: security.istio.io/v1
+kind: PeerAuthentication
+metadata:
+  name: cnpg-instance-permissive
+  namespace: databases
+spec:
+  selector:
+    matchLabels:
+      cnpg.io/podRole: instance
+  mtls:
+    mode: PERMISSIVE
