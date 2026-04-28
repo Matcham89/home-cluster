@@ -28,7 +28,7 @@ spec:
             - name: RUNDECK_DATABASE_DRIVER
               value: org.postgresql.Driver
             - name: RUNDECK_DATABASE_URL
-              value: "jdbc:postgresql://postgres-external.external-services.svc.cluster.local:5432/rundeck"
+              value: "jdbc:postgresql://postgres-cluster-rw.databases.svc.cluster.local:5432/rundeck"
             - name: RUNDECK_DATABASE_USERNAME
               valueFrom:
                 secretKeyRef:
