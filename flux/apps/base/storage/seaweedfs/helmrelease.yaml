@@ -59,6 +59,7 @@ spec:
           type: "persistentVolumeClaim"
           storageClass: "longhorn"
           size: "20Gi"
+          maxVolumes: 0
       logs:
         type: "emptyDir"
       podSecurityContext:
