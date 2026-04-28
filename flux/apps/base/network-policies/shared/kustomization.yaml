@@ -5,5 +5,4 @@ kind: Kustomization
 resources:
   - ./default-deny-all.yaml
   - ./allow-dns.yaml
-  - ./allow-istio-ambient.yaml
   - ./allow-prometheus-scrape.yaml

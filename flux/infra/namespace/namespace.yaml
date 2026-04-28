@@ -7,5 +7,3 @@ metadata:
     kustomize.toolkit.fluxcd.io/prune: disabled
   labels:
     kubernetes.io/metadata.name: not-used
-    istio-gateway-access: "true"
-    istio.io/dataplane-mode: none

@@ -11,12 +11,9 @@ spec:
   policyTypes:
   - Ingress
   ingress:
-  # Allow from istio ingress gateway
+  # Allow from ingress gateway
   - from:
     - namespaceSelector:
         matchLabels:
-          kubernetes.io/metadata.name: istio-system
-      podSelector:
-        matchLabels:
-          app.kubernetes.io/name: istio-gateway
+          kubernetes.io/metadata.name: ingress
 ---

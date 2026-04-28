@@ -4,7 +4,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: monitoring
 components:
-  - ../../../infra/namespace-istio-privileged
+  - ../../../infra/namespace-privileged
 
 resources:
   - ./flux-alerts/ks.yaml
@@ -14,6 +14,4 @@ resources:
   - ./limit-range-override
   - ./resource-quotas/ks.yaml
   - ./network-policies/ks.yaml
-  - ./waypoint/ks.yaml
-  - ./security/ks.yaml
   # - ./seaweedfs/ks.yaml

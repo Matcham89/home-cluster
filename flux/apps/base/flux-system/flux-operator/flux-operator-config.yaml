@@ -80,8 +80,8 @@ spec:
   parentRefs:
     - group: gateway.networking.k8s.io
       kind: Gateway
-      name: istio-gateway
-      namespace: istio-system
+      name: ingress-gateway
+      namespace: ingress
   hostnames:
     - "flux.kubegit.com"
   rules:

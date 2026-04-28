@@ -24,17 +24,6 @@ spec:
       podSelector:
         matchLabels:
           k8s-app: kube-dns
-  # Allow Istio ambient mesh (ztunnel)
-  - ports:
-    - port: 15008
-      protocol: TCP
-    to:
-    - namespaceSelector:
-        matchLabels:
-          kubernetes.io/metadata.name: istio-system
-      podSelector:
-        matchLabels:
-          app: ztunnel
   # Allow PostgreSQL connection to external database
   - to:
     - ipBlock:
