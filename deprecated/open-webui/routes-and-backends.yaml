@@ -1,0 +1,186 @@
+---
+# ========================================
+# ANTHROPIC (CLAUDE) ROUTES AND BACKENDS
+# ========================================
+
+# HTTPRoute for Claude models endpoint
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: claude-models-route
+  namespace: kgateway-system
+  labels:
+    app: gateway-anthropic
+    provider: anthropic
+spec:
+  parentRefs:
+    - name: gateway-anthropic
+      namespace: kgateway-system
+      sectionName: http
+  hostnames:
+    - "claude.kubegit.com"
+  rules:
+    - matches:
+        - path:
+            type: Exact
+            value: /v1/models
+      backendRefs:
+        - name: claude-models-backend
+          namespace: kgateway-system
+          kind: Service
+          port: 80
+---
+# HTTPRoute for Claude chat completions
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: claude-chat-route
+  namespace: kgateway-system
+  labels:
+    app: gateway-anthropic
+    provider: anthropic
+spec:
+  parentRefs:
+    - name: gateway-anthropic
+      namespace: kgateway-system
+      sectionName: http
+  hostnames:
+    - "claude.kubegit.com"
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /v1/chat
+      backendRefs:
+        - name: claude-ai-backend
+          namespace: kgateway-system
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /v1/completions
+      backendRefs:
+        - name: claude-ai-backend
+          namespace: kgateway-system
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
+---
+# AgentgatewayBackend for Claude AI (Anthropic API)
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: claude-ai-backend
+  namespace: kgateway-system
+  labels:
+    app: gateway-anthropic
+    provider: anthropic
+spec:
+  ai:
+    groups:
+      - providers:
+          - name: anthropic
+            anthropic: {}  # Passthrough mode - supports all Claude models
+            policies:
+              auth:
+                secretRef:
+                  name: anthropic-secret
+---
+# ========================================
+# OLLAMA ROUTES AND BACKENDS
+# ========================================
+
+# HTTPRoute for Ollama models endpoint
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: ollama-models-route
+  namespace: kgateway-system
+  labels:
+    app: gateway-ollama
+    provider: ollama
+spec:
+  parentRefs:
+    - name: gateway-ollama
+      namespace: kgateway-system
+      sectionName: http
+  hostnames:
+    - "ollama.kubegit.com"
+  rules:
+    - matches:
+        - path:
+            type: Exact
+            value: /v1/models
+      backendRefs:
+        - name: ollama-passthrough-backend
+          namespace: kgateway-system
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
+---
+# HTTPRoute for Ollama chat completions
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: ollama-chat-route
+  namespace: kgateway-system
+  labels:
+    app: gateway-ollama
+    provider: ollama
+spec:
+  parentRefs:
+    - name: gateway-ollama
+      namespace: kgateway-system
+      sectionName: http
+  hostnames:
+    - "ollama.kubegit.com"
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /v1/chat
+      backendRefs:
+        - name: ollama-ai-backend
+          namespace: kgateway-system
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /v1/completions
+      backendRefs:
+        - name: ollama-ai-backend
+          namespace: kgateway-system
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
+---
+# Static backend for Ollama models endpoint (no AI parsing)
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: ollama-passthrough-backend
+  namespace: kgateway-system
+  labels:
+    app: gateway-ollama
+    provider: ollama
+spec:
+  static:
+    host: "192.168.1.200"
+    port: 11434
+---
+# AgentgatewayBackend for Ollama AI (OpenAI-compatible API)
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: ollama-ai-backend
+  namespace: kgateway-system
+  labels:
+    app: gateway-ollama
+    provider: ollama
+spec:
+  ai:
+    groups:
+      - providers:
+          - name: ollama
+            openai: {}  # Passthrough mode - supports all Ollama models
+            host: "192.168.1.200"
+            port: 11434

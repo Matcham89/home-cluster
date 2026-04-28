@@ -1,0 +1,364 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: openwebui-cost-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  openwebui-costs.json: |
+    {
+      "dashboard": {
+        "title": "Open WebUI - Provider Costs & Savings",
+        "uid": "openwebui-costs",
+        "tags": ["openwebui", "costs", "ai", "anthropic", "ollama"],
+        "timezone": "browser",
+        "schemaVersion": 38,
+        "refresh": "30s",
+        "time": {
+          "from": "now-24h",
+          "to": "now"
+        },
+        "panels": [
+          {
+            "title": "💰 Anthropic Cost (Daily)",
+            "type": "stat",
+            "gridPos": {"x": 0, "y": 0, "w": 6, "h": 6},
+            "id": 1,
+            "targets": [
+              {
+                "expr": "openwebui:anthropic:cost_usd:daily",
+                "refId": "A",
+                "legendFormat": "Daily Cost"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "currencyUSD",
+                "decimals": 4,
+                "color": {"mode": "thresholds"},
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {"value": 0, "color": "green"},
+                    {"value": 5, "color": "yellow"},
+                    {"value": 10, "color": "red"}
+                  ]
+                }
+              }
+            },
+            "options": {
+              "reduceOptions": {"values": false, "calcs": ["lastNotNull"]},
+              "textMode": "value",
+              "graphMode": "area",
+              "colorMode": "value"
+            }
+          },
+          {
+            "title": "💚 Ollama Savings (Daily)",
+            "type": "stat",
+            "gridPos": {"x": 6, "y": 0, "w": 6, "h": 6},
+            "id": 2,
+            "targets": [
+              {
+                "expr": "openwebui:ollama:cost_equivalent_usd:daily",
+                "refId": "A",
+                "legendFormat": "Equivalent Savings"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "currencyUSD",
+                "decimals": 2,
+                "color": {"mode": "fixed", "fixedColor": "green"}
+              }
+            },
+            "options": {
+              "reduceOptions": {"values": false, "calcs": ["lastNotNull"]},
+              "textMode": "value",
+              "graphMode": "none",
+              "colorMode": "background"
+            },
+            "description": "Amount saved by using Ollama instead of Claude"
+          },
+          {
+            "title": "📊 Provider Distribution",
+            "type": "piechart",
+            "gridPos": {"x": 12, "y": 0, "w": 6, "h": 6},
+            "id": 3,
+            "targets": [
+              {
+                "expr": "openwebui:anthropic:conversations:hourly",
+                "refId": "A",
+                "legendFormat": "Anthropic"
+              },
+              {
+                "expr": "openwebui:ollama:conversations:hourly",
+                "refId": "B",
+                "legendFormat": "Ollama"
+              }
+            ],
+            "options": {
+              "legend": {"displayMode": "list", "placement": "bottom"},
+              "pieType": "pie",
+              "tooltip": {"mode": "single"}
+            }
+          },
+          {
+            "title": "📈 Weekly Cost Summary",
+            "type": "stat",
+            "gridPos": {"x": 18, "y": 0, "w": 6, "h": 6},
+            "id": 4,
+            "targets": [
+              {
+                "expr": "openwebui:anthropic:cost_usd:weekly",
+                "refId": "A",
+                "legendFormat": "7-Day Total"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "currencyUSD",
+                "decimals": 2,
+                "color": {"mode": "thresholds"},
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {"value": 0, "color": "green"},
+                    {"value": 25, "color": "yellow"},
+                    {"value": 50, "color": "red"}
+                  ]
+                }
+              }
+            },
+            "options": {
+              "reduceOptions": {"values": false, "calcs": ["lastNotNull"]},
+              "textMode": "value_and_name",
+              "graphMode": "none"
+            }
+          },
+          {
+            "title": "💵 Cost Trend - Last 7 Days",
+            "type": "timeseries",
+            "gridPos": {"x": 0, "y": 6, "w": 12, "h": 8},
+            "id": 5,
+            "targets": [
+              {
+                "expr": "openwebui:anthropic:cost_usd:daily",
+                "refId": "A",
+                "legendFormat": "Anthropic (Actual)"
+              },
+              {
+                "expr": "openwebui:ollama:cost_equivalent_usd:daily",
+                "refId": "B",
+                "legendFormat": "Ollama (Equivalent)"
+              },
+              {
+                "expr": "openwebui:anthropic:cost_usd:daily + openwebui:ollama:cost_equivalent_usd:daily",
+                "refId": "C",
+                "legendFormat": "Total Equivalent"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "currencyUSD",
+                "custom": {
+                  "axisPlacement": "auto",
+                  "lineWidth": 2,
+                  "fillOpacity": 20,
+                  "gradientMode": "opacity",
+                  "lineInterpolation": "smooth"
+                }
+              }
+            },
+            "options": {
+              "tooltip": {"mode": "multi"},
+              "legend": {
+                "displayMode": "table",
+                "placement": "bottom",
+                "calcs": ["last", "mean", "max"]
+              }
+            }
+          },
+          {
+            "title": "🔢 Token Usage by Provider",
+            "type": "timeseries",
+            "gridPos": {"x": 12, "y": 6, "w": 12, "h": 8},
+            "id": 6,
+            "targets": [
+              {
+                "expr": "sum(increase(agentgateway_gen_ai_client_token_usage_sum{route=~\"kgateway-system/claude-(chat|models)-route\"}[1h]))",
+                "refId": "A",
+                "legendFormat": "Anthropic Tokens"
+              },
+              {
+                "expr": "sum(increase(agentgateway_gen_ai_client_token_usage_sum{route=~\"kgateway-system/ollama-(chat|models)-route\"}[1h]))",
+                "refId": "B",
+                "legendFormat": "Ollama Tokens"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "custom": {
+                  "axisPlacement": "auto",
+                  "lineWidth": 2,
+                  "fillOpacity": 30,
+                  "gradientMode": "opacity"
+                }
+              }
+            },
+            "options": {
+              "tooltip": {"mode": "multi"},
+              "legend": {"displayMode": "list", "placement": "bottom"}
+            }
+          },
+          {
+            "title": "🗣️ Conversations by Provider",
+            "type": "bargauge",
+            "gridPos": {"x": 0, "y": 14, "w": 8, "h": 6},
+            "id": 7,
+            "targets": [
+              {"expr": "openwebui:anthropic:conversations:hourly", "refId": "A", "legendFormat": "Anthropic (1h)"},
+              {"expr": "openwebui:ollama:conversations:hourly", "refId": "B", "legendFormat": "Ollama (1h)"},
+              {"expr": "openwebui:anthropic:conversations:daily", "refId": "C", "legendFormat": "Anthropic (24h)"},
+              {"expr": "openwebui:ollama:conversations:daily", "refId": "D", "legendFormat": "Ollama (24h)"}
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "short",
+                "color": {"mode": "palette-classic"}
+              }
+            },
+            "options": {
+              "orientation": "horizontal",
+              "displayMode": "gradient",
+              "showUnfilled": true
+            }
+          },
+          {
+            "title": "📋 Cost Breakdown Table",
+            "type": "table",
+            "gridPos": {"x": 8, "y": 14, "w": 16, "h": 6},
+            "id": 8,
+            "targets": [
+              {
+                "expr": "label_replace(openwebui:anthropic:conversations:hourly, \"provider\", \"Anthropic\", \"\", \"\")",
+                "refId": "A",
+                "format": "table",
+                "instant": true
+              },
+              {
+                "expr": "label_replace(openwebui:anthropic:cost_usd:hourly, \"provider\", \"Anthropic\", \"\", \"\")",
+                "refId": "B",
+                "format": "table",
+                "instant": true
+              },
+              {
+                "expr": "label_replace(openwebui:anthropic:cost_usd:daily, \"provider\", \"Anthropic\", \"\", \"\")",
+                "refId": "C",
+                "format": "table",
+                "instant": true
+              },
+              {
+                "expr": "label_replace(openwebui:anthropic:cost_usd:weekly, \"provider\", \"Anthropic\", \"\", \"\")",
+                "refId": "D",
+                "format": "table",
+                "instant": true
+              },
+              {
+                "expr": "label_replace(openwebui:ollama:conversations:hourly, \"provider\", \"Ollama\", \"\", \"\")",
+                "refId": "E",
+                "format": "table",
+                "instant": true
+              },
+              {
+                "expr": "label_replace(openwebui:ollama:cost_equivalent_usd:daily, \"provider\", \"Ollama\", \"\", \"\")",
+                "refId": "F",
+                "format": "table",
+                "instant": true
+              }
+            ],
+            "transformations": [
+              {"id": "merge"},
+              {
+                "id": "organize",
+                "options": {
+                  "excludeByName": {"Time": true, "__name__": true},
+                  "renameByName": {
+                    "provider": "Provider",
+                    "Value #A": "Requests (1h)",
+                    "Value #B": "Cost (1h)",
+                    "Value #C": "Cost (24h)",
+                    "Value #D": "Cost (7d)",
+                    "Value #E": "Requests (1h)",
+                    "Value #F": "Equiv Cost (24h)"
+                  }
+                }
+              }
+            ],
+            "fieldConfig": {
+              "overrides": [
+                {
+                  "matcher": {"id": "byRegexp", "options": ".*Cost.*"},
+                  "properties": [
+                    {"id": "unit", "value": "currencyUSD"},
+                    {"id": "decimals", "value": 4}
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "title": "🎯 Cost per 1K Tokens",
+            "type": "stat",
+            "gridPos": {"x": 0, "y": 20, "w": 12, "h": 4},
+            "id": 9,
+            "targets": [
+              {
+                "expr": "(openwebui:anthropic:cost_usd:hourly * 1000) / sum(increase(agentgateway_gen_ai_client_token_usage_sum{route=~\"kgateway-system/claude-(chat|models)-route\"}[1h]))",
+                "refId": "A",
+                "legendFormat": "Anthropic"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "currencyUSD",
+                "decimals": 6
+              }
+            },
+            "options": {
+              "reduceOptions": {"values": false, "calcs": ["lastNotNull"]},
+              "textMode": "value_and_name",
+              "graphMode": "none"
+            },
+            "description": "Average cost per 1000 tokens"
+          },
+          {
+            "title": "⚡ Token Throughput (per second)",
+            "type": "timeseries",
+            "gridPos": {"x": 12, "y": 20, "w": 12, "h": 4},
+            "id": 10,
+            "targets": [
+              {
+                "expr": "rate(agentgateway_gen_ai_client_token_usage_sum{route=~\"kgateway-system/claude-(chat|models)-route\"}[5m])",
+                "refId": "A",
+                "legendFormat": "Anthropic"
+              },
+              {
+                "expr": "rate(agentgateway_gen_ai_client_token_usage_sum{route=~\"kgateway-system/ollama-(chat|models)-route\"}[5m])",
+                "refId": "B",
+                "legendFormat": "Ollama"
+              }
+            ],
+            "fieldConfig": {
+              "defaults": {
+                "unit": "tps",
+                "custom": {"axisPlacement": "auto", "lineWidth": 1, "fillOpacity": 10}
+              }
+            }
+          }
+        ]
+      }
+    }

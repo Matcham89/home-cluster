@@ -1,0 +1,279 @@
+---
+# PrometheusRule for per-gateway cost tracking and metrics
+# Tracks Anthropic (Claude) and Ollama separately
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: openwebui-provider-metrics
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+spec:
+  groups:
+    - name: openwebui_provider_tracking
+      interval: 30s
+      rules:
+        # ========================================
+        # ANTHROPIC (CLAUDE) METRICS
+        # ========================================
+
+        # Token usage for Claude
+        - record: openwebui:anthropic:input_tokens:5m
+          expr: |
+            sum(increase(agentgateway_gen_ai_client_token_usage_sum{
+              gen_ai_token_type="input",
+              route=~"kgateway-system/claude-.*"
+            }[5m])) or vector(0)
+
+        - record: openwebui:anthropic:output_tokens:5m
+          expr: |
+            sum(increase(agentgateway_gen_ai_client_token_usage_sum{
+              gen_ai_token_type="output",
+              route=~"kgateway-system/claude-.*"
+            }[5m])) or vector(0)
+
+        # Token usage by Claude model
+        - record: openwebui:anthropic:tokens:by_model
+          expr: |
+            sum by (gen_ai_request_model) (
+              increase(agentgateway_gen_ai_client_token_usage_sum{
+                route=~"kgateway-system/claude-.*"
+              }[1h])
+            )
+
+        # Claude request count
+        - record: openwebui:anthropic:requests:total:5m
+          expr: |
+            sum(increase(agentgateway_gen_ai_server_request_duration_count{
+              route=~"kgateway-system/claude-.*"
+            }[5m])) or vector(0)
+
+        # Claude hourly/daily conversation counts
+        - record: openwebui:anthropic:conversations:hourly
+          expr: |
+            sum(increase(agentgateway_gen_ai_server_request_duration_count{
+              route=~"kgateway-system/claude-.*"
+            }[1h])) or vector(0)
+
+        - record: openwebui:anthropic:conversations:daily
+          expr: |
+            sum(increase(agentgateway_gen_ai_server_request_duration_count{
+              route=~"kgateway-system/claude-.*"
+            }[24h])) or vector(0)
+
+        # ========================================
+        # CLAUDE COST CALCULATION
+        # Pricing as of 2025:
+        # - Claude Sonnet 4.5: $3.00/1M input, $15.00/1M output
+        # - Claude Opus 4.5: $15.00/1M input, $75.00/1M output
+        # Using blended rate for simplicity
+        # ========================================
+
+        # Claude hourly cost (blended rate: $3/1M input, $15/1M output)
+        - record: openwebui:anthropic:cost_usd:hourly
+          expr: |
+            (
+              sum(increase(agentgateway_gen_ai_client_token_usage_sum{
+                gen_ai_token_type="input",
+                route=~"kgateway-system/claude-.*"
+              }[1h])) * 3.00 / 1000000
+            ) + (
+              sum(increase(agentgateway_gen_ai_client_token_usage_sum{
+                gen_ai_token_type="output",
+                route=~"kgateway-system/claude-.*"
+              }[1h])) * 15.00 / 1000000
+            )
+
+        # Claude daily cost
+        - record: openwebui:anthropic:cost_usd:daily
+          expr: |
+            (
+              sum(increase(agentgateway_gen_ai_client_token_usage_sum{
+                gen_ai_token_type="input",
+                route=~"kgateway-system/claude-.*"
+              }[24h])) * 3.00 / 1000000
+            ) + (
+              sum(increase(agentgateway_gen_ai_client_token_usage_sum{
+                gen_ai_token_type="output",
+                route=~"kgateway-system/claude-.*"
+              }[24h])) * 15.00 / 1000000
+            )
+
+        # Claude weekly cost
+        - record: openwebui:anthropic:cost_usd:weekly
+          expr: |
+            (
+              sum(increase(agentgateway_gen_ai_client_token_usage_sum{
+                gen_ai_token_type="input",
+                route=~"kgateway-system/claude-.*"
+              }[7d])) * 3.00 / 1000000
+            ) + (
+              sum(increase(agentgateway_gen_ai_client_token_usage_sum{
+                gen_ai_token_type="output",
+                route=~"kgateway-system/claude-.*"
+              }[7d])) * 15.00 / 1000000
+            )
+
+        # Claude monthly cost
+        - record: openwebui:anthropic:cost_usd:monthly
+          expr: |
+            (
+              sum(increase(agentgateway_gen_ai_client_token_usage_sum{
+                gen_ai_token_type="input",
+                route=~"kgateway-system/claude-.*"
+              }[30d])) * 3.00 / 1000000
+            ) + (
+              sum(increase(agentgateway_gen_ai_client_token_usage_sum{
+                gen_ai_token_type="output",
+                route=~"kgateway-system/claude-.*"
+              }[30d])) * 15.00 / 1000000
+            )
+
+        # ========================================
+        # OLLAMA METRICS
+        # ========================================
+
+        # Token usage for Ollama
+        - record: openwebui:ollama:input_tokens:5m
+          expr: |
+            sum(increase(agentgateway_gen_ai_client_token_usage_sum{
+              gen_ai_token_type="input",
+              route=~"kgateway-system/ollama-.*"
+            }[5m])) or vector(0)
+
+        - record: openwebui:ollama:output_tokens:5m
+          expr: |
+            sum(increase(agentgateway_gen_ai_client_token_usage_sum{
+              gen_ai_token_type="output",
+              route=~"kgateway-system/ollama-.*"
+            }[5m])) or vector(0)
+
+        # Token usage by Ollama model
+        - record: openwebui:ollama:tokens:by_model
+          expr: |
+            sum by (gen_ai_request_model) (
+              increase(agentgateway_gen_ai_client_token_usage_sum{
+                route=~"kgateway-system/ollama-.*"
+              }[1h])
+            )
+
+        # Ollama request count
+        - record: openwebui:ollama:requests:total:5m
+          expr: |
+            sum(increase(agentgateway_gen_ai_server_request_duration_count{
+              route=~"kgateway-system/ollama-.*"
+            }[5m])) or vector(0)
+
+        # Ollama hourly/daily conversation counts
+        - record: openwebui:ollama:conversations:hourly
+          expr: |
+            sum(increase(agentgateway_gen_ai_server_request_duration_count{
+              route=~"kgateway-system/ollama-.*"
+            }[1h])) or vector(0)
+
+        - record: openwebui:ollama:conversations:daily
+          expr: |
+            sum(increase(agentgateway_gen_ai_server_request_duration_count{
+              route=~"kgateway-system/ollama-.*"
+            }[24h])) or vector(0)
+
+        # ========================================
+        # OLLAMA "EQUIVALENT COST"
+        # Ollama is self-hosted (free), but calculate equivalent cost
+        # for comparison with Claude pricing
+        # ========================================
+
+        # Ollama equivalent cost (using Claude Sonnet pricing for comparison)
+        - record: openwebui:ollama:cost_equivalent_usd:hourly
+          expr: |
+            (
+              sum(increase(agentgateway_gen_ai_client_token_usage_sum{
+                gen_ai_token_type="input",
+                route=~"kgateway-system/ollama-.*"
+              }[1h])) * 3.00 / 1000000
+            ) + (
+              sum(increase(agentgateway_gen_ai_client_token_usage_sum{
+                gen_ai_token_type="output",
+                route=~"kgateway-system/ollama-.*"
+              }[1h])) * 15.00 / 1000000
+            )
+
+        - record: openwebui:ollama:cost_equivalent_usd:daily
+          expr: |
+            (
+              sum(increase(agentgateway_gen_ai_client_token_usage_sum{
+                gen_ai_token_type="input",
+                route=~"kgateway-system/ollama-.*"
+              }[24h])) * 3.00 / 1000000
+            ) + (
+              sum(increase(agentgateway_gen_ai_client_token_usage_sum{
+                gen_ai_token_type="output",
+                route=~"kgateway-system/ollama-.*"
+              }[24h])) * 15.00 / 1000000
+            )
+
+        # ========================================
+        # COMBINED METRICS
+        # ========================================
+
+        # Total actual cost (Anthropic only, Ollama is free)
+        - record: openwebui:total:cost_usd:hourly
+          expr: |
+            openwebui:anthropic:cost_usd:hourly
+
+        - record: openwebui:total:cost_usd:daily
+          expr: |
+            openwebui:anthropic:cost_usd:daily
+
+        - record: openwebui:total:cost_usd:weekly
+          expr: |
+            openwebui:anthropic:cost_usd:weekly
+
+        - record: openwebui:total:cost_usd:monthly
+          expr: |
+            openwebui:anthropic:cost_usd:monthly
+
+        # Total conversations (both providers)
+        - record: openwebui:total:conversations:hourly
+          expr: |
+            (openwebui:anthropic:conversations:hourly or vector(0)) +
+            (openwebui:ollama:conversations:hourly or vector(0))
+
+        - record: openwebui:total:conversations:daily
+          expr: |
+            (openwebui:anthropic:conversations:daily or vector(0)) +
+            (openwebui:ollama:conversations:daily or vector(0))
+
+        # Total tokens (both providers)
+        - record: openwebui:total:tokens:hourly
+          expr: |
+            (
+              sum(increase(agentgateway_gen_ai_client_token_usage_sum{
+                route=~"kgateway-system/(claude|ollama)-.*"
+              }[1h]))
+            ) or vector(0)
+
+    - name: openwebui_cost_alerts
+      interval: 1m
+      rules:
+        # Alert when Claude daily cost exceeds $10
+        - alert: ClaudeDailyCostExceeded
+          expr: openwebui:anthropic:cost_usd:daily >= 10
+          for: 5m
+          labels:
+            severity: warning
+            provider: anthropic
+          annotations:
+            summary: "Claude daily cost exceeded $10"
+            description: "Claude API costs have reached ${{ $value | humanize }} in the last 24 hours."
+
+        # Alert when Claude weekly cost exceeds $50
+        - alert: ClaudeWeeklyCostExceeded
+          expr: openwebui:anthropic:cost_usd:weekly >= 50
+          for: 5m
+          labels:
+            severity: warning
+            provider: anthropic
+          annotations:
+            summary: "Claude weekly cost exceeded $50"
+            description: "Claude API costs have reached ${{ $value | humanize }} in the last 7 days."

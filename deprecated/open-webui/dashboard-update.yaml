@@ -1,0 +1,229 @@
+---
+# Additional panels for multi-gateway dashboard
+# These can be added to the existing open-webui dashboard
+
+# Panel: Provider Cost Comparison (Daily)
+---
+title: "Provider Costs (Daily)"
+type: "stat"
+gridPos: {x: 0, y: 0, w: 12, h: 6}
+targets:
+  - expr: "openwebui:anthropic:cost_usd:daily"
+    legendFormat: "Anthropic (Actual Cost)"
+    refId: "A"
+  - expr: "openwebui:ollama:cost_equivalent_usd:daily"
+    legendFormat: "Ollama (Equivalent Cost)"
+    refId: "B"
+fieldConfig:
+  defaults:
+    unit: "currencyUSD"
+    decimals: 4
+    color:
+      mode: "thresholds"
+    thresholds:
+      mode: "absolute"
+      steps:
+        - value: 0
+          color: "green"
+        - value: 5
+          color: "yellow"
+        - value: 10
+          color: "red"
+options:
+  reduceOptions:
+    values: false
+    calcs: ["lastNotNull"]
+  textMode: "value_and_name"
+  graphMode: "area"
+
+---
+# Panel: Cost Savings with Ollama
+title: "Savings vs Claude"
+type: "stat"
+gridPos: {x: 12, y: 0, w: 6, h: 6}
+targets:
+  - expr: "openwebui:ollama:cost_equivalent_usd:daily"
+    legendFormat: "Daily Savings"
+    refId: "A"
+fieldConfig:
+  defaults:
+    unit: "currencyUSD"
+    decimals: 2
+    color:
+      mode: "fixed"
+      fixedColor: "green"
+options:
+  reduceOptions:
+    values: false
+    calcs: ["lastNotNull"]
+  textMode: "value"
+  graphMode: "none"
+  text:
+    titleSize: 16
+    valueSize: 24
+description: "Amount saved by using Ollama instead of Claude (based on equivalent token usage)"
+
+---
+# Panel: Provider Usage Distribution
+title: "Provider Distribution (Requests)"
+type: "piechart"
+gridPos: {x: 18, y: 0, w: 6, h: 6}
+targets:
+  - expr: "openwebui:anthropic:conversations:hourly"
+    legendFormat: "Anthropic"
+    refId: "A"
+  - expr: "openwebui:ollama:conversations:hourly"
+    legendFormat: "Ollama"
+    refId: "B"
+options:
+  legend:
+    displayMode: "list"
+    placement: "bottom"
+  pieType: "pie"
+  tooltip:
+    mode: "single"
+
+---
+# Panel: Cost Trend (7 days)
+title: "Cost Trend - Last 7 Days"
+type: "timeseries"
+gridPos: {x: 0, y: 6, w: 12, h: 8}
+targets:
+  - expr: "openwebui:anthropic:cost_usd:daily"
+    legendFormat: "Anthropic (Actual)"
+    refId: "A"
+  - expr: "openwebui:ollama:cost_equivalent_usd:daily"
+    legendFormat: "Ollama (Equivalent)"
+    refId: "B"
+  - expr: "openwebui:total:cost_usd:daily"
+    legendFormat: "Total Actual Cost"
+    refId: "C"
+fieldConfig:
+  defaults:
+    unit: "currencyUSD"
+    custom:
+      axisPlacement: "auto"
+      lineWidth: 2
+      fillOpacity: 20
+      gradientMode: "opacity"
+options:
+  tooltip:
+    mode: "multi"
+  legend:
+    displayMode: "table"
+    placement: "bottom"
+    calcs: ["last", "mean", "max"]
+
+---
+# Panel: Token Usage by Provider
+title: "Token Usage by Provider (Hourly)"
+type: "timeseries"
+gridPos: {x: 12, y: 6, w: 12, h: 8}
+targets:
+  - expr: "sum(increase(agentgateway_gen_ai_client_token_usage_sum{route=~\"kgateway-system/claude-(chat|models)-route\"}[1h]))"
+    legendFormat: "Anthropic Tokens"
+    refId: "A"
+  - expr: "sum(increase(agentgateway_gen_ai_client_token_usage_sum{route=~\"kgateway-system/ollama-(chat|models)-route\"}[1h]))"
+    legendFormat: "Ollama Tokens"
+    refId: "B"
+fieldConfig:
+  defaults:
+    unit: "short"
+    custom:
+      axisPlacement: "auto"
+      lineWidth: 2
+      fillOpacity: 30
+      gradientMode: "opacity"
+options:
+  tooltip:
+    mode: "multi"
+  legend:
+    displayMode: "list"
+    placement: "bottom"
+
+---
+# Panel: Conversation Count by Provider
+title: "Conversations by Provider"
+type: "bargauge"
+gridPos: {x: 0, y: 14, w: 8, h: 6}
+targets:
+  - expr: "openwebui:anthropic:conversations:hourly"
+    legendFormat: "Anthropic (1h)"
+    refId: "A"
+  - expr: "openwebui:ollama:conversations:hourly"
+    legendFormat: "Ollama (1h)"
+    refId: "B"
+  - expr: "openwebui:anthropic:conversations:daily"
+    legendFormat: "Anthropic (24h)"
+    refId: "C"
+  - expr: "openwebui:ollama:conversations:daily"
+    legendFormat: "Ollama (24h)"
+    refId: "D"
+fieldConfig:
+  defaults:
+    unit: "short"
+    color:
+      mode: "palette-classic"
+options:
+  orientation: "horizontal"
+  displayMode: "gradient"
+  showUnfilled: true
+
+---
+# Panel: Cost Breakdown Table
+title: "Cost Breakdown"
+type: "table"
+gridPos: {x: 8, y: 14, w: 16, h: 6}
+targets:
+  - expr: |
+      openwebui:anthropic:conversations:hourly
+    format: "table"
+    instant: true
+    legendFormat: ""
+    refId: "A"
+  - expr: |
+      openwebui:anthropic:cost_usd:hourly
+    format: "table"
+    instant: true
+    refId: "B"
+  - expr: |
+      openwebui:anthropic:cost_usd:daily
+    format: "table"
+    instant: true
+    refId: "C"
+  - expr: |
+      openwebui:anthropic:cost_usd:weekly
+    format: "table"
+    instant: true
+    refId: "D"
+  - expr: |
+      openwebui:ollama:conversations:hourly
+    format: "table"
+    instant: true
+    refId: "E"
+  - expr: |
+      openwebui:ollama:cost_equivalent_usd:daily
+    format: "table"
+    instant: true
+    refId: "F"
+transformations:
+  - id: "merge"
+  - id: "organize"
+    options:
+      excludeByName:
+        Time: true
+      renameByName:
+        "Value #A": "Claude Requests (1h)"
+        "Value #B": "Claude Cost (1h)"
+        "Value #C": "Claude Cost (24h)"
+        "Value #D": "Claude Cost (7d)"
+        "Value #E": "Ollama Requests (1h)"
+        "Value #F": "Ollama Savings (24h)"
+fieldConfig:
+  overrides:
+    - matcher: {id: "byRegexp", options: ".*Cost.*|.*Savings.*"}
+      properties:
+        - id: "unit"
+          value: "currencyUSD"
+        - id: "decimals"
+          value: 4

@@ -1,0 +1,21 @@
+---
+# Dedicated gateway for Ollama (self-hosted LLM)
+# Instance: gateway-ollama
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: gateway-ollama
+  namespace: kgateway-system
+  labels:
+    app: gateway-ollama
+    provider: ollama
+spec:
+  gatewayClassName: agentgateway
+  listeners:
+  # HTTP listener for Ollama API calls from Open WebUI
+  - name: http
+    port: 8082
+    protocol: HTTP
+    allowedRoutes:
+      namespaces:
+        from: Same

@@ -1,0 +1,91 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: claude-models
+  namespace: kgateway-system
+data:
+  models.json: |
+    {
+      "object": "list",
+      "data": [
+        {
+          "id": "claude-sonnet-4-5",
+          "object": "model",
+          "created": 1730419200,
+          "owned_by": "anthropic"
+        },
+        {
+          "id": "claude-opus-4-5",
+          "object": "model",
+          "created": 1730419200,
+          "owned_by": "anthropic"
+        },
+        {
+          "id": "claude-haiku-4-5",
+          "object": "model",
+          "created": 1730419200,
+          "owned_by": "anthropic"
+        }
+      ]
+    }
+  nginx.conf: |
+    events {
+      worker_connections 1024;
+    }
+    http {
+      server {
+        listen 80;
+        location /v1/models {
+          default_type application/json;
+          alias /usr/share/nginx/html/models.json;
+        }
+      }
+    }
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: claude-models-backend
+  namespace: kgateway-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: claude-models-backend
+  template:
+    metadata:
+      labels:
+        app: claude-models-backend
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: config
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+        - name: data
+          mountPath: /usr/share/nginx/html/models.json
+          subPath: models.json
+      volumes:
+      - name: config
+        configMap:
+          name: claude-models
+      - name: data
+        configMap:
+          name: claude-models
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: claude-models-backend
+  namespace: kgateway-system
+spec:
+  selector:
+    app: claude-models-backend
+  ports:
+  - port: 80
+    targetPort: 80

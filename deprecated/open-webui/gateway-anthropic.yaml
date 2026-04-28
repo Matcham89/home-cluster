@@ -1,0 +1,21 @@
+---
+# Dedicated gateway for Anthropic (Claude) API
+# Instance: gateway-anthropic
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: gateway-anthropic
+  namespace: kgateway-system
+  labels:
+    app: gateway-anthropic
+    provider: anthropic
+spec:
+  gatewayClassName: agentgateway
+  listeners:
+  # HTTP listener for Claude API calls from Open WebUI
+  - name: http
+    port: 8081
+    protocol: HTTP
+    allowedRoutes:
+      namespaces:
+        from: Same
