@@ -6,7 +6,7 @@ metadata:
 spec:
   podSelector:
     matchLabels:
-      app.kubernetes.io/name: authentik
+      app.kubernetes.io/name: n8n
   policyTypes:
   - Egress
   egress:
