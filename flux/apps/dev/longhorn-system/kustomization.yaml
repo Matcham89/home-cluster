@@ -9,5 +9,4 @@ components:
 resources:
   - ./operator/ks.yaml
   - ./limit-ranges/ks.yaml
-  - ./resource-quotas/ks.yaml
   - ./network-policies/ks.yaml

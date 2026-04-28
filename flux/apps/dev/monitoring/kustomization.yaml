@@ -12,6 +12,5 @@ resources:
   - ./kube-prometheus-stack/ks.yaml
   - ./open-telemetry/ks.yaml
   - ./limit-range-override
-  - ./resource-quotas/ks.yaml
   - ./network-policies/ks.yaml
   # - ./seaweedfs/ks.yaml

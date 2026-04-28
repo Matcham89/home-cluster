@@ -10,7 +10,6 @@ resources:
   - ./crds/ks.yaml
   - ./operator/ks.yaml
   - ./limit-ranges/ks.yaml
-  - ./resource-quotas/ks.yaml
   # DISABLED: Commented out for easier development/deployment
   # - ./network-policies/ks.yaml
   - ./gateway/ks.yaml
