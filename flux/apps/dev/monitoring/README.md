@@ -210,18 +210,6 @@ Configure via the HelmRelease values.
 
 ## Troubleshooting
 
-### Pods Not Starting (CNI Errors)
-
-**Symptom**: Pods stuck in `ContainerCreating` with `failed to find plugin "istio-cni"`
-
-**Solution**: Check CNI configuration on worker nodes:
-```bash
-# Check CNI config
-kubectl debug node/worker01 -it --image=alpine -- chroot /host cat /var/lib/rancher/k3s/agent/etc/cni/net.d/10-flannel.conflist
-
-# Should show flannel plugin, not istio-cni
-```
-
 ### Metrics Not Appearing in Grafana
 
 **Checklist**:

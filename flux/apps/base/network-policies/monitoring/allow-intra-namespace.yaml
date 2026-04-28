@@ -1,0 +1,19 @@
+---
+# Allow all traffic between pods within the monitoring namespace.
+# Covers: Grafana→Prometheus, Grafana→Loki, Grafana→Tempo, Promtail→Loki,
+# Loki read/write/backend internal comms, Tempo→Prometheus remote write.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-intra-namespace
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - podSelector: {}
+  egress:
+  - to:
+    - podSelector: {}
