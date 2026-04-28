@@ -11,11 +11,11 @@ spec:
   policyTypes:
   - Egress
   egress:
-  # SeaweedFS is an external service (EndpointSlice in external-services). After DNAT the
-  # destination is the bare node IP, so namespaceSelector cannot match it — use ipBlock.
+  # SeaweedFS S3 runs in-cluster in the storage namespace.
   - to:
-    - ipBlock:
-        cidr: 192.168.1.100/32
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: storage
     ports:
     - protocol: TCP
       port: 8333
