@@ -28,7 +28,15 @@ spec:
     - port: 53
       protocol: UDP
   # Allow API server access for service discovery.
-  # Talos control plane pods use hostNetwork (node IPs), so podSelector can't target them.
+  # Siderolabs flannel evaluates policies before kube-proxy DNAT, so we must allow:
+  #   - the kubernetes ClusterIP (10.96.0.1:443) — pre-DNAT destination
+  #   - the actual control plane node IPs (:6443) — post-DNAT destination (belt-and-braces)
+  - to:
+    - ipBlock:
+        cidr: 10.96.0.1/32
+    ports:
+    - port: 443
+      protocol: TCP
   - to:
     - ipBlock:
         cidr: 192.168.1.181/32
