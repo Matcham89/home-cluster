@@ -13,3 +13,19 @@ spec:
       app: longhorn-manager
   mtls:
     mode: PERMISSIVE
+---
+# Longhorn instance managers use plaintext gRPC internally (ports 8500-8503).
+# When enrolled in Istio ambient, ztunnel enforces STRICT mTLS on inbound traffic,
+# blocking longhorn-manager connections. PERMISSIVE allows plaintext gRPC through
+# while the rest of the namespace remains STRICT.
+apiVersion: security.istio.io/v1
+kind: PeerAuthentication
+metadata:
+  name: longhorn-instance-manager-permissive
+  namespace: longhorn-system
+spec:
+  selector:
+    matchLabels:
+      longhorn.io/component: instance-manager
+  mtls:
+    mode: PERMISSIVE
