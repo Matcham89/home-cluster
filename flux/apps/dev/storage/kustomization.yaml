@@ -6,6 +6,7 @@ namespace: storage
 components:
   - ../../../infra/namespace-privileged
 resources:
+  - ./secrets/ks.yaml
   - ./seaweedfs/ks.yaml
   - ./limit-ranges/ks.yaml
   - ./network-policies/ks.yaml

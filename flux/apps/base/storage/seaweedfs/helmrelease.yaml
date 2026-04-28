@@ -84,6 +84,8 @@ spec:
       s3:
         enabled: true
         port: 8333
+        enableAuth: true
+        existingConfigSecret: seaweedfs-s3-config
         createBuckets:
           - name: loki-chunks
             anonymousRead: false
