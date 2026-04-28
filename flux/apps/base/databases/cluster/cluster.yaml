@@ -38,7 +38,7 @@ spec:
     initdb:
       database: homelab
       owner: postgres
-      postInitSuperuserSQL:
+      postInitSQL:
         - CREATE DATABASE "home-cluster"
         - CREATE DATABASE n8n
         - CREATE DATABASE rundeck
