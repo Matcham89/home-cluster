@@ -16,9 +16,6 @@ spec:
       to:
         - operation:
             ports: ["5432"]
-    - from:
-        - source:
-            namespaces: ["cnpg-system"]
-      to:
+    - to:
         - operation:
             ports: ["8000"]

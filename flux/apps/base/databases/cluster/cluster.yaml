@@ -7,10 +7,6 @@ spec:
   instances: 1
   imageName: ghcr.io/cloudnative-pg/postgresql:17
 
-  inheritedMetadata:
-    annotations:
-      traffic.sidecar.istio.io/excludeInboundPorts: "8000"
-
   superuserSecret:
     name: postgres-superuser
 
