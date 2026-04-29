@@ -5,3 +5,6 @@ kind: Kustomization
 resources:
   - ./allow-kgateway-ingress.yaml
   - ./allow-kgateway-to-webhook-receiver.yaml
+  - ./allow-ingress-to-oauth2-proxy.yaml
+  - ./allow-oauth2-proxy-egress.yaml
+  - ./allow-oauth2-proxy-to-ui.yaml

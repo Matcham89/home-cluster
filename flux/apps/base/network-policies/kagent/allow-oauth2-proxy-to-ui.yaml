@@ -1,0 +1,21 @@
+---
+# Allow oauth2-proxy to forward authenticated requests to kagent-ui
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-oauth2-proxy-to-ui
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: kagent
+      app.kubernetes.io/component: ui
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: oauth2-proxy
+    ports:
+    - port: 8080
+      protocol: TCP

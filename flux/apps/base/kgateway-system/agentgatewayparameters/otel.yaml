@@ -16,3 +16,8 @@ spec:
       value: "otlp"
     - name: OTEL_LOGS_EXPORTER
       value: "otlp"
+  rawConfig:
+    config:
+      tracing:
+        otlpEndpoint: "http://otel-collector-collector.monitoring.svc.cluster.local:4317"
+        otlpProtocol: grpc
