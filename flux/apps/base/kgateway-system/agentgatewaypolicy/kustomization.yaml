@@ -5,6 +5,8 @@ resources:
   - a2a-ratelimit.yaml
   - haiku-spending.yaml
   - sonnet-resiliency.yaml
-  # Disabled due to schema changes in v2.2.0-main
-  # - otel.yaml
+  # frontend.tracing not yet implemented by controller (spec schema exists but rejected at admission)
+  # Tracing is configured via AgentgatewayParameters OTEL env vars on the gateway pod instead
   # - traces.yaml
+  # OTLP access log sink removed from AgentgatewayPolicy in v2.2.0 — handled by OTEL_LOGS_EXPORTER env var
+  # - otel.yaml

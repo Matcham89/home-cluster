@@ -6,6 +6,11 @@ metadata:
   namespace: kgateway-system
 spec:
   gatewayClassName: agentgateway
+  infrastructure:
+    parametersRef:
+      group: agentgateway.dev
+      kind: AgentgatewayParameters
+      name: agentgateway-otel
   listeners:
   - protocol: HTTP
     port: 8080
