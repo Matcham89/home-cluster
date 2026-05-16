@@ -161,7 +161,7 @@ spec:
       accessModes:
         - ReadWriteOnce
       # -- Size of persistent disk
-      size: 5Gi  # Optimized for 24-hour retention
+      size: 20Gi  # Write WAL needs headroom even with 24-hour retention
       # -- Storage class to be used.
       # If defined, storageClassName: <storageClass>.
       # If set to "-", storageClassName: "", which disables dynamic provisioning.
