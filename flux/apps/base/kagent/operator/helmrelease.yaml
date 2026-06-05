@@ -69,8 +69,10 @@ spec:
       # Point the controller at the OpenShell gateway so the AgentHarness
       # reconciler is enabled (otherwise: "AgentHarness controller disabled:
       # --openshell-gateway-url not set"). OpenShell exposes gRPC on :8080.
+      # NB: the env var is OPENSHELL_GATEWAY_URL (maps to --openshell-gateway-url);
+      # the chart's OPENSHELL_GRPC_ADDR example comment is stale and has no effect.
       env:
-        - name: OPENSHELL_GRPC_ADDR
+        - name: OPENSHELL_GATEWAY_URL
           value: "openshell.openshell.svc.cluster.local:8080"
 
     agents:
