@@ -95,6 +95,14 @@ spec:
           readOnly: true
 
     worker:
+      # Without this the worker inherits the namespace LimitRange default of
+      # 512Mi and gets OOMKilled (exit 137). Mirror the server's allocation.
+      resources:
+        requests:
+          cpu: 250m
+          memory: 768Mi
+        limits:
+          memory: 1Gi
       volumes:
         - name: postgres-creds
           secret:
