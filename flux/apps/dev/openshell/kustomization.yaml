@@ -4,7 +4,10 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: openshell
 components:
-  - ../../../infra/namespace
+  # Privileged PSS: OpenShell runs sandbox pods here, which need elevated
+  # privileges (SYS_ADMIN/NET_ADMIN, AppArmor Unconfined) that baseline/restricted
+  # reject. Sandbox runtime, same rationale as longhorn/storage/monitoring.
+  - ../../../infra/namespace-privileged
 
 resources:
   - ./operator/ks.yaml
