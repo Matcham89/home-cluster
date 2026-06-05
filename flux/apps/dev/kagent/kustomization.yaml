@@ -18,3 +18,4 @@ resources:
   - ./agents/ks.yaml
   - ./agent-harness/ks.yaml
   - ./github-webhook-receiver/ks.yaml
+  - ./agent-sandbox/ks.yaml

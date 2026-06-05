@@ -1,0 +1,38 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: agent-sandbox
+
+spec:
+  interval: 1m0s
+  # TODO: replace with the published OCI chart URL for agent-sandbox
+  url: oci://ghcr.io/<ORG>/agent-sandbox/helm-chart
+  ref:
+    # renovate: datasource=github-releases depName=<ORG>/agent-sandbox
+    tag: v0.4.6
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: agent-sandbox
+
+spec:
+  interval: 1m0s
+  releaseName: agent-sandbox
+  chartRef:
+    kind: OCIRepository
+    name: agent-sandbox
+  install:
+    strategy:
+      name: RetryOnFailure
+    createNamespace: true
+    timeout: 10m
+  upgrade:
+    strategy:
+      name: RetryOnFailure
+    cleanupOnFail: true
+    timeout: 10m
+  values:
+    image:
+      tag: v0.4.6
