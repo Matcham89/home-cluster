@@ -74,6 +74,9 @@ spec:
       env:
         - name: OPENSHELL_GATEWAY_URL
           value: "openshell.openshell.svc.cluster.local:8080"
+        # Gateway runs plaintext gRPC (see openshell HelmRelease) — dial without TLS.
+        - name: OPENSHELL_INSECURE
+          value: "true"
 
     agents:
       k8s-agent:

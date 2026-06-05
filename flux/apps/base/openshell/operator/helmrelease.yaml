@@ -32,4 +32,14 @@ spec:
       name: RetryOnFailure
     cleanupOnFail: true
     timeout: 10m
-  values: {}
+  values:
+    # Homelab/dev: run the gateway in plaintext gRPC with no client auth, because
+    # kagent v0.9.5's controller cannot present a client cert (mTLS) or obtain a
+    # gateway JWT. In-cluster traffic only. Revisit for a secure (mTLS+JWT) setup
+    # once kagent exposes client-cert config.
+    server:
+      disableTls: true
+      auth:
+        allowUnauthenticatedUsers: true
+      tls:
+        clientCaSecretName: ""
