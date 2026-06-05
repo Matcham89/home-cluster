@@ -10,4 +10,5 @@ components:
   - ../../../infra/namespace-privileged
 
 resources:
+  - ./secrets/ks.yaml
   - ./operator/ks.yaml

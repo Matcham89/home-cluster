@@ -43,3 +43,7 @@ spec:
         allowUnauthenticatedUsers: true
       tls:
         clientCaSecretName: ""
+      # Use the CNPG Postgres cluster (databases ns) instead of the default
+      # SQLite-on-Longhorn, which locked under fsync latency. Secret built by
+      # the openshell-db ExternalSecret (key: uri).
+      externalDbSecret: openshell-db
