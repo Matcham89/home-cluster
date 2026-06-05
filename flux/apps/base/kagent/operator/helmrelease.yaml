@@ -66,6 +66,12 @@ spec:
           memory: 128Mi
       service:
         appProtocol: kgateway.dev/mcp
+      # Point the controller at the OpenShell gateway so the AgentHarness
+      # reconciler is enabled (otherwise: "AgentHarness controller disabled:
+      # --openshell-gateway-url not set"). OpenShell exposes gRPC on :8080.
+      env:
+        - name: OPENSHELL_GRPC_ADDR
+          value: "openshell.openshell.svc.cluster.local:8080"
 
     agents:
       k8s-agent:
