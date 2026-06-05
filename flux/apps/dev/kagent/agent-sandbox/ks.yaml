@@ -8,15 +8,14 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: kagent-operator
   interval: 1h
   path: ./flux/apps/base/kagent/agent-sandbox
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: kagent
+  # No targetNamespace: the manifest creates and pins its own
+  # `agent-sandbox-system` namespace; the CRD is cluster-scoped.
   timeout: 5m
   prune: true
   wait: true
