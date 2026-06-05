@@ -1,0 +1,10 @@
+apiVersion: kagent.dev/v1alpha2
+kind: AgentHarness
+metadata:
+  name: hermes-sandbox
+  namespace: kagent
+spec:
+  backend: hermes
+  modelConfigRef: default-model-config
+  description: "hermes agent"
+
