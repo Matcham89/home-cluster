@@ -23,9 +23,6 @@ spec:
               kubernetes.io/metadata.name: rundeck
         - namespaceSelector:
             matchLabels:
-              kubernetes.io/metadata.name: openshell
-        - namespaceSelector:
-            matchLabels:
               kubernetes.io/metadata.name: monitoring
         - namespaceSelector:
             matchLabels:
