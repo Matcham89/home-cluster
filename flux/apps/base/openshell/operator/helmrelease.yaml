@@ -1,0 +1,51 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: openshell
+
+spec:
+  interval: 1m0s
+  url: oci://ghcr.io/nvidia/openshell/helm-chart
+  ref:
+    # PINNED: do NOT upgrade past 0.0.49. OpenShell 0.0.53+ report the sandbox
+    # phase as UNKNOWN to kagent 0.9.6, so the hermes AgentHarness never reaches
+    # Ready and the actor never bootstraps. 0.0.49 is the compatible version.
+    tag: 0.0.49
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: openshell
+
+spec:
+  interval: 1m0s
+  releaseName: openshell
+  chartRef:
+    kind: OCIRepository
+    name: openshell
+  install:
+    strategy:
+      name: RetryOnFailure
+    createNamespace: true
+    timeout: 10m
+  upgrade:
+    strategy:
+      name: RetryOnFailure
+    cleanupOnFail: true
+    timeout: 10m
+  values:
+    # Plaintext gRPC, no client auth (in-cluster only, homelab) — kagent v0.9.6
+    # can't present mTLS client certs. SQLite default (0.0.49 has no
+    # externalDbSecret); single sandbox, no lock contention observed.
+    # NOTE: the gateway expects a pre-existing `openshell-ssh-handshake` Secret
+    # (key: secret). The chart does NOT create it; per the OpenShell docs it is
+    # provisioned manually:
+    #   kubectl -n openshell create secret generic openshell-ssh-handshake \
+    #     --from-literal=secret="$(openssl rand -hex 32)"
+    server:
+      disableTls: true
+      auth:
+        allowUnauthenticatedUsers: true
+    service:
+      metricsPort: 0
