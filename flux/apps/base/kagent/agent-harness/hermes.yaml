@@ -7,4 +7,10 @@ spec:
   backend: hermes
   modelConfigRef: default-model-config
   description: "hermes agent"
+  # OpenShell sandboxes are egress-deny-by-default. The Hermes actor must reach
+  # its model API (default-model-config → OpenAI gpt-4.1-mini) to initialize and
+  # report ready; without this it stays ActorNotReady / SandboxPhaseUnknown.
+  network:
+    allowedDomains:
+      - api.openai.com
 
