@@ -1,0 +1,17 @@
+---
+# Declarative kagent agent running in an isolated pod via the upstream
+# agent-sandbox controller (agents.x-k8s.io). No OpenShell gateway involved.
+apiVersion: kagent.dev/v1alpha2
+kind: SandboxAgent
+metadata:
+  name: sandbox-agent
+  namespace: kagent
+spec:
+  type: Declarative
+  sandbox:
+    network:
+      allowedDomains:
+        - api.openai.com
+  declarative:
+    modelConfig: default-model-config
+    systemMessage: "You are a helpful assistant running in a sandboxed environment."
