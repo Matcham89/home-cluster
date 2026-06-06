@@ -9,7 +9,7 @@ spec:
   url: oci://ghcr.io/kagent-dev/kagent/helm/kagent
   ref:
     # renovate: datasource=github-releases depName=kagent-dev/kagent
-    tag: 0.9.5
+    tag: 0.9.6
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -72,8 +72,9 @@ spec:
       # NB: the env var is OPENSHELL_GATEWAY_URL (maps to --openshell-gateway-url);
       # the chart's OPENSHELL_GRPC_ADDR example comment is stale and has no effect.
       env:
+        # Documented gRPC dns:/// target form (kagent.dev AgentHarness docs).
         - name: OPENSHELL_GATEWAY_URL
-          value: "openshell.openshell.svc.cluster.local:8080"
+          value: "dns:///openshell.openshell.svc:8080"
         # Gateway runs plaintext gRPC (see openshell HelmRelease) — dial without TLS.
         - name: OPENSHELL_INSECURE
           value: "true"
