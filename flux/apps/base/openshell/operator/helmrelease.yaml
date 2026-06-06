@@ -8,10 +8,11 @@ spec:
   interval: 1m0s
   url: oci://ghcr.io/nvidia/openshell/helm-chart
   ref:
-    # Testing latest: 0.0.49 is known-good. 0.0.53–0.0.57 previously gave
-    # SandboxPhaseUnknown, but those runs lacked the openshell-ssh-handshake
-    # secret + clean setup. Re-validating 0.0.57 with the full config.
-    tag: 0.0.57
+    # PINNED: do NOT upgrade past 0.0.49. Confirmed by test: 0.0.57 (latest)
+    # gives SandboxPhaseUnknown with kagent 0.9.6 even with the full setup
+    # (ssh-handshake secret, clean Flux deploy) — the sandbox never reaches
+    # Ready and the actor never starts. 0.0.49 is the only compatible version.
+    tag: 0.0.49
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
