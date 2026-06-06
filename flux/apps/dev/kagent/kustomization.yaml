@@ -16,5 +16,6 @@ resources:
   - ./providers/ks.yaml
   - ./mcps/ks.yaml
   - ./agents/ks.yaml
+  - ./agent-harness/ks.yaml
   - ./github-webhook-receiver/ks.yaml
   - ./agent-sandbox/ks.yaml
