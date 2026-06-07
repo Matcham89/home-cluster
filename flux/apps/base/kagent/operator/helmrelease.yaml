@@ -63,7 +63,7 @@ spec:
       image:
         registry: docker.io
         repository: matcham89/kagent-controller
-        tag: deepagents-ac00fa8d
+        tag: deepagents-764cf259
       resources:
         limits:
           memory: 512Mi
