@@ -36,3 +36,6 @@ spec:
               - op: add
                 path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/backend/enum/-
                 value: deepagents
+              - op: add
+                path: /spec/versions/0/schema/openAPIV3Schema/properties/status/properties/backendRef/properties/backend/enum/-
+                value: deepagents
