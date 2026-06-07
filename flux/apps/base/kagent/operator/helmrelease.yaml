@@ -58,6 +58,12 @@ spec:
     podSecurityContext:
       fsGroup: 1000
     controller:
+      # Custom controller image carrying the deepagents AgentHarness backend
+      # (feat/deepagents-harness). Revert to chart default once released upstream.
+      image:
+        registry: docker.io
+        repository: matcham89/kagent-controller
+        tag: deepagents-ac00fa8d
       resources:
         limits:
           memory: 512Mi
