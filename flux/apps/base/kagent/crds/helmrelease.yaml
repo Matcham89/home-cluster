@@ -24,3 +24,15 @@ spec:
     createNamespace: true
     remediation:
       retries: 3
+  # The pinned chart (0.9.6) predates the deepagents AgentHarness backend, so patch the
+  # backend enum onto the rendered CRD. Helm owns the CRD, so there is no Flux/Helm fight.
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: CustomResourceDefinition
+              name: agentharnesses.kagent.dev
+            patch: |
+              - op: add
+                path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/backend/enum/-
+                value: deepagents
