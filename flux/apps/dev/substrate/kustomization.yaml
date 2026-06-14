@@ -1,0 +1,13 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: ate-system
+components:
+  # Privileged PSS: substrate worker pool launches gVisor sandbox pods (ateom-gvisor)
+  # which require elevated capabilities that the baseline/restricted profiles reject.
+  - ../../../infra/namespace-privileged
+
+resources:
+  - ./substate-crds/ks.yaml
+  - ./substrate-operator/ks.yaml

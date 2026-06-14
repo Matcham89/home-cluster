@@ -5,6 +5,9 @@ metadata:
   name: hermes-sandbox
   namespace: kagent
 spec:
+  substrate:
+    workerPoolRef:
+      name: hermes-worker-pool
   backend: hermes
   modelConfigRef: default-model-config
   description: "hermes agent"

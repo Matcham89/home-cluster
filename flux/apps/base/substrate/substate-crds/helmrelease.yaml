@@ -1,0 +1,26 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: substrate-crds
+
+spec:
+  interval: 1m0s
+  url: oci://ghcr.io/kagent-dev/substrate/helm/substrate-crds
+  ref:
+    tag: latest
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: substrate-crds
+spec:
+  interval: 1m0s
+  releaseName: substrate-crds
+  chartRef:
+    kind: OCIRepository
+    name: substrate-crds
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
