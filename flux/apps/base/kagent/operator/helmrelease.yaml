@@ -22,6 +22,11 @@ spec:
   chartRef:
     kind: OCIRepository
     name: kagent
+  # WorkerPool CRD (ate.dev/v1alpha1) is required to render the
+  # substrateWorkerPool template — gate the helm upgrade on substrate-crds.
+  dependsOn:
+    - name: substrate-crds
+      namespace: ate-system
   install:
     strategy:
       name: RetryOnFailure
