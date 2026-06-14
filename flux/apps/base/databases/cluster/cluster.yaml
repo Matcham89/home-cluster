@@ -34,6 +34,25 @@ spec:
   monitoring:
     enablePodMonitor: true
 
+  # Dedicated, non-superuser login roles per app. CNPG continuously reconciles
+  # each role's password from its basic-auth secret (labelled cnpg.io/reload),
+  # so the role password can never drift out of sync. Each role owns its own
+  # database (ownership set out-of-band via ALTER DATABASE / REASSIGN OWNED).
+  managed:
+    roles:
+      - name: authentik
+        ensure: present
+        login: true
+        superuser: false
+        passwordSecret:
+          name: authentik-db-role
+      - name: n8n
+        ensure: present
+        login: true
+        superuser: false
+        passwordSecret:
+          name: n8n-db-role
+
   bootstrap:
     initdb:
       database: homelab
