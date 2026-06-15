@@ -81,6 +81,13 @@ spec:
         enabled: true
         ateApiEndpoint: "dns:///api.ate-system.svc:443"
         ateApiInsecure: true
+        # gVisor runsc pinned newer than the chart default (2026-05-19), which
+        # fails multi-container checkpoint/restore of the node.js OpenClaw actor
+        # ("inconsistent private memory files on restore"). 2026-06-13 nightly.
+        runscAMD64URL: "gs://gvisor/releases/nightly/2026-06-13/x86_64/runsc"
+        runscAMD64SHA256: "ae7919a4c72d30935164a767ee7433b0c8a0726f64f1d54ef907d0cefb9a1a85"
+        runscARM64URL: "gs://gvisor/releases/nightly/2026-06-13/aarch64/runsc"
+        runscARM64SHA256: "e4d2039b47cfeef0738e4fdb6b512692ee8dcd698b3efbe349fd94b8efb8bea1"
 
     agents:
       k8s-agent:
