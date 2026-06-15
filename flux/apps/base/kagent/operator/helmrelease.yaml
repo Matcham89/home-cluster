@@ -79,13 +79,6 @@ spec:
         enabled: true
         ateApiEndpoint: "dns:///api.ate-system.svc:443"
         ateApiInsecure: true
-      # Enables the AgentHarness reconciler and points it at the OpenShell
-      # gateway (plaintext gRPC). Required for the hermes AgentHarness.
-      env:
-        - name: OPENSHELL_GATEWAY_URL
-          value: "dns:///openshell.openshell.svc:8080"
-        - name: OPENSHELL_INSECURE
-          value: "true"
 
     agents:
       k8s-agent:

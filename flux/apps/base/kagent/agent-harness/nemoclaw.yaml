@@ -1,0 +1,21 @@
+---
+apiVersion: kagent.dev/v1alpha2
+kind: AgentHarness
+metadata:
+  name: nemoclaw-sandbox
+  namespace: kagent
+spec:
+  runtime: substrate
+  backend: nemoclaw
+  modelConfigRef: default-model-config
+  description: "nemoclaw agent"
+  substrate:
+    # Self-issued bearer token securing the actor's in-pod OpenClaw gateway and
+    # the kagent controller proxy to it. Sourced from Bitwarden via ESO.
+    gatewayTokenSecretRef:
+      name: harness-gateway-token
+  # Egress-deny-by-default sandbox; allow the model API (default-model-config = OpenAI).
+  # OpenClaw/NemoClaw baseline egress (clawhub, npm, docs) is applied by the backend.
+  network:
+    allowedDomains:
+      - api.openai.com
