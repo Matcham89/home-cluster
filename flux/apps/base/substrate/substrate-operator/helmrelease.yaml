@@ -25,3 +25,11 @@ spec:
     createNamespace: true
     remediation:
       retries: 3
+  values:
+    auth:
+      jwt:
+        # Talos mints SA tokens with the API-server endpoint as the OIDC issuer,
+        # not the stock in-cluster URL. ate-api rejects controller tokens unless
+        # this matches the cluster's real issuer:
+        #   kubectl get --raw /.well-known/openid-configuration | jq .issuer
+        issuer: https://192.168.1.180:6443
