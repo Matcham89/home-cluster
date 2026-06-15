@@ -46,9 +46,9 @@ spec:
     substrateWorkerPool:
       create: true
       replicas: 2
-      # Experimental substrate worker using memory-backed overlays so gVisor
-      # checkpoints one sandbox memory file instead of per-container filestores.
-      ateomImage: docker.io/matcham89/ateom-gvisor:0.0.6-overlay-memory-20260615@sha256:d93a5dc38f42fd489f3f8985f1dd7d25b03da0333f60b829f5afd06e52b1dd22
+      # Experimental substrate worker with rootfs overlays disabled to avoid
+      # inconsistent per-container private filestores during gVisor restore.
+      ateomImage: docker.io/matcham89/ateom-gvisor:0.0.6-no-overlay-20260615@sha256:edeb8fc30b31994ecf80dea68f4c99a4377bc7ece439ddc117837b7c3f813d1a
 
     # Override default resource limits to prevent CPU throttling
     # CPU limits removed - CPU is compressible, requests provide sufficient scheduling protection
