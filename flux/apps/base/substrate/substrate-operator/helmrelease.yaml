@@ -55,3 +55,17 @@ spec:
                     containers:
                       - name: ate-controller
                         image: docker.io/matcham89/atecontroller:0.0.6-shmfix@sha256:3da89954cda3e04e68de966064aca83fc576ef75bbf51932125613e2812e20a0
+          - target:
+              kind: Deployment
+              name: ate-api-server-deployment
+            patch: |
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: ate-api-server-deployment
+              spec:
+                template:
+                  spec:
+                    containers:
+                      - name: ate-api-server
+                        image: docker.io/matcham89/ateapi:0.0.6-workflow-timeout-20260615@sha256:464eec86614ea55e3fa964bf5b84f66360180efb7b2df9822a85a6fa5c17afc3
