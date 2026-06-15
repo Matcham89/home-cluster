@@ -68,4 +68,4 @@ spec:
                   spec:
                     containers:
                       - name: ate-api-server
-                        image: docker.io/matcham89/ateapi:0.0.6-workflow-timeout-20260615@sha256:464eec86614ea55e3fa964bf5b84f66360180efb7b2df9822a85a6fa5c17afc3
+                        image: docker.io/matcham89/ateapi:0.0.6-redis-master-lockfix-20260615@sha256:0d4368caf48abe8b78d8ece4d5df718a0385e27218cdb0af18e25cca3d92cddc
