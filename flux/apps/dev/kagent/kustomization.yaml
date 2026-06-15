@@ -19,9 +19,6 @@ resources:
   - ./providers/ks.yaml
   - ./mcps/ks.yaml
   - ./agents/ks.yaml
-  # Parked: nemoclaw-sandbox AgentHarness can't reach Ready until the substrate
-  # gVisor blocker is resolved (Talos node-level namespace/sysctl fix). Re-enable
-  # once the worker can create gVisor sandboxes. See agent-harness/ for the manifest.
-  # - ./agent-harness/ks.yaml
+  - ./agent-harness/ks.yaml
   - ./github-webhook-receiver/ks.yaml
   - ./agent-sandbox/ks.yaml
