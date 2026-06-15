@@ -1,0 +1,20 @@
+---
+# kagent runs substrate ateom-gvisor worker pods, which set no resources of
+# their own (the ate.dev WorkerPool CRD exposes only ateomImage/replicas), so
+# they inherit this namespace default. gVisor needs far more than the shared
+# 512Mi default: it copies the runsc binary via a memory-backed memfd and backs
+# sandbox memory against the cgroup, so a tight limit fails actor/gofer creation
+# with "no space left on device". Raise the default for containers without
+# explicit limits. defaultRequest stays low so scheduling isn't over-reserved.
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: default-limits
+spec:
+  limits:
+    - type: Container
+      defaultRequest:
+        cpu: 10m
+        memory: 128Mi
+      default:
+        memory: 4Gi
