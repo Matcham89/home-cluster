@@ -33,3 +33,25 @@ spec:
         # this matches the cluster's real issuer:
         #   kubectl get --raw /.well-known/openid-configuration | jq .issuer
         issuer: https://192.168.1.180:6443
+  # Custom ate-controller image (fork of kagent-dev/substrate@0.0.6) that gives
+  # the ateom worker pods a 1Gi memory-backed /dev/shm + explicit resources.
+  # Upstream's 64Mi /dev/shm makes gVisor's runsc self-copy fail with ENOSPC
+  # (fork/exec /proc/self/exe). Only the controller image differs; all other
+  # substrate components stay on upstream 0.0.6.
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: Deployment
+              name: ate-controller
+            patch: |
+              apiVersion: apps/v1
+              kind: Deployment
+              metadata:
+                name: ate-controller
+              spec:
+                template:
+                  spec:
+                    containers:
+                      - name: ate-controller
+                        image: docker.io/matcham89/atecontroller:0.0.6-shmfix@sha256:3da89954cda3e04e68de966064aca83fc576ef75bbf51932125613e2812e20a0
