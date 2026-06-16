@@ -69,6 +69,14 @@ spec:
     podSecurityContext:
       fsGroup: 1000
     controller:
+      env:
+        - name: SUBSTRATE_CALL_TIMEOUT
+          value: 5m
+      image:
+        registry: docker.io
+        repository: matcham89/kagent-controller
+        tag: substrate-resume-retry-20260615@sha256:c83e1394fbc2c68aee2ad1b4e4dba39893055300ab2a37b56100790748710fe0
+        pullPolicy: IfNotPresent
       resources:
         limits:
           memory: 512Mi
