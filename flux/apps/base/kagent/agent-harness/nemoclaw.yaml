@@ -14,7 +14,7 @@ spec:
     # the kagent controller proxy to it. Sourced from Bitwarden via ESO.
     gatewayTokenSecretRef:
       name: harness-gateway-token
-    workloadImage: docker.io/matcham89/nemoclaw-sandbox-base:tmpdirs-tasks-20260616@sha256:775b2fe2f9c8f3d5cefda924c7556ba5ed83db0a75f13bcc4d0da495de2adf2b
+    workloadImage: docker.io/matcham89/nemoclaw-sandbox-base:no-update-check-20260616@sha256:bcdbb3fb5bc8f15858e285b69627bcaacae9ca47d5740e1f982a68572bc86191
   # Egress-deny-by-default sandbox; allow the model API (default-model-config = OpenAI).
   # OpenClaw/NemoClaw baseline egress (clawhub, npm, docs) is applied by the backend.
   network:
