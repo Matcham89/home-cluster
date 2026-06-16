@@ -48,7 +48,7 @@ spec:
       replicas: 2
       # Experimental substrate worker with rootfs overlays disabled to avoid
       # inconsistent per-container private filestores during gVisor restore.
-      ateomImage: docker.io/matcham89/ateom-gvisor:0.0.6-host-network-20260616@sha256:08d8b37827033f5ad917efcf9384666269c02da82468deffd23ad7500f329843
+      ateomImage: docker.io/matcham89/ateom-gvisor:0.0.6-host-network-checkpoint-clean-20260616@sha256:dd1e07aed373ee2aa62c0c71c083863e0d76aa01c9411d80ac317b6c863d52d9
 
     # Override default resource limits to prevent CPU throttling
     # CPU limits removed - CPU is compressible, requests provide sufficient scheduling protection
