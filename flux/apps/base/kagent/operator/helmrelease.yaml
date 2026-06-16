@@ -81,12 +81,16 @@ spec:
         enabled: true
         ateApiEndpoint: "dns:///api.ate-system.svc:443"
         ateApiInsecure: true
-        # runsc stays on the chart default (nightly 2026-05-19) that substrate's
-        # checkpoint/restore code is built against. Newer runsc (2026-06-13) broke
-        # checkpoint outright. The remaining blocker — multi-container RESTORE of
-        # the node.js OpenClaw actor failing with gVisor "inconsistent private
-        # memory files" — is an upstream substrate/gVisor C/R limitation, not a
-        # version we can fix here. Track upstream before changing this.
+        # runsc pinned to nightly 2026-06-02 (amd64). The chart default 2026-05-19
+        # FAILS to RESTORE the node.js OpenClaw actor on amd64 gVisor `systrap` with
+        # "inconsistent private memory files on restore" (works on arm64 — see
+        # docs/substrate-openclaw-talos.md). A runsc nightly sweep (2026-06-16) found
+        # the gVisor C/R fix landed between 05-26 (still fails) and 06-02 (RESTORES),
+        # and 06-02 checkpoint still works (it breaks at 06-13). So 06-02 is the
+        # sweet spot for amd64 OpenClaw checkpoint+restore on Talos.
+        # arm64 left on the chart default (no arm64 Talos nodes; 05-19 restores on arm64).
+        runscAMD64URL: "gs://gvisor/releases/nightly/2026-06-02/x86_64/runsc"
+        runscAMD64SHA256: "efd12935f6654c91a1389710eb8dfa4d12b6b9be00db87526dc2eb584ad00119"
 
     agents:
       k8s-agent:
