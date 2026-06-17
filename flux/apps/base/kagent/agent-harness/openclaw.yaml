@@ -1,0 +1,19 @@
+---
+# OpenClaw agent harness on the substrate runtime (gVisor checkpoint/restore).
+# Backed by the kagent-default worker pool; the gateway token and model config
+# come from the kagent-secrets and kagent-providers Kustomizations respectively.
+# See docs/substrate-openclaw-open-items.md for the deployment saga.
+apiVersion: kagent.dev/v1alpha2
+kind: AgentHarness
+metadata:
+  name: openclaw
+  namespace: kagent
+spec:
+  backend: openclaw
+  modelConfigRef: default-model-config
+  runtime: substrate
+  substrate:
+    gatewayTokenSecretRef:
+      name: harness-gateway-token
+    workerPoolRef:
+      name: kagent-default
