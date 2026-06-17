@@ -13,6 +13,10 @@ spec:
   modelConfigRef: default-model-config
   runtime: substrate
   substrate:
+    # Custom sandbox image (derivative of nemoclaw/sandbox-base) that bridges the
+    # kagent agent broker (controller /mcp) into the gateway config at startup.
+    # Source: images/openclaw-sandbox-mcp/. Pinned to the amd64 manifest digest.
+    workloadImage: docker.io/matcham89/openclaw-sandbox-mcp@sha256:c9950b4eac9c372b09e2504562961c7b2802aa3c42f342382003ae014f539d6c
     gatewayTokenSecretRef:
       name: harness-gateway-token
     workerPoolRef:
