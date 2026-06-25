@@ -45,7 +45,7 @@ spec:
     revisionHistoryLimit: 2
     substrateWorkerPool:
       create: true
-      replicas: 2
+      replicas: 6
       # ateom-gvisor is a SUBSTRATE component — tag must match the substrate
       # chart version (0.0.6), not the kagent version. v0.9.7 does not exist.
       ateomImage: ghcr.io/kagent-dev/substrate/ateom-gvisor:v0.0.6
