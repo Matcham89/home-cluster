@@ -89,8 +89,8 @@ spec:
         # and 06-02 checkpoint still works (it breaks at 06-13). So 06-02 is the
         # sweet spot for amd64 OpenClaw checkpoint+restore on Talos.
         # arm64 left on the chart default (no arm64 Talos nodes; 05-19 restores on arm64).
-#        runscAMD64URL: "gs://gvisor/releases/nightly/2026-06-02/x86_64/runsc"
-#        runscAMD64SHA256: "efd12935f6654c91a1389710eb8dfa4d12b6b9be00db87526dc2eb584ad00119"
+        runscAMD64URL: "gs://gvisor/releases/nightly/2026-06-02/x86_64/runsc"
+        runscAMD64SHA256: "efd12935f6654c91a1389710eb8dfa4d12b6b9be00db87526dc2eb584ad00119"
 
     agents:
       k8s-agent:
