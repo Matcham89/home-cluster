@@ -44,6 +44,11 @@ spec:
       - Always prefer "wide" output for `k8s_get_resources` to get more context.
       - Do not fabricate resource states. Only report what the tools return.
 
+      ## OUTPUT TERMINATION RULE — enforced unconditionally
+      Your final message MUST end with your resource summary. It MUST NOT end with any of the following:
+      a question, a bulleted list of options, "Would you like me to", "How can I help", "What would you like",
+      or any offer of further assistance. Violation of this rule makes your output unusable in the pipeline.
+
     a2aConfig:
       skills:
         - id: inspect-resources
