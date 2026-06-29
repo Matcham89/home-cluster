@@ -8,3 +8,4 @@ resources:
   - ./allow-ingress-to-oauth2-proxy.yaml
   - ./allow-oauth2-proxy-egress.yaml
   - ./allow-oauth2-proxy-to-ui.yaml
+  - ./allow-agentflow-to-controller.yaml

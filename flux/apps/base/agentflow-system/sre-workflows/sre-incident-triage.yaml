@@ -1,0 +1,81 @@
+# SRE Incident Triage Workflow
+#
+# Purpose: Full triage chain when an alert or ticket comes in about a failing workload.
+# Chain:
+#   1. k8s-inspector  — describe the named resource to understand current state
+#   2. k8s-events     — surface Warning events in the affected namespace
+#   3. k8s-logs       — retrieve recent logs from the affected pods
+#   4. k8s-health     — check overall cluster pod health for full blast-radius picture
+#
+# Trigger: POST /webhook/sre/incident
+# Expected payload: { "namespace": "...", "app": "...", "description": "..." }
+#
+# Example manual run (no webhook):
+#   kubectl create -f - <<EOF
+#   apiVersion: agentflow.io/v1alpha1
+#   kind: AgentWorkflowRun
+#   metadata:
+#     name: incident-$(date +%s)
+#     namespace: agentflow-system
+#   spec:
+#     workflowRef:
+#       name: sre-incident-triage
+#     input:
+#       namespace: "kagent"
+#       app: "k8s-events-agent"
+#       description: "Pod restarting repeatedly"
+#   EOF
+---
+apiVersion: agentflow.io/v1alpha1
+kind: AgentWorkflow
+metadata:
+  name: sre-incident-triage
+  namespace: agentflow-system
+spec:
+  description: >-
+    SRE incident triage: inspect resources → surface events → retrieve logs → assess cluster-wide pod health.
+    Accepts a namespace, app name, and free-text problem description as input.
+  execution:
+    mode: Sequential
+    timeoutSeconds: 600
+  steps:
+    - name: inspect-resources
+      agentRef:
+        name: k8s-inspector
+      retries: 1
+      timeoutSeconds: 120
+
+    - name: get-namespace-events
+      agentRef:
+        name: k8s-events
+      retries: 1
+      timeoutSeconds: 120
+
+    - name: get-pod-logs
+      agentRef:
+        name: k8s-logs
+      retries: 1
+      timeoutSeconds: 120
+
+    - name: check-pod-health
+      agentRef:
+        name: k8s-health
+      retries: 1
+      timeoutSeconds: 180
+---
+apiVersion: agentflow.io/v1alpha1
+kind: WebhookTrigger
+metadata:
+  name: sre-incident-triage
+  namespace: agentflow-system
+spec:
+  path: /webhook/sre/incident
+  workflow: sre-incident-triage
+  # Maps incoming webhook JSON fields into AgentWorkflowRun.spec.input.
+  # The runner passes this input object to the first step agent.
+  # ${dot.path} interpolates against the raw webhook payload.
+  mapping:
+    namespace: "${namespace}"
+    app: "${app}"
+    description: "${description}"
+    severity: "${severity}"

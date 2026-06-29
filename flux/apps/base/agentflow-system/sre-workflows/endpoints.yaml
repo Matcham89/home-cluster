@@ -1,0 +1,98 @@
+# AgentEndpoints routing into kagent's A2A controller.
+# protocol: a2a tells the agentflow runner to wrap requests in the Google A2A
+# JSON-RPC 2.0 message/send envelope and extract output from result artifacts.
+#
+# Network policy: allow-agentflow-to-controller (in network-policies/kagent/) must be
+# applied first so agentflow-system pods can reach kagent-controller on port 8083.
+---
+apiVersion: agentflow.io/v1alpha1
+kind: AgentEndpoint
+metadata:
+  name: k8s-inspector
+  namespace: agentflow-system
+spec:
+  type: http
+  http:
+    method: POST
+    protocol: a2a
+    url: http://kagent-controller.kagent.svc.cluster.local:8083/api/a2a/kagent/k8s-inspector-agent/
+    timeoutSeconds: 120
+---
+apiVersion: agentflow.io/v1alpha1
+kind: AgentEndpoint
+metadata:
+  name: k8s-events
+  namespace: agentflow-system
+spec:
+  type: http
+  http:
+    method: POST
+    protocol: a2a
+    url: http://kagent-controller.kagent.svc.cluster.local:8083/api/a2a/kagent/k8s-events-agent/
+    timeoutSeconds: 120
+---
+apiVersion: agentflow.io/v1alpha1
+kind: AgentEndpoint
+metadata:
+  name: k8s-logs
+  namespace: agentflow-system
+spec:
+  type: http
+  http:
+    method: POST
+    protocol: a2a
+    url: http://kagent-controller.kagent.svc.cluster.local:8083/api/a2a/kagent/k8s-logs-agent/
+    timeoutSeconds: 120
+---
+apiVersion: agentflow.io/v1alpha1
+kind: AgentEndpoint
+metadata:
+  name: k8s-health
+  namespace: agentflow-system
+spec:
+  type: http
+  http:
+    method: POST
+    protocol: a2a
+    url: http://kagent-controller.kagent.svc.cluster.local:8083/api/a2a/kagent/k8s-health-agent/
+    timeoutSeconds: 180
+---
+apiVersion: agentflow.io/v1alpha1
+kind: AgentEndpoint
+metadata:
+  name: flux-health
+  namespace: agentflow-system
+spec:
+  type: http
+  http:
+    method: POST
+    protocol: a2a
+    # flux-health-agent has internal retry loops (up to 3×60s waits) — use a generous timeout
+    url: http://kagent-controller.kagent.svc.cluster.local:8083/api/a2a/kagent/flux-health-agent/
+    timeoutSeconds: 300
+---
+apiVersion: agentflow.io/v1alpha1
+kind: AgentEndpoint
+metadata:
+  name: k8s-network
+  namespace: agentflow-system
+spec:
+  type: http
+  http:
+    method: POST
+    protocol: a2a
+    url: http://kagent-controller.kagent.svc.cluster.local:8083/api/a2a/kagent/k8s-network-agent/
+    timeoutSeconds: 120
+---
+apiVersion: agentflow.io/v1alpha1
+kind: AgentEndpoint
+metadata:
+  name: k8s-ops
+  namespace: agentflow-system
+spec:
+  type: http
+  http:
+    method: POST
+    protocol: a2a
+    url: http://kagent-controller.kagent.svc.cluster.local:8083/api/a2a/kagent/k8s-ops-agent/
+    timeoutSeconds: 180

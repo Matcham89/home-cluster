@@ -1,0 +1,90 @@
+# SRE Flux Deployment Check Workflow
+#
+# Purpose: Post-merge validation after a GitOps push to main.
+# Confirms that Flux has fully reconciled and no pods have gone unhealthy.
+# Chain:
+#   1. flux-health    — verify all Kustomizations and HelmReleases are Ready
+#                       (has built-in retry loop: up to 3×60s waits for Unknown→Ready)
+#   2. k8s-health     — cluster-wide pod health check — catches CrashLoopBackOff, Pending, etc.
+#   3. k8s-events     — surface any new Warning events since the rollout
+#   4. k8s-network    — (optional) spot-check a named service is reachable post-deploy
+#
+# Trigger: POST /webhook/sre/flux-deploy-check
+# Expected payload:
+#   {
+#     "commit":      "abc1234",                 # the merge commit SHA
+#     "description": "deploy kagent 0.9.9",     # human-readable change description
+#     "service":     "kagent-ui",               # (optional) service to network-probe
+#     "namespace":   "kagent"                   # (optional) namespace for network probe
+#   }
+#
+# Example manual run:
+#   kubectl create -f - <<EOF
+#   apiVersion: agentflow.io/v1alpha1
+#   kind: AgentWorkflowRun
+#   metadata:
+#     name: deploy-check-$(date +%s)
+#     namespace: agentflow-system
+#   spec:
+#     workflowRef:
+#       name: sre-flux-deploy-check
+#     input:
+#       commit: "abc1234"
+#       description: "validate after merging PR #88 — kagent 0.9.9 bump"
+#   EOF
+---
+apiVersion: agentflow.io/v1alpha1
+kind: AgentWorkflow
+metadata:
+  name: sre-flux-deploy-check
+  namespace: agentflow-system
+spec:
+  description: >-
+    Post-merge GitOps validation: wait for Flux reconciliation → verify pod health cluster-wide
+    → surface any warning events → optional in-cluster network probe.
+    Accepts a commit SHA and change description as input.
+  execution:
+    mode: Sequential
+    # flux-health alone can take up to ~3 minutes with retries; add headroom for the rest
+    timeoutSeconds: 720
+  steps:
+    - name: check-flux-reconciliation
+      agentRef:
+        name: flux-health
+      # Allow 2 attempts in case the controller itself has a transient error
+      retries: 2
+      # Must be generous: flux-health-agent retries internally for up to ~3 minutes
+      timeoutSeconds: 300
+
+    - name: check-pod-health
+      agentRef:
+        name: k8s-health
+      retries: 1
+      timeoutSeconds: 180
+
+    - name: get-warning-events
+      agentRef:
+        name: k8s-events
+      retries: 1
+      timeoutSeconds: 120
+
+    - name: verify-network-connectivity
+      agentRef:
+        name: k8s-network
+      retries: 1
+      timeoutSeconds: 120
+---
+apiVersion: agentflow.io/v1alpha1
+kind: WebhookTrigger
+metadata:
+  name: sre-flux-deploy-check
+  namespace: agentflow-system
+spec:
+  path: /webhook/sre/flux-deploy-check
+  workflow: sre-flux-deploy-check
+  mapping:
+    commit: "${commit}"
+    description: "${description}"
+    # Optional: passed through to k8s-network-agent for service connectivity check
+    service: "${service}"
+    namespace: "${namespace}"
