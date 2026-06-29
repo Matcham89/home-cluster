@@ -1,0 +1,22 @@
+---
+# Allow agentflow-system pods to call kagent's A2A controller endpoint (port 8083).
+# Without this, the default-deny-all policy in kagent blocks agentflow workflow runs.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-agentflow-to-controller
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: controller
+      app.kubernetes.io/name: kagent
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: agentflow-system
+      ports:
+        - port: 8083
+          protocol: TCP
