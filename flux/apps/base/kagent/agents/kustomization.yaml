@@ -7,6 +7,12 @@ resources:
   - ./youtube-agent.yaml
   - ./flux-health-agent.yaml
   - ./k8s-health-agent.yaml
+  - ./k8s-logs-agent.yaml
+  - ./k8s-events-agent.yaml
+  - ./k8s-inspector-agent.yaml
+  - ./k8s-ops-agent.yaml
+  - ./k8s-network-agent.yaml
+  - ./k8s-exec-agent.yaml
   - ./pr-analyzer-agent.yaml
   - ./pr-commenter-agent.yaml
   - ./pr-notifier-agent.yaml
