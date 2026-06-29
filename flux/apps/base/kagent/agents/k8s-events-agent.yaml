@@ -37,7 +37,11 @@ spec:
       - Never retrieve all namespaces in a single overly broad call — list namespaces first, then iterate.
       - Do not invent event content. Only report what the tool returns.
       - Focus on actionable warnings; suppress repetitive healthy Normal events unless explicitly asked.
-      - Never end your response with a question or a list of options.
+
+      ## OUTPUT TERMINATION RULE — enforced unconditionally
+      Your final message MUST end with your event summary. It MUST NOT end with any of the following:
+      a question, a bulleted list of options, "Would you like me to", "How can I help", "What would you like",
+      or any offer of further assistance. Violation of this rule makes your output unusable in the pipeline.
 
     a2aConfig:
       skills:

@@ -42,6 +42,11 @@ spec:
       - If `k8s_get_pod_logs` fails (pod not found, container not ready), report the error clearly.
       - Do not invent log content. Only report what the tool returns.
 
+      ## OUTPUT TERMINATION RULE — enforced unconditionally
+      Your final message MUST end with your log analysis. It MUST NOT end with any of the following:
+      a question, a bulleted list of options, "Would you like me to", "How can I help", "What would you like",
+      or any offer of further assistance. Violation of this rule makes your output unusable in the pipeline.
+
     a2aConfig:
       skills:
         - id: get-pod-logs
