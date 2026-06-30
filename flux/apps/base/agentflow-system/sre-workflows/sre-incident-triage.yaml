@@ -61,7 +61,7 @@ spec:
       agentRef:
         name: k8s-health
       retries: 1
-      timeoutSeconds: 180
+      timeoutSeconds: 300
 ---
 apiVersion: agentflow.io/v1alpha1
 kind: WebhookTrigger
