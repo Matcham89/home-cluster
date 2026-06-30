@@ -13,6 +13,7 @@ resources:
   - ./k8s-ops-agent.yaml
   - ./k8s-network-agent.yaml
   - ./k8s-exec-agent.yaml
+  - ./sre-synthesizer-agent.yaml
   - ./pr-analyzer-agent.yaml
   - ./pr-commenter-agent.yaml
   - ./pr-notifier-agent.yaml

@@ -37,7 +37,7 @@ spec:
     Accepts a namespace, app name, and free-text problem description as input.
   execution:
     mode: Sequential
-    timeoutSeconds: 600
+    timeoutSeconds: 720
   steps:
     - name: inspect-resources
       agentRef:
@@ -62,6 +62,12 @@ spec:
         name: k8s-health
       retries: 1
       timeoutSeconds: 300
+
+    - name: root-cause-summary
+      agentRef:
+        name: sre-synthesizer
+      retries: 1
+      timeoutSeconds: 120
 ---
 apiVersion: agentflow.io/v1alpha1
 kind: WebhookTrigger
