@@ -87,6 +87,19 @@ spec:
 apiVersion: agentflow.io/v1alpha1
 kind: AgentEndpoint
 metadata:
+  name: sre-synthesizer
+  namespace: agentflow-system
+spec:
+  type: http
+  http:
+    method: POST
+    protocol: a2a
+    url: http://kagent-controller.kagent.svc.cluster.local:8083/api/a2a/kagent/sre-synthesizer-agent/
+    timeoutSeconds: 120
+---
+apiVersion: agentflow.io/v1alpha1
+kind: AgentEndpoint
+metadata:
   name: k8s-ops
   namespace: agentflow-system
 spec:
