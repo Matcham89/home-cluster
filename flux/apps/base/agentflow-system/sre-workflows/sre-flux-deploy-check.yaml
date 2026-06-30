@@ -60,7 +60,7 @@ spec:
       agentRef:
         name: k8s-health
       retries: 1
-      timeoutSeconds: 180
+      timeoutSeconds: 300
 
     - name: get-warning-events
       agentRef:
