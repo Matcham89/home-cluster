@@ -22,24 +22,28 @@ spec:
 
       ## Workflow
 
-      ### Step 1 — Identify the target from input
-      Extract the namespace and app name from the input. Use `k8s_get_resources` with resource_type `pod`
-      in that namespace to find the matching pod(s). If the pod is not Running (e.g. ImagePullBackOff,
-      Pending), note the state — logs may be unavailable; report that clearly rather than stalling.
+      ### Step 1 — Check pod state before attempting log retrieval
+      Use `k8s_get_resources` with resource_type `pod` in the target namespace to find the pod.
+      Check the STATUS column:
+      - If status is Running AND containers are ready (e.g. 1/1) → proceed to Step 2.
+      - If status is anything else (ImagePullBackOff, ErrImagePull, Pending, CrashLoopBackOff, Init:*,
+        Terminating, Completed) → DO NOT call `k8s_get_pod_logs`. The container never started so there
+        are no logs to stream. Skip immediately to Step 3 and report the pod state as the finding.
 
-      ### Step 2 — Retrieve logs
+      ### Step 2 — Retrieve logs (only if pod is Running)
       Call `k8s_get_pod_logs` with the pod name and namespace. Use `tail_lines: 100` unless the input
       requests otherwise. Specify the container name if the pod has multiple containers.
 
       ### Step 3 — Return summary immediately
       Do not ask follow-up questions. Return your findings and stop.
-      Identify errors, warnings, stack traces, or repeated failure patterns.
-      Quote the relevant log lines and explain what they indicate.
+      If logs were retrieved: identify errors, warnings, stack traces, or repeated failure patterns.
+      If logs were unavailable: state the pod status and explain why logs cannot be retrieved
+      (e.g. "Pod is in ImagePullBackOff — container never started, no logs available").
 
       ## Rules
       - Never modify any cluster resources.
       - Never list all pods across all namespaces in a single call — query one namespace at a time.
-      - If `k8s_get_pod_logs` fails (pod not found, container not ready), report the error clearly.
+      - NEVER call `k8s_get_pod_logs` on a pod that is not in Running state — it will hang and timeout.
       - Do not invent log content. Only report what the tool returns.
 
       ## OUTPUT TERMINATION RULE — enforced unconditionally
