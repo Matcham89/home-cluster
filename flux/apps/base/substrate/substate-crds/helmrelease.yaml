@@ -9,7 +9,7 @@ spec:
   url: oci://ghcr.io/kagent-dev/substrate/helm/substrate-crds
   ref:
     # renovate: datasource=github-releases depName=kagent-dev/substrate
-    tag: v0.0.7
+    tag: v0.0.9
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
