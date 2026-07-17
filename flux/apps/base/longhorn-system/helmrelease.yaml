@@ -46,3 +46,23 @@ spec:
       # Safe for typical workloads as volumes are rarely fully utilized simultaneously
       # Required to support current volume requirements with 30% reserved storage
       storageOverProvisioningPercentage: 200
+      # --- Power-outage resilience (added after 2026-07-16 outage) ---
+      # Re-attach and remount volumes whose workloads had them attached when
+      # the node went down unexpectedly. Without this, RWO volumes stay stuck
+      # until a human deletes pods/VolumeAttachments.
+      autoSalvage: true
+      # Delete the workload pod so the StatefulSet/Deployment controller can
+      # recreate it and re-attach the volume when a volume detaches
+      # unexpectedly. Key for StatefulSets (valkey, loki, postgres) after
+      # abrupt node reboots.
+      autoDeletePodWhenVolumeDetachedUnexpectedly: true
+      # After a node comes back, wait before evicting/rebuilding replicas so
+      # a whole-cluster restart doesn't trigger a rebuild storm (which is what
+      # OOM-killed instance-managers during the outage recovery).
+      replicaReplenishmentWaitInterval: 600
+      # Limit concurrent rebuilds per node to keep instance-manager memory
+      # bounded when many volumes recover at once.
+      concurrentReplicaRebuildPerNodeLimit: 2
+      # Detach volumes cleanly during node drain/shutdown so a graceful
+      # (UPS-initiated) shutdown never leaves stale attachments behind.
+      nodeDownPodDeletionPolicy: delete-both-statefulset-and-deployment-pod

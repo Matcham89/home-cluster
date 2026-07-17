@@ -33,3 +33,35 @@ spec:
         # this matches the cluster's real issuer:
         #   kubectl get --raw /.well-known/openid-configuration | jq .issuer
         issuer: https://192.168.1.180:6443
+  # Announce stable per-pod DNS names on the cluster bus instead of pod IPs.
+  # Without this, a full-cluster restart (e.g. power outage) gives every pod a
+  # new IP while nodes.conf still holds the old ones -> cluster_state:fail and
+  # manual CLUSTER MEET surgery. With hostname announcement, nodes re-resolve
+  # each other via headless-service DNS and the cluster reforms on its own.
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: StatefulSet
+              name: valkey-cluster
+            patch: |-
+              - op: replace
+                path: /spec/template/spec/containers/0/command
+                value:
+                  - sh
+                  - -c
+                  - >-
+                    exec valkey-server /etc/valkey/valkey.conf
+                    --cluster-announce-hostname "$(hostname).valkey-cluster-service.ate-system.svc.cluster.local"
+                    --cluster-preferred-endpoint-type hostname
+          # rustfs mounts an RWO Longhorn volume; RollingUpdate deadlocks on
+          # Multi-Attach after node restarts (new pod can't attach while the
+          # old pod still holds the volume). Recreate kills old pod first.
+          - target:
+              kind: Deployment
+              name: rustfs
+            patch: |-
+              - op: replace
+                path: /spec/strategy
+                value:
+                  type: Recreate

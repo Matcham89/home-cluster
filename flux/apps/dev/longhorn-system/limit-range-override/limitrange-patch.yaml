@@ -1,0 +1,19 @@
+---
+# LimitRange patch for longhorn-system namespace
+# Longhorn instance-managers host one engine/replica process per volume and
+# need far more than the cluster default 512Mi during replica rebuilds.
+# 512Mi caused cgroup OOM-kills of instance-managers after a power outage
+# (all volumes rebuilding at once), which cascaded into volume faults and
+# pod crash loops across the cluster (valkey, loki, postgres, seaweedfs).
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: default-limits
+spec:
+  limits:
+  - type: Container
+    defaultRequest:
+      cpu: 10m
+      memory: 128Mi
+    default:
+      memory: 2Gi
