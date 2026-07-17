@@ -4,7 +4,11 @@ kind: Cluster
 metadata:
   name: postgres-cluster
 spec:
-  instances: 1
+  # 2 instances = primary + streaming-replication standby with automated
+  # failover. After a power outage the cluster stays available even if the
+  # node holding the old primary is slow to recover (added after 2026-07-16
+  # outage where single-instance postgres blocked authentik/n8n startup).
+  instances: 2
   imageName: ghcr.io/cloudnative-pg/postgresql:17
 
   enableSuperuserAccess: true

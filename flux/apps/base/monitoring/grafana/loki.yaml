@@ -41,6 +41,13 @@ spec:
               period: 24h
       ingester:
         chunk_encoding: snappy
+      # retention_period alone does NOT delete data — the compactor must have
+      # retention_enabled: true or chunks accumulate in S3 forever. This is
+      # what filled the 20Gi SeaweedFS volume to 99% and OOM-crashed
+      # loki-write (couldn't flush, buffered in memory).
+      compactor:
+        retention_enabled: true
+        delete_request_store: s3
       querier:
         # Increased concurrent queries for better performance
         max_concurrent: 8
