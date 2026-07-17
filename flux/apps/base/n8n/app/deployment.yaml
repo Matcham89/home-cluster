@@ -62,12 +62,14 @@ spec:
               value: "true"
             - name: N8N_METRICS_INCLUDE_API_ENDPOINTS
               value: "true"
+            - name: NODE_OPTIONS
+              value: "--max-old-space-size=768"
           resources:
             requests:
               cpu: 100m
-              memory: 256Mi
-            limits:
               memory: 512Mi
+            limits:
+              memory: 1Gi
           volumeMounts:
             - name: n8n-data
               mountPath: /home/node/.n8n
