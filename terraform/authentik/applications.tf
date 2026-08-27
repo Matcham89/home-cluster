@@ -41,6 +41,13 @@ resource "authentik_provider_oauth2" "flux" {
     }
   ]
 
+  # NOTE: this field is optional+computed in the provider schema, but omitting
+  # it leaves the underlying authentik model's grant_types as an empty list
+  # (ArrayField default=list), which makes every authorization request fail
+  # with "invalid_request" / "Invalid grant_type for provider". Must be set
+  # explicitly.
+  grant_types = ["authorization_code", "refresh_token"]
+
   sub_mode               = "hashed_user_id"
   access_token_validity  = "hours=1"
   refresh_token_validity = "days=30"
@@ -76,6 +83,13 @@ resource "authentik_provider_oauth2" "kagent" {
       url           = "https://kagent.kubegit.com/oauth2/callback"
     }
   ]
+
+  # NOTE: this field is optional+computed in the provider schema, but omitting
+  # it leaves the underlying authentik model's grant_types as an empty list
+  # (ArrayField default=list), which makes every authorization request fail
+  # with "invalid_request" / "Invalid grant_type for provider". Must be set
+  # explicitly.
+  grant_types = ["authorization_code", "refresh_token"]
 
   sub_mode               = "hashed_user_id"
   access_token_validity  = "hours=1"
@@ -114,6 +128,13 @@ resource "authentik_provider_oauth2" "grafana" {
     }
   ]
 
+  # NOTE: this field is optional+computed in the provider schema, but omitting
+  # it leaves the underlying authentik model's grant_types as an empty list
+  # (ArrayField default=list), which makes every authorization request fail
+  # with "invalid_request" / "Invalid grant_type for provider". Must be set
+  # explicitly.
+  grant_types = ["authorization_code", "refresh_token"]
+
   sub_mode               = "hashed_user_id"
   access_token_validity  = "hours=1"
   refresh_token_validity = "days=30"
@@ -127,41 +148,7 @@ resource "authentik_application" "grafana" {
   open_in_new_tab   = true
 }
 
-# =============================================================
-# Kiali
-# Provider slug: kiali-kubegit-com
-# Client ID sourced from kiali CR (istio-system/kiali.yaml)
-# Client secret: k8s secret istio-system/kiali (key: oidc-secret)
-# =============================================================
-
-resource "authentik_provider_oauth2" "kiali" {
-  name = "Kiali"
-  # client_id is hardcoded in the Kiali CR (istio-system/kiali.yaml).
-  # If you rotate it, update both here and in the Kiali CR.
-  client_id     = "B86FR4ySUv3u41K25pbnb9vCCbT4Z0RSLQP1xGw1"
-  client_secret = data.kubernetes_secret_v1.kiali_oidc.data["oidc-secret"]
-
-  authorization_flow = data.authentik_flow.authorization.id
-  invalidation_flow  = data.authentik_flow.invalidation.id
-  signing_key        = data.authentik_certificate_key_pair.default.id
-  property_mappings  = concat(data.authentik_property_mapping_provider_scope.oauth2.ids, [authentik_property_mapping_provider_scope.email.id, authentik_property_mapping_provider_scope.groups.id])
-
-  allowed_redirect_uris = [
-    {
-      matching_mode = "strict"
-      url = "https://kiali.kubegit.com"
-    }
-  ]
-
-  sub_mode               = "hashed_user_id"
-  access_token_validity  = "hours=1"
-  refresh_token_validity = "days=30"
-}
-
-resource "authentik_application" "kiali" {
-  name              = "Kiali"
-  slug              = "kiali-kubegit-com"
-  protocol_provider = authentik_provider_oauth2.kiali.id
-  meta_launch_url   = "https://kiali.kubegit.com"
-  open_in_new_tab   = true
-}
+# Kiali/Istio are not deployed in this cluster (no service mesh — see
+# CLAUDE.md) and this cluster has no istio-system/kiali secret, so the
+# corresponding authentik_provider_oauth2/authentik_application resources
+# were removed. Re-add per git history if Kiali is ever deployed here.

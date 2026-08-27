@@ -23,13 +23,6 @@ data "kubernetes_secret_v1" "grafana_oauth" {
   }
 }
 
-data "kubernetes_secret_v1" "kiali_oidc" {
-  metadata {
-    name      = "kiali"
-    namespace = "istio-system"
-  }
-}
-
 # =============================================================
 # Authentik — flows and signing certificate
 # =============================================================
