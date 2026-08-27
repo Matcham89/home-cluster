@@ -1,0 +1,27 @@
+---
+# Declarative ownership for databases created via postInitSQL in cluster.yaml.
+# CNPG's postInitSQL only runs `CREATE DATABASE`, which leaves the database
+# owned by the bootstrap superuser (postgres) — the managed per-app roles
+# never get CREATE on the `public` schema, so app migrations fail with
+# "permission denied for schema public". These Database resources are
+# reconciled continuously (unlike postInitSQL, which is one-shot), so they
+# apply cleanly even though the managed roles are created after bootstrap.
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: n8n
+spec:
+  name: n8n
+  owner: n8n
+  cluster:
+    name: postgres-cluster
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: home-cluster
+spec:
+  name: home-cluster
+  owner: authentik
+  cluster:
+    name: postgres-cluster
