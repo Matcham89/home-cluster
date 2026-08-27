@@ -18,3 +18,4 @@ resources:
   - ./pr-commenter-agent.yaml
   - ./pr-notifier-agent.yaml
   - ./code-supervisor-agent.yaml
+  - ./content-scout-agent.yaml

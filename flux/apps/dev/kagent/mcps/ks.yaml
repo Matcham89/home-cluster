@@ -10,6 +10,8 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: kagent-operator
+    - name: qdrant
+      namespace: qdrant
   interval: 1h
   path: ./flux/apps/base/kagent/mcps
   sourceRef:
