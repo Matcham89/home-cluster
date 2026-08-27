@@ -32,9 +32,14 @@ metadata:
   name: agentgateway-crds
 spec:
   interval: 1m0s
-  url: oci://ghcr.io/kgateway-dev/charts/agentgateway-crds
+  # Switched from ghcr.io/kgateway-dev/charts (v2.2.0-main dev tag) to the
+  # official stable agentgateway.dev release, per
+  # https://agentgateway.dev/docs/kubernetes/latest/install/flux/ — the dev
+  # tag's controller hard-requires the deprecated v1alpha2 TCPRoute/TLSRoute
+  # API versions, which the standard Gateway API CRD channel no longer serves.
+  url: oci://cr.agentgateway.dev/charts/agentgateway-crds
   ref:
-    tag: v2.2.0-main
+    tag: v1.4.1
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease

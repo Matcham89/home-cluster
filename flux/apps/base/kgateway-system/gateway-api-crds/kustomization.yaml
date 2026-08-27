@@ -1,5 +1,35 @@
 ---
 # yaml-language-server: $schema=https://json.schemastore.org/kustomization
+#
+# Vendored upstream Kubernetes Gateway API CRDs (standard channel). kgateway's
+# own CRD charts (kgateway-crds, agentgateway-crds) only install its custom
+# resources (gateway.kgateway.dev/*, agentgateway.dev/*) — they do NOT include
+# the core Gateway API kinds (GatewayClass, Gateway, HTTPRoute, ReferenceGrant,
+# etc.) that Gateway/HTTPRoute/ReferenceGrant manifests elsewhere in this repo
+# and the kgateway/agentgateway controllers themselves depend on.
+#
+# Source: https://github.com/kubernetes-sigs/gateway-api releases, standard
+# channel, matching agentgateway.dev's official Flux install guide
+# (https://agentgateway.dev/docs/kubernetes/latest/install/flux/).
+#
+# To bump the version, re-fetch and replace standard-install.yaml:
+#   curl -fsSL \
+#     https://github.com/kubernetes-sigs/gateway-api/releases/download/vX.Y.Z/standard-install.yaml \
+#     -o standard-install.yaml
+#
+# Current version: v1.6.1
+#
+# NOTE: as of v1.6.1, the standard channel no longer serves the deprecated
+# v1alpha2 API version for TCPRoute/TLSRoute (only v1). The
+# ghcr.io/kgateway-dev/charts/agentgateway:v2.2.0-main image currently pinned
+# in ../operator/helmrelease.yaml hard-requires v1alpha2 TCPRoute/TLSRoute to
+# be served and will crash-loop forever without it ("waiting for sync..." /
+# "the server could not find the requested resource") — this is a real
+# incompatibility with that specific dev-tag pin, not a config gap here.
+# Fixing it means either switching to the experimental channel (which still
+# serves v1alpha2) or moving to the chart/version pairing agentgateway.dev
+# documents (oci://cr.agentgateway.dev/charts/agentgateway v1.4.1 +
+# agentgateway-crds v1.4.1) instead of the kgateway-dev "-main" tag.
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:

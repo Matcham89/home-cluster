@@ -50,9 +50,24 @@ metadata:
   name: agentgateway
 spec:
   interval: 1m0s
-  url: oci://ghcr.io/kgateway-dev/charts/agentgateway
+  # Switched from ghcr.io/kgateway-dev/charts (v2.2.0-main dev tag) to the
+  # official stable agentgateway.dev release, per
+  # https://agentgateway.dev/docs/kubernetes/latest/install/flux/ — the dev
+  # tag's controller hard-requires the deprecated v1alpha2 TCPRoute/TLSRoute
+  # API versions, which the standard Gateway API CRD channel no longer serves
+  # (see ../gateway-api-crds/kustomization.yaml).
+  #
+  # BREAKING: this chart has a different values schema than the kgateway-dev
+  # fork. `gateway.aiExtension.enabled` / `agentgateway.enabled` (used to
+  # configure the per-model Claude gateways — see CLAUDE-ARCHITECTURE.md in
+  # this directory) do NOT exist here and were dropped below. The closest
+  # equivalent in this chart looks to be `agentgatewayModels` (the
+  # "experimental AgentgatewayModel API" — currently disabled by default);
+  # the Claude multi-gateway routing needs to be rebuilt against that (or
+  # another v1.4.1-native mechanism) as follow-up work.
+  url: oci://cr.agentgateway.dev/charts/agentgateway
   ref:
-    tag: v2.2.0-main
+    tag: v1.4.1
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -79,11 +94,6 @@ spec:
   # Fixed by enabling DisableChartDigestTracking feature gate in helm-controller
   # See: https://github.com/fluxcd/flux2/issues/4910
   values:
-    gateway:
-      aiExtension:
-        enabled: true
-    agentgateway:
-      enabled: true
     controller:
       image:
         pullPolicy: Always
