@@ -8,6 +8,9 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  dependsOn:
+    - name: kube-prometheus-stack
+      namespace: monitoring
   interval: 1h
   path: ./flux/apps/base/1password/operator
   sourceRef:
