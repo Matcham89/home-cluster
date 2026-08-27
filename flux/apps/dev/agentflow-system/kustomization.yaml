@@ -1,9 +1,11 @@
-#---
-## yaml-language-server: $schema=https://json.schemastore.org/kustomization
-#apiVersion: kustomize.config.k8s.io/v1beta1
-#kind: Kustomization
-#namespace: agentflow-system
-#components:
-#  - ../../../infra/namespace
-#resources:
-#  - ./app/ks.yaml
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# agentflow-system disabled: sre-workflows references CRD `AgentEndpoint`
+# (agentflow.io/v1alpha1) which nothing in this repo installs. Re-enable by
+# restoring the resources below once the CRD source is sorted out.
+# namespace: agentflow-system
+# components:
+#   - ../../../infra/namespace
+resources: []
