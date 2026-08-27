@@ -10,7 +10,7 @@ spec:
   ref:
     # renovate: datasource=github-releases depName=kagent-dev/substrate extractVersion=^v(?<version>.*)$
     # NOTE: chart tags are published WITHOUT the v prefix (0.0.9, not v0.0.9)
-    tag: 0.0.9
+    tag: 0.0.21
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
