@@ -1,0 +1,44 @@
+---
+# Allow the kagent-controller to reach qdrant-mcp-server (../../kagent/mcps/qdrant-mcp.yaml).
+# Two policies are needed: default-deny-all denies egress from every pod
+# (including the controller) as well as ingress to every pod (including
+# qdrant-mcp-server), so both sides need an explicit allow.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-controller-to-qdrant-mcp-ingress
+spec:
+  podSelector:
+    matchLabels:
+      app: qdrant-mcp-server
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/component: controller
+              app.kubernetes.io/name: kagent
+      ports:
+        - port: 8000
+          protocol: TCP
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-controller-to-qdrant-mcp-egress
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/component: controller
+      app.kubernetes.io/name: kagent
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: qdrant-mcp-server
+      ports:
+        - port: 8000
+          protocol: TCP

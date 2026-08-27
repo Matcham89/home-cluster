@@ -1,0 +1,12 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: qdrant
+components:
+  # Vector DB pod, no elevated host access required.
+  - ../../../infra/namespace
+
+resources:
+  - ./qdrant/ks.yaml
+  - ./network-policies/ks.yaml

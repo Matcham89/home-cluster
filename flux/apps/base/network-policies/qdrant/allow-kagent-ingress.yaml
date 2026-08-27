@@ -1,0 +1,23 @@
+---
+# Allow the kagent namespace (qdrant-mcp-server, and any agent pods that
+# might one day talk to Qdrant directly) to reach Qdrant's REST/gRPC ports.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-kagent-ingress
+spec:
+  podSelector:
+    matchLabels:
+      app: qdrant
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kagent
+      ports:
+        - port: 6333
+          protocol: TCP
+        - port: 6334
+          protocol: TCP

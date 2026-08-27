@@ -1,0 +1,155 @@
+---
+# Official Qdrant MCP server (https://github.com/qdrant/mcp-server-qdrant) —
+# a semantic memory layer over the qdrant HelmRelease (../../qdrant/qdrant),
+# exposing qdrant-store/qdrant-find tools to kagent agents via the
+# RemoteMCPServer below. Qdrant ships no pre-built image for this server
+# (it's a PyPI package meant to be run via uvx/pip), so this pip-installs it
+# at container start on top of python:3.12-slim rather than maintaining a
+# custom-built image.
+#
+# Trade-off: the pip install (and the fastembed embedding model it pulls on
+# first use) re-downloads on every pod restart, since $HOME is an emptyDir.
+# Acceptable for a single low-traffic homelab MCP server; revisit with a
+# baked image or a persisted cache volume if restarts become frequent.
+#
+# Internal-only: no external/LAN route. Reachability is via
+# ../../network-policies/kagent/allow-controller-to-qdrant-mcp.yaml.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qdrant-mcp-server
+  namespace: kagent
+  labels:
+    app: qdrant-mcp-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: qdrant-mcp-server
+  template:
+    metadata:
+      labels:
+        app: qdrant-mcp-server
+    spec:
+      containers:
+        - name: qdrant-mcp-server
+          image: docker.io/library/python:3.12-slim
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              set -e
+              mkdir -p "$TMPDIR"
+              pip install --no-cache-dir --user mcp-server-qdrant==0.8.1
+              exec python /opt/qdrant-mcp-entrypoint.py
+          env:
+            - name: HOME
+              value: /home/mcp
+            # pip's build tracker needs a writable temp dir; with
+            # readOnlyRootFilesystem, /tmp isn't writable by default.
+            - name: TMPDIR
+              value: /home/mcp/tmp
+            - name: QDRANT_URL
+              value: "http://qdrant.qdrant.svc.cluster.local:6333"
+            - name: COLLECTION_NAME
+              value: "content-ideas"
+            - name: FASTMCP_SERVER_HOST
+              value: "0.0.0.0"
+            - name: FASTMCP_SERVER_PORT
+              value: "8000"
+          ports:
+            - containerPort: 8000
+              name: http
+          resources:
+            requests:
+              cpu: 100m
+              memory: 512Mi
+            limits:
+              memory: 1Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: [ALL]
+            readOnlyRootFilesystem: true # all writes go to the explicit /home/mcp volume
+            runAsNonRoot: true
+            runAsUser: 1000
+            seccompProfile:
+              type: RuntimeDefault
+          volumeMounts:
+            - name: home
+              mountPath: /home/mcp
+            - name: entrypoint
+              mountPath: /opt/qdrant-mcp-entrypoint.py
+              subPath: entrypoint.py
+              readOnly: true
+          readinessProbe:
+            tcpSocket:
+              port: 8000
+            initialDelaySeconds: 45
+            periodSeconds: 15
+            failureThreshold: 6
+          livenessProbe:
+            tcpSocket:
+              port: 8000
+            initialDelaySeconds: 60
+            periodSeconds: 30
+      volumes:
+        - name: home
+          emptyDir: {}
+        - name: entrypoint
+          configMap:
+            name: qdrant-mcp-entrypoint
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: qdrant-mcp-server
+  namespace: kagent
+  labels:
+    app: qdrant-mcp-server
+spec:
+  selector:
+    app: qdrant-mcp-server
+  ports:
+    - port: 8000
+      targetPort: 8000
+      protocol: TCP
+      name: http
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: qdrant-mcp-entrypoint
+  namespace: kagent
+  labels:
+    app: qdrant-mcp-server
+data:
+  entrypoint.py: |
+    #!/usr/bin/env python3
+    """Run mcp-server-qdrant on 0.0.0.0 with streamable-http transport."""
+    import os
+
+    from mcp_server_qdrant.server import mcp
+
+    mcp.run(
+        transport="streamable-http",
+        host=os.environ.get("FASTMCP_SERVER_HOST", "0.0.0.0"),
+        port=int(os.environ.get("FASTMCP_SERVER_PORT", "8000")),
+    )
+---
+# Registers qdrant-mcp-server as a tool source for kagent agents — same
+# shape as the kagent chart's own bundled RemoteMCPServers (e.g.
+# kagent-grafana-mcp). Internal-only: no auth header, matching
+# github-mcp/youtube-mcp's in-cluster-trust pattern rather than the old
+# repo's Keycloak-OAuth + LAN IngressRoute setup (not needed here).
+apiVersion: kagent.dev/v1alpha2
+kind: RemoteMCPServer
+metadata:
+  name: qdrant-mcp
+  namespace: kagent
+spec:
+  description: Qdrant semantic memory MCP server (qdrant-store / qdrant-find)
+  protocol: STREAMABLE_HTTP
+  url: http://qdrant-mcp-server.kagent.svc.cluster.local:8000/mcp
+  timeout: 30s
+  sseReadTimeout: 5m0s
+  terminateOnClose: true
