@@ -1,0 +1,49 @@
+---
+# The substrate chart (kagent-dev/substrate) grants podcertificate-controller-system's
+# default ServiceAccount `sign`/`attest` on the two podcert.ate.dev signers, but never
+# grants any workload `use` on them. Kubernetes requires the identity that submits a
+# Pod (or a workload template that embeds one) to have `use` on the exact signer name
+# before it will honor a podCertificate/clusterTrustBundle projection's signerName —
+# without it, the field is silently stripped to `sources: [{}]` at admission, which is
+# why postgres/ate-controller/ate-api-server/atelet/atenet-router/atenet-egress got
+# empty cert projections on the v0.0.21 upgrade. See
+# docs/2026-08-27-ate-system-clustertrustbundle-investigation.md.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: podcert-ate-dev-signer-use
+rules:
+  - apiGroups: ["certificates.k8s.io"]
+    resources: ["signers"]
+    resourceNames:
+      - servicedns.podcert.ate.dev/identity
+      - podidentity.podcert.ate.dev/identity
+    verbs: ["use"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: podcert-ate-dev-signer-use
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: podcert-ate-dev-signer-use
+subjects:
+  - kind: ServiceAccount
+    name: default
+    namespace: ate-system
+  - kind: ServiceAccount
+    name: ate-api-server
+    namespace: ate-system
+  - kind: ServiceAccount
+    name: ate-controller
+    namespace: ate-system
+  - kind: ServiceAccount
+    name: atenet-egress
+    namespace: ate-system
+  - kind: ServiceAccount
+    name: atenet-router
+    namespace: ate-system
+  - kind: ServiceAccount
+    name: atelet
+    namespace: ate-system
