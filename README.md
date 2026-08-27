@@ -84,6 +84,7 @@ This DRY approach centralizes namespace configuration - security policies, Istio
 ### ML/AI
 
 - **KAgent** - AI agent platform
+- **Agent Substrate** (`kagent-dev/substrate`) - sandboxed actor runtime backing KAgent's WorkerPools. Has non-obvious, non-GitOps bootstrap requirements (CA/JWT secrets, RBAC) — see [docs/substrate-bootstrap-requirements.md](docs/substrate-bootstrap-requirements.md) before touching it.
 
 ## Quick Start
 
