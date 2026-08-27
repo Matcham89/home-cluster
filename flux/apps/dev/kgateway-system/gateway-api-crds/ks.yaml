@@ -3,16 +3,13 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app kgateway-operator
+  name: &app gateway-api-crds
 spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  dependsOn:
-    - name: kgateway-crds
-    - name: gateway-api-crds
   interval: 1h
-  path: ./flux/apps/base/kgateway-system/operator
+  path: ./flux/apps/base/kgateway-system/gateway-api-crds
   sourceRef:
     kind: GitRepository
     name: flux-system

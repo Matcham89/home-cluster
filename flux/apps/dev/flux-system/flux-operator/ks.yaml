@@ -5,6 +5,9 @@ metadata:
   name: flux-system-flux-operator
   namespace: flux-system
 spec:
+  dependsOn:
+    - name: gateway-api-crds
+      namespace: kgateway-system
   interval: 30m
   path: ./flux/apps/base/flux-system/flux-operator
   prune: true
