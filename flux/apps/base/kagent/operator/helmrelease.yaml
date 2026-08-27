@@ -81,16 +81,20 @@ spec:
         enabled: true
         ateApiEndpoint: "dns:///api.ate-system.svc:443"
         ateApiInsecure: true
-        # runsc pinned to nightly 2026-06-02 (amd64). The chart default 2026-05-19
-        # FAILS to RESTORE the node.js OpenClaw actor on amd64 gVisor `systrap` with
-        # "inconsistent private memory files on restore" (works on arm64 — see
-        # docs/substrate-openclaw-talos.md). A runsc nightly sweep (2026-06-16) found
-        # the gVisor C/R fix landed between 05-26 (still fails) and 06-02 (RESTORES),
-        # and 06-02 checkpoint still works (it breaks at 06-13). So 06-02 is the
-        # sweet spot for amd64 OpenClaw checkpoint+restore on Talos.
-        # arm64 left on the chart default (no arm64 Talos nodes; 05-19 restores on arm64).
-        runscAMD64URL: "gs://gvisor/releases/nightly/2026-06-02/x86_64/runsc"
-        runscAMD64SHA256: "efd12935f6654c91a1389710eb8dfa4d12b6b9be00db87526dc2eb584ad00119"
+        # A runsc pin (runscAMD64URL/SHA256, nightly 2026-06-02) was set here
+        # previously to work around an amd64 gVisor checkpoint/restore bug in
+        # OpenClaw's node.js actor (docs/substrate-openclaw-talos.md). Verified
+        # removed as dead: neither this kagent chart (0.10.0-rc3) nor its bundled
+        # `charts/substrate` subchart (gated behind `substrate.enabled: false`,
+        # never rendered) has any template referencing runscAMD64URL/SHA64 — the
+        # value silently did nothing on every install/upgrade since at least this
+        # chart version. The gVisor build actually in effect today comes from the
+        # separately-deployed `flux/apps/base/substrate` chart's default
+        # SandboxConfig (`gvisor-default`), currently release `20260803`, which
+        # has not been re-tested against OpenClaw's node.js restore path. If
+        # OpenClaw hits `inconsistent private memory files on restore` again, see
+        # docs/substrate-bootstrap-requirements.md §7b for the real override
+        # mechanism (SandboxConfig spec.assets, not a Helm value).
 
     agents:
       k8s-agent:

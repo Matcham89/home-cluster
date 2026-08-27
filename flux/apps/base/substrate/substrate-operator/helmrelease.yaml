@@ -26,14 +26,16 @@ spec:
     createNamespace: true
     remediation:
       retries: 3
-  values:
-    auth:
-      jwt:
-        # Talos mints SA tokens with the API-server endpoint as the OIDC issuer,
-        # not the stock in-cluster URL. ate-api rejects controller tokens unless
-        # this matches the cluster's real issuer:
-        #   kubectl get --raw /.well-known/openid-configuration | jq .issuer
-        issuer: https://192.168.1.180:6443
+  # Talos mints SA tokens with the API-server endpoint as the OIDC issuer, not the
+  # stock in-cluster URL. This matters for the ate-api-authentication ConfigMap
+  # (bootstrapped imperatively, not via a chart value — see
+  # docs/substrate-bootstrap-requirements.md §2), which must set its jwtProviders
+  # issuer to match:
+  #   kubectl get --raw /.well-known/openid-configuration | jq .issuer
+  # A `values.auth.jwt.issuer` key was set here previously under the assumption
+  # the chart read it — verified in chart 0.0.21 that no template references
+  # `.Values.auth` at all, so it was a dead value. Removed; see doc above for
+  # where the issuer is actually wired up.
   # Announce stable per-pod DNS names on the cluster bus instead of pod IPs.
   # Without this, a full-cluster restart (e.g. power outage) gives every pod a
   # new IP while nodes.conf still holds the old ones -> cluster_state:fail and

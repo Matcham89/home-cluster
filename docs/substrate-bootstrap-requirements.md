@@ -366,41 +366,81 @@ EOF
 
 ---
 
-## 6c. Separately noticed, NOT acted on: `machine.install.image` drift
+## 6c. `machine.install.image` drift — investigated further and closed out
 
 While rendering `rendered/*.yaml` to persist the §6 sysctl, the dry-run diff on
-**every one of the 5 nodes** showed the live machine config still points
-`machine.install.image` at the stock
-`ghcr.io/siderolabs/installer:v1.13.9`, while `controlplane.yaml`/`worker.yaml`
-(and thus `rendered/*.yaml`) already specify the Factory image
-(`factory.talos.dev/metal-installer/613e...:v1.13.9`, with the `iscsi-tools`/
-`util-linux-tools` extensions this repo's own `talos-config/README.md` documents
-as required for Longhorn). This is **pre-existing drift, unrelated to
-substrate/kagent**, not something this review introduced — flagged here because
-it means those extensions may not actually be active despite the base config
-believing they are. Deliberately not touched: fixing it means changing
-`machine.install.image` cluster-wide, a separate decision from "add one sysctl,"
-and this review's scope was substrate/kagent enablement specifically.
+**every one of the 5 nodes** showed the live machine config pointing
+`machine.install.image` at the stock `ghcr.io/siderolabs/installer:v1.13.9`,
+while `controlplane.yaml`/`worker.yaml` (and thus `rendered/*.yaml`) already
+specified the Factory image (`factory.talos.dev/metal-installer/613e...:v1.13.9`,
+with the `iscsi-tools`/`util-linux-tools` extensions this repo's own
+`talos-config/README.md` documents as required for Longhorn). Initially flagged
+as a possible functional risk to Longhorn and left untouched pending a decision.
+
+**Correction found on follow-up, before touching the control planes:** checked
+`talosctl -n <ip> get extensions` on `control-01`/`02`/`03` (still untouched at
+that point) — **all three already had `iscsi-tools`, `util-linux-tools`, and the
+correct `schematic` active**, despite never having been patched. So the
+extensions were running on every node the whole time; only the
+`machine.install.image` *config field* — which Talos reads only during an actual
+(re)install, not on an already-running system — was stale. **Longhorn was never
+actually at risk.** This corrects the initial framing above.
+
+**What was done, given the corrected understanding:**
+- `worker-01` had already been fully reinstalled via `talosctl upgrade --image
+  factory.talos.dev/metal-installer/613e...:v1.13.9` before the correction was
+  found (drain → install → reboot → uncordon). Harmless — confirmed healthy,
+  extensions present — but not functionally necessary in hindsight.
+- `worker-02`'s equivalent `talosctl upgrade` attempt was interrupted mid-drain
+  by a client-side timeout (the exact failure mode `talos-config/README.md`
+  warns about for `--wait=false` — here caused by the *tool* enforcing a 2-minute
+  foreground timeout on a long-running blocking command, not a deliberate flag).
+  It never reached the actual install step; the node was left `Ready` but
+  `SchedulingDisabled` (cordoned) with nothing else changed. Fixed with a plain
+  `kubectl uncordon worker-02` — no reinstall occurred or was needed.
+- Given the real risk was zero, **did not** run `talosctl upgrade` (full
+  reinstall + reboot) against `control-01`/`02`/`03` or re-attempt it on
+  `worker-02` — not worth the etcd-quorum risk for a cosmetic field. Instead,
+  applied a scoped, no-reboot config patch to all 5 nodes:
+  ```bash
+  export TALOSCONFIG=/Users/macbook/talos-config/talosconfig
+  IMG="factory.talos.dev/metal-installer/613e1592b2da41ae5e265e8789429f22e121aab91cb4deb6bc3c0b6262961245:v1.13.9"
+  for ip in 192.168.1.181 192.168.1.182 192.168.1.183 192.168.1.191 192.168.1.192; do
+    talosctl --nodes "$ip" patch mc -p "{\"machine\":{\"install\":{\"image\":\"$IMG\"}}}"
+  done
+  ```
+  Dry-run confirmed beforehand this touches only `machine.install.image` — no
+  `wipe` change, no reboot. Applied to all 5; every node stayed `Ready`
+  throughout; `kubectl get pods -A` showed zero non-`Running`/`Completed` pods
+  immediately after.
+
+**Status now:** all 5 nodes report the Factory image in their live machine
+config *and* have the extensions active; `controlplane.yaml`/`worker.yaml`/
+`rendered/*.yaml` already matched (no further edits needed there — the base
+files had this right all along, only the running nodes' `install.image` field
+was catching up).
 
 ---
 
-## 7. Two confirmed-dead values — remove or they'll mislead the next investigation
+## 7. Two confirmed-dead values — removed
 
-### 7a. ❌ `auth.jwt.issuer` in `flux/apps/base/substrate/substrate-operator/helmrelease.yaml`
+### 7a. ❌ REMOVED — `auth.jwt.issuer` in `flux/apps/base/substrate/substrate-operator/helmrelease.yaml`
 
-Set to `https://192.168.1.180:6443` with a comment explaining Talos's OIDC issuer
-quirk. **Verified dead:** `grep -rn "Values.auth" charts/substrate/templates/` on
-chart `0.0.21` returns nothing — no template reads `.Values.auth` at all. The
+Was set to `https://192.168.1.180:6443` with a comment explaining Talos's OIDC
+issuer quirk. **Verified dead:** `grep -rn "Values.auth" charts/substrate/templates/`
+on chart `0.0.21` returns nothing — no template reads `.Values.auth` at all. The
 *actual* JWT issuer wiring for `ate-api-server` comes from the
 `ate-api-authentication` ConfigMap (§2), created imperatively, not from this Helm
 value. The comment's underlying fact (Talos's OIDC issuer is the apiserver
 endpoint, not `https://kubernetes.default.svc`) is correct and was reused when
-building the ConfigMap — just not through this value.
-**Recommendation:** delete the dead `auth:` block from the HelmRelease values, or
-convert the comment into a pointer at §2 of this doc so a future reader doesn't
-assume this is where the issuer is actually configured.
+building the ConfigMap — just not through this value. **Removed** the dead
+`values.auth` block; replaced with a comment pointing at §2 of this doc so a
+future reader doesn't assume this is where the issuer is actually configured.
+Confirmed the HelmRelease still parses with no `values:` key at all (valid — it's
+optional) and Flux picked up the no-op change on its next reconcile with no
+effect on running pods.
 
-### 7b. ❌ `controller.substrate.runscAMD64URL` / `runscAMD64SHA256` in `flux/apps/base/kagent/operator/helmrelease.yaml`
+### 7b. ❌ REMOVED — `controller.substrate.runscAMD64URL` / `runscAMD64SHA256` in `flux/apps/base/kagent/operator/helmrelease.yaml`
 
 Pins gVisor `runsc` nightly `2026-06-02` — the version
 `docs/substrate-openclaw-talos.md` spent an entire investigation validating as the
@@ -420,19 +460,19 @@ release tarball, not a raw `runsc` binary, and **not** the validated `06-02`
 nightly. This has never been tested against OpenClaw's node.js checkpoint/restore
 path on this cluster.
 
-**Consequence:** if/when §6 is fixed and the `openclaw` AgentHarness's separate,
-pre-existing env-var validation error (see `docs/substrate-openclaw-open-items.md`)
-is also resolved, OpenClaw restore may hit the original
-`inconsistent private memory files on restore` amd64 bug again, because the
-carefully-validated `06-02` pin is not actually in effect. **Recommendation:**
-either find the current chart's real mechanism for overriding the gVisor release
-asset (per-`SandboxConfig` `spec.assets.<arch>.gvisor.url/sha256` — this field is
-CRD-native, not a Helm value, so it can be overridden with a plain
-`kubectl patch sandboxconfig gvisor-default` or a small Kustomize patch in
-`flux/apps/base/substrate/substrate-operator/`), or explicitly re-test OpenClaw
-restore against `20260803` and drop the concern if it turns out fixed upstream.
-Either way, delete the dead `runscAMD64URL/SHA256` values — they currently do
-nothing but suggest a safety net that isn't there.
+**Consequence:** once §6b (cgroup delegation) is resolved and the `openclaw`
+AgentHarness's separate, pre-existing env-var validation error (see
+`docs/substrate-openclaw-open-items.md`) is also fixed, OpenClaw restore may hit
+the original `inconsistent private memory files on restore` amd64 bug again,
+because the carefully-validated `06-02` pin was never actually in effect. **Removed**
+the dead `runscAMD64URL`/`runscAMD64SHA256` values — they did nothing but
+suggested a safety net that wasn't there. Replaced with a comment pointing at
+this section and at the real override mechanism if it's ever needed: per-`SandboxConfig`
+`spec.assets.<arch>.gvisor.url/sha256` (CRD-native, not a Helm value — overridable
+with a plain `kubectl patch sandboxconfig gvisor-default` or a small Kustomize
+patch). Not re-tested against OpenClaw's restore path this pass — deliberately
+left as a documented open question for whoever revisits OpenClaw, not something
+to chase now.
 
 ---
 
@@ -464,7 +504,14 @@ nothing but suggest a safety net that isn't there.
 | 4 | `ateomImage` version lockstep | ✅ Required, in place, in git | None; consider Renovate wiring |
 | 5 | Privileged PSS on ate-system/kagent | ✅ Required, in place | None; optionally label `podcertificate-controller-system` for consistency |
 | 6 | `user.max_user_namespaces` sysctl | ✅ Required, fixed this pass | None |
-| 6b | cgroup v2 delegation for `runsc` | ❌ **Required, still broken** | **Decide: privileged WorkerPool pods, an `--ignore-cgroups`-equivalent knob, or a containerd/Talos delegation mechanism** |
-| 6c | `machine.install.image` drift (pre-existing, unrelated) | ℹ️ Noticed, not acted on | Separate decision — Longhorn extensions may not be active |
-| 7a | `auth.jwt.issuer` HelmRelease value | ❌ Dead | Remove or repoint comment |
-| 7b | `runscAMD64URL/SHA256` HelmRelease value | ❌ Dead | Remove; find real override mechanism if OpenClaw restore still needs a pin |
+| 6b | cgroup v2 delegation for `runsc` | ❌ **Required, still broken — left open per explicit decision** | Revisit later: privileged WorkerPool pods, an `--ignore-cgroups`-equivalent knob, or a containerd/Talos delegation mechanism |
+| 6c | `machine.install.image` drift | ✅ Investigated + closed — was cosmetic only, extensions were always active | None |
+| 7a | `auth.jwt.issuer` HelmRelease value | ✅ Removed (was dead) | None |
+| 7b | `runscAMD64URL/SHA256` HelmRelease value | ✅ Removed (was dead) | None |
+
+**Net effect of this pass:** cluster fully healthy, gVisor sandbox creation
+progresses one step further than before (user-namespace creation now succeeds)
+but is not yet fully working (§6b blocks it), both dead config values are gone,
+and the install-image drift turned out to be cosmetic and is now fully aligned.
+The one deliberately-left-open item is §6b — everything else in this document is
+closed.
