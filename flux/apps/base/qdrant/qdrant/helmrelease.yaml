@@ -48,6 +48,12 @@ spec:
       size: 10Gi
       storageClassName: longhorn
 
+    # LAN access: home-pool only had 192.168.1.215 free (.201-.214,.216 are
+    # already claimed by ingress-gateway/kgateway/monitoring services).
+    service:
+      type: LoadBalancer
+      loadBalancerIP: "192.168.1.215"
+
     # Chart defaults already satisfy most of the restricted PSS
     # (../../../infra/namespace); add the drop-ALL capability set and
     # seccomp profile it doesn't set on its own.
