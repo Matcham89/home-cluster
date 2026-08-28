@@ -3,13 +3,14 @@
 ## 1. Create Bitwarden Secret
 
 ```bash
-export BITWARDEN_KEY=<your-token>
+export BITWARDEN_KEY="" #access token
 kubectl create secret generic bitwarden-access-token \
   --namespace=kube-ops \
   --from-literal=token=$BITWARDEN_KEY \
   --dry-run=client \
   -o yaml > secret-bitwarden-token.yaml
 kubectl apply -f secret-bitwarden-token.yaml
+rm secret-bitwarden-token.yaml
 ```
 
 ## 1b. Define 1password authentication
