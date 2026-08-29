@@ -1,0 +1,44 @@
+---
+# Agent Substrate control plane (ate-system) exposes real Prometheus metrics
+# on each component today, just never scraped:
+#   - ate-api-server:9090 (port "prometheus") — ate_workerpool_workers
+#     (idle/assigned capacity per WorkerPool), ate_actor_crashes_total
+#     (by ate_actor_operation_name/ate_failure_reason), and
+#     rpc_server_call_duration_seconds{rpc_method} — per-operation timing
+#     (create/suspend/resume/delete) via OTel gRPC auto-instrumentation.
+#     This is the source for actor boot/checkpoint/restore latency once
+#     those operations are actually invoked.
+#   - atelet:9090 (port "prometheus", DaemonSet, hostPort) — mostly
+#     rpc client-call boilerplate; thin signal but free to include.
+#   - ate-controller:8080 (port "metrics") — standard controller-runtime
+#     reconcile-loop metrics (actortemplate/workerpool/networkpolicy).
+# No Actor CRD exists (actors live only in ate-api-server's own Postgres,
+# reachable via the ateapi.Control gRPC API) — there's no per-actor
+# asleep/awake gauge, only the fleet-level idle/assigned counts above.
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: ate-system
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+    app: ate-system
+spec:
+  namespaceSelector:
+    matchNames:
+      - ate-system
+  selector:
+    matchExpressions:
+      - key: app
+        operator: In
+        values:
+          - ate-api-server
+          - ate-controller
+          - atelet
+  podMetricsEndpoints:
+    - port: prometheus
+      path: /metrics
+      interval: 30s
+    - port: metrics
+      path: /metrics
+      interval: 30s
