@@ -1,0 +1,212 @@
+---
+# One AgentgatewayParameters per Gateway (mirroring ./otel.yaml, which only
+# ever covered the "agentgateway" Gateway) so every agentgateway-class
+# Gateway actually exports traces — see ../gateway/*.yaml infrastructure.
+# Each gets its own OTEL_SERVICE_NAME so spanmetrics/Tempo can tell gateways
+# apart instead of bucketing all traffic under one "agentgateway" service.
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayParameters
+metadata:
+  name: agentgateway1-otel
+  namespace: kgateway-system
+spec:
+  env:
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: "http://otel-collector-collector.monitoring.svc.cluster.local:4317"
+    - name: OTEL_EXPORTER_OTLP_PROTOCOL
+      value: "grpc"
+    - name: OTEL_SERVICE_NAME
+      value: "agentgateway1"
+    - name: OTEL_TRACES_EXPORTER
+      value: "otlp"
+    - name: OTEL_LOGS_EXPORTER
+      value: "otlp"
+  rawConfig:
+    config:
+      tracing:
+        otlpEndpoint: "http://otel-collector-collector.monitoring.svc.cluster.local:4317"
+        otlpProtocol: grpc
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayParameters
+metadata:
+  name: agentgateway2-otel
+  namespace: kgateway-system
+spec:
+  env:
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: "http://otel-collector-collector.monitoring.svc.cluster.local:4317"
+    - name: OTEL_EXPORTER_OTLP_PROTOCOL
+      value: "grpc"
+    - name: OTEL_SERVICE_NAME
+      value: "agentgateway2"
+    - name: OTEL_TRACES_EXPORTER
+      value: "otlp"
+    - name: OTEL_LOGS_EXPORTER
+      value: "otlp"
+  rawConfig:
+    config:
+      tracing:
+        otlpEndpoint: "http://otel-collector-collector.monitoring.svc.cluster.local:4317"
+        otlpProtocol: grpc
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayParameters
+metadata:
+  name: agentgateway3-otel
+  namespace: kgateway-system
+spec:
+  env:
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: "http://otel-collector-collector.monitoring.svc.cluster.local:4317"
+    - name: OTEL_EXPORTER_OTLP_PROTOCOL
+      value: "grpc"
+    - name: OTEL_SERVICE_NAME
+      value: "agentgateway3"
+    - name: OTEL_TRACES_EXPORTER
+      value: "otlp"
+    - name: OTEL_LOGS_EXPORTER
+      value: "otlp"
+  rawConfig:
+    config:
+      tracing:
+        otlpEndpoint: "http://otel-collector-collector.monitoring.svc.cluster.local:4317"
+        otlpProtocol: grpc
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayParameters
+metadata:
+  name: claude-code-otel
+  namespace: kgateway-system
+spec:
+  env:
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: "http://otel-collector-collector.monitoring.svc.cluster.local:4317"
+    - name: OTEL_EXPORTER_OTLP_PROTOCOL
+      value: "grpc"
+    - name: OTEL_SERVICE_NAME
+      value: "claude-code-gateway"
+    - name: OTEL_TRACES_EXPORTER
+      value: "otlp"
+    - name: OTEL_LOGS_EXPORTER
+      value: "otlp"
+  rawConfig:
+    config:
+      tracing:
+        otlpEndpoint: "http://otel-collector-collector.monitoring.svc.cluster.local:4317"
+        otlpProtocol: grpc
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayParameters
+metadata:
+  name: claude-sonnet-gateway-otel
+  namespace: kgateway-system
+spec:
+  env:
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: "http://otel-collector-collector.monitoring.svc.cluster.local:4317"
+    - name: OTEL_EXPORTER_OTLP_PROTOCOL
+      value: "grpc"
+    - name: OTEL_SERVICE_NAME
+      value: "claude-sonnet-gateway"
+    - name: OTEL_TRACES_EXPORTER
+      value: "otlp"
+    - name: OTEL_LOGS_EXPORTER
+      value: "otlp"
+  rawConfig:
+    config:
+      tracing:
+        otlpEndpoint: "http://otel-collector-collector.monitoring.svc.cluster.local:4317"
+        otlpProtocol: grpc
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayParameters
+metadata:
+  name: claude-opus-gateway-otel
+  namespace: kgateway-system
+spec:
+  env:
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: "http://otel-collector-collector.monitoring.svc.cluster.local:4317"
+    - name: OTEL_EXPORTER_OTLP_PROTOCOL
+      value: "grpc"
+    - name: OTEL_SERVICE_NAME
+      value: "claude-opus-gateway"
+    - name: OTEL_TRACES_EXPORTER
+      value: "otlp"
+    - name: OTEL_LOGS_EXPORTER
+      value: "otlp"
+  rawConfig:
+    config:
+      tracing:
+        otlpEndpoint: "http://otel-collector-collector.monitoring.svc.cluster.local:4317"
+        otlpProtocol: grpc
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayParameters
+metadata:
+  name: claude-haiku-gateway-otel
+  namespace: kgateway-system
+spec:
+  env:
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: "http://otel-collector-collector.monitoring.svc.cluster.local:4317"
+    - name: OTEL_EXPORTER_OTLP_PROTOCOL
+      value: "grpc"
+    - name: OTEL_SERVICE_NAME
+      value: "claude-haiku-gateway"
+    - name: OTEL_TRACES_EXPORTER
+      value: "otlp"
+    - name: OTEL_LOGS_EXPORTER
+      value: "otlp"
+  rawConfig:
+    config:
+      tracing:
+        otlpEndpoint: "http://otel-collector-collector.monitoring.svc.cluster.local:4317"
+        otlpProtocol: grpc
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayParameters
+metadata:
+  name: gemini-flash-gateway-otel
+  namespace: kgateway-system
+spec:
+  env:
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: "http://otel-collector-collector.monitoring.svc.cluster.local:4317"
+    - name: OTEL_EXPORTER_OTLP_PROTOCOL
+      value: "grpc"
+    - name: OTEL_SERVICE_NAME
+      value: "gemini-flash-gateway"
+    - name: OTEL_TRACES_EXPORTER
+      value: "otlp"
+    - name: OTEL_LOGS_EXPORTER
+      value: "otlp"
+  rawConfig:
+    config:
+      tracing:
+        otlpEndpoint: "http://otel-collector-collector.monitoring.svc.cluster.local:4317"
+        otlpProtocol: grpc
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayParameters
+metadata:
+  name: gemini-pro-gateway-otel
+  namespace: kgateway-system
+spec:
+  env:
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: "http://otel-collector-collector.monitoring.svc.cluster.local:4317"
+    - name: OTEL_EXPORTER_OTLP_PROTOCOL
+      value: "grpc"
+    - name: OTEL_SERVICE_NAME
+      value: "gemini-pro-gateway"
+    - name: OTEL_TRACES_EXPORTER
+      value: "otlp"
+    - name: OTEL_LOGS_EXPORTER
+      value: "otlp"
+  rawConfig:
+    config:
+      tracing:
+        otlpEndpoint: "http://otel-collector-collector.monitoring.svc.cluster.local:4317"
+        otlpProtocol: grpc

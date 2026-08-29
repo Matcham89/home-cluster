@@ -1,0 +1,28 @@
+---
+# Same OTEL wiring as kgateway-system's agentgateway-otel (see that repo's
+# AgentgatewayParameters), but in this namespace since Gateway
+# infrastructure.parametersRef must reference a same-namespace object.
+# ingress-gateway fronts all *.kubegit.com traffic, so this is the single
+# highest-volume gateway to trace.
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayParameters
+metadata:
+  name: ingress-gateway-otel
+  namespace: ingress
+spec:
+  env:
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: "http://otel-collector-collector.monitoring.svc.cluster.local:4317"
+    - name: OTEL_EXPORTER_OTLP_PROTOCOL
+      value: "grpc"
+    - name: OTEL_SERVICE_NAME
+      value: "ingress-gateway"
+    - name: OTEL_TRACES_EXPORTER
+      value: "otlp"
+    - name: OTEL_LOGS_EXPORTER
+      value: "otlp"
+  rawConfig:
+    config:
+      tracing:
+        otlpEndpoint: "http://otel-collector-collector.monitoring.svc.cluster.local:4317"
+        otlpProtocol: grpc
