@@ -9,6 +9,11 @@ metadata:
     provider: anthropic
 spec:
   gatewayClassName: agentgateway
+  infrastructure:
+    parametersRef:
+      group: agentgateway.dev
+      kind: AgentgatewayParameters
+      name: claude-code-otel
   listeners:
     - name: http
       port: 8094

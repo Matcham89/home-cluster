@@ -11,6 +11,10 @@ spec:
   infrastructure:
     annotations:
       metallb.universe.tf/loadBalancerIPs: "192.168.1.201"
+    parametersRef:
+      group: agentgateway.dev
+      kind: AgentgatewayParameters
+      name: ingress-gateway-otel
   listeners:
     - name: http
       protocol: HTTP

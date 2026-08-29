@@ -21,6 +21,11 @@ metadata:
     provider: gemini
 spec:
   gatewayClassName: agentgateway
+  infrastructure:
+    parametersRef:
+      group: agentgateway.dev
+      kind: AgentgatewayParameters
+      name: gemini-flash-gateway-otel
   listeners:
     - name: http
       port: 8094
@@ -47,6 +52,10 @@ spec:
   infrastructure:
     annotations:
       metallb.universe.tf/loadBalancerIPs: "192.168.1.216"
+    parametersRef:
+      group: agentgateway.dev
+      kind: AgentgatewayParameters
+      name: gemini-pro-gateway-otel
   listeners:
     - name: http
       port: 8095

@@ -8,6 +8,11 @@ metadata:
     app: agentgateway1
 spec:
   gatewayClassName: agentgateway
+  infrastructure:
+    parametersRef:
+      group: agentgateway.dev
+      kind: AgentgatewayParameters
+      name: agentgateway1-otel
   listeners:
   - protocol: HTTP
     port: 8080

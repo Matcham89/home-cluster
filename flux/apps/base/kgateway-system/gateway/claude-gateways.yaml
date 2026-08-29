@@ -26,6 +26,11 @@ metadata:
     provider: anthropic
 spec:
   gatewayClassName: agentgateway
+  infrastructure:
+    parametersRef:
+      group: agentgateway.dev
+      kind: AgentgatewayParameters
+      name: claude-sonnet-gateway-otel
   listeners:
     - name: http
       port: 8091
@@ -49,6 +54,11 @@ metadata:
     provider: anthropic
 spec:
   gatewayClassName: agentgateway
+  infrastructure:
+    parametersRef:
+      group: agentgateway.dev
+      kind: AgentgatewayParameters
+      name: claude-opus-gateway-otel
   listeners:
     - name: http
       port: 8092
@@ -72,6 +82,11 @@ metadata:
     provider: anthropic
 spec:
   gatewayClassName: agentgateway
+  infrastructure:
+    parametersRef:
+      group: agentgateway.dev
+      kind: AgentgatewayParameters
+      name: claude-haiku-gateway-otel
   listeners:
     - name: http
       port: 8093
