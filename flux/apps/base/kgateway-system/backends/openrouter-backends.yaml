@@ -37,6 +37,7 @@ spec:
               auth:
                 secretRef:
                   name: openrouter-secret
+              tls: {}
 
 ---
 apiVersion: agentgateway.dev/v1alpha1
@@ -63,6 +64,7 @@ spec:
               auth:
                 secretRef:
                   name: openrouter-secret
+              tls: {}
 
 ---
 apiVersion: agentgateway.dev/v1alpha1
@@ -89,6 +91,7 @@ spec:
               auth:
                 secretRef:
                   name: openrouter-secret
+              tls: {}
 
 ---
 apiVersion: agentgateway.dev/v1alpha1
@@ -115,6 +118,7 @@ spec:
               auth:
                 secretRef:
                   name: openrouter-secret
+              tls: {}
 
 ---
 apiVersion: agentgateway.dev/v1alpha1
@@ -141,3 +145,4 @@ spec:
               auth:
                 secretRef:
                   name: openrouter-secret
+              tls: {}
