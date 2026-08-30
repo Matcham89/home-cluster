@@ -29,7 +29,10 @@ spec:
             host: openrouter.ai
             port: 443
             custom:
-              model: "deepseek/deepseek-v4-flash-latest"
+              # OpenRouter alias — the leading ~ is part of the real model
+              # ID, not a typo (confirmed against openrouter.ai/api/v1/models
+              # — this is a floating alias to the latest V4 Flash snapshot)
+              model: "~deepseek/deepseek-v4-flash-latest"
               formats:
                 - type: Completions
                   path: /api/v1/chat/completions
@@ -56,7 +59,10 @@ spec:
             host: openrouter.ai
             port: 443
             custom:
-              model: "qwen/qwen3.8-flash"
+              # qwen/qwen3.8-flash doesn't exist on OpenRouter — verified
+              # against openrouter.ai/api/v1/models; qwen3-coder-flash is
+              # the closest real flash-tier Qwen3 model
+              model: "qwen/qwen3-coder-flash"
               formats:
                 - type: Completions
                   path: /api/v1/chat/completions
