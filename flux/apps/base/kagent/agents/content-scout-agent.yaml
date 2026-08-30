@@ -14,7 +14,7 @@ spec:
     # shell-tool-driven research workflow below needs the full Python ADK
     # feature set, not just faster startup.
     runtime: go
-    modelConfig: claude-sonnet-config
+    modelConfig: openrouter-deepseek-v4-flash
     promptTemplate:
       dataSources:
         - alias: builtin

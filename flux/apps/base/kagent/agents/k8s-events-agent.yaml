@@ -5,7 +5,7 @@ metadata:
   namespace: kagent
 spec:
   declarative:
-    modelConfig: claude-haiku-config
+    modelConfig: openrouter-deepseek-v4-flash
     systemMessage: |
       # Kubernetes Events Agent
 

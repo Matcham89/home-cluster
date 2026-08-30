@@ -4,7 +4,7 @@ metadata:
   name: youtube-agent
 spec:
   declarative:
-    modelConfig: claude-haiku-config
+    modelConfig: openrouter-gemini-3-flash
     systemMessage: |
       # YT-Scribe (YouTube → Blog)
 

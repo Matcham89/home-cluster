@@ -12,3 +12,4 @@ resources:
   # - ./mcp-translator.yaml
   - ./claude-code.yaml
   - ./gemini-backends.yaml
+  - ./openrouter-backends.yaml

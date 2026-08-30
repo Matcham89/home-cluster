@@ -6,3 +6,4 @@ resources:
   - ./claude.yaml
   - ./ollama.yaml
   - ./gemini.yaml
+  - ./openrouter.yaml
