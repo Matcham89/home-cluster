@@ -113,7 +113,7 @@ data:
                 "uid": "tempo"
               },
               "limit": 100000,
-              "query": "{resource.service.name=\"kagent\" && name=\"call_llm\"} | select(span.gen_ai.usage.input_tokens)",
+              "query": "{resource.service.namespace=\"kagent\" && resource.service.name=~\"${agent:regex}\" && name=\"call_llm\" && span.gen_ai.request.model=~\"${model:regex}\"} | select(span.gen_ai.usage.input_tokens)",
               "queryType": "traceql",
               "refId": "A",
               "tableType": "spans"
@@ -233,7 +233,7 @@ data:
                 "uid": "tempo"
               },
               "limit": 100000,
-              "query": "{resource.service.name=\"kagent\" && name=\"call_llm\"} | select(span.gen_ai.usage.output_tokens)",
+              "query": "{resource.service.namespace=\"kagent\" && resource.service.name=~\"${agent:regex}\" && name=\"call_llm\" && span.gen_ai.request.model=~\"${model:regex}\"} | select(span.gen_ai.usage.output_tokens)",
               "queryType": "traceql",
               "refId": "A",
               "tableType": "spans"
@@ -266,994 +266,6 @@ data:
                   }
                 ],
                 "fields": {}
-              }
-            }
-          ],
-          "type": "stat"
-        },
-        {
-          "datasource": {
-            "type": "tempo",
-            "uid": "tempo"
-          },
-          "description": "Total input tokens across all LLM calls in time range",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "thresholds"
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": 0
-                  },
-                  {
-                    "color": "yellow",
-                    "value": 100000
-                  },
-                  {
-                    "color": "red",
-                    "value": 500000
-                  }
-                ]
-              },
-              "unit": "none"
-            },
-            "overrides": [
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Input Tokens"
-                },
-                "properties": [
-                  {
-                    "id": "unit",
-                    "value": "none"
-                  },
-                  {
-                    "id": "decimals",
-                    "value": 0
-                  }
-                ]
-              }
-            ]
-          },
-          "gridPos": {
-            "h": 4,
-            "w": 6,
-            "x": 0,
-            "y": 4
-          },
-          "id": 15,
-          "options": {
-            "colorMode": "value",
-            "graphMode": "area",
-            "justifyMode": "auto",
-            "orientation": "auto",
-            "percentChangeColorMode": "standard",
-            "reduceOptions": {
-              "calcs": [
-                "sum"
-              ],
-              "fields": "/^Input Tokens$/",
-              "values": false
-            },
-            "showPercentChange": false,
-            "textMode": "auto",
-            "wideLayout": true
-          },
-          "pluginVersion": "12.2.1",
-          "targets": [
-            {
-              "datasource": {
-                "type": "tempo",
-                "uid": "tempo"
-              },
-              "limit": 100000,
-              "metricsQueryType": "range",
-              "query": "{resource.service.name=\"kagent\" && name=\"call_llm\" && span.gen_ai.request.model=~\"gpt.*\"} | select(span.gen_ai.usage.input_tokens)",
-              "queryType": "traceql",
-              "refId": "A",
-              "serviceMapUseNativeHistograms": false,
-              "tableType": "spans"
-            }
-          ],
-          "title": "GPT Input Tokens",
-          "transformations": [
-            {
-              "id": "organize",
-              "options": {
-                "excludeByName": {
-                  "durationMs": true,
-                  "spanID": true,
-                  "startTimeUnixNano": true,
-                  "traceID": true
-                },
-                "indexByName": {},
-                "renameByName": {
-                  "gen_ai.usage.input_tokens": "Input Tokens"
-                }
-              }
-            },
-            {
-              "id": "convertFieldType",
-              "options": {
-                "conversions": [
-                  {
-                    "destinationType": "number",
-                    "targetField": "Input Tokens"
-                  }
-                ],
-                "fields": {}
-              }
-            }
-          ],
-          "type": "stat"
-        },
-        {
-          "datasource": {
-            "type": "tempo",
-            "uid": "tempo"
-          },
-          "description": "Total output tokens across all LLM calls in time range",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "thresholds"
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": 0
-                  },
-                  {
-                    "color": "yellow",
-                    "value": 50000
-                  },
-                  {
-                    "color": "red",
-                    "value": 200000
-                  }
-                ]
-              },
-              "unit": "none"
-            },
-            "overrides": [
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Output Tokens"
-                },
-                "properties": [
-                  {
-                    "id": "unit",
-                    "value": "none"
-                  },
-                  {
-                    "id": "decimals",
-                    "value": 0
-                  }
-                ]
-              }
-            ]
-          },
-          "gridPos": {
-            "h": 4,
-            "w": 6,
-            "x": 6,
-            "y": 4
-          },
-          "id": 17,
-          "options": {
-            "colorMode": "value",
-            "graphMode": "area",
-            "justifyMode": "auto",
-            "orientation": "auto",
-            "percentChangeColorMode": "standard",
-            "reduceOptions": {
-              "calcs": [
-                "sum"
-              ],
-              "fields": "/^Output Tokens$/",
-              "values": false
-            },
-            "showPercentChange": false,
-            "textMode": "auto",
-            "wideLayout": true
-          },
-          "pluginVersion": "12.2.1",
-          "targets": [
-            {
-              "datasource": {
-                "type": "tempo",
-                "uid": "tempo"
-              },
-              "limit": 100000,
-              "metricsQueryType": "range",
-              "query": "{resource.service.name=\"kagent\" && name=\"call_llm\" && span.gen_ai.request.model=~\"gpt.*\"} | select(span.gen_ai.usage.output_tokens)",
-              "queryType": "traceql",
-              "refId": "A",
-              "serviceMapUseNativeHistograms": false,
-              "tableType": "spans"
-            }
-          ],
-          "title": "GPT Output Tokens",
-          "transformations": [
-            {
-              "id": "organize",
-              "options": {
-                "excludeByName": {
-                  "durationMs": true,
-                  "spanID": true,
-                  "startTimeUnixNano": true,
-                  "traceID": true
-                },
-                "indexByName": {},
-                "renameByName": {
-                  "gen_ai.usage.output_tokens": "Output Tokens"
-                }
-              }
-            },
-            {
-              "id": "convertFieldType",
-              "options": {
-                "conversions": [
-                  {
-                    "destinationType": "number",
-                    "targetField": "Output Tokens"
-                  }
-                ],
-                "fields": {}
-              }
-            }
-          ],
-          "type": "stat"
-        },
-        {
-          "datasource": {
-            "type": "tempo",
-            "uid": "tempo"
-          },
-          "description": "Total input tokens across all LLM calls in time range",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "thresholds"
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": 0
-                  },
-                  {
-                    "color": "yellow",
-                    "value": 100000
-                  },
-                  {
-                    "color": "red",
-                    "value": 500000
-                  }
-                ]
-              },
-              "unit": "none"
-            },
-            "overrides": [
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Input Tokens"
-                },
-                "properties": [
-                  {
-                    "id": "unit",
-                    "value": "none"
-                  },
-                  {
-                    "id": "decimals",
-                    "value": 0
-                  }
-                ]
-              }
-            ]
-          },
-          "gridPos": {
-            "h": 4,
-            "w": 6,
-            "x": 12,
-            "y": 4
-          },
-          "id": 18,
-          "options": {
-            "colorMode": "value",
-            "graphMode": "area",
-            "justifyMode": "auto",
-            "orientation": "auto",
-            "percentChangeColorMode": "standard",
-            "reduceOptions": {
-              "calcs": [
-                "sum"
-              ],
-              "fields": "/^Input Tokens$/",
-              "values": false
-            },
-            "showPercentChange": false,
-            "textMode": "auto",
-            "wideLayout": true
-          },
-          "pluginVersion": "12.2.1",
-          "targets": [
-            {
-              "datasource": {
-                "type": "tempo",
-                "uid": "tempo"
-              },
-              "limit": 100000,
-              "metricsQueryType": "range",
-              "query": "{resource.service.name=\"kagent\" && name=\"call_llm\" && span.gen_ai.request.model=~\"anthropic.*\"} | select(span.gen_ai.usage.input_tokens)",
-              "queryType": "traceql",
-              "refId": "A",
-              "serviceMapUseNativeHistograms": false,
-              "tableType": "spans"
-            }
-          ],
-          "title": "Anthropic Input Tokens",
-          "transformations": [
-            {
-              "id": "organize",
-              "options": {
-                "excludeByName": {
-                  "durationMs": true,
-                  "spanID": true,
-                  "startTimeUnixNano": true,
-                  "traceID": true
-                },
-                "indexByName": {},
-                "renameByName": {
-                  "gen_ai.usage.input_tokens": "Input Tokens"
-                }
-              }
-            },
-            {
-              "id": "convertFieldType",
-              "options": {
-                "conversions": [
-                  {
-                    "destinationType": "number",
-                    "targetField": "Input Tokens"
-                  }
-                ],
-                "fields": {}
-              }
-            }
-          ],
-          "type": "stat"
-        },
-        {
-          "datasource": {
-            "type": "tempo",
-            "uid": "tempo"
-          },
-          "description": "Total output tokens across all LLM calls in time range",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "thresholds"
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": 0
-                  },
-                  {
-                    "color": "yellow",
-                    "value": 50000
-                  },
-                  {
-                    "color": "red",
-                    "value": 200000
-                  }
-                ]
-              },
-              "unit": "none"
-            },
-            "overrides": [
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Output Tokens"
-                },
-                "properties": [
-                  {
-                    "id": "unit",
-                    "value": "none"
-                  },
-                  {
-                    "id": "decimals",
-                    "value": 0
-                  }
-                ]
-              }
-            ]
-          },
-          "gridPos": {
-            "h": 4,
-            "w": 6,
-            "x": 18,
-            "y": 4
-          },
-          "id": 16,
-          "options": {
-            "colorMode": "value",
-            "graphMode": "area",
-            "justifyMode": "auto",
-            "orientation": "auto",
-            "percentChangeColorMode": "standard",
-            "reduceOptions": {
-              "calcs": [
-                "sum"
-              ],
-              "fields": "/^Output Tokens$/",
-              "values": false
-            },
-            "showPercentChange": false,
-            "textMode": "auto",
-            "wideLayout": true
-          },
-          "pluginVersion": "12.2.1",
-          "targets": [
-            {
-              "datasource": {
-                "type": "tempo",
-                "uid": "tempo"
-              },
-              "limit": 100000,
-              "metricsQueryType": "range",
-              "query": "{resource.service.name=\"kagent\" && name=\"call_llm\" && span.gen_ai.request.model=~\"anthropic.*\"} | select(span.gen_ai.usage.output_tokens)",
-              "queryType": "traceql",
-              "refId": "A",
-              "serviceMapUseNativeHistograms": false,
-              "tableType": "spans"
-            }
-          ],
-          "title": "Anthropic Output Tokens",
-          "transformations": [
-            {
-              "id": "organize",
-              "options": {
-                "excludeByName": {
-                  "durationMs": true,
-                  "spanID": true,
-                  "startTimeUnixNano": true,
-                  "traceID": true
-                },
-                "indexByName": {},
-                "renameByName": {
-                  "gen_ai.usage.output_tokens": "Output Tokens"
-                }
-              }
-            },
-            {
-              "id": "convertFieldType",
-              "options": {
-                "conversions": [
-                  {
-                    "destinationType": "number",
-                    "targetField": "Output Tokens"
-                  }
-                ],
-                "fields": {}
-              }
-            }
-          ],
-          "type": "stat"
-        },
-        {
-          "datasource": {
-            "type": "tempo",
-            "uid": "tempo"
-          },
-          "description": "GPT models: $0.03/1K input tokens, $0.06/1K output tokens",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "thresholds"
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": 0
-                  },
-                  {
-                    "color": "yellow",
-                    "value": 0.5
-                  },
-                  {
-                    "color": "red",
-                    "value": 5
-                  }
-                ]
-              },
-              "unit": "currencyUSD"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 4,
-            "w": 6,
-            "x": 0,
-            "y": 8
-          },
-          "id": 10,
-          "options": {
-            "colorMode": "value",
-            "graphMode": "area",
-            "justifyMode": "auto",
-            "orientation": "auto",
-            "percentChangeColorMode": "standard",
-            "reduceOptions": {
-              "calcs": [
-                "sum"
-              ],
-              "fields": "/^Cost$/",
-              "values": false
-            },
-            "showPercentChange": false,
-            "textMode": "auto",
-            "wideLayout": true
-          },
-          "pluginVersion": "12.2.1",
-          "targets": [
-            {
-              "datasource": {
-                "type": "tempo",
-                "uid": "tempo"
-              },
-              "limit": 100000,
-              "metricsQueryType": "range",
-              "query": "{resource.service.name=\"kagent\" && name=\"call_llm\" && span.gen_ai.request.model=~\"gpt.*\"} | select(span.gen_ai.usage.input_tokens, span.gen_ai.usage.output_tokens)",
-              "queryType": "traceql",
-              "refId": "A",
-              "serviceMapUseNativeHistograms": false,
-              "tableType": "spans"
-            }
-          ],
-          "title": "GPT Cost ($0.03/$0.06 per 1K)",
-          "transformations": [
-            {
-              "id": "organize",
-              "options": {
-                "excludeByName": {
-                  "durationMs": true,
-                  "spanID": true,
-                  "startTimeUnixNano": true,
-                  "traceID": true
-                },
-                "indexByName": {},
-                "renameByName": {
-                  "gen_ai.usage.input_tokens": "Input Tokens",
-                  "gen_ai.usage.output_tokens": "Output Tokens"
-                }
-              }
-            },
-            {
-              "id": "convertFieldType",
-              "options": {
-                "conversions": [
-                  {
-                    "destinationType": "number",
-                    "targetField": "Input Tokens"
-                  },
-                  {
-                    "destinationType": "number",
-                    "targetField": "Output Tokens"
-                  }
-                ],
-                "fields": {}
-              }
-            },
-            {
-              "id": "calculateField",
-              "options": {
-                "alias": "Input Cost",
-                "binary": {
-                  "left": "Input Tokens",
-                  "operator": "*",
-                  "right": "0.00003"
-                },
-                "mode": "binary"
-              }
-            },
-            {
-              "id": "calculateField",
-              "options": {
-                "alias": "Output Cost",
-                "binary": {
-                  "left": "Output Tokens",
-                  "operator": "*",
-                  "right": "0.00006"
-                },
-                "mode": "binary"
-              }
-            },
-            {
-              "id": "calculateField",
-              "options": {
-                "alias": "Cost",
-                "binary": {
-                  "left": "Input Cost",
-                  "operator": "+",
-                  "right": "Output Cost"
-                },
-                "mode": "binary"
-              }
-            }
-          ],
-          "type": "stat"
-        },
-        {
-          "datasource": {
-            "type": "tempo",
-            "uid": "tempo"
-          },
-          "description": "Total number of calls to GPT models",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "thresholds"
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": 0
-                  },
-                  {
-                    "color": "yellow",
-                    "value": 50
-                  },
-                  {
-                    "color": "red",
-                    "value": 100
-                  }
-                ]
-              },
-              "unit": "none"
-            },
-            "overrides": [
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Model"
-                },
-                "properties": [
-                  {
-                    "id": "unit",
-                    "value": "none"
-                  }
-                ]
-              }
-            ]
-          },
-          "gridPos": {
-            "h": 4,
-            "w": 6,
-            "x": 6,
-            "y": 8
-          },
-          "id": 7,
-          "options": {
-            "colorMode": "value",
-            "graphMode": "area",
-            "justifyMode": "auto",
-            "orientation": "auto",
-            "percentChangeColorMode": "standard",
-            "reduceOptions": {
-              "calcs": [
-                "count"
-              ],
-              "fields": "/^Model$/",
-              "values": false
-            },
-            "showPercentChange": false,
-            "textMode": "auto",
-            "wideLayout": true
-          },
-          "pluginVersion": "12.2.1",
-          "targets": [
-            {
-              "datasource": {
-                "type": "tempo",
-                "uid": "tempo"
-              },
-              "limit": 100000,
-              "query": "{resource.service.name=\"kagent\" && name=\"call_llm\" && span.gen_ai.request.model=~\"gpt.*\"} | select(span.gen_ai.request.model)",
-              "queryType": "traceql",
-              "refId": "A",
-              "tableType": "spans"
-            }
-          ],
-          "title": "Total GPT Calls",
-          "transformations": [
-            {
-              "id": "organize",
-              "options": {
-                "excludeByName": {
-                  "durationMs": true,
-                  "spanID": true,
-                  "startTimeUnixNano": true,
-                  "traceID": true
-                },
-                "indexByName": {},
-                "renameByName": {
-                  "gen_ai.request.model": "Model"
-                }
-              }
-            }
-          ],
-          "type": "stat"
-        },
-        {
-          "datasource": {
-            "type": "tempo",
-            "uid": "tempo"
-          },
-          "description": "Anthropic Claude: $0.015/1K input tokens, $0.075/1K output tokens",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "thresholds"
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": 0
-                  },
-                  {
-                    "color": "yellow",
-                    "value": 0.5
-                  },
-                  {
-                    "color": "red",
-                    "value": 5
-                  }
-                ]
-              },
-              "unit": "currencyUSD"
-            },
-            "overrides": []
-          },
-          "gridPos": {
-            "h": 4,
-            "w": 6,
-            "x": 12,
-            "y": 8
-          },
-          "id": 14,
-          "options": {
-            "colorMode": "value",
-            "graphMode": "area",
-            "justifyMode": "auto",
-            "orientation": "auto",
-            "percentChangeColorMode": "standard",
-            "reduceOptions": {
-              "calcs": [
-                "sum"
-              ],
-              "fields": "/^Cost$/",
-              "values": false
-            },
-            "showPercentChange": false,
-            "textMode": "auto",
-            "wideLayout": true
-          },
-          "pluginVersion": "12.2.1",
-          "targets": [
-            {
-              "datasource": {
-                "type": "tempo",
-                "uid": "tempo"
-              },
-              "limit": 100000,
-              "metricsQueryType": "range",
-              "query": "{resource.service.name=\"kagent\" && name=\"call_llm\" && span.gen_ai.request.model=~\"anthropic.*\"} | select(span.gen_ai.usage.input_tokens, span.gen_ai.usage.output_tokens)",
-              "queryType": "traceql",
-              "refId": "A",
-              "serviceMapUseNativeHistograms": false,
-              "tableType": "spans"
-            }
-          ],
-          "title": "Anthropic Cost ($0.015/$0.075 per 1K)",
-          "transformations": [
-            {
-              "id": "organize",
-              "options": {
-                "excludeByName": {
-                  "durationMs": true,
-                  "spanID": true,
-                  "startTimeUnixNano": true,
-                  "traceID": true
-                },
-                "indexByName": {},
-                "renameByName": {
-                  "gen_ai.usage.input_tokens": "Input Tokens",
-                  "gen_ai.usage.output_tokens": "Output Tokens"
-                }
-              }
-            },
-            {
-              "id": "convertFieldType",
-              "options": {
-                "conversions": [
-                  {
-                    "destinationType": "number",
-                    "targetField": "Input Tokens"
-                  },
-                  {
-                    "destinationType": "number",
-                    "targetField": "Output Tokens"
-                  }
-                ],
-                "fields": {}
-              }
-            },
-            {
-              "id": "calculateField",
-              "options": {
-                "alias": "Input Cost",
-                "binary": {
-                  "left": "Input Tokens",
-                  "operator": "*",
-                  "right": "0.000015"
-                },
-                "mode": "binary"
-              }
-            },
-            {
-              "id": "calculateField",
-              "options": {
-                "alias": "Output Cost",
-                "binary": {
-                  "left": "Output Tokens",
-                  "operator": "*",
-                  "right": "0.000075"
-                },
-                "mode": "binary"
-              }
-            },
-            {
-              "id": "calculateField",
-              "options": {
-                "alias": "Cost",
-                "binary": {
-                  "left": "Input Cost",
-                  "operator": "+",
-                  "right": "Output Cost"
-                },
-                "mode": "binary"
-              }
-            }
-          ],
-          "type": "stat"
-        },
-        {
-          "datasource": {
-            "type": "tempo",
-            "uid": "tempo"
-          },
-          "description": "Total number of calls to Anthropic Claude models",
-          "fieldConfig": {
-            "defaults": {
-              "color": {
-                "mode": "thresholds"
-              },
-              "mappings": [],
-              "thresholds": {
-                "mode": "absolute",
-                "steps": [
-                  {
-                    "color": "green",
-                    "value": 0
-                  },
-                  {
-                    "color": "yellow",
-                    "value": 50
-                  },
-                  {
-                    "color": "red",
-                    "value": 100
-                  }
-                ]
-              },
-              "unit": "none"
-            },
-            "overrides": [
-              {
-                "matcher": {
-                  "id": "byName",
-                  "options": "Model"
-                },
-                "properties": [
-                  {
-                    "id": "unit",
-                    "value": "none"
-                  }
-                ]
-              }
-            ]
-          },
-          "gridPos": {
-            "h": 4,
-            "w": 6,
-            "x": 18,
-            "y": 8
-          },
-          "id": 8,
-          "options": {
-            "colorMode": "value",
-            "graphMode": "area",
-            "justifyMode": "auto",
-            "orientation": "auto",
-            "percentChangeColorMode": "standard",
-            "reduceOptions": {
-              "calcs": [
-                "count"
-              ],
-              "fields": "/^Model$/",
-              "values": false
-            },
-            "showPercentChange": false,
-            "textMode": "auto",
-            "wideLayout": true
-          },
-          "pluginVersion": "12.2.1",
-          "targets": [
-            {
-              "datasource": {
-                "type": "tempo",
-                "uid": "tempo"
-              },
-              "limit": 100000,
-              "query": "{resource.service.name=\"kagent\" && name=\"call_llm\" && span.gen_ai.request.model=~\"anthropic.*\"} | select(span.gen_ai.request.model)",
-              "queryType": "traceql",
-              "refId": "A",
-              "tableType": "spans"
-            }
-          ],
-          "title": "Total Anthropic Calls",
-          "transformations": [
-            {
-              "id": "organize",
-              "options": {
-                "excludeByName": {
-                  "durationMs": true,
-                  "spanID": true,
-                  "startTimeUnixNano": true,
-                  "traceID": true
-                },
-                "indexByName": {},
-                "renameByName": {
-                  "gen_ai.request.model": "Model"
-                }
               }
             }
           ],
@@ -1296,7 +308,7 @@ data:
             "h": 4,
             "w": 12,
             "x": 0,
-            "y": 12
+            "y": 4
           },
           "id": 12,
           "options": {
@@ -1323,7 +335,7 @@ data:
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "histogram_quantile(0.99, sum by(le) (rate(otelcol_duration_milliseconds_bucket{service_name=\"kagent\",span_name=\"call_llm\"}[$__rate_interval])))",
+              "expr": "histogram_quantile(0.99, sum by(le) (rate(otelcol_duration_milliseconds_bucket{service_namespace=\"kagent\",service_name=~\"${agent:regex}\",span_name=\"call_llm\"}[$__rate_interval])))",
               "refId": "A"
             }
           ],
@@ -1367,7 +379,7 @@ data:
             "h": 4,
             "w": 12,
             "x": 12,
-            "y": 12
+            "y": 4
           },
           "id": 13,
           "options": {
@@ -1394,7 +406,7 @@ data:
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "sum(rate(otelcol_duration_milliseconds_sum{service_name=\"kagent\",span_name=\"call_llm\"}[$__rate_interval])) / sum(rate(otelcol_duration_milliseconds_count{service_name=\"kagent\",span_name=\"call_llm\"}[$__rate_interval]))",
+              "expr": "sum(rate(otelcol_duration_milliseconds_sum{service_namespace=\"kagent\",service_name=~\"${agent:regex}\",span_name=\"call_llm\"}[$__rate_interval])) / sum(rate(otelcol_duration_milliseconds_count{service_namespace=\"kagent\",service_name=~\"${agent:regex}\",span_name=\"call_llm\"}[$__rate_interval]))",
               "refId": "A"
             }
           ],
@@ -1579,7 +591,7 @@ data:
                 "uid": "tempo"
               },
               "limit": 50,
-              "query": "{resource.service.name=\"kagent\" && name=\"call_llm\"} | select(span.gen_ai.usage.input_tokens, span.gen_ai.usage.output_tokens, span.gen_ai.request.model, span.gen_ai.conversation.id, span.gen_ai.operation.name, span.kagent.user_id, span.gen_ai.agent.name)",
+              "query": "{resource.service.namespace=\"kagent\" && resource.service.name=~\"${agent:regex}\" && name=\"call_llm\" && span.gen_ai.request.model=~\"${model:regex}\"} | select(span.gen_ai.usage.input_tokens, span.gen_ai.usage.output_tokens, span.gen_ai.request.model, span.gen_ai.conversation.id, span.gen_ai.operation.name, span.kagent.user_id, span.gen_ai.agent.name)",
               "queryType": "traceql",
               "refId": "A",
               "tableType": "spans"
@@ -1782,7 +794,7 @@ data:
                 "uid": "tempo"
               },
               "limit": 50,
-              "query": "{resource.service.name=\"kagent\" && name=~\"invoke_agent.*\"} | select(span.gen_ai.agent.name, span.gen_ai.conversation.id, span.gen_ai.operation.name, span.kagent.user_id)",
+              "query": "{resource.service.namespace=\"kagent\" && resource.service.name=~\"${agent:regex}\" && name=~\"invoke_agent.*\"} | select(span.gen_ai.agent.name, span.gen_ai.conversation.id, span.gen_ai.operation.name, span.kagent.user_id)",
               "queryType": "traceql",
               "refId": "A",
               "tableType": "spans"
@@ -1818,6 +830,274 @@ data:
             }
           ],
           "type": "table"
+        },
+        {
+          "datasource": {
+            "type": "tempo",
+            "uid": "tempo"
+          },
+          "description": "Calls, input/output tokens per model actually used \u2014 works for any provider (direct Anthropic/OpenAI or OpenRouter-routed)",
+          "fieldConfig": {
+            "defaults": {
+              "custom": {
+                "align": "left",
+                "cellOptions": {
+                  "type": "auto"
+                },
+                "footer": {
+                  "reducers": [
+                    "sum"
+                  ]
+                },
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Calls"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 100
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Input Tokens (sum)"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 150
+                  }
+                ]
+              },
+              {
+                "matcher": {
+                  "id": "byName",
+                  "options": "Output Tokens (sum)"
+                },
+                "properties": [
+                  {
+                    "id": "custom.width",
+                    "value": 150
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 8
+          },
+          "id": 20,
+          "options": {
+            "cellHeight": "sm",
+            "showHeader": true,
+            "sortBy": [
+              {
+                "desc": true,
+                "displayName": "Calls"
+              }
+            ]
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "tempo",
+                "uid": "tempo"
+              },
+              "limit": 1000,
+              "query": "{resource.service.namespace=\"kagent\" && resource.service.name=~\"${agent:regex}\" && name=\"call_llm\" && span.gen_ai.request.model=~\"${model:regex}\"} | select(span.gen_ai.request.model, span.gen_ai.usage.input_tokens, span.gen_ai.usage.output_tokens)",
+              "queryType": "traceql",
+              "refId": "A",
+              "tableType": "spans"
+            }
+          ],
+          "title": "Calls & Tokens by Model",
+          "transformations": [
+            {
+              "id": "convertFieldType",
+              "options": {
+                "conversions": [
+                  {
+                    "destinationType": "number",
+                    "targetField": "gen_ai.usage.input_tokens"
+                  },
+                  {
+                    "destinationType": "number",
+                    "targetField": "gen_ai.usage.output_tokens"
+                  }
+                ],
+                "fields": {}
+              }
+            },
+            {
+              "id": "groupBy",
+              "options": {
+                "fields": {
+                  "gen_ai.request.model": {
+                    "aggregations": [],
+                    "operation": "groupby"
+                  },
+                  "gen_ai.usage.input_tokens": {
+                    "aggregations": [
+                      "sum"
+                    ],
+                    "operation": "aggregate"
+                  },
+                  "gen_ai.usage.output_tokens": {
+                    "aggregations": [
+                      "sum"
+                    ],
+                    "operation": "aggregate"
+                  },
+                  "traceID": {
+                    "aggregations": [
+                      "count"
+                    ],
+                    "operation": "aggregate"
+                  }
+                }
+              }
+            },
+            {
+              "id": "organize",
+              "options": {
+                "renameByName": {
+                  "gen_ai.request.model": "Model",
+                  "gen_ai.usage.input_tokens (sum)": "Input Tokens (sum)",
+                  "gen_ai.usage.output_tokens (sum)": "Output Tokens (sum)",
+                  "traceID (count)": "Calls"
+                }
+              }
+            }
+          ],
+          "type": "table"
+        },
+        {
+          "datasource": {
+            "type": "tempo",
+            "uid": "tempo"
+          },
+          "description": "Call count ranked by model \u2014 which models are actually getting used",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "lineWidth": 1
+              },
+              "mappings": [],
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 8
+          },
+          "id": 21,
+          "options": {
+            "barWidth": 0.6,
+            "fullHighlight": false,
+            "groupWidth": 0.7,
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "orientation": "horizontal",
+            "showValue": "always",
+            "stacking": "none",
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            },
+            "xTickLabelRotation": 0,
+            "xTickLabelSpacing": 0
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "tempo",
+                "uid": "tempo"
+              },
+              "limit": 1000,
+              "query": "{resource.service.namespace=\"kagent\" && resource.service.name=~\"${agent:regex}\" && name=\"call_llm\" && span.gen_ai.request.model=~\"${model:regex}\"} | select(span.gen_ai.request.model)",
+              "queryType": "traceql",
+              "refId": "A",
+              "tableType": "spans"
+            }
+          ],
+          "title": "Most Used Models",
+          "transformations": [
+            {
+              "id": "groupBy",
+              "options": {
+                "fields": {
+                  "gen_ai.request.model": {
+                    "aggregations": [],
+                    "operation": "groupby"
+                  },
+                  "traceID": {
+                    "aggregations": [
+                      "count"
+                    ],
+                    "operation": "aggregate"
+                  }
+                }
+              }
+            },
+            {
+              "id": "organize",
+              "options": {
+                "renameByName": {
+                  "gen_ai.request.model": "Model",
+                  "traceID (count)": "Calls"
+                }
+              }
+            },
+            {
+              "id": "sortBy",
+              "options": {
+                "fields": {},
+                "sort": [
+                  {
+                    "field": "Calls",
+                    "desc": true
+                  }
+                ]
+              }
+            }
+          ],
+          "type": "barchart"
         }
       ],
       "preload": false,
@@ -1830,7 +1110,50 @@ data:
         "usage"
       ],
       "templating": {
-        "list": []
+        "list": [
+          {
+            "current": {},
+            "datasource": {
+              "type": "tempo",
+              "uid": "tempo"
+            },
+            "definition": "",
+            "hide": 0,
+            "includeAll": true,
+            "label": "Agent",
+            "multi": true,
+            "name": "agent",
+            "query": {
+              "refId": "TempoVariableQueryEditor-VariableQuery",
+              "type": 1,
+              "tag": "resource.service.name"
+            },
+            "refresh": 2,
+            "regex": "",
+            "type": "query"
+          },
+          {
+            "current": {},
+            "datasource": {
+              "type": "tempo",
+              "uid": "tempo"
+            },
+            "definition": "",
+            "hide": 0,
+            "includeAll": true,
+            "label": "Model",
+            "multi": true,
+            "name": "model",
+            "query": {
+              "refId": "TempoVariableQueryEditor-VariableQuery",
+              "type": 1,
+              "tag": "span.gen_ai.request.model"
+            },
+            "refresh": 2,
+            "regex": "",
+            "type": "query"
+          }
+        ]
       },
       "time": {
         "from": "now-6h",
