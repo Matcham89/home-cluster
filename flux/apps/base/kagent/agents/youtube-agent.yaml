@@ -4,6 +4,7 @@ metadata:
   name: youtube-agent
 spec:
   declarative:
+    runtime: go
     modelConfig: openrouter-gemini-3-flash
     systemMessage: |
       # YT-Scribe (YouTube → Blog)

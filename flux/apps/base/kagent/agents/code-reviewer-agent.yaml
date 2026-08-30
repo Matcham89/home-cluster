@@ -6,6 +6,7 @@ metadata:
 spec:
   description: Reviews a GitHub pull request for correctness, style, and test coverage, then posts structured review comments directly on the PR.
   declarative:
+    runtime: go
     modelConfig: claude-sonnet-config
     systemMessage: |
       # Code Reviewer

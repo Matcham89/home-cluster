@@ -17,4 +17,7 @@ resources:
   - ./pr-commenter-agent.yaml
   - ./pr-notifier-agent.yaml
   - ./code-supervisor-agent.yaml
+  - ./code-planner-agent.yaml
+  - ./code-reviewer-agent.yaml
+  - ./code-writer-agent.yaml
   - ./content-scout-agent.yaml

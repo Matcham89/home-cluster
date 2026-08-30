@@ -5,6 +5,7 @@ metadata:
   namespace: kagent
 spec:
   declarative:
+    runtime: go
     modelConfig: claude-sonnet-config
     systemMessage: |
       # Flux Cluster Health Checker

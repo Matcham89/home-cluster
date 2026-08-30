@@ -5,6 +5,7 @@ metadata:
   namespace: kagent
 spec:
   declarative:
+    runtime: go
     modelConfig: openrouter-gemini-3-flash
     systemMessage: |
       # Kubernetes Inspector Agent

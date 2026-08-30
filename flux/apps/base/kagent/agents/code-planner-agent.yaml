@@ -6,6 +6,7 @@ metadata:
 spec:
   description: Reads a GitHub issue and the relevant codebase, then produces a structured file-level implementation plan for the code-writer-agent.
   declarative:
+    runtime: go
     modelConfig: claude-sonnet-config
     systemMessage: |
       # Code Planner

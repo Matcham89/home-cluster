@@ -10,9 +10,11 @@ metadata:
   namespace: kagent
 spec:
   declarative:
-    # Default runtime is "go"; explicitly overridden to "python" since the
-    # shell-tool-driven research workflow below needs the full Python ADK
-    # feature set, not just faster startup.
+    # Explicit (not relying on the schema default, which has drifted between
+    # kagent versions — see git history). Go ADK chosen fleet-wide for faster
+    # startup; it emits generate_content <model> instead of call_llm, which
+    # ../../monitoring/kube-prometheus-stack/dashboards/kagent-llm-usage.yaml
+    # accounts for.
     runtime: go
     modelConfig: openrouter-deepseek-v4-flash
     promptTemplate:

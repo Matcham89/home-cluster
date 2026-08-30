@@ -5,6 +5,7 @@ metadata:
   namespace: kagent
 spec:
   declarative:
+    runtime: go
     modelConfig: openrouter-deepseek-v4-flash
     systemMessage: |
       # Kubernetes Events Agent

@@ -6,6 +6,7 @@ metadata:
 spec:
   description: Posts a human-readable summary comment on the GitHub PR tagging the repo owner, summarising what the review pipeline found and what action is needed.
   declarative:
+    runtime: go
     modelConfig: openrouter-gemini-3-flash
     systemMessage: |
       # PR Notifier

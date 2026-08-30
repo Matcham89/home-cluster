@@ -6,6 +6,7 @@ metadata:
 spec:
   description: Analyses a GitHub pull request diff and produces a structured JSON findings report for the pr-commenter-agent.
   declarative:
+    runtime: go
     modelConfig: claude-sonnet-config
     systemMessage: |
       # PR Analyzer
