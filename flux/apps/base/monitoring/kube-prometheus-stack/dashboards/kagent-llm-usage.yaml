@@ -113,7 +113,7 @@ data:
                 "uid": "tempo"
               },
               "limit": 100000,
-              "query": "{resource.service.namespace=\"kagent\" && resource.service.name=~\"${agent:regex}\" && name=\"call_llm\" && span.gen_ai.request.model=~\"${model:regex}\"} | select(span.gen_ai.usage.input_tokens)",
+              "query": "{resource.service.namespace=\"kagent\" && name=\"call_llm\"} | select(span.gen_ai.usage.input_tokens)",
               "queryType": "traceql",
               "refId": "A",
               "tableType": "spans"
@@ -233,7 +233,7 @@ data:
                 "uid": "tempo"
               },
               "limit": 100000,
-              "query": "{resource.service.namespace=\"kagent\" && resource.service.name=~\"${agent:regex}\" && name=\"call_llm\" && span.gen_ai.request.model=~\"${model:regex}\"} | select(span.gen_ai.usage.output_tokens)",
+              "query": "{resource.service.namespace=\"kagent\" && name=\"call_llm\"} | select(span.gen_ai.usage.output_tokens)",
               "queryType": "traceql",
               "refId": "A",
               "tableType": "spans"
@@ -335,7 +335,7 @@ data:
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "histogram_quantile(0.99, sum by(le) (rate(otelcol_duration_milliseconds_bucket{service_namespace=\"kagent\",service_name=~\"${agent:regex}\",span_name=\"call_llm\"}[$__rate_interval])))",
+              "expr": "histogram_quantile(0.99, sum by(le) (rate(otelcol_duration_milliseconds_bucket{service_namespace=\"kagent\",span_name=\"call_llm\"}[$__rate_interval])))",
               "refId": "A"
             }
           ],
@@ -406,7 +406,7 @@ data:
                 "type": "prometheus",
                 "uid": "prometheus"
               },
-              "expr": "sum(rate(otelcol_duration_milliseconds_sum{service_namespace=\"kagent\",service_name=~\"${agent:regex}\",span_name=\"call_llm\"}[$__rate_interval])) / sum(rate(otelcol_duration_milliseconds_count{service_namespace=\"kagent\",service_name=~\"${agent:regex}\",span_name=\"call_llm\"}[$__rate_interval]))",
+              "expr": "sum(rate(otelcol_duration_milliseconds_sum{service_namespace=\"kagent\",span_name=\"call_llm\"}[$__rate_interval])) / sum(rate(otelcol_duration_milliseconds_count{service_namespace=\"kagent\",span_name=\"call_llm\"}[$__rate_interval]))",
               "refId": "A"
             }
           ],
@@ -591,7 +591,7 @@ data:
                 "uid": "tempo"
               },
               "limit": 50,
-              "query": "{resource.service.namespace=\"kagent\" && resource.service.name=~\"${agent:regex}\" && name=\"call_llm\" && span.gen_ai.request.model=~\"${model:regex}\"} | select(span.gen_ai.usage.input_tokens, span.gen_ai.usage.output_tokens, span.gen_ai.request.model, span.gen_ai.conversation.id, span.gen_ai.operation.name, span.kagent.user_id, span.gen_ai.agent.name)",
+              "query": "{resource.service.namespace=\"kagent\" && name=\"call_llm\"} | select(span.gen_ai.usage.input_tokens, span.gen_ai.usage.output_tokens, span.gen_ai.request.model, span.gen_ai.conversation.id, span.gen_ai.operation.name, span.kagent.user_id, span.gen_ai.agent.name)",
               "queryType": "traceql",
               "refId": "A",
               "tableType": "spans"
@@ -794,7 +794,7 @@ data:
                 "uid": "tempo"
               },
               "limit": 50,
-              "query": "{resource.service.namespace=\"kagent\" && resource.service.name=~\"${agent:regex}\" && name=~\"invoke_agent.*\"} | select(span.gen_ai.agent.name, span.gen_ai.conversation.id, span.gen_ai.operation.name, span.kagent.user_id)",
+              "query": "{resource.service.namespace=\"kagent\" && name=~\"invoke_agent.*\"} | select(span.gen_ai.agent.name, span.gen_ai.conversation.id, span.gen_ai.operation.name, span.kagent.user_id)",
               "queryType": "traceql",
               "refId": "A",
               "tableType": "spans"
@@ -926,7 +926,7 @@ data:
                 "uid": "tempo"
               },
               "limit": 1000,
-              "query": "{resource.service.namespace=\"kagent\" && resource.service.name=~\"${agent:regex}\" && name=\"call_llm\" && span.gen_ai.request.model=~\"${model:regex}\"} | select(span.gen_ai.request.model, span.gen_ai.usage.input_tokens, span.gen_ai.usage.output_tokens)",
+              "query": "{resource.service.namespace=\"kagent\" && name=\"call_llm\"} | select(span.gen_ai.request.model, span.gen_ai.usage.input_tokens, span.gen_ai.usage.output_tokens)",
               "queryType": "traceql",
               "refId": "A",
               "tableType": "spans"
@@ -1050,7 +1050,7 @@ data:
                 "uid": "tempo"
               },
               "limit": 1000,
-              "query": "{resource.service.namespace=\"kagent\" && resource.service.name=~\"${agent:regex}\" && name=\"call_llm\" && span.gen_ai.request.model=~\"${model:regex}\"} | select(span.gen_ai.request.model)",
+              "query": "{resource.service.namespace=\"kagent\" && name=\"call_llm\"} | select(span.gen_ai.request.model)",
               "queryType": "traceql",
               "refId": "A",
               "tableType": "spans"
@@ -1110,50 +1110,7 @@ data:
         "usage"
       ],
       "templating": {
-        "list": [
-          {
-            "current": {},
-            "datasource": {
-              "type": "tempo",
-              "uid": "tempo"
-            },
-            "definition": "",
-            "hide": 0,
-            "includeAll": true,
-            "label": "Agent",
-            "multi": true,
-            "name": "agent",
-            "query": {
-              "refId": "TempoVariableQueryEditor-VariableQuery",
-              "type": 1,
-              "tag": "resource.service.name"
-            },
-            "refresh": 2,
-            "regex": "",
-            "type": "query"
-          },
-          {
-            "current": {},
-            "datasource": {
-              "type": "tempo",
-              "uid": "tempo"
-            },
-            "definition": "",
-            "hide": 0,
-            "includeAll": true,
-            "label": "Model",
-            "multi": true,
-            "name": "model",
-            "query": {
-              "refId": "TempoVariableQueryEditor-VariableQuery",
-              "type": 1,
-              "tag": "span.gen_ai.request.model"
-            },
-            "refresh": 2,
-            "regex": "",
-            "type": "query"
-          }
-        ]
+        "list": []
       },
       "time": {
         "from": "now-6h",
