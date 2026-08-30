@@ -5,7 +5,7 @@ metadata:
   namespace: kagent
 spec:
   declarative:
-    modelConfig: gemini-flash
+    modelConfig: claude-sonnet-config
     systemMessage: |
       # Flux Cluster Health Checker
 

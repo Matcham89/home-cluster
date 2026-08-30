@@ -5,14 +5,10 @@ kind: Kustomization
 resources:
   # Disabled due to schema changes in v2.2.0-main - MCP backend not supported in current CRD
   # - ./youtube-mcp.yaml
-  - ./anthropic1.yaml
-  - ./anthropic2.yaml
-  - ./anthropic3.yaml
-  # Claude multi-gateway backends (one backend per model with hardcoded model)
+  # Claude/Gemini multi-model backends (one backend per model with hardcoded model)
   - ./claude-backends.yaml
   - ./kagent.yaml
   - ./github-webhook.yaml
   # - ./mcp-translator.yaml
   - ./claude-code.yaml
   - ./gemini-backends.yaml
-

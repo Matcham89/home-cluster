@@ -9,7 +9,7 @@ spec:
   apiKeySecret: kagent-google
   apiKeySecretKey: GOOGLE_API_KEY
   openAI:
-    baseUrl: http://gemini-flash-gateway.kgateway-system.svc.cluster.local:8094/v1
+    baseUrl: http://agentgateway.kgateway-system.svc.cluster.local:8080/gemini/flash/v1
 ---
 apiVersion: kagent.dev/v1alpha2
 kind: ModelConfig
@@ -22,4 +22,4 @@ spec:
   apiKeySecret: kagent-google
   apiKeySecretKey: GOOGLE_API_KEY
   openAI:
-    baseUrl: http://gemini-pro-gateway.kgateway-system.svc.cluster.local:8095/v1
+    baseUrl: http://agentgateway.kgateway-system.svc.cluster.local:8080/gemini/pro/v1

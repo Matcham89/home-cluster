@@ -7,9 +7,7 @@ resources:
   - ./github-webhook.yaml
   # Disabled: references gateway.kgateway.dev/Backend kind not supported in current CRD version
   # - ./youtube-mcp.yaml
-  - ./claude1.yaml
-  - ./claude2.yaml
-  - ./claude3.yaml
-  # Claude multi-gateway routes (OpenAI-compatible endpoints)
+  # Claude/Gemini multi-model routes, all on the single shared agentgateway
+  # Gateway (path-prefix per model, OpenAI-compatible endpoints)
   - ./claude-routes.yaml
   - ./gemini-routes.yaml

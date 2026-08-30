@@ -41,33 +41,6 @@ spec:
         - sourceLabels: [__meta_kubernetes_pod_label_gateway_networking_k8s_io_gateway_name]
           targetLabel: gateway_instance
 
-        # Optional: tag Claude gateways with provider/model (only when it matches)
-        - sourceLabels: [gateway_name]
-          regex: claude-(sonnet|opus|haiku)-gateway
-          targetLabel: provider
-          replacement: anthropic
-
-        - sourceLabels: [gateway_name]
-          regex: claude-sonnet-gateway
-          targetLabel: model
-          replacement: sonnet-4-5
-
-        - sourceLabels: [gateway_name]
-          regex: claude-opus-gateway
-          targetLabel: model
-          replacement: opus-4-5
-
-        - sourceLabels: [gateway_name]
-          regex: claude-haiku-gateway
-          targetLabel: model
-          replacement: haiku-4-5
-
-        # Optional: tag ollama gateway
-        - sourceLabels: [gateway_name]
-          regex: gateway-ollama
-          targetLabel: provider
-          replacement: ollama
-
       metricRelabelings:
         - sourceLabels: [__name__]
           regex: '.*_info'

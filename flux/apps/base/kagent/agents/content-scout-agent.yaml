@@ -13,8 +13,8 @@ spec:
     # Default runtime is "go"; explicitly overridden to "python" since the
     # shell-tool-driven research workflow below needs the full Python ADK
     # feature set, not just faster startup.
-    runtime: python
-    modelConfig: default-model-config
+    runtime: go
+    modelConfig: claude-sonnet-config
     promptTemplate:
       dataSources:
         - alias: builtin
@@ -97,6 +97,9 @@ spec:
       - mcpServer:
           kind: RemoteMCPServer
           name: qdrant-mcp
+          toolNames:
+            - qdrant-find
+            - qdrant-store
         type: McpServer
   description: >-
     DevOps/SRE content idea researcher — scouts YouTube, Reddit, HN, and blogs
