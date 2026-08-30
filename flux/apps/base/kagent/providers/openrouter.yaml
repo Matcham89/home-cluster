@@ -1,0 +1,69 @@
+---
+# OpenRouter models, routed entirely through agentgateway
+# (../../kgateway-system/backends/openrouter-backends.yaml) — kagent holds
+# no real API key for these (../secrets/openrouter-placeholder.yaml is a
+# non-secret placeholder; the gateway injects the real credential).
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: openrouter-deepseek-v4-flash
+  namespace: kagent
+spec:
+  apiKeySecret: kagent-openrouter-placeholder
+  apiKeySecretKey: OPENROUTER_API_KEY
+  model: deepseek/deepseek-v4-flash-latest
+  provider: OpenAI
+  openAI:
+    baseUrl: http://agentgateway.kgateway-system.svc.cluster.local:8080/openrouter/deepseek-v4-flash/v1
+---
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: openrouter-qwen3-flash
+  namespace: kagent
+spec:
+  apiKeySecret: kagent-openrouter-placeholder
+  apiKeySecretKey: OPENROUTER_API_KEY
+  model: qwen/qwen3.8-flash
+  provider: OpenAI
+  openAI:
+    baseUrl: http://agentgateway.kgateway-system.svc.cluster.local:8080/openrouter/qwen3-flash/v1
+---
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: openrouter-deepseek-v3-2
+  namespace: kagent
+spec:
+  apiKeySecret: kagent-openrouter-placeholder
+  apiKeySecretKey: OPENROUTER_API_KEY
+  model: deepseek/deepseek-v3.2
+  provider: OpenAI
+  openAI:
+    baseUrl: http://agentgateway.kgateway-system.svc.cluster.local:8080/openrouter/deepseek-v3-2/v1
+---
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: openrouter-gemini-3-flash
+  namespace: kagent
+spec:
+  apiKeySecret: kagent-openrouter-placeholder
+  apiKeySecretKey: OPENROUTER_API_KEY
+  model: google/gemini-3.7-flash
+  provider: OpenAI
+  openAI:
+    baseUrl: http://agentgateway.kgateway-system.svc.cluster.local:8080/openrouter/gemini-3-flash/v1
+---
+apiVersion: kagent.dev/v1alpha2
+kind: ModelConfig
+metadata:
+  name: openrouter-claude-sonnet-4-6
+  namespace: kagent
+spec:
+  apiKeySecret: kagent-openrouter-placeholder
+  apiKeySecretKey: OPENROUTER_API_KEY
+  model: anthropic/claude-sonnet-4.6
+  provider: OpenAI
+  openAI:
+    baseUrl: http://agentgateway.kgateway-system.svc.cluster.local:8080/openrouter/claude-sonnet-4-6/v1

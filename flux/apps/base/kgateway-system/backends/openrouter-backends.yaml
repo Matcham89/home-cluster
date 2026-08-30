@@ -1,0 +1,143 @@
+---
+# ============================================================================
+# OPENROUTER AGENTGATEWAY BACKENDS
+# ============================================================================
+# OpenRouter (https://openrouter.ai) is an OpenAI-compatible model
+# aggregator, not a "managed" provider AgentgatewayBackend has a built-in
+# type for (unlike Anthropic/Gemini) — so these use `custom` with an
+# explicit host/port/format, pointed at OpenRouter's chat-completions
+# endpoint. Same enforcement pattern as ../claude-backends.yaml /
+# ../gemini-backends.yaml: model is HARDCODED per-backend, so the caller
+# (kagent) can't override it — it only selects one of these five by which
+# route/backend it hits. Auth is entirely gateway-side via
+# ../secrets/openrouter-secret.yaml; kagent never sees the real key.
+# ============================================================================
+
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: openrouter-deepseek-v4-flash-backend
+  namespace: kgateway-system
+  labels:
+    app: openrouter
+    provider: openrouter
+spec:
+  ai:
+    groups:
+      - providers:
+          - name: openrouter-deepseek-v4-flash
+            host: openrouter.ai
+            port: 443
+            custom:
+              model: "deepseek/deepseek-v4-flash-latest"
+              formats:
+                - type: Completions
+                  path: /api/v1/chat/completions
+            policies:
+              auth:
+                secretRef:
+                  name: openrouter-secret
+
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: openrouter-qwen3-flash-backend
+  namespace: kgateway-system
+  labels:
+    app: openrouter
+    provider: openrouter
+spec:
+  ai:
+    groups:
+      - providers:
+          - name: openrouter-qwen3-flash
+            host: openrouter.ai
+            port: 443
+            custom:
+              model: "qwen/qwen3.8-flash"
+              formats:
+                - type: Completions
+                  path: /api/v1/chat/completions
+            policies:
+              auth:
+                secretRef:
+                  name: openrouter-secret
+
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: openrouter-deepseek-v3-2-backend
+  namespace: kgateway-system
+  labels:
+    app: openrouter
+    provider: openrouter
+spec:
+  ai:
+    groups:
+      - providers:
+          - name: openrouter-deepseek-v3-2
+            host: openrouter.ai
+            port: 443
+            custom:
+              model: "deepseek/deepseek-v3.2"
+              formats:
+                - type: Completions
+                  path: /api/v1/chat/completions
+            policies:
+              auth:
+                secretRef:
+                  name: openrouter-secret
+
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: openrouter-gemini-3-flash-backend
+  namespace: kgateway-system
+  labels:
+    app: openrouter
+    provider: openrouter
+spec:
+  ai:
+    groups:
+      - providers:
+          - name: openrouter-gemini-3-flash
+            host: openrouter.ai
+            port: 443
+            custom:
+              model: "google/gemini-3.7-flash"
+              formats:
+                - type: Completions
+                  path: /api/v1/chat/completions
+            policies:
+              auth:
+                secretRef:
+                  name: openrouter-secret
+
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: openrouter-claude-sonnet-4-6-backend
+  namespace: kgateway-system
+  labels:
+    app: openrouter
+    provider: openrouter
+spec:
+  ai:
+    groups:
+      - providers:
+          - name: openrouter-claude-sonnet-4-6
+            host: openrouter.ai
+            port: 443
+            custom:
+              model: "anthropic/claude-sonnet-4.6"
+              formats:
+                - type: Completions
+                  path: /api/v1/chat/completions
+            policies:
+              auth:
+                secretRef:
+                  name: openrouter-secret

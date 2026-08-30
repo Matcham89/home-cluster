@@ -1,0 +1,167 @@
+---
+# ============================================================================
+# OPENROUTER HTTP ROUTES — all on the single shared `agentgateway` Gateway
+# ============================================================================
+# Same pattern as ../httproute/claude-routes.yaml — one path prefix per
+# model, rewritten to `/` and forwarded to that model's fixed backend
+# (../backends/openrouter-backends.yaml).
+# ============================================================================
+
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: openrouter-deepseek-v4-flash-route
+  namespace: kgateway-system
+  labels:
+    app: openrouter
+    model: deepseek-v4-flash
+    provider: openrouter
+spec:
+  parentRefs:
+    - name: agentgateway
+      namespace: kgateway-system
+      sectionName: http
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /openrouter/deepseek-v4-flash
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /
+      backendRefs:
+        - name: openrouter-deepseek-v4-flash-backend
+          namespace: kgateway-system
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
+
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: openrouter-qwen3-flash-route
+  namespace: kgateway-system
+  labels:
+    app: openrouter
+    model: qwen3-flash
+    provider: openrouter
+spec:
+  parentRefs:
+    - name: agentgateway
+      namespace: kgateway-system
+      sectionName: http
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /openrouter/qwen3-flash
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /
+      backendRefs:
+        - name: openrouter-qwen3-flash-backend
+          namespace: kgateway-system
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
+
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: openrouter-deepseek-v3-2-route
+  namespace: kgateway-system
+  labels:
+    app: openrouter
+    model: deepseek-v3-2
+    provider: openrouter
+spec:
+  parentRefs:
+    - name: agentgateway
+      namespace: kgateway-system
+      sectionName: http
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /openrouter/deepseek-v3-2
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /
+      backendRefs:
+        - name: openrouter-deepseek-v3-2-backend
+          namespace: kgateway-system
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
+
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: openrouter-gemini-3-flash-route
+  namespace: kgateway-system
+  labels:
+    app: openrouter
+    model: gemini-3-flash
+    provider: openrouter
+spec:
+  parentRefs:
+    - name: agentgateway
+      namespace: kgateway-system
+      sectionName: http
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /openrouter/gemini-3-flash
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /
+      backendRefs:
+        - name: openrouter-gemini-3-flash-backend
+          namespace: kgateway-system
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
+
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: openrouter-claude-sonnet-4-6-route
+  namespace: kgateway-system
+  labels:
+    app: openrouter
+    model: claude-sonnet-4-6
+    provider: openrouter
+spec:
+  parentRefs:
+    - name: agentgateway
+      namespace: kgateway-system
+      sectionName: http
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /openrouter/claude-sonnet-4-6
+      filters:
+        - type: URLRewrite
+          urlRewrite:
+            path:
+              type: ReplacePrefixMatch
+              replacePrefixMatch: /
+      backendRefs:
+        - name: openrouter-claude-sonnet-4-6-backend
+          namespace: kgateway-system
+          group: agentgateway.dev
+          kind: AgentgatewayBackend
