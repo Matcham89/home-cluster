@@ -12,3 +12,4 @@ resources:
   - ./claude-routes.yaml
   - ./gemini-routes.yaml
   - ./openrouter-routes.yaml
+  - ./hermes-routes.yaml

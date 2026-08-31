@@ -13,3 +13,4 @@ resources:
   - ./claude-code.yaml
   - ./gemini-backends.yaml
   - ./openrouter-backends.yaml
+  - ./hermes-backends.yaml
