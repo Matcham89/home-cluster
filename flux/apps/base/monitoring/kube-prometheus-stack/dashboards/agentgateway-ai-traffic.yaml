@@ -697,46 +697,52 @@ data:
               "text": "All",
               "value": "$__all"
             },
-            "datasource": {
-              "type": "loki",
-              "uid": "P8E80F9AEF21F6940"
-            },
-            "definition": "label_values({service_name=\"agentgateway\", container=\"agentgateway\"} |= \"protocol=llm\" | logfmt, route)",
             "hide": 0,
             "includeAll": true,
             "label": "Route",
             "multi": true,
             "name": "route",
-            "options": [],
-            "query": "label_values({service_name=\"agentgateway\", container=\"agentgateway\"} |= \"protocol=llm\" | logfmt, route)",
-            "refresh": 2,
-            "regex": "",
+            "options": [
+              {"text": "All", "value": "$__all"},
+              {"text": "kgateway-system/claude-haiku-route", "value": "kgateway-system/claude-haiku-route"},
+              {"text": "kgateway-system/claude-opus-route", "value": "kgateway-system/claude-opus-route"},
+              {"text": "kgateway-system/claude-sonnet-route", "value": "kgateway-system/claude-sonnet-route"},
+              {"text": "kgateway-system/gemini-flash-route", "value": "kgateway-system/gemini-flash-route"},
+              {"text": "kgateway-system/gemini-pro-route", "value": "kgateway-system/gemini-pro-route"},
+              {"text": "kgateway-system/hermes-route", "value": "kgateway-system/hermes-route"},
+              {"text": "kgateway-system/openrouter-route", "value": "kgateway-system/openrouter-route"}
+            ],
+            "query": "kgateway-system/claude-haiku-route,kgateway-system/claude-opus-route,kgateway-system/claude-sonnet-route,kgateway-system/gemini-flash-route,kgateway-system/gemini-pro-route,kgateway-system/hermes-route,kgateway-system/openrouter-route",
+            "queryValue": "",
             "skipUrlSync": false,
-            "sort": 1,
-            "type": "query"
+            "type": "custom",
+            "description": "Static list — the current AI-serving routes on the shared agentgateway Gateway. Loki's label_values() can't resolve this dynamically (route is a parsed logfmt field, not an indexed stream label — Loki's label API only accepts a bare stream selector, not a query with filters/parsers), so this needs a manual update if routes are added/renamed (see ../../../kgateway-system/httproute/)."
           },
           {
             "current": {
               "text": "All",
               "value": "$__all"
             },
-            "datasource": {
-              "type": "loki",
-              "uid": "P8E80F9AEF21F6940"
-            },
-            "definition": "label_values({service_name=\"agentgateway\", container=\"agentgateway\"} |= \"gen_ai.request.model\" | logfmt, gen_ai_response_model)",
             "hide": 0,
             "includeAll": true,
             "label": "Model",
             "multi": true,
             "name": "model",
-            "options": [],
-            "query": "label_values({service_name=\"agentgateway\", container=\"agentgateway\"} |= \"gen_ai.request.model\" | logfmt, gen_ai_response_model)",
-            "refresh": 2,
-            "regex": "",
+            "options": [
+              {"text": "All", "value": "$__all"},
+              {"text": "anthropic/claude-sonnet-4.6", "value": "anthropic/claude-sonnet-4.6"},
+              {"text": "claude-sonnet-4-5-20250929", "value": "claude-sonnet-4-5-20250929"},
+              {"text": "deepseek/deepseek-v3.2", "value": "deepseek/deepseek-v3.2"},
+              {"text": "deepseek/deepseek-v4-flash-0731", "value": "deepseek/deepseek-v4-flash-0731"},
+              {"text": "google/gemini-3.7-flash", "value": "google/gemini-3.7-flash"},
+              {"text": "qwen/qwen3-coder-flash", "value": "qwen/qwen3-coder-flash"},
+              {"text": "z-ai/glm-5.3-flash", "value": "z-ai/glm-5.3-flash"}
+            ],
+            "query": "anthropic/claude-sonnet-4.6,claude-sonnet-4-5-20250929,deepseek/deepseek-v3.2,deepseek/deepseek-v4-flash-0731,google/gemini-3.7-flash,qwen/qwen3-coder-flash,z-ai/glm-5.3-flash",
+            "queryValue": "",
             "skipUrlSync": false,
-            "sort": 1,
-            "type": "query"
+            "type": "custom",
+            "description": "Static snapshot of gen_ai.response.model values seen in the last 24h (same Loki limitation as Route above — this is OpenRouter passthrough, so the actual set of models is open-ended; add new ones here as they show up, e.g. via the Calls by Model panel legend)."
           }
         ]
       },
@@ -748,5 +754,5 @@ data:
       "timezone": "America/Denver",
       "title": "Agent Gateway - AI Traffic",
       "uid": "agentgateway-ai-traffic",
-      "version": 3
+      "version": 4
     }
