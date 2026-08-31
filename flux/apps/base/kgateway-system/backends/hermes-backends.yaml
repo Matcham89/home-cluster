@@ -15,6 +15,15 @@
 # model, so this backend/route is model-agnostic. Not named after any one
 # model (previously "hermes-deepseek-v4-flash", which stopped making sense
 # once Hermes started using other models too).
+#
+# `policies.ai.routes` is set because Hermes auto-probes several
+# llama.cpp/Ollama-style capability-detection endpoints on startup
+# (/props, /version, /api/tags, /api/show, /v1/models, plain GETs with no
+# body) that all 503 under the default (every path treated as Completions,
+# which requires a JSON body to parse). Model-listing paths get the real
+# `Models` format (OpenRouter actually serves GET /api/v1/models); anything
+# else falls through to `Passthrough` so it's forwarded as-is instead of
+# erroring in agentgateway's own request parser.
 # ============================================================================
 
 apiVersion: agentgateway.dev/v1alpha1
@@ -39,3 +48,11 @@ spec:
                 secretRef:
                   name: openrouter-secret
               tls: {}
+              ai:
+                routes:
+                  "/chat/completions": Completions
+                  "/v1/chat/completions": Completions
+                  "/v1/models": Models
+                  "/api/v1/models": Models
+                  "/models": Models
+                  "*": Passthrough
