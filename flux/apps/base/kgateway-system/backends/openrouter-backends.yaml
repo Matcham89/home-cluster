@@ -1,22 +1,26 @@
 ---
 # ============================================================================
-# OPENROUTER AGENTGATEWAY BACKENDS
+# OPENROUTER AGENTGATEWAY BACKEND — passthrough
 # ============================================================================
 # OpenRouter (https://openrouter.ai) is an OpenAI-compatible model
-# aggregator, not a "managed" provider AgentgatewayBackend has a built-in
-# type for (unlike Anthropic/Gemini) — so these use `custom` with an
-# explicit host/port/format, pointed at OpenRouter's chat-completions
-# endpoint. Same enforcement pattern as ../claude-backends.yaml /
-# ../gemini-backends.yaml: model is HARDCODED per-backend, so the caller
-# (kagent) can't override it — it only selects one of these five by which
-# route/backend it hits. Auth is entirely gateway-side via
-# ../secrets/openrouter-secret.yaml; kagent never sees the real key.
+# aggregator with ~400 models. This installed agentgateway version (v1.4.1)
+# has no dedicated "openrouter" provider type (that's a newer release —
+# https://agentgateway.dev/docs/kubernetes/latest/llm/providers/ documents
+# it, but the live CRD here only has openai/custom/anthropic/gemini/etc.),
+# so this uses the generic `openai` type with a host override — verified
+# directly against the installed CRD schema, not just the docs.
+#
+# Deliberately does NOT set `model` — unlike ../claude-backends.yaml /
+# ../gemini-backends.yaml (which hardcode one model per backend so the
+# caller can't override it), OpenRouter's whole purpose is picking from
+# many models, so this passes the caller's own "model" field straight
+# through. Auth is still gateway-side only via ../secrets/openrouter-secret.yaml.
 # ============================================================================
 
 apiVersion: agentgateway.dev/v1alpha1
 kind: AgentgatewayBackend
 metadata:
-  name: openrouter-deepseek-v4-flash-backend
+  name: openrouter-backend
   namespace: kgateway-system
   labels:
     app: openrouter
@@ -25,128 +29,11 @@ spec:
   ai:
     groups:
       - providers:
-          - name: openrouter-deepseek-v4-flash
+          - name: openrouter
             host: openrouter.ai
             port: 443
-            custom:
-              # OpenRouter alias — the leading ~ is part of the real model
-              # ID, not a typo (confirmed against openrouter.ai/api/v1/models
-              # — this is a floating alias to the latest V4 Flash snapshot)
-              model: "~deepseek/deepseek-v4-flash-latest"
-              formats:
-                - type: Completions
-                  path: /api/v1/chat/completions
-            policies:
-              auth:
-                secretRef:
-                  name: openrouter-secret
-              tls: {}
-
----
-apiVersion: agentgateway.dev/v1alpha1
-kind: AgentgatewayBackend
-metadata:
-  name: openrouter-qwen3-flash-backend
-  namespace: kgateway-system
-  labels:
-    app: openrouter
-    provider: openrouter
-spec:
-  ai:
-    groups:
-      - providers:
-          - name: openrouter-qwen3-flash
-            host: openrouter.ai
-            port: 443
-            custom:
-              # qwen/qwen3.8-flash doesn't exist on OpenRouter — verified
-              # against openrouter.ai/api/v1/models; qwen3-coder-flash is
-              # the closest real flash-tier Qwen3 model
-              model: "qwen/qwen3-coder-flash"
-              formats:
-                - type: Completions
-                  path: /api/v1/chat/completions
-            policies:
-              auth:
-                secretRef:
-                  name: openrouter-secret
-              tls: {}
-
----
-apiVersion: agentgateway.dev/v1alpha1
-kind: AgentgatewayBackend
-metadata:
-  name: openrouter-deepseek-v3-2-backend
-  namespace: kgateway-system
-  labels:
-    app: openrouter
-    provider: openrouter
-spec:
-  ai:
-    groups:
-      - providers:
-          - name: openrouter-deepseek-v3-2
-            host: openrouter.ai
-            port: 443
-            custom:
-              model: "deepseek/deepseek-v3.2"
-              formats:
-                - type: Completions
-                  path: /api/v1/chat/completions
-            policies:
-              auth:
-                secretRef:
-                  name: openrouter-secret
-              tls: {}
-
----
-apiVersion: agentgateway.dev/v1alpha1
-kind: AgentgatewayBackend
-metadata:
-  name: openrouter-gemini-3-flash-backend
-  namespace: kgateway-system
-  labels:
-    app: openrouter
-    provider: openrouter
-spec:
-  ai:
-    groups:
-      - providers:
-          - name: openrouter-gemini-3-flash
-            host: openrouter.ai
-            port: 443
-            custom:
-              model: "google/gemini-3.7-flash"
-              formats:
-                - type: Completions
-                  path: /api/v1/chat/completions
-            policies:
-              auth:
-                secretRef:
-                  name: openrouter-secret
-              tls: {}
-
----
-apiVersion: agentgateway.dev/v1alpha1
-kind: AgentgatewayBackend
-metadata:
-  name: openrouter-claude-sonnet-4-6-backend
-  namespace: kgateway-system
-  labels:
-    app: openrouter
-    provider: openrouter
-spec:
-  ai:
-    groups:
-      - providers:
-          - name: openrouter-claude-sonnet-4-6
-            host: openrouter.ai
-            port: 443
-            custom:
-              model: "anthropic/claude-sonnet-4.6"
-              formats:
-                - type: Completions
-                  path: /api/v1/chat/completions
+            path: /api/v1/chat/completions
+            openai: {}
             policies:
               auth:
                 secretRef:

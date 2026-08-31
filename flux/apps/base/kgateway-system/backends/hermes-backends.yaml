@@ -1,0 +1,41 @@
+---
+# ============================================================================
+# HERMES AGENTGATEWAY BACKENDS
+# ============================================================================
+# Dedicated route/backend for Hermes (standalone box on the LAN, not a
+# kagent agent) — same upstream/secret as ./openrouter-backends.yaml, just a
+# separate route (../httproute/hermes-routes.yaml) so its traffic shows up
+# distinctly in Grafana's "Calls by Route" panel
+# (../../monitoring/kube-prometheus-stack/dashboards/agentgateway-ai-traffic.yaml).
+# Needed because externalTrafficPolicy: Cluster on the agentgateway Service
+# SNATs Hermes' real source IP, so route is the only reliable way to tell
+# its traffic apart from kagent's on the shared route.
+#
+# Passthrough (no hardcoded `model`) — Hermes' own request body picks the
+# model, so this backend/route is model-agnostic. Not named after any one
+# model (previously "hermes-deepseek-v4-flash", which stopped making sense
+# once Hermes started using other models too).
+# ============================================================================
+
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: hermes-backend
+  namespace: kgateway-system
+  labels:
+    app: hermes
+    provider: openrouter
+spec:
+  ai:
+    groups:
+      - providers:
+          - name: hermes
+            host: openrouter.ai
+            port: 443
+            path: /api/v1/chat/completions
+            openai: {}
+            policies:
+              auth:
+                secretRef:
+                  name: openrouter-secret
+              tls: {}

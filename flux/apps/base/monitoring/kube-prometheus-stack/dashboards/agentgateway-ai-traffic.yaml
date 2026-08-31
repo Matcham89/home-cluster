@@ -1,0 +1,752 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: agentgateway-ai-traffic-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  agentgateway-ai-traffic.json: |-
+    {
+      "annotations": {
+        "list": [
+          {
+            "builtIn": 1,
+            "datasource": {
+              "type": "grafana",
+              "uid": "-- Grafana --"
+            },
+            "enable": true,
+            "hide": true,
+            "iconColor": "rgba(0, 211, 255, 1)",
+            "name": "Annotations & Alerts",
+            "type": "dashboard"
+          }
+        ]
+      },
+      "description": "AI traffic through agentgateway (kgateway-system) \u2014 every caller (kagent agents, Hermes, or anything else hitting the gateway), sourced from agentgateway's own structured access logs via Loki. Model/token/duration data comes straight from the gateway itself, so this works regardless of whether the caller has its own OTel instrumentation.",
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 0,
+      "id": null,
+      "links": [],
+      "panels": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "description": "Total AI requests proxied through agentgateway",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 6,
+            "x": 0,
+            "y": 0
+          },
+          "id": 1,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "auto"
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "P8E80F9AEF21F6940"
+              },
+              "expr": "sum(count_over_time({service_name=\"agentgateway\", container=\"agentgateway\"} |= \"gen_ai.request.model\" | logfmt | route=~\"$route\" | gen_ai_response_model=~\"$model\" [$__range]))",
+              "instant": true,
+              "queryType": "instant",
+              "refId": "A"
+            }
+          ],
+          "title": "Total AI Calls",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "description": "Total input tokens across all AI calls through the gateway",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 6,
+            "x": 6,
+            "y": 0
+          },
+          "id": 2,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "auto"
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "P8E80F9AEF21F6940"
+              },
+              "expr": "sum(sum_over_time({service_name=\"agentgateway\", container=\"agentgateway\"} |= \"gen_ai.request.model\" | logfmt | route=~\"$route\" | gen_ai_response_model=~\"$model\" | unwrap gen_ai_usage_input_tokens [$__range]))",
+              "instant": true,
+              "queryType": "instant",
+              "refId": "A"
+            }
+          ],
+          "title": "Total Input Tokens",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "description": "Total output tokens across all AI calls through the gateway",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  }
+                ]
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 6,
+            "x": 12,
+            "y": 0
+          },
+          "id": 3,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "auto"
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "P8E80F9AEF21F6940"
+              },
+              "expr": "sum(sum_over_time({service_name=\"agentgateway\", container=\"agentgateway\"} |= \"gen_ai.request.model\" | logfmt | route=~\"$route\" | gen_ai_response_model=~\"$model\" | unwrap gen_ai_usage_output_tokens [$__range]))",
+              "instant": true,
+              "queryType": "instant",
+              "refId": "A"
+            }
+          ],
+          "title": "Total Output Tokens",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "description": "Average call duration across all AI calls (gateway-measured, includes upstream provider latency)",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "thresholds"
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": 0
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 5
+                  },
+                  {
+                    "color": "red",
+                    "value": 15
+                  }
+                ]
+              },
+              "unit": "s"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 4,
+            "w": 6,
+            "x": 18,
+            "y": 0
+          },
+          "id": 4,
+          "options": {
+            "colorMode": "value",
+            "graphMode": "none",
+            "justifyMode": "auto",
+            "orientation": "auto",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "textMode": "auto"
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "P8E80F9AEF21F6940"
+              },
+              "expr": "sum(sum_over_time({service_name=\"agentgateway\", container=\"agentgateway\"} |= \"gen_ai.request.model\" | logfmt | route=~\"$route\" | gen_ai_response_model=~\"$model\" | unwrap duration(duration) [$__range])) / sum(count_over_time({service_name=\"agentgateway\", container=\"agentgateway\"} |= \"gen_ai.request.model\" | logfmt | route=~\"$route\" | gen_ai_response_model=~\"$model\" [$__range]))",
+              "instant": true,
+              "queryType": "instant",
+              "refId": "A"
+            }
+          ],
+          "title": "Avg Call Duration",
+          "type": "stat"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "description": "Which model actually served each call (gen_ai.response.model \u2014 the resolved model, not the alias requested)",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisPlacement": "auto",
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "lineWidth": 1
+              },
+              "mappings": [],
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 4
+          },
+          "id": 5,
+          "options": {
+            "barWidth": 0.6,
+            "fullHighlight": false,
+            "groupWidth": 0.7,
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "orientation": "horizontal",
+            "showValue": "always",
+            "stacking": "none",
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            },
+            "xTickLabelRotation": 0,
+            "xTickLabelSpacing": 0
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "P8E80F9AEF21F6940"
+              },
+              "expr": "sum by (gen_ai_response_model) (count_over_time({service_name=\"agentgateway\", container=\"agentgateway\"} |= \"gen_ai.request.model\" | logfmt | route=~\"$route\" [$__range]))",
+              "instant": true,
+              "legendFormat": "{{gen_ai_response_model}}",
+              "queryType": "instant",
+              "refId": "A"
+            }
+          ],
+          "title": "Calls by Model",
+          "type": "barchart"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "description": "Which route handled each call \u2014 distinguishes callers sharing the gateway (e.g. a dedicated Hermes route vs. the shared kagent routes) even when source IPs are SNAT'd (externalTrafficPolicy: Cluster)",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisPlacement": "auto",
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "lineWidth": 1
+              },
+              "mappings": [],
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 4
+          },
+          "id": 6,
+          "options": {
+            "barWidth": 0.6,
+            "fullHighlight": false,
+            "groupWidth": 0.7,
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "orientation": "horizontal",
+            "showValue": "always",
+            "stacking": "none",
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            },
+            "xTickLabelRotation": 0,
+            "xTickLabelSpacing": 0
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "P8E80F9AEF21F6940"
+              },
+              "expr": "sum by (route) (count_over_time({service_name=\"agentgateway\", container=\"agentgateway\"} |= \"gen_ai.request.model\" | logfmt | gen_ai_response_model=~\"$model\" [$__range]))",
+              "instant": true,
+              "legendFormat": "{{route}}",
+              "queryType": "instant",
+              "refId": "A"
+            }
+          ],
+          "title": "Calls by Route",
+          "type": "barchart"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "description": "HTTP status codes returned to callers \u2014 non-200 here means the gateway or upstream provider rejected the request",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisPlacement": "auto",
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "lineWidth": 1
+              },
+              "mappings": [],
+              "unit": "none"
+            },
+            "overrides": [
+              {
+                "matcher": {
+                  "id": "byRegexp",
+                  "options": "^[45].*"
+                },
+                "properties": [
+                  {
+                    "id": "color",
+                    "value": {
+                      "fixedColor": "red",
+                      "mode": "fixed"
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 12,
+            "x": 12,
+            "y": 12
+          },
+          "id": 7,
+          "options": {
+            "barWidth": 0.6,
+            "fullHighlight": false,
+            "groupWidth": 0.7,
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "orientation": "horizontal",
+            "showValue": "always",
+            "stacking": "none",
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            },
+            "xTickLabelRotation": 0,
+            "xTickLabelSpacing": 0
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "P8E80F9AEF21F6940"
+              },
+              "expr": "sum by (http_status) (count_over_time({service_name=\"agentgateway\", container=\"agentgateway\"} |= \"protocol=llm\" | logfmt | route=~\"$route\" [$__range]))",
+              "instant": true,
+              "legendFormat": "{{http_status}}",
+              "queryType": "instant",
+              "refId": "A"
+            }
+          ],
+          "title": "Calls by HTTP Status",
+          "type": "barchart"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "description": "Raw recent AI-proxied requests \u2014 every field agentgateway logs per call (model, tokens, duration, route, status)",
+          "fieldConfig": {
+            "defaults": {}
+          },
+          "gridPos": {
+            "h": 10,
+            "w": 24,
+            "x": 0,
+            "y": 18
+          },
+          "id": 8,
+          "options": {
+            "dedupStrategy": "none",
+            "enableLogDetails": true,
+            "prettifyLogMessage": false,
+            "showCommonLabels": false,
+            "showLabels": false,
+            "showTime": true,
+            "sortOrder": "Descending",
+            "wrapLogMessage": true
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "P8E80F9AEF21F6940"
+              },
+              "expr": "{service_name=\"agentgateway\", container=\"agentgateway\"} |= \"gen_ai.request.model\" | logfmt | route=~\"$route\" | gen_ai_response_model=~\"$model\"",
+              "queryType": "range",
+              "refId": "A"
+            }
+          ],
+          "title": "Recent AI Calls (raw)",
+          "type": "logs"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "description": "In-cluster (kagent agents, calling via ClusterIP DNS \u2014 real pod IP in src.addr) vs out-of-cluster (Hermes or anything else hitting the external LoadBalancer IP \u2014 SNAT'd to the node's CNI gateway address, always ending in .1 within the pod CIDR). Verified against real traffic, not assumed.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisPlacement": "auto",
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "lineWidth": 1
+              },
+              "mappings": [],
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 6,
+            "w": 12,
+            "x": 0,
+            "y": 12
+          },
+          "id": 9,
+          "options": {
+            "barWidth": 0.6,
+            "fullHighlight": false,
+            "groupWidth": 0.7,
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": false
+            },
+            "orientation": "horizontal",
+            "showValue": "always",
+            "stacking": "none",
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            },
+            "xTickLabelRotation": 0,
+            "xTickLabelSpacing": 0
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "P8E80F9AEF21F6940"
+              },
+              "expr": "sum(count_over_time({service_name=\"agentgateway\", container=\"agentgateway\"} |= \"gen_ai.request.model\" | logfmt | route=~\"$route\" | gen_ai_response_model=~\"$model\" | src_addr!~\"10\\\\.244\\\\.[0-9]+\\\\.1:.*\" [$__range]))",
+              "instant": true,
+              "legendFormat": "in-cluster",
+              "queryType": "instant",
+              "refId": "A"
+            },
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "P8E80F9AEF21F6940"
+              },
+              "expr": "sum(count_over_time({service_name=\"agentgateway\", container=\"agentgateway\"} |= \"gen_ai.request.model\" | logfmt | route=~\"$route\" | gen_ai_response_model=~\"$model\" | src_addr=~\"10\\\\.244\\\\.[0-9]+\\\\.1:.*\" [$__range]))",
+              "instant": true,
+              "legendFormat": "out-of-cluster",
+              "queryType": "instant",
+              "refId": "B"
+            }
+          ],
+          "title": "Calls by Location (In-Cluster vs Out-of-Cluster)",
+          "type": "barchart"
+        },
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "description": "Non-2xx requests by path — catches callers hitting endpoints agentgateway can't serve as AI completions (e.g. a client's own health-check/model-list probes like /props, /version, /api/tags sent with no JSON body, which fail request parsing). These never appear in the gen_ai.* panels above since they never reach model/token logging — this is the only place they're visible.",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisPlacement": "auto",
+                "fillOpacity": 80,
+                "gradientMode": "none",
+                "lineWidth": 1
+              },
+              "mappings": [],
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 24,
+            "x": 0,
+            "y": 28
+          },
+          "id": 10,
+          "options": {
+            "barWidth": 0.6,
+            "fullHighlight": false,
+            "groupWidth": 0.7,
+            "legend": {
+              "displayMode": "list",
+              "placement": "bottom",
+              "showLegend": true
+            },
+            "orientation": "horizontal",
+            "showValue": "always",
+            "stacking": "none",
+            "tooltip": {
+              "mode": "single",
+              "sort": "none"
+            },
+            "xTickLabelRotation": 0,
+            "xTickLabelSpacing": 0
+          },
+          "pluginVersion": "12.2.1",
+          "targets": [
+            {
+              "datasource": {
+                "type": "loki",
+                "uid": "P8E80F9AEF21F6940"
+              },
+              "expr": "sum by (http_path, http_status, route) (count_over_time({service_name=\"agentgateway\", container=\"agentgateway\"} |= \"protocol=llm\" | logfmt | route=~\"$route\" | http_status!~\"2..\" [$__range]))",
+              "instant": true,
+              "legendFormat": "{{route}} {{http_path}} ({{http_status}})",
+              "queryType": "instant",
+              "refId": "A"
+            }
+          ],
+          "title": "Failed Requests by Path",
+          "type": "barchart"
+        }
+      ],
+      "preload": false,
+      "refresh": "30s",
+      "schemaVersion": 42,
+      "tags": [
+        "kagent",
+        "agentgateway",
+        "ai",
+        "traffic"
+      ],
+      "templating": {
+        "list": [
+          {
+            "current": {
+              "text": "All",
+              "value": "$__all"
+            },
+            "datasource": {
+              "type": "loki",
+              "uid": "P8E80F9AEF21F6940"
+            },
+            "definition": "label_values({service_name=\"agentgateway\", container=\"agentgateway\"} |= \"protocol=llm\" | logfmt, route)",
+            "hide": 0,
+            "includeAll": true,
+            "label": "Route",
+            "multi": true,
+            "name": "route",
+            "options": [],
+            "query": "label_values({service_name=\"agentgateway\", container=\"agentgateway\"} |= \"protocol=llm\" | logfmt, route)",
+            "refresh": 2,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 1,
+            "type": "query"
+          },
+          {
+            "current": {
+              "text": "All",
+              "value": "$__all"
+            },
+            "datasource": {
+              "type": "loki",
+              "uid": "P8E80F9AEF21F6940"
+            },
+            "definition": "label_values({service_name=\"agentgateway\", container=\"agentgateway\"} |= \"gen_ai.request.model\" | logfmt, gen_ai_response_model)",
+            "hide": 0,
+            "includeAll": true,
+            "label": "Model",
+            "multi": true,
+            "name": "model",
+            "options": [],
+            "query": "label_values({service_name=\"agentgateway\", container=\"agentgateway\"} |= \"gen_ai.request.model\" | logfmt, gen_ai_response_model)",
+            "refresh": 2,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 1,
+            "type": "query"
+          }
+        ]
+      },
+      "time": {
+        "from": "now-6h",
+        "to": "now"
+      },
+      "timepicker": {},
+      "timezone": "America/Denver",
+      "title": "Agent Gateway - AI Traffic",
+      "uid": "agentgateway-ai-traffic",
+      "version": 3
+    }
