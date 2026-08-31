@@ -1,0 +1,13 @@
+---
+apiVersion: kagent.dev/v1alpha2
+kind: AgentHarness
+metadata:
+  name: hermes-shell
+  namespace: kagent
+spec:
+  backend: hermes
+  description: "Hermes shell for scheduled and chat-driven workflows"
+  modelConfigRef: claude-sonnet-config
+  substrate:
+    workerPoolRef:
+      name: kagent-default

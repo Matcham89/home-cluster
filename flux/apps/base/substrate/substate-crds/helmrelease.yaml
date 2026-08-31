@@ -26,3 +26,41 @@ spec:
     createNamespace: true
     remediation:
       retries: 3
+  # Patch ActorTemplate CRD to add valueFrom (secretKeyRef) and pauseImage.
+  # Required for kagent 0.10.0-rc3 AgentHarness support — the Go types define
+  # these fields but the chart CRD omits them. Remove when substrate ships
+  # a chart version that includes them.
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: CustomResourceDefinition
+              name: actortemplates.ate.dev
+            patch: |-
+              - op: replace
+                path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/containers/items/properties/env/items/required
+                value: ["name"]
+              - op: add
+                path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/containers/items/properties/env/items/properties/valueFrom
+                value:
+                  description: "Source for the environment variable value."
+                  type: object
+                  properties:
+                    secretKeyRef:
+                      description: "Selects a key of a Secret."
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          maxLength: 253
+                        key:
+                          type: string
+                          minLength: 1
+                        optional:
+                          type: boolean
+                      required: ["name", "key"]
+              - op: add
+                path: /spec/versions/0/schema/openAPIV3Schema/properties/spec/properties/pauseImage
+                value:
+                  description: "Image used for the pause container."
+                  type: string
