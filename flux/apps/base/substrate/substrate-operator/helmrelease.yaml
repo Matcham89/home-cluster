@@ -10,7 +10,7 @@ spec:
   ref:
     # renovate: datasource=github-releases depName=kagent-dev/substrate extractVersion=^v(?<version>.*)$
     # NOTE: chart tags are published WITHOUT the v prefix (0.0.9, not v0.0.9)
-    tag: 0.0.21
+    tag: 0.0.9
 ---
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -26,16 +26,17 @@ spec:
     createNamespace: true
     remediation:
       retries: 3
-  # Talos mints SA tokens with the API-server endpoint as the OIDC issuer, not the
-  # stock in-cluster URL. This matters for the ate-api-authentication ConfigMap
-  # (bootstrapped imperatively, not via a chart value — see
-  # docs/substrate-bootstrap-requirements.md §2), which must set its jwtProviders
-  # issuer to match:
-  #   kubectl get --raw /.well-known/openid-configuration | jq .issuer
-  # A `values.auth.jwt.issuer` key was set here previously under the assumption
-  # the chart read it — verified in chart 0.0.21 that no template references
-  # `.Values.auth` at all, so it was a dead value. Removed; see doc above for
-  # where the issuer is actually wired up.
+  values:
+    auth:
+      mode: jwt
+      jwt:
+        # MUST match the cluster. Talos mints SA tokens with the API-server
+        # endpoint as issuer, NOT the stock in-cluster URL.
+        # Verified: kubectl get --raw /.well-known/openid-configuration | jq -r .issuer
+        issuer: https://192.168.1.180:6443
+        audience: api.ate-system.svc
+        bootstrap:
+          enabled: true
   # Announce stable per-pod DNS names on the cluster bus instead of pod IPs.
   # Without this, a full-cluster restart (e.g. power outage) gives every pod a
   # new IP while nodes.conf still holds the old ones -> cluster_state:fail and
