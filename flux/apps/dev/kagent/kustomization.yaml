@@ -11,8 +11,7 @@ components:
 
 resources:
   - ./crds/ks.yaml
-  # DISABLED FOR MANUAL TESTING - See RFC about Flux/Helm state issues
-  # - ./operator/ks.yaml
+  - ./operator/ks.yaml
   - ./limit-ranges/ks.yaml
   - ./network-policies/ks.yaml
   - ./secrets/ks.yaml
