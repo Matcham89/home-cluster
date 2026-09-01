@@ -11,7 +11,8 @@ components:
 
 resources:
   - ./crds/ks.yaml
-  - ./operator/ks.yaml
+  # DISABLED - keeping manual deployment stable while Flux health checks time out
+  # - ./operator/ks.yaml
   - ./limit-ranges/ks.yaml
   - ./network-policies/ks.yaml
   - ./secrets/ks.yaml

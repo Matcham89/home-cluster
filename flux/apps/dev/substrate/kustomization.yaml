@@ -8,6 +8,7 @@ components:
   # which require elevated capabilities that the baseline/restricted profiles reject.
   - ../../../infra/namespace-privileged
 
-resources:
-  - ./substate-crds/ks.yaml
-  - ./substrate-operator/ks.yaml
+# DISABLED - Flux health checks timing out; keeping manual deployment stable
+# resources:
+#   - ./substate-crds/ks.yaml
+#   - ./substrate-operator/ks.yaml
