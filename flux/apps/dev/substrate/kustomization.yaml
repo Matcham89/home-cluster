@@ -8,6 +8,7 @@ components:
   # which require elevated capabilities that the baseline/restricted profiles reject.
   - ../../../infra/namespace-privileged
 
-resources:
-  - ./substate-crds/ks.yaml
-  - ./substrate-operator/ks.yaml
+# DISABLED FOR MANUAL TESTING - See RFC about Flux/Helm state issues
+# resources:
+#   - ./substate-crds/ks.yaml
+#   - ./substrate-operator/ks.yaml
