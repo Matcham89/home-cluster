@@ -336,4 +336,20 @@ talosctl apply-config --file worker.yaml --nodes <worker-ip>
 
 **Substrate 0.0.9 + JWT is production-ready on Talos.** The investigation revealed operational issues with Flux/Helm state management rather than a chart incompatibility. With proper state cleanup and direct Helm deployment, the upgrade path works reliably.
 
+## Follow-up: Manual 0.0.9 Deployment (2026-09-01)
+
+After the investigation, a manual deployment of substrate 0.0.9 with JWT was completed:
+
+**Deployment completed:**
+- ✅ substrate-crds 0.0.9 deployed
+- ✅ substrate 0.0.9 deployed with JWT auth (issuer: https://192.168.1.180:6443)
+- ✅ All substrate pods Running (ate-api-server, ate-controller, atelet, atenet-router, dns, rustfs)
+- ✅ Valkey cluster 6/6 Running with cluster_state:ok
+- ✅ kagent operator deployed (v0.10.0-rc3)
+- ✅ WorkerPool "kagent-default" created with 6 replicas
+- ✅ Worker pods (ateom-gvisor:v0.0.9) 6/6 Running
+- ⏳ AgentHarness (hermes-shell) waiting for ActorTemplate
+
+**Next step:** Create ActorTemplate for hermes backend to enable agent harness functionality.
+
 The main artifact from this work: **a clear recovery playbook for Flux/Helm conflicts**, which is valuable for future Flux-managed Helm deployments on this cluster.
