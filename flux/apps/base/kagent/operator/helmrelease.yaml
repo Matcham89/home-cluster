@@ -47,8 +47,8 @@ spec:
       create: true
       replicas: 6
       # ateom-gvisor is a SUBSTRATE component — tag must match the substrate
-      # chart version (0.0.9), not the kagent version. v0.9.7 does not exist.
-      ateomImage: ghcr.io/kagent-dev/substrate/ateom-gvisor:v0.0.9
+      # chart version (0.0.21), not the kagent version. v0.9.7 does not exist.
+      ateomImage: ghcr.io/kagent-dev/substrate/ateom-gvisor:v0.0.21
 
     # Override default resource limits to prevent CPU throttling
     # CPU limits removed - CPU is compressible, requests provide sufficient scheduling protection
