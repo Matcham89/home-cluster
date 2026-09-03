@@ -46,7 +46,10 @@ spec:
       name: agentdesktop
   backend:
     tls:
-      caCertificateRefs:
-        - kind: Secret
-          name: agentdesktop-device-ca
+      # TODO: AgentGateway v1.5.0 limitation — backend.tls.caCertificateRefs
+      # doesn't apply to JWKS fetch via backendRef. Using insecureSkipVerify
+      # temporarily for testing on local cluster. This needs to be fixed
+      # upstream or we need to find a workaround (possibly using JWKS url
+      # with custom CA bundle support, if that feature exists).
+      insecureSkipVerify: All
       sni: agentdesktop.agentdesktop.svc.cluster.local
