@@ -32,11 +32,17 @@ spec:
     timeout: 5m
   upgrade:
     timeout: 5m
-  # KNOWN DEVIATION from this repo's "pin, don't float" convention: v0.1.0 is
-  # the only tagged release and it only ships CLI binaries (checked GitHub
-  # releases directly), not a versioned controller image — the project's own
-  # deploy/README.md says to use the published `latest` image. No versioned
-  # image tag confirmed to exist yet; revisit once agentdesktop-dev cuts one.
+  # Upstream (ghcr.io/agentdesktop-dev/agentdesktop-controller) never publicly
+  # published a controller image — its v0.1.0 release workflow run succeeded
+  # but GHCR packages default to private, and no one flipped visibility.
+  # Built our own from source instead: forked to github.com/Matcham89/agentdesktop,
+  # fixed an upstream bug (release.yml hardcodes ${{ github.repository_owner }}
+  # into the image tag, which is invalid for any account with uppercase
+  # letters — Docker/OCI names must be lowercase; the upstream org name just
+  # happens to already be all-lowercase so they never hit it), and triggered
+  # their own release workflow on real GitHub-hosted amd64 runners (native,
+  # no local QEMU cross-arch emulation needed). Confirmed public via anonymous
+  # pull. Bump this tag by hand alongside the GitRepository tag above.
   postRenderers:
     - kustomize:
         patches:
@@ -47,16 +53,28 @@ spec:
               - op: add
                 path: /metadata/annotations
                 value:
-                  metallb.universe.tf/loadBalancerIPs: "192.168.1.203"
+                  metallb.universe.tf/loadBalancerIPs: "192.168.1.205"
+          # The chart's existingConfigSecret path only projects the single
+          # configSecretKey (controller.yaml) into the config volume — it
+          # doesn't know about daemon.yaml, which the same Secret also holds
+          # (see ../config/config-secret.yaml). Add it so
+          # controller.yaml's daemonConfig.path can actually resolve.
+          - target:
+              kind: Deployment
+              name: agentdesktop
+            patch: |-
+              - op: add
+                path: /spec/template/spec/volumes/0/secret/items/-
+                value:
+                  key: daemon.yaml
+                  path: daemon.yaml
   values:
     existingConfigSecret: agentdesktop-controller-config
     configSecretKey: controller.yaml
     tlsSecretName: agentdesktop-controller-tls
     image:
-      # Chart defaults to Chart.AppVersion (0.1.0), which 401s on pull —
-      # confirmed live: no versioned controller image is published, only
-      # `latest` (matches deploy/README.md's explicit guidance).
-      tag: latest
+      repository: ghcr.io/matcham89/agentdesktop-controller
+      tag: v0.1.0
     service:
       type: LoadBalancer
       port: 443

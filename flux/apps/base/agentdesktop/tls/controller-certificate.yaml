@@ -13,11 +13,12 @@ spec:
   privateKey:
     algorithm: RSA
     size: 2048
+    encoding: PKCS8
   dnsNames:
     - agentdesktop.agentdesktop.svc.cluster.local
     - agentdesktop.kubegit.internal
   ipAddresses:
-    - 192.168.1.203
+    - 192.168.1.205
   issuerRef:
     name: agentdesktop-device-ca-issuer
     kind: Issuer

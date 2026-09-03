@@ -16,6 +16,9 @@ spec:
   privateKey:
     algorithm: RSA
     size: 4096
+    # cert-manager defaults to PKCS#1 ("RSA PRIVATE KEY"); the controller's
+    # Rust key-parsing rejects that and needs PKCS#8 ("PRIVATE KEY").
+    encoding: PKCS8
   issuerRef:
     name: selfsigned
     kind: ClusterIssuer

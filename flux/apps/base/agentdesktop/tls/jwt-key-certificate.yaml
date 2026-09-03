@@ -13,6 +13,7 @@ spec:
   privateKey:
     algorithm: RSA
     size: 2048
+    encoding: PKCS8
   issuerRef:
     name: selfsigned
     kind: ClusterIssuer
