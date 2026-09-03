@@ -1,0 +1,16 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  # Disabled due to schema changes in v2.2.0-main - MCP backend not supported in current CRD
+  # - ./youtube-mcp.yaml
+  # Claude/Gemini multi-model backends (one backend per model with hardcoded model)
+  - ./claude-backends.yaml
+  - ./kagent.yaml
+  - ./github-webhook.yaml
+  # - ./mcp-translator.yaml
+  - ./claude-code.yaml
+  - ./gemini-backends.yaml
+  - ./openrouter-backends.yaml
+  - ./hermes-backends.yaml

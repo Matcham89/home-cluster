@@ -1,0 +1,27 @@
+---
+# claude-code keeps its own dedicated Gateway (external dev-tool access, not
+# a kagent ModelConfig — see backends/claude-code.yaml) so it needs its own
+# AgentgatewayParameters. Every other model now routes through the single
+# shared "agentgateway" Gateway, which already has its own (./otel.yaml).
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayParameters
+metadata:
+  name: claude-code-otel
+  namespace: agentgateway-system
+spec:
+  env:
+    - name: OTEL_EXPORTER_OTLP_ENDPOINT
+      value: "http://otel-collector-collector.monitoring.svc.cluster.local:4317"
+    - name: OTEL_EXPORTER_OTLP_PROTOCOL
+      value: "grpc"
+    - name: OTEL_SERVICE_NAME
+      value: "claude-code-gateway"
+    - name: OTEL_TRACES_EXPORTER
+      value: "otlp"
+    - name: OTEL_LOGS_EXPORTER
+      value: "otlp"
+  rawConfig:
+    config:
+      tracing:
+        otlpEndpoint: "http://otel-collector-collector.monitoring.svc.cluster.local:4317"
+        otlpProtocol: grpc

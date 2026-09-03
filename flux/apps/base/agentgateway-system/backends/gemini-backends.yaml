@@ -1,0 +1,77 @@
+---
+# ============================================================================
+# GEMINI AGENTGATEWAY BACKENDS
+# ============================================================================
+# Each backend is configured with a specific Gemini model hardcoded.
+# Ports: 8094 = Flash, 8095 = Pro
+# ============================================================================
+
+# ============================================================================
+# BACKEND 1: Gemini Flash — load balanced across Gemini, Haiku, Sonnet, GPT
+# ============================================================================
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: gemini-flash-backend
+  namespace: agentgateway-system
+  labels:
+    app: gemini-flash
+    model: gemini-2-5-flash
+    provider: gemini
+spec:
+  ai:
+    groups:
+      - providers:
+          - name: gemini-flash
+            gemini:
+              model: "gemini-2.5-flash"
+            policies:
+              auth:
+                secretRef:
+                  name: google-secret
+          - name: claude-haiku
+            anthropic:
+              model: "claude-haiku-4-5"
+            policies:
+              auth:
+                secretRef:
+                  name: anthropic-secret
+          - name: claude-sonnet
+            anthropic:
+              model: "claude-sonnet-4-5"
+            policies:
+              auth:
+                secretRef:
+                  name: anthropic-secret
+          - name: gpt-4o-mini
+            openai:
+              model: "gpt-4.1-mini"
+            policies:
+              auth:
+                secretRef:
+                  name: openai-secret
+
+---
+# ============================================================================
+# BACKEND 2: Gemini 2.5 Pro
+# ============================================================================
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayBackend
+metadata:
+  name: gemini-pro-backend
+  namespace: agentgateway-system
+  labels:
+    app: gemini-pro
+    model: gemini-2-5-pro
+    provider: gemini
+spec:
+  ai:
+    groups:
+      - providers:
+          - name: gemini-pro
+            gemini:
+              model: "gemini-2.5"
+            policies:
+              auth:
+                secretRef:
+                  name: google-secret

@@ -1,0 +1,35 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: agentgateway-crds
+spec:
+  interval: 1m0s
+  url: oci://cr.agentgateway.dev/charts/agentgateway-crds
+  ref:
+    tag: v1.5.0
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: agentgateway-crds
+spec:
+  interval: 1m0s
+  releaseName: agentgateway-crds
+  chartRef:
+    kind: OCIRepository
+    name: agentgateway-crds
+  install:
+    strategy:
+      name: RetryOnFailure
+    createNamespace: true
+    timeout: 5m
+  upgrade:
+    strategy:
+      name: RetryOnFailure
+    cleanupOnFail: true
+    timeout: 5m
+  values:
+    controller:
+      image:
+        pullPolicy: Always

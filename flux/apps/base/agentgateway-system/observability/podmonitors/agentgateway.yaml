@@ -1,0 +1,47 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: agentgateway-gateways
+  namespace: monitoring
+  labels:
+    release: kube-prometheus-stack
+    app: agentgateway
+spec:
+  namespaceSelector:
+    matchNames:
+      - agentgateway-system
+
+  # This cleanly targets ONLY dataplane pods because they all have:
+  # gateway.networking.k8s.io/gateway-name=<gateway object name>
+  # Your controller pod does NOT, so it won't be scraped.
+  selector:
+    matchExpressions:
+      - key: gateway.networking.k8s.io/gateway-name
+        operator: Exists
+
+  podMetricsEndpoints:
+    - port: metrics
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s
+
+      relabelings:
+        # Basics
+        - sourceLabels: [__meta_kubernetes_pod_name]
+          targetLabel: pod
+        - sourceLabels: [__meta_kubernetes_namespace]
+          targetLabel: namespace
+
+        # Canonical gateway identity (matches Gateway object name)
+        - sourceLabels: [__meta_kubernetes_pod_label_gateway_networking_k8s_io_gateway_name]
+          targetLabel: gateway_name
+
+        # Keep compatibility with your existing rules/dashboards:
+        # gateway_instance == gateway_name (truthy, stable, no guessing)
+        - sourceLabels: [__meta_kubernetes_pod_label_gateway_networking_k8s_io_gateway_name]
+          targetLabel: gateway_instance
+
+      metricRelabelings:
+        - sourceLabels: [__name__]
+          regex: '.*_info'
+          action: drop
