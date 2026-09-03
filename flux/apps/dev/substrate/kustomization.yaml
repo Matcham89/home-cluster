@@ -8,7 +8,7 @@ components:
   # which require elevated capabilities that the baseline/restricted profiles reject.
   - ../../../infra/namespace-privileged
 
-# DISABLED temporarily - investigating v0.0.6 compatibility issues
-# resources:
-#   - ./substate-crds/ks.yaml
-#   - ./substrate-operator/ks.yaml
+
+resources:
+  - ./substate-crds/ks.yaml
+  - ./substrate-operator/ks.yaml

@@ -11,6 +11,8 @@ spec:
   dependsOn:
     - name: kagent-crds
     - name: kagent-secrets
+    - name: substrate-operator
+      namespace: ate-system
   interval: 1h
   path: ./flux/apps/base/kagent/operator
   sourceRef:
