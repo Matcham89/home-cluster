@@ -52,6 +52,11 @@ spec:
     existingConfigSecret: agentdesktop-controller-config
     configSecretKey: controller.yaml
     tlsSecretName: agentdesktop-controller-tls
+    image:
+      # Chart defaults to Chart.AppVersion (0.1.0), which 401s on pull —
+      # confirmed live: no versioned controller image is published, only
+      # `latest` (matches deploy/README.md's explicit guidance).
+      tag: latest
     service:
       type: LoadBalancer
       port: 443
