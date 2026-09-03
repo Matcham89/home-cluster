@@ -8,7 +8,6 @@ components:
 
 resources:
   - ./gateway-api-crds/ks.yaml
-  - ./crds/ks.yaml
   - ./operator/ks.yaml
   - ./limit-ranges/ks.yaml
   # DISABLED: Commented out for easier development/deployment
