@@ -10,7 +10,9 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: databases-cluster
+      namespace: databases
     - name: databases-secrets
+      namespace: databases
   interval: 1h
   path: ./flux/apps/base/agentdesktop/config
   sourceRef:
