@@ -17,6 +17,6 @@ spec:
     name: flux-system
     namespace: flux-system
   targetNamespace: ate-system
-  timeout: 10m
+  timeout: 20m
   prune: true
   wait: true
