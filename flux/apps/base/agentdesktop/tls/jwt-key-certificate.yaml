@@ -1,0 +1,18 @@
+---
+# Throwaway self-signed cert used purely as a vehicle for an RSA private key
+# (gatewayJwt.privateKey). Only the key is used; the cert itself is discarded.
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: agentdesktop-gateway-jwt-key
+  namespace: agentdesktop
+spec:
+  commonName: agentdesktop-gateway-jwt-signing-key
+  secretName: agentdesktop-gateway-jwt-key
+  duration: 8760h # 1y — rotated by cert-manager; agentgateway re-fetches JWKS on interval
+  privateKey:
+    algorithm: RSA
+    size: 2048
+  issuerRef:
+    name: selfsigned
+    kind: ClusterIssuer

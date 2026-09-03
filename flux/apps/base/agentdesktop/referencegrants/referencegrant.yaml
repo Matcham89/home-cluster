@@ -1,0 +1,17 @@
+---
+# Allows the JWT/TLS-trust AgentgatewayPolicy in agentgateway-system to
+# backendRef this namespace's controller Service (JWKS fetch + TLS CA trust).
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  name: allow-agentgateway-to-controller
+  namespace: agentdesktop
+spec:
+  from:
+    - group: agentgateway.dev
+      kind: AgentgatewayPolicy
+      namespace: agentgateway-system
+  to:
+    - group: ""
+      kind: Service
+      name: agentdesktop

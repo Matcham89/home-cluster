@@ -152,3 +152,51 @@ resource "authentik_application" "grafana" {
 # CLAUDE.md) and this cluster has no istio-system/kiali secret, so the
 # corresponding authentik_provider_oauth2/authentik_application resources
 # were removed. Re-add per git history if Kiali is ever deployed here.
+
+# =============================================================
+# AgentDesktop (Claude Code fleet manager)
+# Provider slug: agentdesktop
+# Public/native client (PKCE, no secret) — the workstation daemon's local
+# callback listener (127.0.0.1:51327) can't hold a confidential-client
+# secret, so client_id is a fixed non-sensitive value, not a k8s Secret
+# data source like the confidential-client apps above.
+# See flux/apps/base/agentdesktop/config/config-secret.yaml for the
+# controller-side oidc.clientId, which must match this exactly.
+# =============================================================
+
+resource "authentik_provider_oauth2" "agentdesktop" {
+  name          = "AgentDesktop"
+  client_type   = "public"
+  client_id     = "agentdesktop"
+
+  authorization_flow = data.authentik_flow.authorization.id
+  invalidation_flow  = data.authentik_flow.invalidation.id
+  signing_key        = data.authentik_certificate_key_pair.default.id
+  property_mappings  = concat(data.authentik_property_mapping_provider_scope.oauth2.ids, [authentik_property_mapping_provider_scope.email.id, authentik_property_mapping_provider_scope.groups.id])
+
+  allowed_redirect_uris = [
+    {
+      matching_mode = "strict"
+      url           = "http://127.0.0.1:51327/callback"
+    }
+  ]
+
+  # NOTE: this field is optional+computed in the provider schema, but omitting
+  # it leaves the underlying authentik model's grant_types as an empty list
+  # (ArrayField default=list), which makes every authorization request fail
+  # with "invalid_request" / "Invalid grant_type for provider". Must be set
+  # explicitly. AgentDesktop's daemon uses the authorization_code flow with
+  # PKCE; no refresh_token grant needed since the daemon re-authenticates
+  # each enrollment rather than holding a long-lived session.
+  grant_types = ["authorization_code"]
+
+  sub_mode              = "hashed_user_id"
+  access_token_validity = "hours=1"
+}
+
+resource "authentik_application" "agentdesktop" {
+  name              = "AgentDesktop"
+  slug              = "agentdesktop"
+  protocol_provider = authentik_provider_oauth2.agentdesktop.id
+  open_in_new_tab   = true
+}

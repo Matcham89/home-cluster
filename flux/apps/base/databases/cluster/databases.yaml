@@ -25,3 +25,13 @@ spec:
   owner: authentik
   cluster:
     name: postgres-cluster
+---
+apiVersion: postgresql.cnpg.io/v1
+kind: Database
+metadata:
+  name: agentdesktop
+spec:
+  name: agentdesktop
+  owner: agentdesktop
+  cluster:
+    name: postgres-cluster

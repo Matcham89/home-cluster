@@ -1,0 +1,24 @@
+---
+# Mirrors the agentdesktop device-CA into this namespace (same-namespace-only
+# limitation of caCertificateRefs, see jwt-policy.yaml) so agentgateway trusts
+# the controller's TLS cert when fetching its JWKS.
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: agentdesktop-device-ca
+  namespace: agentgateway-system
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: agentdesktop-in-cluster
+    kind: ClusterSecretStore
+  target:
+    name: agentdesktop-device-ca
+    template:
+      data:
+        ca.crt: "{{ .caCert }}"
+  data:
+    - secretKey: caCert
+      remoteRef:
+        key: agentdesktop-device-ca-root
+        property: tls.crt

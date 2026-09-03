@@ -1,0 +1,51 @@
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayPolicy
+metadata:
+  name: agentdesktop-jwt
+  namespace: agentgateway-system
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: agentdesktop
+  frontend:
+    accessLog:
+      attributes:
+        add:
+          - name: llm.client
+            expression: jwt.client_id
+          - name: user
+            expression: jwt.email
+  traffic:
+    jwtAuthentication:
+      mode: Strict
+      providers:
+        - issuer: agentdesktop-controller
+          audiences:
+            - agentgateway
+          jwks:
+            remote:
+              jwksPath: /.well-known/jwks.json
+              backendRef:
+                group: ""
+                kind: Service
+                name: agentdesktop
+                namespace: agentdesktop
+                port: 443
+---
+apiVersion: agentgateway.dev/v1alpha1
+kind: AgentgatewayPolicy
+metadata:
+  name: agentdesktop-controller-tls
+  namespace: agentgateway-system
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: agentdesktop
+  backend:
+    tls:
+      caCertificateRefs:
+        - kind: Secret
+          name: agentdesktop-device-ca

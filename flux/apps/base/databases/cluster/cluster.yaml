@@ -56,6 +56,12 @@ spec:
         superuser: false
         passwordSecret:
           name: n8n-db-role
+      - name: agentdesktop
+        ensure: present
+        login: true
+        superuser: false
+        passwordSecret:
+          name: agentdesktop-db-role
 
   bootstrap:
     initdb:

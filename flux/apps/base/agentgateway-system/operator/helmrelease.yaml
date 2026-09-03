@@ -37,3 +37,9 @@ spec:
     controller:
       image:
         pullPolicy: Always
+    # Required for AgentDesktop's fleet gateway (per-model routing via
+    # AgentgatewayModel + JWT auth). Defaults to false upstream. Verified live
+    # against v1.5.0: without this, AgentgatewayModel objects show Accepted
+    # but the dataplane returns "route not found" for all matching traffic.
+    agentgatewayModels:
+      enabled: true

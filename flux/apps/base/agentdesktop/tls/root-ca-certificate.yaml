@@ -1,0 +1,21 @@
+---
+# Root CA that workstation daemons trust to validate the controller's fleet
+# API cert. AgentDesktop calls this pair "device-ca.pem"/"device-ca-key.pem" —
+# the controller also holds the private key at runtime to sign per-device
+# client certs during enrollment (see deploy/README.md in agentdesktop-dev/agentdesktop).
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: agentdesktop-device-ca
+  namespace: agentdesktop
+spec:
+  isCA: true
+  commonName: agentdesktop-device-ca
+  secretName: agentdesktop-device-ca-root
+  duration: 87600h # 10y — root CA, long-lived by design (matches upstream create-tls.sh)
+  privateKey:
+    algorithm: RSA
+    size: 4096
+  issuerRef:
+    name: selfsigned
+    kind: ClusterIssuer

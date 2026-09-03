@@ -1,0 +1,57 @@
+---
+# Chart only exists in-repo (no OCI/Helm-repo publish yet), so source it
+# directly from git. renovate/dependabot won't track this — bump the tag by
+# hand, same as substrate/agentgateway tags elsewhere in this repo.
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: agentdesktop
+spec:
+  interval: 1h
+  url: https://github.com/agentdesktop-dev/agentdesktop
+  ref:
+    tag: v0.1.0
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: agentdesktop
+spec:
+  interval: 1h
+  releaseName: agentdesktop
+  chart:
+    spec:
+      chart: ./deploy/helm/agentdesktop-controller
+      sourceRef:
+        kind: GitRepository
+        name: agentdesktop
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+    timeout: 5m
+  upgrade:
+    timeout: 5m
+  # KNOWN DEVIATION from this repo's "pin, don't float" convention: v0.1.0 is
+  # the only tagged release and it only ships CLI binaries (checked GitHub
+  # releases directly), not a versioned controller image — the project's own
+  # deploy/README.md says to use the published `latest` image. No versioned
+  # image tag confirmed to exist yet; revisit once agentdesktop-dev cuts one.
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              kind: Service
+              name: agentdesktop
+            patch: |-
+              - op: add
+                path: /metadata/annotations
+                value:
+                  metallb.universe.tf/loadBalancerIPs: "192.168.1.203"
+  values:
+    existingConfigSecret: agentdesktop-controller-config
+    configSecretKey: controller.yaml
+    tlsSecretName: agentdesktop-controller-tls
+    service:
+      type: LoadBalancer
+      port: 443

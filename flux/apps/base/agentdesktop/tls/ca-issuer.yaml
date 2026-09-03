@@ -1,0 +1,10 @@
+---
+# Namespaced CA issuer signing leaf certs from the device CA root above.
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: agentdesktop-device-ca-issuer
+  namespace: agentdesktop
+spec:
+  ca:
+    secretName: agentdesktop-device-ca-root

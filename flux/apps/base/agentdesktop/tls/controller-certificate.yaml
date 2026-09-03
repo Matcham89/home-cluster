@@ -1,0 +1,23 @@
+---
+# Controller's fleet-API serving cert (controller.pem/controller-key.pem),
+# signed by the device CA so workstation daemons can validate it directly.
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: agentdesktop-controller
+  namespace: agentdesktop
+spec:
+  commonName: agentdesktop.agentdesktop.svc.cluster.local
+  secretName: agentdesktop-controller-cert
+  duration: 2160h # 90d, cert-manager auto-renews
+  privateKey:
+    algorithm: RSA
+    size: 2048
+  dnsNames:
+    - agentdesktop.agentdesktop.svc.cluster.local
+    - agentdesktop.kubegit.internal
+  ipAddresses:
+    - 192.168.1.203
+  issuerRef:
+    name: agentdesktop-device-ca-issuer
+    kind: Issuer

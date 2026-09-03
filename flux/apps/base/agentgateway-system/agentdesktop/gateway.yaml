@@ -1,0 +1,25 @@
+---
+# Dedicated Gateway for AgentDesktop-proxied model traffic — isolated from
+# ingress-gateway so the JWT-auth policy below only affects this traffic,
+# same pattern as the claude-code Gateway in ../backends/claude-code.yaml.
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: agentdesktop
+  namespace: agentgateway-system
+  annotations:
+    metallb.universe.tf/loadBalancerIPs: "192.168.1.204"
+  labels:
+    app: agentdesktop
+spec:
+  gatewayClassName: agentgateway
+  infrastructure:
+    annotations:
+      metallb.universe.tf/loadBalancerIPs: "192.168.1.204"
+  listeners:
+    - name: http
+      port: 8095
+      protocol: HTTP
+      allowedRoutes:
+        namespaces:
+          from: Same
