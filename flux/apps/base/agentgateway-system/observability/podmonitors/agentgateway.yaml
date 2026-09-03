@@ -10,6 +10,7 @@ spec:
   namespaceSelector:
     matchNames:
       - agentgateway-system
+      - ingress
 
   # This cleanly targets ONLY dataplane pods because they all have:
   # gateway.networking.k8s.io/gateway-name=<gateway object name>

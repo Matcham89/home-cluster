@@ -14,8 +14,8 @@ metadata:
     provider: openrouter
 spec:
   parentRefs:
-    - name: agentgateway
-      namespace: agentgateway-system
+    - name: ingress-gateway
+      namespace: ingress
       sectionName: http
   rules:
     - matches:

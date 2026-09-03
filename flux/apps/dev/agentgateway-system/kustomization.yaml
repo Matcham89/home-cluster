@@ -12,12 +12,10 @@ resources:
   - ./limit-ranges/ks.yaml
   # DISABLED: Commented out for easier development/deployment
   # - ./network-policies/ks.yaml
-  - ./gateway/ks.yaml
   - ./agentgatewayparameters/ks.yaml
   - ./agentgatewaypolicy/ks.yaml
   - ./backends/ks.yaml
   - ./httproute/ks.yaml
-  - ./certificate/ks.yaml
   - ./referencegrants/ks.yaml
   - ./observability/ks.yaml
   - ./secrets/ks.yaml

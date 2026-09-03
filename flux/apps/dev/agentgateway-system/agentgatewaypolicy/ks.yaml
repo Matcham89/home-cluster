@@ -9,7 +9,8 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: agentgateway-gateway
+    - name: ingress-gateway
+      namespace: ingress
   interval: 1h
   path: ./flux/apps/base/agentgateway-system/agentgatewaypolicy
   sourceRef:

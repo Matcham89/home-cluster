@@ -6,8 +6,8 @@ metadata:
   name: youtube-mcp-route
 spec:
   parentRefs:
-    - name: agentgateway
-      namespace: agentgateway-system
+    - name: ingress-gateway
+      namespace: ingress
   rules:
     - matches:
         - path:

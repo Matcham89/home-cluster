@@ -6,12 +6,9 @@ metadata:
   namespace: agentgateway-system
 spec:
   parentRefs:
-    - name: agentgateway
-      namespace: agentgateway-system
+    - name: ingress-gateway
+      namespace: ingress
       sectionName: http
-    - name: agentgateway
-      namespace: agentgateway-system
-      sectionName: https
   rules:
     - matches:
         - path:
