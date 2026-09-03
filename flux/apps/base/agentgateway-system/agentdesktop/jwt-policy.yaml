@@ -26,10 +26,13 @@ spec:
             - agentgateway
           jwks:
             remote:
-              # Use url (not backendRef) so we can specify https:// scheme,
-              # which auto-enables backend TLS. backendRef doesn't support
-              # automatic TLS even with backend.tls policy block applied.
-              url: "https://agentdesktop.agentdesktop.svc.cluster.local:443/.well-known/jwks.json"
+              jwksPath: /.well-known/jwks.json
+              backendRef:
+                group: ""
+                kind: Service
+                name: agentdesktop
+                namespace: agentdesktop
+                port: 443
 ---
 apiVersion: agentgateway.dev/v1alpha1
 kind: AgentgatewayPolicy
@@ -46,3 +49,4 @@ spec:
       caCertificateRefs:
         - kind: Secret
           name: agentdesktop-device-ca
+      sni: agentdesktop.agentdesktop.svc.cluster.local
