@@ -9,7 +9,6 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: agentgateway-crds
     - name: gateway-api-crds
   interval: 1h
   path: ./flux/apps/base/agentgateway-system/operator
