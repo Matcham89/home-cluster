@@ -1,0 +1,23 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ./1password
+  - ./agentflow-system
+  - ./agentgateway-system
+  - ./authentik
+  - ./cnpg-system
+  - ./databases
+  - ./external-services
+  - ./flux-system
+  - ./ingress
+  - ./kagent
+  - ./kube-ops
+  - ./kube-system
+  - ./longhorn-system
+  - ./metrics-server
+  - ./monitoring
+  - ./n8n
+  - ./qdrant
+  - ./storage
+  - ./substrate
