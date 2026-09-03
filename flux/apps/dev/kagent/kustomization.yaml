@@ -4,15 +4,13 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: kagent
 components:
-  # Privileged PSS: substrate worker pods (ateom-gvisor) are the sandbox runtime
-  # and require privileged + hostPath, which baseline/restricted reject.
-  # (Same rationale OpenShell used for its sandbox namespace.)
+  # Privileged PSS: substrate worker pool launches gVisor sandbox pods (ateom-gvisor)
+  # which require elevated capabilities that the baseline/restricted profiles reject.
   - ../../../infra/namespace-privileged
 
 resources:
   - ./crds/ks.yaml
-  # DISABLED - keeping manual deployment stable while Flux health checks time out
-  # - ./operator/ks.yaml
+  - ./operator/ks.yaml
   - ./limit-ranges/ks.yaml
   - ./network-policies/ks.yaml
   - ./secrets/ks.yaml
