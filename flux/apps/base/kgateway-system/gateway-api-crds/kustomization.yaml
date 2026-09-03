@@ -17,20 +17,14 @@
 #     https://github.com/kubernetes-sigs/gateway-api/releases/download/vX.Y.Z/standard-install.yaml \
 #     -o standard-install.yaml
 #
-# Current version: v1.6.1
+# Current version: v1.6.0
 #
-# NOTE: as of v1.6.1, the standard channel no longer serves the deprecated
-# v1alpha2 API version for TCPRoute/TLSRoute (only v1). The
-# ghcr.io/kgateway-dev/charts/agentgateway:v2.2.0-main image currently pinned
-# in ../operator/helmrelease.yaml hard-requires v1alpha2 TCPRoute/TLSRoute to
-# be served and will crash-loop forever without it ("waiting for sync..." /
-# "the server could not find the requested resource") — this is a real
-# incompatibility with that specific dev-tag pin, not a config gap here.
-# Fixing it means either switching to the experimental channel (which still
-# serves v1alpha2) or moving to the chart/version pairing agentgateway.dev
-# documents (oci://cr.agentgateway.dev/charts/agentgateway v1.4.1 +
-# agentgateway-crds v1.4.1) instead of the kgateway-dev "-main" tag.
+# NOTE: v1.6.0 still serves v1alpha2 API versions for TCPRoute/TLSRoute. As of
+# v1.6.1, these are no longer included in the standard channel. If you need to
+# upgrade beyond v1.6.0, you may need to switch to the experimental channel or
+# coordinate with the agentgateway chart version.
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
   - ./standard-install.yaml
+  - ./helmrelease-agentgateway-crds.yaml
