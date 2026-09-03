@@ -25,10 +25,11 @@ spec:
           audiences:
             - agentgateway
           jwks:
-            remote:
-              # Use url with https:// scheme so TLS is attempted and
-              # insecureSkipVerify applies. backendRef defaults to HTTP.
-              url: "https://agentdesktop.agentdesktop.svc.cluster.local:443/.well-known/jwks.json"
+            # Use inline JWKS to avoid agentgateway v1.5.0 TLS verification
+            # limitation where remote URL fetches bypass backend.tls policies.
+            # JWKS is static per key rotation (annually), so this is safe.
+            # TODO: revert to remote fetch once agentgateway fixes the TLS issue.
+            inline: '{"keys":[{"kty":"RSA","use":"sig","alg":"RS256","kid":"agentdesktop","n":"qVgkdPm9JjAlavReKIUezIsLRn2XwqmVUX-op9qIrbrrydtUvt50Z2hj2s5Lv0z26JLGdcLCkjGITaGNYHX4NcL-2leoGDpS9bWksZhsnSoOX3nk16ljuiUp9faQExxbtM-QqeTN3yKnwYi80Due97ubNB31hYIJ668i7ph5te3fXAMZgRM4IcKY-txyyUg9DlWLDFj2qbDlw7aM1tggJhw93qp6Y988JzXWVjiePvbB39DlD0Vw5-rzNRvzcNogQUSiMupcju5zN-GymCDuy4Cvt5-qdkMEQ4odfoSXTBAsf7VfFq1z4hmqIKU_DC2k8kf1mmP8XmFqtzyK2ayiqw","e":"AQAB"}]}'
 ---
 apiVersion: agentgateway.dev/v1alpha1
 kind: AgentgatewayPolicy
@@ -42,10 +43,7 @@ spec:
       name: agentdesktop
   backend:
     tls:
-      # TODO: AgentGateway v1.5.0 limitation — backend.tls.caCertificateRefs
-      # doesn't apply to JWKS fetch via backendRef. Using insecureSkipVerify
-      # temporarily for testing on local cluster. This needs to be fixed
-      # upstream or we need to find a workaround (possibly using JWKS url
-      # with custom CA bundle support, if that feature exists).
-      insecureSkipVerify: All
+      caCertificateRefs:
+        - kind: Secret
+          name: agentdesktop-device-ca
       sni: agentdesktop.agentdesktop.svc.cluster.local
