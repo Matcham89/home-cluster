@@ -27,10 +27,8 @@ spec:
     remediation:
       retries: 3
     timeout: 15m
-    wait: true
   upgrade:
     timeout: 15m
-    wait: true
   # Announce stable per-pod DNS names on the cluster bus instead of pod IPs.
   # Without this, a full-cluster restart (e.g. power outage) gives every pod a
   # new IP while nodes.conf still holds the old ones -> cluster_state:fail and
