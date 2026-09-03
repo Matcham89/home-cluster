@@ -3,26 +3,33 @@
 # directly to its listeners, but that did NOT work in an isolated test
 # against this cluster's agentgateway v1.5.0 (dataplane returned "route not
 # found" for all matching traffic even though the Model showed Accepted).
-# The HTTPRoute-parent path (below) was verified working end-to-end,
-# including a real Anthropic round-trip, so use that instead.
+#
+# UPDATE: even via the HTTPRoute-parent path, the AgentgatewayModel wildcard
+# ("*") catalog routing consistently failed outbound TLS to api.anthropic.com
+# ("received fatal alert: HandshakeFailure") in this cluster's agentgateway
+# v1.5.0, while the AgentgatewayBackend pattern below (identical to the
+# working claude-code gateway in ../backends/claude-code.yaml) round-trips
+# to Anthropic successfully. AgentgatewayModel appears broken/unreliable in
+# this agentgateway version — use AgentgatewayBackend instead.
 apiVersion: agentgateway.dev/v1alpha1
-kind: AgentgatewayModel
+kind: AgentgatewayBackend
 metadata:
-  name: agentdesktop
+  name: agentdesktop-backend
   namespace: agentgateway-system
+  labels:
+    app: agentdesktop
+    provider: anthropic
 spec:
-  parentRefs:
-    - group: gateway.networking.k8s.io
-      kind: HTTPRoute
-      name: agentdesktop
-  match:
-    model: "*"
-  provider: Anthropic
-  policies:
-    auth:
-      secretRef:
-        # Reuses the existing Anthropic key — see ../secrets/anthropic-secret.yaml
-        name: anthropic-secret
+  ai:
+    groups:
+      - providers:
+          - name: anthropic
+            anthropic: {}
+            policies:
+              auth:
+                secretRef:
+                  # Reuses the existing Anthropic key — see ../secrets/anthropic-secret.yaml
+                  name: anthropic-secret
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
@@ -36,5 +43,5 @@ spec:
   rules:
     - backendRefs:
         - group: agentgateway.dev
-          kind: AgentgatewayModel
-          name: "*"
+          kind: AgentgatewayBackend
+          name: agentdesktop-backend

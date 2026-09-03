@@ -30,20 +30,13 @@ spec:
             # JWKS is static per key rotation (annually), so this is safe.
             # TODO: revert to remote fetch once agentgateway fixes the TLS issue.
             inline: '{"keys":[{"kty":"RSA","use":"sig","alg":"RS256","kid":"agentdesktop","n":"qVgkdPm9JjAlavReKIUezIsLRn2XwqmVUX-op9qIrbrrydtUvt50Z2hj2s5Lv0z26JLGdcLCkjGITaGNYHX4NcL-2leoGDpS9bWksZhsnSoOX3nk16ljuiUp9faQExxbtM-QqeTN3yKnwYi80Due97ubNB31hYIJ668i7ph5te3fXAMZgRM4IcKY-txyyUg9DlWLDFj2qbDlw7aM1tggJhw93qp6Y988JzXWVjiePvbB39DlD0Vw5-rzNRvzcNogQUSiMupcju5zN-GymCDuy4Cvt5-qdkMEQ4odfoSXTBAsf7VfFq1z4hmqIKU_DC2k8kf1mmP8XmFqtzyK2ayiqw","e":"AQAB"}]}'
----
-apiVersion: agentgateway.dev/v1alpha1
-kind: AgentgatewayPolicy
-metadata:
-  name: agentdesktop-controller-tls
-  namespace: agentgateway-system
-spec:
-  targetRefs:
-    - group: gateway.networking.k8s.io
-      kind: Gateway
-      name: agentdesktop
-  backend:
-    tls:
-      caCertificateRefs:
-        - kind: Secret
-          name: agentdesktop-device-ca
-      sni: agentdesktop.agentdesktop.svc.cluster.local
+# NOTE: an "agentdesktop-controller-tls" AgentgatewayPolicy used to live here,
+# setting spec.backend.tls with a custom SNI/CA (agentdesktop-device-ca) to
+# let agentgateway trust the controller's cert when fetching JWKS remotely.
+# It targeted the whole Gateway (agentgateway.dev has no way to scope
+# backend.tls to a single route/backend here), so once we moved to inline
+# JWKS above it became dead weight — but it was still silently applied to
+# EVERY backend connection this Gateway makes, including the AI proxy calls
+# to api.anthropic.com. That forced Anthropic's TLS handshake to use the
+# wrong SNI, causing a hard "received fatal alert: HandshakeFailure" on
+# every request. Removed since inline JWKS no longer needs it.
