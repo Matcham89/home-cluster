@@ -24,8 +24,13 @@ spec:
     name: substrate-crds
   install:
     createNamespace: true
+    crds: Create
     remediation:
       retries: 3
+    timeout: 5m
+  upgrade:
+    crds: CreateReplace
+    timeout: 5m
   # Patch ActorTemplate CRD to add valueFrom (secretKeyRef) and pauseImage.
   # Required for kagent 0.10.0-rc3 AgentHarness support — the Go types define
   # these fields but the chart CRD omits them. Remove when substrate ships
