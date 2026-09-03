@@ -9,8 +9,8 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: kgateway-operator
-      namespace: kgateway-system
+    - name: agentgateway-operator
+      namespace: agentgateway-system
   interval: 1h
   path: ./flux/apps/base/ingress/gateway
   sourceRef:

@@ -1,8 +1,8 @@
 ---
 # All Claude models route through the single shared agentgateway Gateway
-# (../../kgateway-system/gateway/agentgateway.yaml) — no direct Anthropic
+# (../../agentgateway-system/gateway/agentgateway.yaml) — no direct Anthropic
 # API access. Model is hardcoded per-backend on the gateway side
-# (../../kgateway-system/backends/claude-backends.yaml), so the model can't
+# (../../agentgateway-system/backends/claude-backends.yaml), so the model can't
 # be overridden by the client; the path prefix just selects which backend.
 apiVersion: kagent.dev/v1alpha2
 kind: ModelConfig
@@ -15,7 +15,7 @@ spec:
   model: claude-sonnet-4-5-20250929
   provider: OpenAI
   openAI:
-    baseUrl: http://agentgateway.kgateway-system.svc.cluster.local:8080/anthropic/sonnet/v1
+    baseUrl: http://agentgateway.agentgateway-system.svc.cluster.local:8080/anthropic/sonnet/v1
 ---
 apiVersion: kagent.dev/v1alpha2
 kind: ModelConfig
@@ -28,7 +28,7 @@ spec:
   model: claude-opus-4-5
   provider: OpenAI
   openAI:
-    baseUrl: http://agentgateway.kgateway-system.svc.cluster.local:8080/anthropic/opus/v1
+    baseUrl: http://agentgateway.agentgateway-system.svc.cluster.local:8080/anthropic/opus/v1
 ---
 apiVersion: kagent.dev/v1alpha2
 kind: ModelConfig
@@ -41,4 +41,4 @@ spec:
   model: claude-haiku-4-5-20251001
   provider: OpenAI
   openAI:
-    baseUrl: http://agentgateway.kgateway-system.svc.cluster.local:8080/anthropic/haiku/v1
+    baseUrl: http://agentgateway.agentgateway-system.svc.cluster.local:8080/anthropic/haiku/v1

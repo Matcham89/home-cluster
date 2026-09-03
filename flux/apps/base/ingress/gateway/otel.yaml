@@ -1,5 +1,5 @@
 ---
-# Same OTEL wiring as kgateway-system's agentgateway-otel (see that repo's
+# Same OTEL wiring as agentgateway-system's agentgateway-otel (see that repo's
 # AgentgatewayParameters), but in this namespace since Gateway
 # infrastructure.parametersRef must reference a same-namespace object.
 # ingress-gateway fronts all *.kubegit.com traffic, so this is the single

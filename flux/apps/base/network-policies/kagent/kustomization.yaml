@@ -3,8 +3,8 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
-  - ./allow-kgateway-ingress.yaml
-  - ./allow-kgateway-to-webhook-receiver.yaml
+  - ./allow-agentgateway-ingress.yaml
+  - ./allow-agentgateway-to-webhook-receiver.yaml
   - ./allow-ingress-to-oauth2-proxy.yaml
   - ./allow-oauth2-proxy-egress.yaml
   - ./allow-oauth2-proxy-to-ui.yaml

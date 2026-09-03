@@ -1,6 +1,6 @@
 ---
 # OpenRouter models, routed entirely through agentgateway's single shared
-# passthrough backend (../../kgateway-system/backends/openrouter-backends.yaml)
+# passthrough backend (../../agentgateway-system/backends/openrouter-backends.yaml)
 # — kagent holds no real API key for these
 # (../secrets/openrouter-placeholder.yaml is a non-secret placeholder; the
 # gateway injects the real credential). All 5 share the same baseUrl now:
@@ -18,7 +18,7 @@ spec:
   model: "~deepseek/deepseek-v4-flash-latest"
   provider: OpenAI
   openAI:
-    baseUrl: http://agentgateway.kgateway-system.svc.cluster.local:8080/openrouter/v1
+    baseUrl: http://agentgateway.agentgateway-system.svc.cluster.local:8080/openrouter/v1
 ---
 apiVersion: kagent.dev/v1alpha2
 kind: ModelConfig
@@ -31,7 +31,7 @@ spec:
   model: qwen/qwen3-coder-flash
   provider: OpenAI
   openAI:
-    baseUrl: http://agentgateway.kgateway-system.svc.cluster.local:8080/openrouter/v1
+    baseUrl: http://agentgateway.agentgateway-system.svc.cluster.local:8080/openrouter/v1
 ---
 apiVersion: kagent.dev/v1alpha2
 kind: ModelConfig
@@ -44,7 +44,7 @@ spec:
   model: deepseek/deepseek-v3.2
   provider: OpenAI
   openAI:
-    baseUrl: http://agentgateway.kgateway-system.svc.cluster.local:8080/openrouter/v1
+    baseUrl: http://agentgateway.agentgateway-system.svc.cluster.local:8080/openrouter/v1
 ---
 apiVersion: kagent.dev/v1alpha2
 kind: ModelConfig
@@ -57,7 +57,7 @@ spec:
   model: google/gemini-3.7-flash
   provider: OpenAI
   openAI:
-    baseUrl: http://agentgateway.kgateway-system.svc.cluster.local:8080/openrouter/v1
+    baseUrl: http://agentgateway.agentgateway-system.svc.cluster.local:8080/openrouter/v1
 ---
 apiVersion: kagent.dev/v1alpha2
 kind: ModelConfig
@@ -70,4 +70,4 @@ spec:
   model: anthropic/claude-sonnet-4.6
   provider: OpenAI
   openAI:
-    baseUrl: http://agentgateway.kgateway-system.svc.cluster.local:8080/openrouter/v1
+    baseUrl: http://agentgateway.agentgateway-system.svc.cluster.local:8080/openrouter/v1

@@ -24,7 +24,7 @@ data:
           }
         ]
       },
-      "description": "AI traffic through agentgateway (kgateway-system) \u2014 every caller (kagent agents, Hermes, or anything else hitting the gateway), sourced from agentgateway's own structured access logs via Loki. Model/token/duration data comes straight from the gateway itself, so this works regardless of whether the caller has its own OTel instrumentation.",
+      "description": "AI traffic through agentgateway (agentgateway-system) \u2014 every caller (kagent agents, Hermes, or anything else hitting the gateway), sourced from agentgateway's own structured access logs via Loki. Model/token/duration data comes straight from the gateway itself, so this works regardless of whether the caller has its own OTel instrumentation.",
       "editable": true,
       "fiscalYearStartMonth": 0,
       "graphTooltip": 0,
@@ -704,19 +704,19 @@ data:
             "name": "route",
             "options": [
               {"text": "All", "value": "$__all"},
-              {"text": "kgateway-system/claude-haiku-route", "value": "kgateway-system/claude-haiku-route"},
-              {"text": "kgateway-system/claude-opus-route", "value": "kgateway-system/claude-opus-route"},
-              {"text": "kgateway-system/claude-sonnet-route", "value": "kgateway-system/claude-sonnet-route"},
-              {"text": "kgateway-system/gemini-flash-route", "value": "kgateway-system/gemini-flash-route"},
-              {"text": "kgateway-system/gemini-pro-route", "value": "kgateway-system/gemini-pro-route"},
-              {"text": "kgateway-system/hermes-route", "value": "kgateway-system/hermes-route"},
-              {"text": "kgateway-system/openrouter-route", "value": "kgateway-system/openrouter-route"}
+              {"text": "agentgateway-system/claude-haiku-route", "value": "agentgateway-system/claude-haiku-route"},
+              {"text": "agentgateway-system/claude-opus-route", "value": "agentgateway-system/claude-opus-route"},
+              {"text": "agentgateway-system/claude-sonnet-route", "value": "agentgateway-system/claude-sonnet-route"},
+              {"text": "agentgateway-system/gemini-flash-route", "value": "agentgateway-system/gemini-flash-route"},
+              {"text": "agentgateway-system/gemini-pro-route", "value": "agentgateway-system/gemini-pro-route"},
+              {"text": "agentgateway-system/hermes-route", "value": "agentgateway-system/hermes-route"},
+              {"text": "agentgateway-system/openrouter-route", "value": "agentgateway-system/openrouter-route"}
             ],
-            "query": "kgateway-system/claude-haiku-route,kgateway-system/claude-opus-route,kgateway-system/claude-sonnet-route,kgateway-system/gemini-flash-route,kgateway-system/gemini-pro-route,kgateway-system/hermes-route,kgateway-system/openrouter-route",
+            "query": "agentgateway-system/claude-haiku-route,agentgateway-system/claude-opus-route,agentgateway-system/claude-sonnet-route,agentgateway-system/gemini-flash-route,agentgateway-system/gemini-pro-route,agentgateway-system/hermes-route,agentgateway-system/openrouter-route",
             "queryValue": "",
             "skipUrlSync": false,
             "type": "custom",
-            "description": "Static list — the current AI-serving routes on the shared agentgateway Gateway. Loki's label_values() can't resolve this dynamically (route is a parsed logfmt field, not an indexed stream label — Loki's label API only accepts a bare stream selector, not a query with filters/parsers), so this needs a manual update if routes are added/renamed (see ../../../kgateway-system/httproute/)."
+            "description": "Static list — the current AI-serving routes on the shared agentgateway Gateway. Loki's label_values() can't resolve this dynamically (route is a parsed logfmt field, not an indexed stream label — Loki's label API only accepts a bare stream selector, not a query with filters/parsers), so this needs a manual update if routes are added/renamed (see ../../../agentgateway-system/httproute/)."
           },
           {
             "current": {
