@@ -30,4 +30,4 @@ spec:
       backendRefs:
         - name: agentdesktop
           namespace: agentdesktop
-          port: 443
+          port: 8080

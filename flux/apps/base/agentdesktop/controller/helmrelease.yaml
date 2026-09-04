@@ -54,6 +54,13 @@ spec:
                 path: /metadata/annotations
                 value:
                   metallb.universe.tf/loadBalancerIPs: "192.168.1.205"
+              - op: add
+                path: /spec/ports/-
+                value:
+                  name: admin
+                  port: 8080
+                  protocol: TCP
+                  targetPort: admin
           # The chart's existingConfigSecret path only projects the single
           # configSecretKey (controller.yaml) into the config volume — it
           # doesn't know about daemon.yaml, which the same Secret also holds
