@@ -1,0 +1,24 @@
+---
+# Allow the controller to reach the LLM gateway's dedicated MetalLB IP
+# (agentgateway-system's agentdesktop Gateway, see
+# flux/apps/base/agentgateway-system/agentdesktop/gateway.yaml) — this is
+# the address distributed to workstation daemons in daemon.yaml's
+# llmGateway.url, so the controller itself must also be able to reach it.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-controller-llm-gateway-egress
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/instance: agentdesktop
+      app.kubernetes.io/name: agentdesktop-controller
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 192.168.1.204/32
+    ports:
+    - port: 8095
+      protocol: TCP

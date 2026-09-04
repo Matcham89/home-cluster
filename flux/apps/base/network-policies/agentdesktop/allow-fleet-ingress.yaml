@@ -1,0 +1,24 @@
+---
+# Allow workstation daemons to reach the fleet controller's mTLS port
+# directly via the LoadBalancer IP (192.168.1.205:443 -> containerPort
+# 8443). Traffic originates from outside the cluster (workstations, not
+# other pods), so this is expressed as an ipBlock rather than a
+# pod/namespace selector.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-fleet-ingress
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/instance: agentdesktop
+      app.kubernetes.io/name: agentdesktop-controller
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+    ports:
+    - port: 8443
+      protocol: TCP

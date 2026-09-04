@@ -1,0 +1,23 @@
+---
+# Allow oauth2-proxy to forward authenticated requests to the controller
+# pod's admin-proxy sidecar (port 8081 -> loopback-only admin UI on 8080,
+# see flux/apps/base/agentdesktop/controller/helmrelease.yaml)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-oauth2-proxy-to-admin
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/instance: agentdesktop
+      app.kubernetes.io/name: agentdesktop-controller
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: oauth2-proxy
+    ports:
+    - port: 8081
+      protocol: TCP

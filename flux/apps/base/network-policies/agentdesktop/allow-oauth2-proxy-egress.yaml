@@ -1,0 +1,33 @@
+---
+# Allow oauth2-proxy to reach the controller's admin-proxy sidecar (upstream)
+# and Authentik OIDC (external HTTPS via Cloudflare)
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-oauth2-proxy-egress
+spec:
+  podSelector:
+    matchLabels:
+      app: oauth2-proxy
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          app.kubernetes.io/instance: agentdesktop
+          app.kubernetes.io/name: agentdesktop-controller
+    ports:
+    - port: 8081
+      protocol: TCP
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except:
+        - 10.0.0.0/8
+        - 172.16.0.0/12
+        - 192.168.0.0/16
+        - 169.254.0.0/16
+    ports:
+    - port: 443
+      protocol: TCP

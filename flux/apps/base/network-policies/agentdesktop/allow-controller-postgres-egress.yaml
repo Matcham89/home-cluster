@@ -1,0 +1,20 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-controller-postgres-egress
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/instance: agentdesktop
+      app.kubernetes.io/name: agentdesktop-controller
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: databases
+    ports:
+    - port: 5432
+      protocol: TCP

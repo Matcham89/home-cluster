@@ -1,0 +1,27 @@
+---
+# Allow the controller to reach Authentik's OIDC UserInfo endpoint for
+# access-token revalidation (external HTTPS via Cloudflare, same reachability
+# pattern as oauth2-proxy's egress to authentik.kubegit.com).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-controller-authentik-egress
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/instance: agentdesktop
+      app.kubernetes.io/name: agentdesktop-controller
+  policyTypes:
+  - Egress
+  egress:
+  - to:
+    - ipBlock:
+        cidr: 0.0.0.0/0
+        except:
+        - 10.0.0.0/8
+        - 172.16.0.0/12
+        - 192.168.0.0/16
+        - 169.254.0.0/16
+    ports:
+    - port: 443
+      protocol: TCP
