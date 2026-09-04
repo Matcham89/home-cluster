@@ -17,6 +17,9 @@ spec:
               kubernetes.io/metadata.name: authentik
         - namespaceSelector:
             matchLabels:
+              kubernetes.io/metadata.name: agentdesktop
+        - namespaceSelector:
+            matchLabels:
               kubernetes.io/metadata.name: n8n
         - namespaceSelector:
             matchLabels:

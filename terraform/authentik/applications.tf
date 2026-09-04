@@ -196,13 +196,54 @@ resource "authentik_provider_oauth2" "agentdesktop" {
 }
 
 resource "authentik_application" "agentdesktop" {
-  name              = "AgentDesktop"
+  # Named/labeled distinctly from authentik_application.agentdesktop_proxy
+  # below so the two don't look identical in the library — this one exists
+  # only so the CLI daemon's OIDC issuer URL
+  # (https://authentik.kubegit.com/application/o/agentdesktop/) resolves; it
+  # has no meta_launch_url since it isn't meant to be clicked by a human.
+  name              = "AgentDesktop CLI Enrollment"
   slug              = "agentdesktop"
   protocol_provider = authentik_provider_oauth2.agentdesktop.id
-  # Without this, the library tile falls back to running the OAuth
-  # authorization flow, which completes by redirecting to the provider's
-  # only allowed_redirect_uri — the workstation daemon's loopback callback
-  # (http://127.0.0.1:51327/callback), not the web admin UI.
-  meta_launch_url = "https://agentdesktop.kubegit.com"
-  open_in_new_tab = true
+}
+
+# =============================================================
+# AgentDesktop web admin UI (oauth2-proxy)
+# Provider slug: agentdesktop-kubegit-com
+# Client credentials: k8s secret agentdesktop/agentdesktop-oauth2-proxy
+# Separate from the native/public provider above — that one is locked to
+# the CLI daemon's loopback redirect URI and can't be reused here.
+# =============================================================
+
+resource "authentik_provider_oauth2" "agentdesktop_proxy" {
+  name          = "AgentDesktop Web"
+  client_id     = data.kubernetes_secret_v1.agentdesktop_oauth2_proxy.data["client-id"]
+  client_secret = data.kubernetes_secret_v1.agentdesktop_oauth2_proxy.data["client-secret"]
+
+  authorization_flow = data.authentik_flow.authorization.id
+  invalidation_flow  = data.authentik_flow.invalidation.id
+  signing_key        = data.authentik_certificate_key_pair.default.id
+  property_mappings  = concat(data.authentik_property_mapping_provider_scope.oauth2.ids, [authentik_property_mapping_provider_scope.email.id, authentik_property_mapping_provider_scope.groups.id])
+
+  allowed_redirect_uris = [
+    {
+      matching_mode = "strict"
+      url           = "https://agentdesktop.kubegit.com/oauth2/callback"
+    }
+  ]
+
+  # See NOTE on authentik_provider_oauth2.kagent above — required explicitly
+  # or every authorization request fails with "Invalid grant_type for provider".
+  grant_types = ["authorization_code", "refresh_token"]
+
+  sub_mode               = "hashed_user_id"
+  access_token_validity  = "hours=1"
+  refresh_token_validity = "days=30"
+}
+
+resource "authentik_application" "agentdesktop_proxy" {
+  name              = "AgentDesktop"
+  slug              = "agentdesktop-kubegit-com"
+  protocol_provider = authentik_provider_oauth2.agentdesktop_proxy.id
+  meta_launch_url   = "https://agentdesktop.kubegit.com"
+  open_in_new_tab   = true
 }

@@ -16,6 +16,13 @@ data "kubernetes_secret_v1" "kagent_oauth2_proxy" {
   }
 }
 
+data "kubernetes_secret_v1" "agentdesktop_oauth2_proxy" {
+  metadata {
+    name      = "agentdesktop-oauth2-proxy"
+    namespace = "agentdesktop"
+  }
+}
+
 data "kubernetes_secret_v1" "grafana_oauth" {
   metadata {
     name      = "auth-generic-oauth-secret"

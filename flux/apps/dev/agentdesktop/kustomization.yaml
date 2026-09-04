@@ -11,3 +11,5 @@ resources:
   - ./tls/ks.yaml
   - ./config/ks.yaml
   - ./controller/ks.yaml
+  - ./oauth2-proxy/ks.yaml
+  - ./network-policies/ks.yaml
