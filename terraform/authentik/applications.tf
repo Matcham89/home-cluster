@@ -199,5 +199,10 @@ resource "authentik_application" "agentdesktop" {
   name              = "AgentDesktop"
   slug              = "agentdesktop"
   protocol_provider = authentik_provider_oauth2.agentdesktop.id
-  open_in_new_tab   = true
+  # Without this, the library tile falls back to running the OAuth
+  # authorization flow, which completes by redirecting to the provider's
+  # only allowed_redirect_uri — the workstation daemon's loopback callback
+  # (http://127.0.0.1:51327/callback), not the web admin UI.
+  meta_launch_url = "https://agentdesktop.kubegit.com"
+  open_in_new_tab = true
 }
