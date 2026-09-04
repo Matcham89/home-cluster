@@ -186,12 +186,13 @@ resource "authentik_provider_oauth2" "agentdesktop" {
   # (ArrayField default=list), which makes every authorization request fail
   # with "invalid_request" / "Invalid grant_type for provider". Must be set
   # explicitly. AgentDesktop's daemon uses the authorization_code flow with
-  # PKCE; no refresh_token grant needed since the daemon re-authenticates
-  # each enrollment rather than holding a long-lived session.
-  grant_types = ["authorization_code"]
+  # PKCE to enroll, then holds the returned refresh token for background
+  # access-token refresh every ~60 minutes (persisted in macOS Keychain).
+  grant_types = ["authorization_code", "refresh_token"]
 
-  sub_mode              = "hashed_user_id"
-  access_token_validity = "hours=1"
+  sub_mode               = "hashed_user_id"
+  access_token_validity  = "hours=1"
+  refresh_token_validity = "days=30"
 }
 
 resource "authentik_application" "agentdesktop" {
