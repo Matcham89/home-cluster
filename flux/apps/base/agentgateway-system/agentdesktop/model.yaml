@@ -4,13 +4,35 @@
 # against this cluster's agentgateway v1.5.0 (dataplane returned "route not
 # found" for all matching traffic even though the Model showed Accepted).
 #
-# UPDATE: even via the HTTPRoute-parent path, the AgentgatewayModel wildcard
+# UPDATE 1: even via the HTTPRoute-parent path, the AgentgatewayModel wildcard
 # ("*") catalog routing consistently failed outbound TLS to api.anthropic.com
 # ("received fatal alert: HandshakeFailure") in this cluster's agentgateway
-# v1.5.0, while the AgentgatewayBackend pattern below (identical to the
-# working claude-code gateway in ../backends/claude-code.yaml) round-trips
-# to Anthropic successfully. AgentgatewayModel appears broken/unreliable in
-# this agentgateway version — use AgentgatewayBackend instead.
+# v1.5.0, while the AgentgatewayBackend "ai" pattern below (identical to the
+# claude-code gateway in ../backends/claude-code.yaml) round-tripped to
+# Anthropic successfully for simple requests — so switched to that.
+#
+# UPDATE 2: the AgentgatewayBackend "ai" translation mode normalizes every
+# provider to an OpenAI-compatible wire format (request AND response), even
+# on this native-Anthropic-shaped /v1/messages path. Claude Code is a native
+# Anthropic API client — it sends real "tools": [{name, description,
+# input_schema}] and expects native Anthropic SSE responses. Once Claude Code
+# sends real tool definitions (i.e. on essentially every real request), the
+# "ai" backend fails with "failed to marshal request: missing field `type`".
+# Reproduced identically on the independently-configured, previously-working
+# claude-code gateway too, and on both agentgateway v1.5.0 and v1.4.1 (the
+# version this project's own examples/claude reference pins) — so this is a
+# version-spanning limitation of the "ai" translation feature with native
+# Anthropic tool-calling, not a config mistake or a v1.5.0 regression.
+#
+# FIX: use a plain `static` backend (raw host:port passthrough, no request/
+# response translation) so Claude Code's native Anthropic wire format reaches
+# api.anthropic.com completely unmodified. The real Anthropic API key is
+# injected into the x-api-key header via policies.auth.credentials (replacing
+# whatever the client sent), so the client only ever needs the agentdesktop-
+# issued JWT (validated by the agentdesktop-jwt AgentgatewayPolicy) to talk to
+# the gateway. Verified end-to-end with a real captured Claude Code request
+# (30 tools, thinking, context_management, prompt caching) — returns a
+# genuine native Anthropic response.
 apiVersion: agentgateway.dev/v1alpha1
 kind: AgentgatewayBackend
 metadata:
@@ -20,16 +42,23 @@ metadata:
     app: agentdesktop
     provider: anthropic
 spec:
-  ai:
-    groups:
-      - providers:
-          - name: anthropic
-            anthropic: {}
-            policies:
-              auth:
-                secretRef:
-                  # Reuses the existing Anthropic key — see ../secrets/anthropic-secret.yaml
-                  name: anthropic-secret
+  static:
+    host: api.anthropic.com
+    port: 443
+  policies:
+    tls:
+      sni: api.anthropic.com
+    auth:
+      credentials:
+        - location:
+            header:
+              name: x-api-key
+          secretRef:
+            # Reuses the existing Anthropic key — see ../secrets/anthropic-secret.yaml
+            # Note: the secret's data key is named "Authorization" but its
+            # value is the raw Anthropic API key (sk-ant-...), not a header.
+            name: anthropic-secret
+            key: Authorization
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
