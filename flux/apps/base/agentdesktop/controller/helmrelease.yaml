@@ -60,12 +60,18 @@ spec:
                   name: admin
                   port: 8080
                   protocol: TCP
-                  targetPort: admin
+                  targetPort: admin-proxy
           # The chart's existingConfigSecret path only projects the single
           # configSecretKey (controller.yaml) into the config volume — it
           # doesn't know about daemon.yaml, which the same Secret also holds
           # (see ../config/config-secret.yaml). Add it so
           # controller.yaml's daemonConfig.path can actually resolve.
+          #
+          # Also adds a socat sidecar: the controller's admin UI must bind to
+          # a loopback address (enforced by the app itself, see
+          # ../../ingress/httproutes/agentdesktop.yaml), so it's unreachable
+          # from the Service/HTTPRoute. The sidecar shares the pod's network
+          # namespace and relays 0.0.0.0:8081 -> 127.0.0.1:8080.
           - target:
               kind: Deployment
               name: agentdesktop
@@ -75,6 +81,30 @@ spec:
                 value:
                   key: daemon.yaml
                   path: daemon.yaml
+              - op: add
+                path: /spec/template/spec/containers/-
+                value:
+                  name: admin-proxy
+                  image: alpine/socat:1.8.0.1
+                  args:
+                    - tcp-listen:8081,fork,reuseaddr
+                    - tcp-connect:127.0.0.1:8080
+                  ports:
+                    - name: admin-proxy
+                      containerPort: 8081
+                      protocol: TCP
+                  securityContext:
+                    allowPrivilegeEscalation: false
+                    capabilities:
+                      drop:
+                        - ALL
+                    readOnlyRootFilesystem: true
+                  resources:
+                    requests:
+                      cpu: 5m
+                      memory: 16Mi
+                    limits:
+                      memory: 32Mi
   values:
     existingConfigSecret: agentdesktop-controller-config
     configSecretKey: controller.yaml
