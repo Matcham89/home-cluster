@@ -85,7 +85,7 @@ spec:
                 path: /spec/template/spec/containers/-
                 value:
                   name: admin-proxy
-                  image: alpine/socat:1.8.0.1
+                  image: alpine/socat:1.8.1.3
                   args:
                     - tcp-listen:8081,fork,reuseaddr
                     - tcp-connect:127.0.0.1:8080
