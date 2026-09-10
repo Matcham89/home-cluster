@@ -12,7 +12,7 @@ resources:
   - ./external-services
   - ./flux-system
   - ./ingress
-  - ./kagent
+  # - ./kagent  # DISABLED: substrate 0.0.21 broken pod identity, needs cleanup
   - ./kube-ops
   - ./kube-system
   - ./longhorn-system
@@ -21,4 +21,4 @@ resources:
   - ./n8n
   - ./qdrant
   - ./storage
-  - ./substrate
+  # - ./substrate  # DISABLED: incompatible with current cluster state
