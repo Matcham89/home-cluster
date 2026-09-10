@@ -5,7 +5,7 @@ kind: Kustomization
 resources:
   - ./agentdesktop.yaml
   - ./authentik.yaml
-  - ./kagent.yaml
+  # - ./kagent.yaml  # DISABLED: substrate/kagent removed from cluster
   - ./longhorn.yaml
   - ./monitoring.yaml
   - ./n8n.yaml

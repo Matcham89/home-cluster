@@ -12,3 +12,13 @@ resource "authentik_group" "grafana_editors" {
   name  = "Grafana Editors"
   users = [authentik_user.matcham89.id]
 }
+
+resource "authentik_group" "cc_flux_viewer" {
+  name  = "cc-flux-viewer"
+  users = [authentik_user.matcham89.id]
+}
+
+resource "authentik_group" "cc_flux_admin" {
+  name  = "cc-flux-admin"
+  users = [authentik_user.matcham89.id]
+}

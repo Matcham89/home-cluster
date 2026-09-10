@@ -6,6 +6,6 @@ resources:
   - ./agentdesktop.yaml
   - ./authentik.yaml
   - ./grafana.yaml
-  - ./kagent.yaml
+  # - ./kagent.yaml  # DISABLED: substrate/kagent removed from cluster
   - ./longhorn.yaml
   - ./n8n.yaml

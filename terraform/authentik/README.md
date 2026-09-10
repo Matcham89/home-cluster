@@ -10,6 +10,8 @@ Running `terraform apply` fully restores Authentik config after a database loss 
 |---|---|---|
 | `flux-kubegit-com` | OAuth2 Provider + Application | Flux Web UI |
 | `kagent-kubegit-com` | OAuth2 Provider + Application | Kagent (via oauth2-proxy) |
+| `agentdesktop-kubegit-com` | OAuth2 Provider + Application | AgentDesktop admin web UI (via oauth2-proxy) |
+| `agentdesktop` | OAuth2 Provider + Application | AgentDesktop CLI/daemon device enrollment — public/native client, redirect fixed to `http://127.0.0.1:51327/callback`; separate from the web UI provider above and can't be merged with it |
 | `grafana-kubegit-com` | OAuth2 Provider + Application | Grafana generic OAuth |
 | `flux-admins` | Group | Bound to `flux-web-admin` ClusterRole |
 | `Grafana Admins` | Group | Maps to Grafana Admin role |

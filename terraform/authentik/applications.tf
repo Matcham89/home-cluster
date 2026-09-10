@@ -247,3 +247,42 @@ resource "authentik_application" "agentdesktop_proxy" {
   meta_launch_url   = "https://agentdesktop.kubegit.com"
   open_in_new_tab   = true
 }
+
+# =============================================================
+# CC-Flux Test
+# Provider slug: cc-flux-dev-test
+# Confidential client for testing group-based ClusterRoleBinding
+# Groups emitted: cc-flux-viewer, cc-flux-admin (exact names match binding subjects)
+# =============================================================
+
+resource "authentik_provider_oauth2" "cc_flux_test" {
+  name          = "CC Flux Dev Test"
+  client_type   = "confidential"
+  client_id     = "cc-flux-dev-test-client"
+  client_secret = "cc-flux-dev-test-secret-change-me-in-production"
+
+  authorization_flow = data.authentik_flow.authorization.id
+  invalidation_flow  = data.authentik_flow.invalidation.id
+  signing_key        = data.authentik_certificate_key_pair.default.id
+  property_mappings  = concat(data.authentik_property_mapping_provider_scope.oauth2.ids, [authentik_property_mapping_provider_scope.email.id, authentik_property_mapping_provider_scope.groups.id])
+
+  allowed_redirect_uris = [
+    {
+      matching_mode = "strict"
+      url           = "https://exposable-enjoyment-manned.ngrok-free.dev/oauth2/callback"
+    }
+  ]
+
+  grant_types = ["authorization_code", "refresh_token"]
+
+  sub_mode               = "hashed_user_id"
+  access_token_validity  = "hours=1"
+  refresh_token_validity = "days=30"
+}
+
+resource "authentik_application" "cc_flux_test" {
+  name              = "CC Flux Dev Test"
+  slug              = "cc-flux-dev-test"
+  protocol_provider = authentik_provider_oauth2.cc_flux_test.id
+  open_in_new_tab   = true
+}

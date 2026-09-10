@@ -121,9 +121,11 @@ No service mesh. Traffic enters via Cloudflare Tunnel → `ingress-gateway` (age
 
 - **Ingress gateway**: `apps/base/ingress/gateway/gateway.yaml` — agentgateway on port 80, hostname `*.kubegit.com`, MetalLB IP `192.168.1.201`
 - **cloudflared**: `apps/base/ingress/tunnel/` — 2-replica Deployment pulling tunnel token from ExternalSecret
-- **HTTPRoutes**: `apps/base/ingress/httproutes/` — one route per app (authentik, grafana, kagent, longhorn, n8n, rundeck)
+- **HTTPRoutes**: `apps/base/ingress/httproutes/` — one route per app (agentdesktop, authentik, grafana, kagent, longhorn, n8n, rundeck)
 - **ReferenceGrants**: `apps/base/ingress/referencegrants/` — one per target namespace allowing HTTPRoutes in `ingress` to reach backend Services
 - All Cloudflare Zero Trust routes must point to `http://192.168.1.201` (the ingress-gateway LoadBalancer IP)
+
+**Gating a web UI behind Authentik (oauth2-proxy pattern):** apps with no native login (kagent, agentdesktop) sit behind an `oauth2-proxy` Deployment in their own namespace (`apps/base/<namespace>/oauth2-proxy/`). The HTTPRoute's `backendRef` points at the `oauth2-proxy` Service (port `4180`), not the app's Service directly. `oauth2-proxy` authenticates against a **dedicated confidential-client** Authentik provider/application (`terraform/authentik/applications.tf`, slug convention `<app>-kubegit-com`) — if the app already has an Authentik application for something else (e.g. agentdesktop's CLI daemon uses a public/native client for device enrollment, slug `agentdesktop`, redirect `127.0.0.1:<port>`), that one can't be reused for oauth2-proxy; add a second, separate provider/application instead of repurposing it. Client id/secret/cookie-secret come from a dedicated Bitwarden-backed `ExternalSecret` (`<app>-oauth2-proxy`), read into Terraform via a `data.kubernetes_secret_v1` lookup so the Authentik provider's credentials match what oauth2-proxy actually uses.
 
 ## Secret Management
 
@@ -146,9 +148,10 @@ Key external services exposed this way:
 ## Network Policies
 
 Reusable network policies live in `apps/base/network-policies/<namespace>/`. The pattern is:
-- Default deny-all ingress/egress as the base
-- Allow DNS (port 53) and Prometheus scraping
+- `apps/base/network-policies/shared/` (default-deny-all + allow-dns + allow-prometheus-scrape) applied to a namespace via its own Flux Kustomization targeting that namespace, alongside a second Kustomization for the namespace's app-specific rules (see `apps/dev/kagent/network-policies/ks.yaml` or `apps/dev/agentdesktop/network-policies/ks.yaml` for the two-Kustomization pattern)
 - App-specific rules added per namespace (e.g., allow postgres egress for apps using CNPG)
+
+**Important — not actually enforced on this cluster:** the CNI is **Flannel**, which has no NetworkPolicy engine at all. Every `NetworkPolicy` object in this repo (across every namespace) is inert — `kubectl get networkpolicy` shows them and Flux reports them healthy, but nothing evaluates them, so traffic flows regardless of what they say. They're kept as documentation of intended traffic shape and would become real the moment Flannel is swapped for a policy-capable CNI (Calico, Cilium, etc.). Don't assume a `default-deny-all` in this repo is actually blocking anything today.
 
 ## kgateway / Claude AI Gateways
 

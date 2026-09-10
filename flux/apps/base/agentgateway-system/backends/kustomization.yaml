@@ -7,8 +7,8 @@ resources:
   # - ./youtube-mcp.yaml
   # Claude/Gemini multi-model backends (one backend per model with hardcoded model)
   - ./claude-backends.yaml
-  - ./kagent.yaml
-  - ./github-webhook.yaml
+  # - ./kagent.yaml  # DISABLED: substrate/kagent removed from cluster
+  # - ./github-webhook.yaml  # DISABLED: substrate/kagent removed from cluster
   # - ./mcp-translator.yaml
   - ./claude-code.yaml
   - ./gemini-backends.yaml
