@@ -86,6 +86,20 @@ This DRY approach centralizes namespace configuration - security policies, Istio
 - **KAgent** - AI agent platform
 - **Agent Substrate** (`kagent-dev/substrate`) - sandboxed actor runtime backing KAgent's WorkerPools. Has non-obvious, non-GitOps bootstrap requirements (CA/JWT secrets, RBAC) — see [docs/substrate-bootstrap-requirements.md](docs/substrate-bootstrap-requirements.md) before touching it.
 
+## Validating Changes
+
+There is no CI gate on this repo, and Flux syncs `main` to the cluster every minute — a broken manifest reaches the cluster before anyone reviews it. Render your change locally before merging:
+
+```bash
+# Changed something under flux/apps/dev/
+flux build kustomization cluster-apps --path ./flux/apps/dev --dry-run
+
+# Changed something under flux/apps/base/
+kubectl kustomize flux/apps/base/<namespace>/<app>
+```
+
+Neither command needs cluster access. See [docs/flux-validation.md](docs/flux-validation.md) for the full pre-merge checklist — which path to render for which layer, `dependsOn` checks, post-merge verification, and two traps (inert NetworkPolicies under Flannel, and the 1Password/ESO dependency for ExternalSecrets) that render cleanly but still bite.
+
 ## Quick Start
 
 See [bootstrap/README.md](bootstrap/README.md) for installation instructions.
