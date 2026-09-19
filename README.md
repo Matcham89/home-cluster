@@ -1,6 +1,5 @@
 # home-cluster
 
-test
 GitOps repository for Kubernetes home cluster managed by Flux.
 
 ## What is Flux?
