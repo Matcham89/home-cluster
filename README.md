@@ -18,6 +18,7 @@ flux/
     ├── base/              # Base app configurations
     └── dev/               # Dev environment overlays
 bootstrap/                 # Flux installation instructions
+terraform/                 # Authentik configuration as code
 ```
 
 ## Architecture
@@ -89,3 +90,7 @@ This DRY approach centralizes namespace configuration - security policies, Istio
 ## Quick Start
 
 See [bootstrap/README.md](bootstrap/README.md) for installation instructions.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for the checks to run before opening a PR — `terraform fmt`/`validate` for `terraform/authentik/`, and rendering Flux manifests with `flux build` / `kubectl kustomize`. No CI enforces these, so the local run is the only gate.
