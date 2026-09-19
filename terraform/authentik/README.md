@@ -31,6 +31,9 @@ Client credentials are read directly from existing cluster secrets — no secret
   lookups fail otherwise
 - An Authentik API token (see below)
 
+Note that only `terraform plan`/`terraform apply` need the cluster, the secrets, and the API token.
+The pre-PR checks in "Local checks before opening a PR" need none of them — see that section.
+
 ## Fresh-cluster bootstrap order
 
 On a brand new cluster, Authentik starts with an empty database — there is no admin login yet, and
@@ -89,6 +92,59 @@ print('TOKEN:', token.key)
 Copy the printed `TOKEN:` value into `TF_VAR_authentik_token` below. This requires a running
 `authentik-operator-server` pod — if Authentik itself has no admin user yet (fresh database), do
 the recovery-key dance in "Recovering after a database loss" first.
+
+## Local checks before opening a PR
+
+Run these two checks on any PR that touches `terraform/`. Unlike `terraform plan`/`terraform apply`,
+**neither needs cluster access, a kubeconfig, or `TF_VAR_authentik_token`** — you can run both on a
+laptop that has never talked to the cluster. Nothing in the "Prerequisites" section above applies
+here except having the `terraform` CLI itself.
+
+```bash
+cd terraform/authentik
+
+# 1. Formatting — no init required
+terraform fmt -recursive -check
+
+# 2. Install the pinned providers, then validate
+terraform init -backend=false
+terraform validate
+```
+
+Both should exit `0`.
+
+Why no credentials are needed:
+
+- `terraform fmt` is a pure source-text check. It never loads providers or evaluates configuration,
+  so it works straight from a fresh clone.
+- `terraform validate` checks syntax, references, and type correctness against the provider schemas.
+  It needs the providers *installed* — hence the `terraform init` first, which downloads
+  `goauthentik/authentik ~> 2026.0` and `hashicorp/kubernetes ~> 3.0` from the registry (network
+  access to the registry only, not to the cluster). It does **not** evaluate `provider` blocks, so
+  the `config_path = "~/.kube/config"` in `providers.tf` is never dialled, and it does **not**
+  require values for input variables, so the no-default `authentik_token` can stay unset.
+- `-backend=false` on `init` skips backend initialisation. It's not strictly required today (state
+  is local — see "State"), but it keeps the check working unchanged if a remote backend is ever
+  configured.
+
+Useful variants:
+
+- `terraform fmt -recursive` (without `-check`) rewrites files in place to fix formatting.
+- Run `terraform fmt -recursive -check` from the repo root to cover every `.tf` file in the tree at
+  once; `terraform validate` is per-module, so it must be run from `terraform/authentik`.
+
+Two things to be aware of:
+
+- **No CI enforces this.** `.github/workflows/` currently contains only `renovate.yaml` — there is
+  no fmt/validate job, so these checks are contributor-run only. An unformatted or invalid `.tf`
+  file will merge without complaint if you skip them.
+- **There is no terragrunt in this repo.** The IaC here is plain Terraform, and `terraform/` holds
+  the single `authentik/` module. If you see a reference to `terragrunt run-all` or similar for this
+  repo, it's a naming error — the commands above are the real workflow.
+
+A passing `validate` does not mean a clean `plan`. Errors that depend on live API state — missing
+flow slugs, a missing certificate, an absent Kubernetes secret, a non-superuser token — only surface
+during `plan`/`apply`, which do need the full Prerequisites. See "Troubleshooting" for those.
 
 ## First Apply
 
