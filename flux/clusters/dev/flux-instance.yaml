@@ -10,6 +10,11 @@ metadata:
     fluxcd.controlplane.io/reconcileArtifactEvery: 10m
 spec:
   distribution:
+    # Flux CD toolkit distribution version (2.x line) -- this is the version of
+    # the source/kustomize/helm/notification controllers the operator installs.
+    # It is NOT the flux-operator's own version, which is on the 0.x line and is
+    # pinned in flux/apps/base/flux-system/flux-operator/flux-operator-config.yaml
+    # and bootstrap/README.md.
     version: 2.9.5
     registry: ghcr.io/fluxcd
     artifact: oci://ghcr.io/controlplaneio-fluxcd/flux-operator-manifests

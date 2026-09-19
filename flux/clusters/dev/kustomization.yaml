@@ -1,0 +1,18 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+# Explicit resource list for the path the FluxInstance syncs
+# (flux-instance.yaml -> spec.sync.path: flux/clusters/dev).
+#
+# Without this file, kustomize-controller falls back to a recursive scan of this
+# directory and would also apply flux-system/gotk-components.yaml (hardcoded
+# legacy controller images) and flux-system/gotk-sync.yaml (a duplicate
+# flux-system GitRepository/Kustomization). Both are now owned by the
+# flux-operator via the FluxInstance, so applying the static copies puts the
+# cluster on mixed controller versions and makes distribution upgrades
+# silently revert.
+#
+# The legacy flux-system/ directory is retained only for reference and is
+# deliberately NOT listed here. It should be deleted outright.
+resources:
+  - flux-instance.yaml
+  - cluster-apps.yaml

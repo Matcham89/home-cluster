@@ -22,7 +22,12 @@ spec:
           mediaType: "application/vnd.cncf.helm.chart.content.v1.tar+gzip"
           operation: copy
         ref:
-          semver: '*' # latest always
+          # flux-operator chart version. Keep in sync with the `--version` in
+          # bootstrap/README.md step 2. This is the operator's own 0.x version,
+          # NOT the Flux CD toolkit distribution version, which is pinned
+          # separately in flux/clusters/dev/flux-instance.yaml
+          # (spec.distribution.version, on the 2.x line).
+          semver: 0.60.0
     - apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease
       metadata:
