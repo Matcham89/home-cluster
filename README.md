@@ -60,7 +60,7 @@ This DRY approach centralizes namespace configuration - security policies, Istio
 - **Flux System** - GitOps operator
 - **Longhorn** - Distributed storage
 - **Cert Manager** - Certificate management
-- **MetalLB** - Load balancer (192.168.1.201-209)
+- **MetalLB** - Load balancer (192.168.1.201-216) - see [docs/metallb-address-pool.md](docs/metallb-address-pool.md) before changing the range
 - **Metrics Server** - Resource metrics
 
 ### Service Mesh & Gateway
