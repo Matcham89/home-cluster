@@ -86,6 +86,32 @@ This DRY approach centralizes namespace configuration - security policies, Istio
 - **KAgent** - AI agent platform
 - **Agent Substrate** (`kagent-dev/substrate`) - sandboxed actor runtime backing KAgent's WorkerPools. Has non-obvious, non-GitOps bootstrap requirements (CA/JWT secrets, RBAC) — see [docs/substrate-bootstrap-requirements.md](docs/substrate-bootstrap-requirements.md) before touching it.
 
+## Backup and Recovery
+
+Verified against `flux/apps/base/databases/cluster/cluster.yaml` (`postgres-cluster`, namespace `databases`).
+
+**What exists**
+
+- **Replication, not backup**: `instances: 2` (primary + streaming standby) with CNPG automated failover. This protects against a node loss, not against data loss or corruption, because deletes and bad writes replicate too.
+- **Storage**: 10Gi PVC per instance on the `longhorn` StorageClass. Longhorn volume replica count is not set in this repo, so it uses the chart defaults.
+- **Declarative state is in Git**: managed roles (`spec.managed.roles`), `Database` resources and role secrets are reconciled by Flux/CNPG. Roles and database ownership can be rebuilt, but the data cannot.
+
+**What is NOT configured**
+
+- No `spec.backup` / `barmanObjectStore` and no WAL archiving on the Cluster.
+- No `ScheduledBackup` or `Backup` resources.
+- No `bootstrap.recovery` or `externalClusters`. The Cluster bootstraps with `initdb` only.
+- No Longhorn `RecurringJob`, backup target or `VolumeSnapshot` configuration in `flux/apps`.
+- No point-in-time recovery is possible, and there is no off-cluster copy of the data.
+- SeaweedFS (S3) is deployed in `storage` but is only wired up for Loki. Nothing points CNPG at it.
+
+**Restore paths today**
+
+- Single instance or node failure: CNPG promotes the standby and re-creates the lost instance from the survivor. No action is needed.
+- Loss of both instances or the PVCs, or logical corruption: there is no automated restore. Recovery depends on any manual `pg_dump` you took yourself, or on Longhorn snapshots or backups taken outside this repo, if any exist. Treat the databases (authentik, n8n, agentdesktop, homelab) as unbacked-up.
+
+**Recommended next step** (not implemented): add `spec.backup.barmanObjectStore` pointing at an S3 bucket with credentials from an ExternalSecret, add a `ScheduledBackup`, and document `bootstrap.recovery` from that backup.
+
 ## Quick Start
 
 See [bootstrap/README.md](bootstrap/README.md) for installation instructions.
