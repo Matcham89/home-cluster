@@ -31,11 +31,15 @@ jobs:
         with:
           version: 2.9.5 # matches flux/clusters/dev/flux-instance.yaml
 
-      - name: Test
-        uses: allenporter/flux-local/action/test@92d3a538c009c3fec120fbf50f6ef33b3e0a569c # 8.4.0
+      - name: Setup uv
+        uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
         with:
-          path: flux/clusters/dev
-          enable-helm: true
+          python-version: "3.13"
+
+      # Runs the CLI instead of allenporter/flux-local/action/test: that action omits
+      # --all-namespaces, so it only tests Kustomizations in flux-system (5 of ~80 here).
+      - name: Test
+        run: uvx --from flux-local==8.4.0 flux-local test --enable-helm --all-namespaces --path flux/clusters/dev -v
 
   # Shows what a PR changes in the rendered Helm output (e.g. a chart version bump).
   # Written to the job summary, not a PR comment, so no extra permissions are needed.
