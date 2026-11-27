@@ -86,6 +86,28 @@ This DRY approach centralizes namespace configuration - security policies, Istio
 - **KAgent** - AI agent platform
 - **Agent Substrate** (`kagent-dev/substrate`) - sandboxed actor runtime backing KAgent's WorkerPools. Has non-obvious, non-GitOps bootstrap requirements (CA/JWT secrets, RBAC) — see [docs/substrate-bootstrap-requirements.md](docs/substrate-bootstrap-requirements.md) before touching it.
 
+## Backup and Recovery
+
+**There is no automated backup of cluster data today.** Neither the Postgres layer nor the storage layer takes scheduled, restorable copies:
+
+- The `postgres-cluster` CNPG Cluster (`flux/apps/base/databases/cluster/cluster.yaml`) has no `backup` / `barmanObjectStore` stanza, so WAL archiving and base backups are off and there is no `ScheduledBackup`.
+- The Longhorn HelmRelease (`flux/apps/base/longhorn-system/helmrelease.yaml`) sets no `backupTarget`, so there is no object-storage/NFS backup target and no recurring snapshot or backup jobs.
+
+What exists instead is **redundancy, not backup**. It protects against a node or disk failing, not against accidental deletion, data corruption, or a bad migration:
+
+- Postgres runs 2 instances - primary plus a streaming-replication standby with automated failover.
+- Longhorn keeps replicas of each volume across nodes and is tuned for power-outage recovery (`autoSalvage`, `autoDeletePodWhenVolumeDetachedUnexpectedly`, bounded replica rebuilds).
+
+### Restore paths available today
+
+| Failure | Recovery |
+| --- | --- |
+| Node loss, unexpected volume detach | CNPG fails over to the standby and Longhorn rebuilds replicas automatically. No manual restore step. |
+| Accidental data loss, corruption, bad migration | No restorable copy exists. Recovery means either a logical dump taken manually **before** the event (`kubectl exec` + `pg_dump`) replayed with `psql`/`pg_restore`, or re-bootstrapping the cluster from `initdb` and re-seeding each consuming app (Authentik, n8n, agentdesktop) from scratch. |
+| Point-in-time recovery | Not possible - without WAL archiving there is no recovery target to replay to. |
+
+Adding real backups means configuring `spec.backup.barmanObjectStore` plus a `ScheduledBackup` on the CNPG cluster, and/or a Longhorn `backupTarget` with `RecurringJob`s, pointed at off-cluster storage. Until that exists, treat data in `postgres-cluster` as recoverable only as far back as the last manual dump.
+
 ## Quick Start
 
 See [bootstrap/README.md](bootstrap/README.md) for installation instructions.
