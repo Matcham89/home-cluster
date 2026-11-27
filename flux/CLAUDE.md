@@ -45,7 +45,7 @@ infra/                  ← Reusable Kustomize Components for namespace template
 
 **File naming conventions:**
 - `ks.yaml` — Flux Kustomization resource (lives in `apps/dev/`)
-- `helmrelease-*.yaml` — HelmRelease resource (lives in `apps/base/`)
+- `helmrelease.yaml` — HelmRelease resource (lives in `apps/base/`); a few apps use another name (e.g. `<app>.yaml`)
 - `kustomization.yaml` — Kustomize resource aggregation (both layers)
 
 ## Application Directory Pattern
@@ -55,7 +55,7 @@ Each application is split across two layers with a consistent structure:
 ```
 apps/base/<namespace>/<app>/
 ├── app/                          # Main workload manifests
-│   ├── deployment.yaml (or helmrelease-*.yaml)
+│   ├── deployment.yaml (or helmrelease.yaml)
 │   ├── service.yaml
 │   └── servicemonitor.yaml       # if exposing metrics
 ├── secrets/
