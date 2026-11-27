@@ -35,6 +35,14 @@ spec:
   values:
     replicaCount: 1
 
+    # API key from the qdrant-api-key ExternalSecret (../secrets). The chart
+    # reads it at render time into its own qdrant-apikey secret.
+    apiKey:
+      valueFrom:
+        secretKeyRef:
+          name: qdrant-api-key
+          key: api-key
+
     resources:
       requests:
         cpu: 100m

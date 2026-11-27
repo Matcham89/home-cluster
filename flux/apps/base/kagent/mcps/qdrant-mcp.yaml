@@ -50,6 +50,11 @@ spec:
               value: /home/mcp/tmp
             - name: QDRANT_URL
               value: "http://qdrant.qdrant.svc.cluster.local:6333"
+            - name: QDRANT_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: qdrant-api-key
+                  key: api-key
             - name: COLLECTION_NAME
               value: "content-ideas"
             - name: FASTMCP_SERVER_HOST

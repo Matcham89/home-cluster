@@ -8,5 +8,6 @@ components:
   - ../../../infra/namespace
 
 resources:
+  - ./secrets/ks.yaml
   - ./qdrant/ks.yaml
   - ./network-policies/ks.yaml

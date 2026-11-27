@@ -10,6 +10,7 @@ spec:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: kagent-operator
+    - name: kagent-secrets
     - name: qdrant
       namespace: qdrant
   interval: 1h
