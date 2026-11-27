@@ -37,9 +37,12 @@ jobs:
           python-version: "3.13"
 
       # Runs the CLI instead of allenporter/flux-local/action/test: that action omits
-      # --all-namespaces, so it only tests Kustomizations in flux-system (5 of ~80 here).
+      # --all-namespaces, so it only tests Kustomizations in flux-system (5 test items instead of 100 here).
+      # --skip-invalid-helm-release-paths: the agentdesktop chart lives in a different git
+      # repo (GitRepository agentdesktop), which flux-local does not clone, so that one
+      # HelmRelease is not rendered. Its Kustomization is still built.
       - name: Test
-        run: uvx --from flux-local==8.4.0 flux-local test --enable-helm --all-namespaces --path flux/clusters/dev -v
+        run: uvx --from flux-local==8.4.0 flux-local test --enable-helm --all-namespaces --skip-invalid-helm-release-paths --path flux/clusters/dev -v
 
   # Shows what a PR changes in the rendered Helm output (e.g. a chart version bump).
   # Written to the job summary, not a PR comment, so no extra permissions are needed.
