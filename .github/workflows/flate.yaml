@@ -1,0 +1,57 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+name: "Flate"
+on:
+  pull_request:
+    paths:
+      - flux/**
+      - .github/workflows/flate.yaml
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # Renders every Kustomization and HelmRelease reachable from the Flux entrypoint
+  # (flux/clusters/dev) without a cluster, and fails on any render error.
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Setup flate
+        uses: home-operations/flate/action@4e07f351352d235a335e5a1f0a088eab7ec40997 # v0.8.0
+
+      # --base= tests the whole tree, not only what changed since the default branch
+      - name: Test
+        run: flate test -p flux/clusters/dev --base=
+
+  # Shows what a PR changes in the rendered output (e.g. a chart version bump).
+  # Written to the job summary, not a PR comment, so no extra permissions are needed.
+  diff:
+    name: Diff
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0   # the diff needs the base branch's history
+          persist-credentials: false
+
+      - name: Setup flate
+        uses: home-operations/flate/action@4e07f351352d235a335e5a1f0a088eab7ec40997 # v0.8.0
+
+      - name: Diff
+        run: |
+          {
+            echo '### Rendered diff'
+            flate diff -p flux/clusters/dev --base "origin/${{ github.base_ref }}" -o github
+          } >> "$GITHUB_STEP_SUMMARY"
