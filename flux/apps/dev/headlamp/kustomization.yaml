@@ -1,0 +1,13 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: headlamp
+components:
+  # Web UI pod, no elevated host access required.
+  - ../../../infra/namespace
+
+resources:
+  - ./headlamp/ks.yaml
+  - ./limit-ranges/ks.yaml
+  - ./network-policies/ks.yaml

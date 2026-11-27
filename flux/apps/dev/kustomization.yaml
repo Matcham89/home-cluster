@@ -11,6 +11,7 @@ resources:
   - ./databases
   - ./external-services
   - ./flux-system
+  - ./headlamp
   - ./ingress
   # - ./kagent  # DISABLED: substrate 0.0.21 broken pod identity, needs cleanup
   - ./kube-ops
