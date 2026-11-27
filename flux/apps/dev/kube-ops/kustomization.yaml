@@ -16,6 +16,7 @@ resources:
   - ./external-secrets/store/ks.yaml
   - ./metal-lb/operator/ks.yaml
   - ./metal-lb/resources/ks.yaml
+  - ./reloader/ks.yaml
   - ./limit-ranges/ks.yaml
   # DISABLED: Commented out for easier development/deployment
   # - ./network-policies/ks.yaml
