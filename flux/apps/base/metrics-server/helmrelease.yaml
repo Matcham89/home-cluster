@@ -36,6 +36,8 @@ spec:
     cleanupOnFail: true
     timeout: 10m
   values:
+    # Keep the resource metrics API schedulable under node pressure (HPA/kubectl top)
+    priorityClassName: system-cluster-critical
     apiService:
       insecureSkipTLSVerify: false
     # Add extra args to skip kubelet TLS verification
