@@ -42,6 +42,13 @@ spec:
       limits:
         memory: 1Gi
 
+    # API key comes from the ExternalSecret in ../secrets (never in Git).
+    apiKey:
+      valueFrom:
+        secretKeyRef:
+          name: qdrant-api-key
+          key: api-key
+
     persistence:
       accessModes:
         - ReadWriteOnce
