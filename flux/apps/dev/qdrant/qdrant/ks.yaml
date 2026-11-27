@@ -18,3 +18,5 @@ spec:
   timeout: 10m
   prune: true
   wait: true
+  dependsOn:
+    - name: qdrant-secrets

@@ -35,6 +35,14 @@ spec:
   values:
     replicaCount: 1
 
+    # API key comes from the ExternalSecret in ../secrets (never in git).
+    env:
+      - name: QDRANT__SERVICE__API_KEY
+        valueFrom:
+          secretKeyRef:
+            name: qdrant-api-key
+            key: api-key
+
     resources:
       requests:
         cpu: 100m
