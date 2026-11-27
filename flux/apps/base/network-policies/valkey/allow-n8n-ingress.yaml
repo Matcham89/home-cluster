@@ -1,0 +1,19 @@
+---
+# Allow only the n8n namespace to reach Valkey (queue mode) on 6379.
+# Valkey has no authentication, so this policy is its only protection.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-n8n-ingress
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: n8n
+      ports:
+        - port: 6379
+          protocol: TCP

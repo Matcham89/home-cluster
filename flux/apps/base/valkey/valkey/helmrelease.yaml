@@ -1,0 +1,54 @@
+---
+# yaml-language-server: $schema=https://github.com/fluxcd-community/flux2-schemas/raw/main/helmrepository-source-v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: valkey
+spec:
+  interval: 10m
+  url: https://valkey.io/valkey-helm
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: valkey
+spec:
+  interval: 10m
+  chart:
+    spec:
+      chart: valkey
+      version: 0.12.1
+      sourceRef:
+        kind: HelmRepository
+        name: valkey
+  install:
+    strategy:
+      name: RetryOnFailure
+    createNamespace: true
+    timeout: 10m
+  upgrade:
+    strategy:
+      name: RetryOnFailure
+    cleanupOnFail: true
+    timeout: 10m
+  values:
+    # Single RWO Longhorn volume: a RollingUpdate surge pod could not attach it.
+    deploymentStrategy: Recreate
+
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        memory: 256Mi
+
+    # The chart's default securityContext/podSecurityContext already drop ALL
+    # capabilities, set readOnlyRootFilesystem, runAsNonRoot and runAsUser 1000.
+    readinessProbe:
+      enabled: true
+
+    dataStorage:
+      enabled: true
+      className: longhorn
+      requestedSize: ${VALKEY_STORAGE_SIZE}

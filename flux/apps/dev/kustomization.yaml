@@ -21,4 +21,5 @@ resources:
   - ./n8n
   - ./qdrant
   - ./storage
+  - ./valkey
   # - ./substrate  # DISABLED: incompatible with current cluster state

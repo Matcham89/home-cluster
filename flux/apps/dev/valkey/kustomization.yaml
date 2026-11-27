@@ -1,0 +1,12 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: valkey
+components:
+  # Redis-compatible queue backend for n8n, no elevated host access required.
+  - ../../../infra/namespace
+
+resources:
+  - ./valkey/ks.yaml
+  - ./network-policies/ks.yaml
