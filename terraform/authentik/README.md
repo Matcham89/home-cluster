@@ -1,3 +1,5 @@
+This directory is managed with Terraform.
+
 # Authentik Terraform
 
 Manages Authentik configuration as code: OAuth2 providers, applications, and groups.
