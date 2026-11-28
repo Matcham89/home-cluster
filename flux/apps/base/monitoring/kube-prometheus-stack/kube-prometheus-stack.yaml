@@ -84,43 +84,43 @@ spec:
         serviceMonitorSelectorNilUsesHelmValues: false
         podMonitorSelectorNilUsesHelmValues: false
         enableFeatures:
-          - native-histograms
+        - native-histograms
         enableRemoteWriteReceiver: true
         additionalScrapeConfigs:
         - job_name: 'postgres-external'
           static_configs:
-            - targets: ['postgres-exporter-external.external-services.svc.cluster.local:9187']
-              labels:
-                service: 'postgres-external'
-                instance: 'external-db'
+          - targets: ['postgres-exporter-external.external-services.svc.cluster.local:9187']
+            labels:
+              service: 'postgres-external'
+              instance: 'external-db'
 
         - job_name: 'seaweedfs-master'
           static_configs:
-            - targets: ['seaweedfs-master-metrics-external.external-services.svc.cluster.local:9324']
-              labels:
-                service: 'seaweedfs'
-                component: 'master'
+          - targets: ['seaweedfs-master-metrics-external.external-services.svc.cluster.local:9324']
+            labels:
+              service: 'seaweedfs'
+              component: 'master'
 
         - job_name: 'seaweedfs-volume'
           static_configs:
-            - targets: ['seaweedfs-volume-metrics-external.external-services.svc.cluster.local:9327']
-              labels:
-                service: 'seaweedfs'
-                component: 'volume'
+          - targets: ['seaweedfs-volume-metrics-external.external-services.svc.cluster.local:9327']
+            labels:
+              service: 'seaweedfs'
+              component: 'volume'
 
         - job_name: 'seaweedfs-filer'
           static_configs:
-            - targets: ['seaweedfs-filer-metrics-external.external-services.svc.cluster.local:9328']
-              labels:
-                service: 'seaweedfs'
-                component: 'filer'
+          - targets: ['seaweedfs-filer-metrics-external.external-services.svc.cluster.local:9328']
+            labels:
+              service: 'seaweedfs'
+              component: 'filer'
 
         - job_name: 'seaweedfs-s3'
           static_configs:
-            - targets: ['seaweedfs-s3-metrics-external.external-services.svc.cluster.local:9329']
-              labels:
-                service: 'seaweedfs'
-                component: 's3'
+          - targets: ['seaweedfs-s3-metrics-external.external-services.svc.cluster.local:9329']
+            labels:
+              service: 'seaweedfs'
+              component: 's3'
     grafana:
       enabled: true
       grafana.ini:
@@ -142,11 +142,11 @@ spec:
           # Optionally map user groups to Grafana roles
           role_attribute_path: contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'
       extraSecretMounts:
-        - name: auth-generic-oauth-secret-mount
-          secretName: auth-generic-oauth-secret
-          defaultMode: 0440
-          mountPath: /etc/secrets/auth_generic_oauth
-          readOnly: true
+      - name: auth-generic-oauth-secret-mount
+        secretName: auth-generic-oauth-secret
+        defaultMode: 0440
+        mountPath: /etc/secrets/auth_generic_oauth
+        readOnly: true
       service:
         type: LoadBalancer
         loadBalancerIP: "192.168.1.209"
@@ -160,38 +160,38 @@ spec:
         datasources.yaml:
           apiVersion: 1
           datasources:
-            - name: Prometheus
-              type: prometheus
-              uid: prometheus
-              access: proxy
-              orgId: 1
-              url: http://kube-prometheus-stack-prometheus.monitoring:9090
-              basicAuth: false
-              editable: true
-              isDefault: false
-              jsonData:
-                httpMethod: GET
-                exemplarTraceIdDestinations:
-                - name: trace_id
-                  datasourceUid: tempo
-            - name: Tempo
-              type: tempo
-              access: proxy
-              basicAuth: false
-              orgId: 1
-              uid: tempo
-              url: http://tempo.monitoring.svc.cluster.local:3200
-              isDefault: false
-              editable: true
-            - orgId: 1
-              name: Loki
-              type: loki
-              typeName: Loki
-              access: proxy
-              url: http://loki-gateway.monitoring.svc.cluster.local
-              basicAuth: false
-              isDefault: false
-              editable: true
+          - name: Prometheus
+            type: prometheus
+            uid: prometheus
+            access: proxy
+            orgId: 1
+            url: http://kube-prometheus-stack-prometheus.monitoring:9090
+            basicAuth: false
+            editable: true
+            isDefault: false
+            jsonData:
+              httpMethod: GET
+              exemplarTraceIdDestinations:
+              - name: trace_id
+                datasourceUid: tempo
+          - name: Tempo
+            type: tempo
+            access: proxy
+            basicAuth: false
+            orgId: 1
+            uid: tempo
+            url: http://tempo.monitoring.svc.cluster.local:3200
+            isDefault: false
+            editable: true
+          - orgId: 1
+            name: Loki
+            type: loki
+            typeName: Loki
+            access: proxy
+            url: http://loki-gateway.monitoring.svc.cluster.local
+            basicAuth: false
+            isDefault: false
+            editable: true
       sidecar:
         dashboards:
           enabled: true
@@ -219,7 +219,7 @@ spec:
           cpu: 100m
           memory: 256Mi
         limits:
-          memory: 512Mi
+          memory: 1Gi
     kubeProxy:
       enabled: false
     kubeControllerManager:
@@ -233,4 +233,3 @@ spec:
           memory: 128Mi
         limits:
           memory: 256Mi
-
