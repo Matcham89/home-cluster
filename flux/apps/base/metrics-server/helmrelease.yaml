@@ -37,7 +37,7 @@ spec:
     timeout: 10m
   values:
     apiService:
-      insecureSkipTLSVerify: false
+      insecureSkipTLSVerify: true
     # Add extra args to skip kubelet TLS verification
     # This is needed because kubelet certificates don't contain IP SANs
     args:
