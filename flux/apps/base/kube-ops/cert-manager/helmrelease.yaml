@@ -16,6 +16,8 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: cert-manager
+  annotations:
+    example.com/docs: https://docs.example.com/cert-manager
 spec:
   releaseName: cert-manager
   interval: 1m
