@@ -16,7 +16,6 @@ resources:
   - ./kube-ops
   - ./kube-system
   - ./longhorn-system
-  - ./metrics-server
   - ./monitoring
   - ./n8n
   - ./qdrant
