@@ -19,6 +19,5 @@ resources:
   - ./metrics-server
   - ./monitoring
   - ./n8n
-  - ./qdrant
   - ./storage
   # - ./substrate  # DISABLED: incompatible with current cluster state
