@@ -13,6 +13,8 @@ spec:
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
+  annotations:
+    example.com/owner: platform
   name: metal-lb
 spec:
   # Override Release name to avoid the pattern Namespace-Release
