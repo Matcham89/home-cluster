@@ -1,7 +1,6 @@
 # home-cluster
 
-test
-GitOps repository for Kubernetes home cluster managed by Flux.
+Welcome! This repository describes everything running in my Kubernetes home cluster. Edit a file, commit it, and Flux makes the cluster match - no manual `kubectl apply` needed.
 
 ## What is Flux?
 
@@ -52,6 +51,16 @@ components:
 ```
 
 This DRY approach centralizes namespace configuration - security policies, Istio labels, and annotations are managed in one place.
+
+## Adding a New App
+
+1. **Base config** - create `flux/apps/base/<app>/` with a `helmrelease.yaml` (plus a HelmRepository if needed) and a `kustomization.yaml` listing it.
+2. **Dev overlay** - create `flux/apps/dev/<app>/` with:
+   - `kustomization.yaml` that sets `namespace: <app>`, includes a namespace template under `components:` (see above) and lists the `ks.yaml` files as `resources:`.
+   - `operator/ks.yaml` - a Flux Kustomization pointing `path` at `./flux/apps/base/<app>` (copy `flux/apps/dev/metrics-server/operator/ks.yaml` as a starting point).
+3. **Register it** - add `./<app>` to `flux/apps/dev/kustomization.yaml`.
+4. **Order it** - use `dependsOn` in the `ks.yaml` if the app needs another component (for example an operator or CRDs) to be ready first.
+5. Commit and open a PR; Flux reconciles the change after merge.
 
 ## Deployed Applications
 
