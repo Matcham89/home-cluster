@@ -141,7 +141,6 @@ Off-cluster services (running at `192.168.1.100`) are exposed in-cluster via **E
 
 Key external services exposed this way:
 - PostgreSQL `:5432` — used by authentik, n8n (via `cnpg-system` cluster or direct)
-- Qdrant `:6333/6334` — vector database
 - SeaweedFS `:8333` (S3), `:8888` (Filer), `:9333` (Master)
 - Ollama `:11434` — local LLM inference
 

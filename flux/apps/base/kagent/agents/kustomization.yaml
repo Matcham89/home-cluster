@@ -21,4 +21,3 @@ resources:
   - ./code-planner-agent.yaml
   - ./code-reviewer-agent.yaml
   - ./code-writer-agent.yaml
-  - ./content-scout-agent.yaml
