@@ -36,6 +36,7 @@ spec:
     cleanupOnFail: true
     timeout: 10m
   values:
+    priorityClassName: system-cluster-critical
     apiService:
       insecureSkipTLSVerify: false
     # Add extra args to skip kubelet TLS verification
