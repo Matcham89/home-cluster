@@ -3,6 +3,8 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
+  annotations:
+    example.com/cost-center: infra
   name: kube-prometheus-stack
   namespace: monitoring
 spec:
