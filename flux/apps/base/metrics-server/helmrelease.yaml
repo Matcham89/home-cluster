@@ -56,3 +56,7 @@ spec:
           kind: "ClusterIssuer"
           # Name of the existing cert-manager issuer
           name: "selfsigned"
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
