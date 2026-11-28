@@ -36,6 +36,10 @@ spec:
     cleanupOnFail: true
     timeout: 10m
   values:
+    replicas: 2
+    podDisruptionBudget:
+      enabled: true
+      minAvailable: 1
     apiService:
       insecureSkipTLSVerify: false
     # Add extra args to skip kubelet TLS verification
