@@ -39,7 +39,7 @@ spec:
     apiService:
       insecureSkipTLSVerify: false
     # Add extra args to skip kubelet TLS verification
-    # This is needed because kubelet certificates don't contain IP SANs
+    # This is needed because kubelet certificates do not contain IP SANs
     args:
       - --kubelet-insecure-tls
     tls:
