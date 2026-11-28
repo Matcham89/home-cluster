@@ -36,6 +36,7 @@ spec:
     cleanupOnFail: true
     timeout: 10m
   values:
+    replicas: 2
     apiService:
       insecureSkipTLSVerify: false
     # Add extra args to skip kubelet TLS verification
